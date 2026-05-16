@@ -10,7 +10,7 @@ if(NOT CMAKE_C_COMPILER_TARGET MATCHES "i.86" AND NOT CMAKE_SYSTEM_PROCESSOR MAT
     set(CMAKE_EXE_LINKER_FLAGS "-m32 ${CMAKE_EXE_LINKER_FLAGS}")
 endif()
 
-set(CMAKE_EXE_LINKER_FLAGS "-fno-pie -no-pie -Wl,--image-base=0x500000 -Wl,--allow-multiple-definition -static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ ${CMAKE_EXE_LINKER_FLAGS}")
 
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY NEVER)
@@ -58,6 +58,21 @@ target_compile_definitions(psycross PRIVATE USE_EXTENDED_PRIM_POINTERS=0)
 target_include_directories(psycross PRIVATE externals/SDL/include externals/openal-soft/include)
 target_link_libraries(psycross SDL2-static OpenAL)
 
+# TODO(aalhendi): handle symbol conflict in a better way
+add_custom_command(TARGET psycross POST_BUILD
+    COMMAND ${CMAKE_OBJCOPY}
+        --redefine-sym _alGenEffects=_psx_alGenEffects
+        --redefine-sym _alEffectf=_psx_alEffectf
+        --redefine-sym _alEffecti=_psx_alEffecti
+        --redefine-sym _alGenAuxiliaryEffectSlots=_psx_alGenAuxiliaryEffectSlots
+        --redefine-sym _alDeleteAuxiliaryEffectSlots=_psx_alDeleteAuxiliaryEffectSlots
+        --redefine-sym _alDeleteEffects=_psx_alDeleteEffects
+        --redefine-sym _alAuxiliaryEffectSloti=_psx_alAuxiliaryEffectSloti
+        $<TARGET_FILE:psycross> $<TARGET_FILE:psycross>.fixed
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:psycross>.fixed $<TARGET_FILE:psycross>
+    COMMENT "Renaming conflicting OpenAL symbols in psycross"
+)
+
 # CTR Native
 add_executable(ctr_native ${GAME_SOURCES})
 target_include_directories(ctr_native PRIVATE ${GAME_INCLUDES})
@@ -70,5 +85,6 @@ target_compile_definitions(ctr_native PRIVATE
     USE_MOREPRIM
     BUILD=926
 )
-target_link_libraries(ctr_native psycross SDL2-static OpenAL)
+target_compile_options(ctr_native PRIVATE -O2)
+target_link_libraries(ctr_native OpenAL psycross SDL2-static)
 target_link_options(ctr_native PRIVATE -static -static-libgcc -static-libstdc++)
