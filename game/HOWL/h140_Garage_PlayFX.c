@@ -2,28 +2,18 @@
 
 void DECOMP_Garage_PlayFX(u_int soundId, char charId)
 {
-  if (charId < PINSTRIPE) 
-  {
-	// if sound == BIRD_RANDOM
-    if (soundId == 0xf6)
+	if (charId < PINSTRIPE)
 	{
-	  // inline audioRNG scramble
-      sdata->audioRNG = ((sdata->audioRNG >> 3) + sdata->audioRNG * 0x20000000) * 5 + 1;
+	    // if sound == BIRD_RANDOM
+		if (soundId == 0xf6)
+		{
+			sdata->audioRNG = ((sdata->audioRNG >> 3) + sdata->audioRNG * 0x20000000) * 5 + 1;
+			soundId = (sdata->audioRNG % 3) + 0xf3;
+		}
 
-	  // pick a new sound, 0xF3, 0xF4, or 0xF5,
-	  // one of three different bird noises near Pura
-	  soundId = (sdata->audioRNG%3) + 0xf3;
-    }
-
-    DECOMP_OtherFX_Play_LowLevel(soundId & 0xffff,1,
-
-				 // volume
-                 sdata->garageSoundPool[charId].volume << 0x10 |
-
-				 // left/right
-                 sdata->garageSoundPool[charId].LR
-
-				 // distortion
-				 | 0x8000);
-  }
+		DECOMP_OtherFX_Play_LowLevel(soundId & 0xffff, 1,
+			sdata->garageSoundPool[charId].volume << 0x10 |
+			sdata->garageSoundPool[charId].LR |
+			0x8000);
+	}
 }

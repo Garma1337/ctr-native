@@ -12,7 +12,7 @@ void DECOMP_CS_Cutscene_Start(void)
 
   // no instance, no initData required,
   // this automatically starts the "introcam" thread
-  CS_Thread_Init(0, 0, 0, 0, 0);
+  DECOMP_CS_Thread_Init(0, 0, 0, 0, 0);
 
   // If this is the Naughty Dog Box Scene
   if (gGT->levelID == NAUGHTY_DOG_CRATE)
@@ -22,11 +22,11 @@ void DECOMP_CS_Cutscene_Start(void)
 	for(int i = 0; i < sizeof(struct CsThreadInitData)/4; i++)
 		ptrIntArr[i] = 0;
 	  
-    CS_Instance_InitMatrix();
+    DECOMP_CS_Instance_InitMatrix();
   
 	for(int i = 0; i < 19; i++)
 	{
-		CS_Thread_Init(BoxSceneArr[i], 0, &initData, 0, 0);
+		DECOMP_CS_Thread_Init(BoxSceneArr[i], 0, &initData, 0, 0);
 	}
   }
   
@@ -35,9 +35,9 @@ void DECOMP_CS_Cutscene_Start(void)
   {
     OVR_233.isCutsceneOver = 0;
 
-    CS_Credits_Init();
+    DECOMP_CS_Credits_Init();
 
-    CS_Instance_InitMatrix();
+    DECOMP_CS_Instance_InitMatrix();
   }
 }
 

@@ -68,6 +68,11 @@ void DECOMP_MainInit_JitPoolsNew(struct GameTracker *gGT)
   // add a bookmark
   DECOMP_MEMPACK_PushState();
 
+#ifdef CTR_INTERNAL
+  fprintf(stderr, "=== JitPoolsNew: gameMode=0x%08X levelID=%d numPlyr=%d uVar7=0x%X uVar9=0x%X ===\n",
+    gameMode, gGT->levelID, numPlyr, uVar7, uVar9);
+#endif
+
 
 // 2mb RAM, decomp/General, ram holes
 #if !defined(REBUILD_PS1) && !defined(USE_RAMEX) && defined(USE_ALTMODS)
@@ -85,6 +90,10 @@ void DECOMP_MainInit_JitPoolsNew(struct GameTracker *gGT)
   DECOMP_JitPool_Init(
 	&gGT->JitPools.thread, numThread,
 	sizeof(struct Thread), /*"ThreadPool"*/0);
+
+#ifdef CTR_INTERNAL
+  fprintf(stderr, "  thread:       %3d items x 0x%X bytes\n", numThread, (unsigned)sizeof(struct Thread));
+#endif
 
 
 // 2mb RAM, decomp/General, ram holes
@@ -107,6 +116,10 @@ void DECOMP_MainInit_JitPoolsNew(struct GameTracker *gGT)
 	&gGT->JitPools.mediumStack, numMedium,
 	sizeof(struct Item) + sizeof(struct WarpPad), 
 	/*"MediumStackPool"*/0);
+
+#ifdef CTR_INTERNAL
+  fprintf(stderr, "  mediumStack:  %3d items x 0x%X bytes\n", numMedium, (unsigned)(sizeof(struct Item) + sizeof(struct WarpPad)));
+#endif
 
 
 // 2mb RAM, decomp/General, ram holes
@@ -140,6 +153,10 @@ void DECOMP_MainInit_JitPoolsNew(struct GameTracker *gGT)
 	&gGT->JitPools.smallStack, numSmall,
 	sizeof(struct Item) + sizeof(struct UiElement3D),  
 	/*"SmallStackPool"*/0);
+
+#ifdef CTR_INTERNAL
+  fprintf(stderr, "  smallStack:   %3d items x 0x%X bytes\n", numSmall, (unsigned)(sizeof(struct Item) + sizeof(struct UiElement3D)));
+#endif
 
 
 // 2mb RAM, decomp/General, ram holes
@@ -214,6 +231,10 @@ void DECOMP_MainInit_JitPoolsNew(struct GameTracker *gGT)
 	&gGT->JitPools.instance, numInstance,
 	sizeof(struct Instance) + (sizeof(struct InstDrawPerPlayer) * numPlyr),
 	/*"InstancePool"*/0);
+
+#ifdef CTR_INTERNAL
+  fprintf(stderr, "  instance:     %3d items x 0x%X bytes\n", numInstance, (unsigned)(sizeof(struct Instance) + (sizeof(struct InstDrawPerPlayer) * numPlyr)));
+#endif
 	
 	
   int numDriver = uVar7 >> 9;

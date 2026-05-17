@@ -561,6 +561,4 @@ void TEST_DrawInstances(struct GameTracker* gGT)
 	}
 	
 	int end = Debug_GetPreciseTime2();
-	
-	printf("TEST_DrawInstances: %d\n", end-start);
 }

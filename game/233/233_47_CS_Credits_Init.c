@@ -3,9 +3,9 @@
 // temporary workaround
 extern struct Ovr233_Credits_BSS* creditsBSS;
 
-void CS_Credits_ThTick();
+void CS_Credits_ThTick(); // TODO(aalhendi): port from overlay 233
 
-void CS_Credits_Init()
+void DECOMP_CS_Credits_Init()
 {
 	int i;
 	int bitIndex;
@@ -65,7 +65,7 @@ void CS_Credits_Init()
 	// 0x300 = SmallStackPool
 	// 0xd = "other" thread bucket
 	creditsBSS->CreditThread =
-		PROC_BirthWithObject(0x30d, CS_Credits_ThTick, NULL, NULL);
+		DECOMP_PROC_BirthWithObject(0x30d, CS_Credits_ThTick, NULL, NULL);
 		
 	memset(creditsObj, 0, sizeof(struct CreditsObj));
 	creditsObj->countdown = FPS_DOUBLE(360);
@@ -79,7 +79,7 @@ void CS_Credits_Init()
 		#endif
 		
 		// STATIC_AKUAKU for some reason?
-		inst = INSTANCE_Birth3D(gGT->modelPtr[STATIC_AKUAKU], 0, 0);
+		inst = DECOMP_INSTANCE_Birth3D(gGT->modelPtr[STATIC_AKUAKU], 0, 0);
 		
 		// save instance
 		creditsObj->creditGhostInst[4-i] = inst;
@@ -100,7 +100,7 @@ void CS_Credits_Init()
 		#endif
 	}
 	
-	creditsDst = MEMPACK_AllocHighMem(CLH->size /* "credits strings" */);
+	creditsDst = DECOMP_MEMPACK_AllocHighMem(CLH->size /* "credits strings" */);
 	
 	memcpy(creditsDst, CLH, CLH->size);
 	

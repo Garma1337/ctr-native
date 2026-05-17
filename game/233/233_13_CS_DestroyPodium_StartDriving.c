@@ -38,9 +38,9 @@ void DECOMP_CS_DestroyPodium_StartDriving(void)
   if (OVR_233.CutsceneManipulatesAudio != 0)
   {
     // restore backup of volume variables
-    howl_VolumeSet(0, OVR_233.FXVolumeBackup);
-    howl_VolumeSet(1, OVR_233.MusicVolumeBackup);
-    howl_VolumeSet(2, OVR_233.VoiceVolumeBackup);
+    DECOMP_howl_VolumeSet(0, OVR_233.FXVolumeBackup);
+    DECOMP_howl_VolumeSet(1, OVR_233.MusicVolumeBackup);
+    DECOMP_howl_VolumeSet(2, OVR_233.VoiceVolumeBackup);
   }
 
   // cam mode be zero to follow you

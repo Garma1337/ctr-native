@@ -25,6 +25,7 @@ void DECOMP_LOAD_OvrThreads(unsigned int param_1)
 		);
 #else
 		gGT->overlayIndex_Threads = param_1;
+		((void(*)())data.overlayCallbackFuncs[param_1])();
 #endif
     }
 }

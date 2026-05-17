@@ -1,0 +1,850 @@
+#include <common.h>
+
+extern struct OVR233_Garage gGarage;
+
+struct Thread *DECOMP_CS_Thread_Init(short modelID, char *name, short *param_3, short param_4, struct Thread *parent);
+
+static void CS_SaveDecodedOpcode(const struct CutsceneObj *cs, int out[5])
+{
+	const int *src = (const int *)&cs->decodedOpcode;
+	out[0] = src[0];
+	out[1] = src[1];
+	out[2] = src[2];
+	out[3] = src[3];
+	out[4] = src[4];
+}
+
+static void CS_RestoreDecodedOpcode(struct CutsceneObj *cs, const int in[5])
+{
+	int *dst = (int *)&cs->decodedOpcode;
+	dst[0] = in[0];
+	dst[1] = in[1];
+	dst[2] = in[2];
+	dst[3] = in[3];
+	dst[4] = in[4];
+}
+
+int DECOMP_CS_Thread_UseOpcode(struct Instance *instance, struct CutsceneObj *cs)
+{
+	unsigned char numPlayers;
+	int frameBoundaryHit;
+	short numCamPathPoints;
+	short gameModeTarget;
+	unsigned short clockEffectFlags;
+	unsigned short cutsceneFlags;
+	unsigned int conditionMet;
+	int iVar8;
+	char **cutsceneOpcodes;
+	int iVar10;
+	short levelToLoad;
+	int distanceToScreen;
+	struct Thread *dancerThread;
+	char *opcodeAt;
+	int iVar12;
+	struct CsOpcodeMeta *opcodeMeta;
+	short *opcodeMetaShorts;
+	short *frameData;
+	int rotInterpNumerator;
+	int rotInterpStartFrame;
+	int rotInterpFrameRange;
+	int nextFrameTime;
+	int lodIndex;
+	struct ModelHeader *modelHeader;
+	int metadataBackup[5];
+	short camRot[3];
+	short camPos[3];
+	unsigned short camPathFlags[2];
+	int animIndex;
+	int opcodeDuration;
+	int opcodeChanged;
+	int elapsedTimeRemaining;
+
+	struct GameTracker *gGT = sdata->gGT;
+	CS_SaveDecodedOpcode(cs, metadataBackup);
+
+	if (instance != 0)
+	{
+		if ((instance->flags & SPLIT_LINE) != 0)
+			instance->vertSplit = OVR_233.VertSplitLine;
+
+		if ((int)instance->model->id == (unsigned int)(u_char)gGT->podium_modelIndex_Second)
+		{
+			if (OVR_233.PodiumInitUnk2 - 0x65U < 0x87)
+			{
+				instance->flags |= HIDE_MODEL;
+			}
+			else
+			{
+				if ((instance->flags & HIDE_MODEL) == 0)
+					goto afterPodiumSecondModelCheck;
+				instance->unk50 -= 2;
+				instance->unk51 -= 2;
+				instance->flags &= ~HIDE_MODEL;
+			}
+		}
+afterPodiumSecondModelCheck:
+
+		if ((int)instance->model->id == (unsigned int)(u_char)gGT->podium_modelIndex_First)
+		{
+			if (OVR_233.PodiumInitUnk2 - 0x83U < 0x69)
+			{
+				instance->flags |= HIDE_MODEL;
+			}
+			else
+			{
+				if ((instance->flags & HIDE_MODEL) == 0)
+					goto afterPodiumFirstModelCheck;
+				instance->unk50 -= 6;
+				instance->unk51 -= 6;
+				instance->flags &= ~HIDE_MODEL;
+			}
+		}
+afterPodiumFirstModelCheck:
+
+		if ((cs->flags & 0x80) != 0)
+		{
+			if (((int)instance->model->id + -0xce ==
+				 (int)gGarage.unusedArr_garageChars[sdata->advCharSelectIndex_curr]) &&
+				(gGarage.boolSelected == 1))
+			{
+				if ((cs->flags & 0x100) == 0)
+				{
+					gGT->pushBuffer[0].fadeFromBlack_currentValue = 0x1fff;
+					gGT->pushBuffer[0].fadeFromBlack_desiredResult = 0x1000;
+					gGT->pushBuffer[0].fade_step = 0xfd56;
+					cs->flags |= 0x100;
+					DECOMP_CS_ScriptCmd_OpcodeAt(
+						cs,
+						OVR_233.advCharSelectSelectOpcodes[(int)instance->model->id - STATIC_CRASHSELECT]);
+					CS_SaveDecodedOpcode(cs, metadataBackup);
+reloadAdvCharSelectOpcodeState:
+					cs->unk18 = ((int *)&cs->decodedOpcode)[2];
+					iVar8 = DECOMP_MixRNG_Scramble();
+					opcodeMeta = &cs->decodedOpcode;
+					opcodeMetaShorts = (short *)opcodeMeta;
+					cs->unk14 =
+						opcodeMeta->frameStart +
+						(short)((int)((iVar8 >> 2 & 0xfff) *
+									 (((int)opcodeMeta->frameEnd - (int)opcodeMeta->frameStart) + 1)) >>
+								0xc);
+				}
+			}
+			else
+			{
+				if ((cs->flags & 0x100) != 0)
+				{
+					cs->flags &= 0xfeff;
+					DECOMP_CS_ScriptCmd_OpcodeAt(
+						cs,
+						OVR_233.advCharSelectDeselectOpcodes[(int)instance->model->id - STATIC_CRASHSELECT]);
+					CS_SaveDecodedOpcode(cs, metadataBackup);
+					goto reloadAdvCharSelectOpcodeState;
+				}
+			}
+		}
+	}
+
+	opcodeDuration = (int)cs->unk14;
+	iVar12 = cs->unk18;
+	iVar8 = (int)cs->unk1e;
+	elapsedTimeRemaining = gGT->elapsedTimeMS;
+	opcodeMeta = &cs->decodedOpcode;
+	opcodeMetaShorts = (short *)opcodeMeta;
+	animIndex = (int)opcodeMeta->animIndex;
+
+	if (instance == 0)
+	{
+		numCamPathPoints = DECOMP_CAM_Path_GetNumPoints();
+		if ((int)numCamPathPoints != 0)
+		{
+			iVar10 = ((s32)((u32)gGT->msInThisLEV << 11)) >> 16;
+			if (iVar10 < (int)numCamPathPoints + -1)
+			{
+				DECOMP_CAM_Path_Move(iVar10, camPos, camRot, camPathFlags);
+				gGT->pushBuffer[0].pos[0] = camPos[0];
+				gGT->pushBuffer[0].pos[1] = camPos[1];
+				gGT->pushBuffer[0].pos[2] = camPos[2];
+				gGT->pushBuffer[0].rot[0] = camRot[0];
+				gGT->pushBuffer[0].rot[1] = camRot[1];
+				gGT->pushBuffer[0].rot[2] = camRot[2];
+			}
+			else
+			{
+				if (opcodeMeta->opcode == 0x14)
+					DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+				DECOMP_CAM_Path_Move((int)(short)(numCamPathPoints + -1),
+									 gGT->pushBuffer[0].pos,
+									 gGT->pushBuffer[0].rot,
+									 camPathFlags);
+			}
+
+			clockEffectFlags = gGT->clockEffectEnabled;
+			gGT->clockEffectEnabled = clockEffectFlags & 0xfffe;
+			if ((camPathFlags[0] & 1) != 0)
+				gGT->clockEffectEnabled = clockEffectFlags & 0xfffe | 1;
+
+			if ((cs->flags & 0x20) == 0)
+			{
+				gGT->pushBuffer[0].distanceToScreen_PREV = 0x100;
+				if ((camPathFlags[0] & 2) != 0)
+					gGT->pushBuffer[0].distanceToScreen_PREV = 0x50;
+				if ((camPathFlags[0] & 4) != 0)
+					gGT->pushBuffer[0].distanceToScreen_PREV = 0x278;
+				if ((camPathFlags[0] & 0x20) != 0)
+					gGT->pushBuffer[0].distanceToScreen_PREV = 0x1eb;
+				if ((camPathFlags[0] & 0x40) != 0)
+					gGT->pushBuffer[0].distanceToScreen_PREV = 0x14d;
+			}
+
+			if (((camPathFlags[0] & 0x10) != 0) && ((DECOMP_MixRNG_Scramble() & 0xf) == 0))
+			{
+				DECOMP_CTR_Box_DrawClearBox(
+					&OVR_233.introClearBoxRect,
+					&OVR_233.introClearBoxColor,
+					1,
+					gGT->backBuffer->otMem.startPlusFour);
+			}
+
+			if (gGT->levelID == 0x29)
+				gGT->pushBuffer[0].distanceToScreen_PREV = 0x140;
+
+			gGT->pushBuffer[0].distanceToScreen_CURR = gGT->pushBuffer[0].distanceToScreen_PREV;
+		}
+
+		if ((sdata->gGamepads->gamepad[0].buttonsTapped & BTN_START) != 0)
+		{
+			gGT->clockEffectEnabled &= 0xfffe;
+			if (0x13 < gGT->levelID - 0x2cU)
+			{
+				if (gGT->levelID == 0x29)
+				{
+					if ((unsigned int)gGT->msInThisLEV >> 5 < 0xb5)
+						goto afterCameraAndSkipChecks;
+					DECOMP_RaceFlag_SetCanDraw(1);
+					iVar8 = DECOMP_RaceFlag_IsTransitioning();
+					if ((iVar8 == 0) && (iVar8 = DECOMP_RaceFlag_IsFullyOnScreen(), iVar8 == 0))
+						DECOMP_RaceFlag_SetFullyOffScreen();
+				}
+				else
+				{
+					DECOMP_RaceFlag_SetCanDraw(1);
+					iVar8 = DECOMP_RaceFlag_IsTransitioning();
+					if ((iVar8 == 0) && (iVar8 = DECOMP_RaceFlag_IsFullyOnScreen(), iVar8 == 0))
+						DECOMP_RaceFlag_SetFullyOffScreen();
+					levelToLoad = CREDITS_CRASH;
+					if (gGT->levelID - 0x2aU < 2)
+						goto requestSkipLevelLoad;
+				}
+				DECOMP_CseqMusic_StopAll();
+				DECOMP_CDSYS_XAPauseRequest();
+				DECOMP_RaceFlag_SetDrawOrder(0);
+				levelToLoad = MAIN_MENU_LEVEL;
+requestSkipLevelLoad:
+				DECOMP_MainRaceTrack_RequestLoad(levelToLoad);
+				OVR_233.isCutsceneOver = 1;
+				gGT->gameMode2 &= ~VEH_FREEZE_PODIUM;
+				CS_RestoreDecodedOpcode(cs, metadataBackup);
+				return 1;
+			}
+			CS_Credits_End();
+		}
+	}
+
+afterCameraAndSkipChecks:
+	opcodeChanged = 0;
+	if (elapsedTimeRemaining == 0)
+	{
+updateInstanceAndReturn:
+		cs->unk18 = iVar12;
+		cs->animIndex = (char)animIndex;
+		cs->unk1e = (short)iVar8;
+		cs->unk14 = (short)opcodeDuration;
+		iVar10 = (int)opcodeMeta->rotStart;
+		iVar12 = iVar12 >> 5;
+		if (iVar10 != (int)opcodeMeta->rotEnd)
+		{
+			rotInterpStartFrame = opcodeMeta->arg0.i;
+			if (opcodeMeta->arg1.i != rotInterpStartFrame)
+			{
+				rotInterpNumerator = ((((int)opcodeMeta->rotEnd - iVar10) + 0x800U & 0xfff) - 0x800) *
+									(iVar12 - rotInterpStartFrame);
+				rotInterpFrameRange = opcodeMeta->arg1.i - rotInterpStartFrame;
+				if (rotInterpFrameRange < 0)
+					rotInterpFrameRange = -rotInterpFrameRange;
+				iVar10 = iVar10 + rotInterpNumerator / rotInterpFrameRange;
+			}
+		}
+		iVar10 = iVar10 + cs->unk1c;
+		if ((iVar10 != (int)cs->unk22) &&
+			(cs->unk22 = (short)iVar10, instance != 0))
+		{
+			ConvertRotToMatrix(&instance->matrix, &cs->unk20);
+		}
+		iVar8 = DECOMP_CS_Instance_SafeCheckAnimFrame(instance, animIndex, iVar8, iVar12);
+		if (iVar12 != iVar8)
+		{
+			animIndex &= ~0xff;
+			iVar12 = 0;
+		}
+		if (instance != 0)
+		{
+			instance->animFrame = (short)iVar12;
+			instance->animIndex = (char)animIndex;
+		}
+		if (cs->frameOverrideRoot != 0)
+		{
+			frameData = (short *)((uintptr_t)(*cs->frameOverrideRoot) + iVar12 * 0x20);
+			*(int *)((u_char *)&instance->matrix + 0x00) = *(int *)(frameData + 4);
+			*(int *)((u_char *)&instance->matrix + 0x04) = *(int *)(frameData + 6);
+			*(int *)((u_char *)&instance->matrix + 0x08) = *(int *)(frameData + 8);
+			*(int *)((u_char *)&instance->matrix + 0x0c) = *(int *)(frameData + 10);
+			*(int *)((u_char *)&instance->matrix + 0x10) = *(int *)(frameData + 0xc);
+			instance->matrix.t[0] = (int)*frameData;
+			instance->matrix.t[1] = (int)frameData[1];
+			instance->matrix.t[2] = (int)frameData[2];
+		}
+		return 0;
+	}
+
+processOpcode:
+	switch (opcodeMeta->opcode)
+	{
+	case 0:
+	case 0x2a:
+	case 0x2b:
+		if (instance != 0)
+		{
+			cutsceneFlags = cs->flags;
+			if ((cutsceneFlags & 0x200) != 0)
+			{
+				if (((cutsceneFlags & 0x400) == 0) && (sdata->XA_State == 3))
+					cs->flags = cutsceneFlags | 0x400;
+				if (sdata->XA_State != 0)
+				{
+					if ((cs->flags & 0x400) == 0)
+						iVar12 = 0;
+					else
+					{
+						iVar12 = DECOMP_CS_Instance_SafeCheckAnimFrame(
+							instance, animIndex, iVar8,
+							(sdata->XA_CurrOffset * 0x1e00) / 0xac44);
+						iVar12 = iVar12 << 5;
+					}
+					if (opcodeMeta->arg1.i << 5 < iVar12)
+						break;
+					goto updateInstanceAndReturn;
+				}
+				break;
+			}
+		}
+		if (opcodeChanged != 0)
+		{
+			animIndex = (int)opcodeMeta->animIndex;
+			iVar12 = DECOMP_CS_Instance_SafeCheckAnimFrame(instance, animIndex, iVar8, opcodeMeta->arg0.i);
+			iVar12 = iVar12 << 5;
+			iVar10 = DECOMP_MixRNG_Scramble();
+			opcodeChanged = 0;
+			opcodeDuration = ((int)((iVar10 >> 2 & 0xfff) * (((int)opcodeMeta->frameEnd - (int)opcodeMeta->frameStart) + 1)) >> 0xc) + (int)opcodeMeta->frameStart;
+		}
+		frameBoundaryHit = 0;
+		if (opcodeMeta->arg1.i < opcodeMeta->arg0.i)
+		{
+			iVar10 = opcodeMeta->arg1.i * 0x20;
+			iVar12 = iVar12 - elapsedTimeRemaining;
+			if (iVar12 < iVar10)
+			{
+				elapsedTimeRemaining = iVar10 - iVar12;
+markAnimationBoundary:
+				frameBoundaryHit = 1;
+			}
+		}
+		else
+		{
+			iVar10 = DECOMP_CS_Instance_SafeCheckAnimFrame(instance, animIndex, iVar8, opcodeMeta->arg1.i);
+			nextFrameTime = (iVar10 + 1) * 0x20;
+			iVar12 = iVar12 + elapsedTimeRemaining;
+			if (nextFrameTime <= iVar12)
+			{
+				frameBoundaryHit = 1;
+				elapsedTimeRemaining = 0;
+				if (nextFrameTime != 0)
+				{
+					elapsedTimeRemaining = iVar12 + (iVar10 + 1) * -0x20;
+					goto markAnimationBoundary;
+				}
+			}
+		}
+		if ((frameBoundaryHit) || (opcodeDuration < 1))
+		{
+			opcodeDuration = opcodeDuration + -1;
+			if (opcodeDuration < 1)
+			{
+				DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+				opcodeChanged = 1;
+			}
+			else
+			{
+				iVar12 = DECOMP_CS_Instance_SafeCheckAnimFrame(instance, animIndex, iVar8, opcodeMeta->arg0.i);
+				iVar12 = iVar12 << 5;
+			}
+		}
+		else
+		{
+			elapsedTimeRemaining = 0;
+		}
+		goto finishOpcodeStep;
+
+	case 1:
+		opcodeChanged = 1;
+		DECOMP_CS_ScriptCmd_OpcodeAt(cs, opcodeMeta->arg1.ptr);
+		goto finishOpcodeStep;
+
+	case 2:
+		if (instance != 0)
+			instance->flags |= HIDE_MODEL;
+		CS_RestoreDecodedOpcode(cs, metadataBackup);
+		return 1;
+
+	case 3:
+		if (instance != 0)
+		{
+			struct CsThreadInitData initData;
+			int spawnModelID = opcodeMeta->arg1.i;
+
+			DECOMP_CS_Instance_GetFrameData(
+				instance,
+				(int)opcodeMeta->animIndex,
+				opcodeMeta->arg0.i,
+				(u_short *)initData.podiumPos,
+				(u_short *)initData.rot,
+				0);
+
+			initData.podiumPos[0] += (short)instance->matrix.t[0];
+			initData.podiumPos[1] += (short)instance->matrix.t[1];
+			initData.podiumPos[2] += (short)instance->matrix.t[2];
+			initData.characterPos[0] = 0;
+			initData.characterPos[1] = 0;
+			initData.characterPos[2] = 0;
+
+			if (spawnModelID == NDI_BOX_PARTICLES_01)
+			{
+				initData.rot[0] = 0;
+				initData.rot[1] = 0;
+				initData.rot[2] = 0;
+			}
+
+			DECOMP_CS_Thread_Init(spawnModelID, OVR_233.s_spawn, (short *)&initData, 0, instance->thread);
+		}
+		break;
+
+	case 4:
+		iVar10 = DECOMP_MixRNG_Scramble();
+		if (opcodeMeta->arg0.i < (int)(iVar10 >> 2 & 0xff))
+			DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+		else
+			DECOMP_CS_ScriptCmd_OpcodeAt(cs, opcodeMeta->arg1.ptr);
+		opcodeChanged = 1;
+		goto finishOpcodeStep;
+
+	case 5:
+		if (gGT->levelID == 0x28)
+		{
+			if (instance != 0)
+				DECOMP_Garage_PlayFX(opcodeMeta->arg1.u, (int)instance->model->id + -0xce);
+		}
+		else
+		{
+			iVar10 = DECOMP_CS_Instance_BoolPlaySound(cs, instance);
+			if (iVar10 != 0)
+				DECOMP_OtherFX_Play((unsigned int)(unsigned short)opcodeMetaShorts[6], 1);
+		}
+		break;
+
+	case 6:
+		DECOMP_OtherFX_Stop2((unsigned int)(unsigned short)opcodeMetaShorts[6]);
+		break;
+
+	case 7:
+		DECOMP_CseqMusic_Start((unsigned int)(unsigned short)opcodeMetaShorts[6], 0, 0, 0, opcodeMeta->arg0.i);
+		break;
+
+	case 8:
+		DECOMP_CseqMusic_Restart((unsigned int)(unsigned short)opcodeMetaShorts[6], 1);
+		break;
+
+	case 9:
+		if (instance != 0)
+		{
+			iVar10 = (int)instance->model->numHeaders;
+			if ((iVar10 != 0) && (modelHeader = instance->model->headers, modelHeader != 0))
+			{
+				lodIndex = opcodeMeta->arg1.i;
+				iVar8 = lodIndex;
+				if (iVar10 <= lodIndex)
+				{
+					lodIndex = iVar10 + -1;
+					iVar8 = lodIndex;
+				}
+				while (lodIndex != 0)
+				{
+					modelHeader->maxDistanceLOD = 0;
+					lodIndex = lodIndex + -1;
+					modelHeader++;
+				}
+				modelHeader->maxDistanceLOD = 20000;
+			}
+		}
+		break;
+
+	case 10:
+		if (opcodeMeta->arg1.i == -1)
+			cutsceneFlags = cs->flags | 1;
+		else
+		{
+			cs->unk28 = 0;
+			cutsceneFlags = cs->flags & 0xfffe;
+		}
+		cs->flags = cutsceneFlags;
+		break;
+
+	case 0xb:
+		cs->desiredScale = opcodeMetaShorts[4];
+		cs->scaleSpeed = opcodeMetaShorts[6];
+		DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+		goto finishOpcodeStep;
+
+	case 0xc:
+		gGT->pushBuffer[0].fadeFromBlack_currentValue = 0x1fff;
+		gGT->pushBuffer[0].fadeFromBlack_desiredResult = 0x1000;
+		gGT->pushBuffer[0].fade_step = 0xfd56;
+		DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+		goto finishOpcodeStep;
+
+	case 0xd:
+		cutsceneFlags = cs->flags | opcodeMetaShorts[6];
+		goto setFlagsAndAdvanceOpcode;
+
+	case 0xe:
+		cs->flags &= ~opcodeMetaShorts[6];
+		DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+		goto finishOpcodeStep;
+
+	case 0xf:
+		gGT->bool_AdvHub_NeedToSwapLEV = 1;
+		if ((gGT->gameMode2 & CREDITS) == 0)
+		{
+			cutsceneOpcodes = OVR_233.introCutsceneOpcodes;
+			iVar10 = gGT->levelID + -0x1e;
+		}
+		else
+		{
+			cutsceneOpcodes = OVR_233.creditsCutsceneOpcodes;
+			iVar10 = gGT->levelID + -0x2c;
+		}
+		DECOMP_CS_ScriptCmd_OpcodeAt(cs, cutsceneOpcodes[iVar10]);
+		goto updateInstanceAndReturn;
+
+	case 0x10:
+		iVar10 = opcodeMeta->arg1.i;
+		gGT->levelID = iVar10;
+		if (iVar10 == 0x1e)
+		{
+			DECOMP_RaceFlag_SetCanDraw(0);
+requestDirectLevelLoad:
+			gGT->gameMode2 &= ~VEH_FREEZE_PODIUM;
+			DECOMP_MainRaceTrack_RequestLoad((int)(short)iVar10);
+		}
+		else
+		{
+			if (iVar10 < 0x1f)
+			{
+				if (iVar10 == 0x19)
+				{
+					levelToLoad = GEM_STONE_VALLEY;
+requestMappedLevelLoad:
+					gGT->gameMode2 &= ~VEH_FREEZE_PODIUM;
+					DECOMP_MainRaceTrack_RequestLoad(levelToLoad);
+					break;
+				}
+			}
+			else
+			{
+				if (iVar10 == 0x27)
+				{
+					DECOMP_RaceFlag_SetDrawOrder(0);
+					levelToLoad = MAIN_MENU_LEVEL;
+					goto requestMappedLevelLoad;
+				}
+				if (iVar10 == 0x2c)
+					goto requestDirectLevelLoad;
+			}
+			OVR_233.boolLoadNextSwap = 1;
+			DECOMP_LOAD_Hub_ReadFile(sdata->ptrBigfileCdPos_2, iVar10, 3 - (int)gGT->activeMempackIndex);
+		}
+		break;
+
+	case 0x11:
+		if ((OVR_233.boolLoadNextSwap == 0) ||
+			(sdata->queueReady == 0) ||
+			(sdata->queueLength != 0))
+			goto updateInstanceAndReturn;
+		break;
+
+	case 0x12:
+		DECOMP_CDSYS_XAPlay(opcodeMeta->arg0.i, opcodeMeta->arg1.i);
+		if (sdata->XA_State != 0)
+			cs->flags = cs->flags & 0xfbff | 0x200;
+		break;
+
+	case 0x13:
+		if (sdata->XA_State == 0)
+		{
+			cutsceneFlags = cs->flags & 0xfdff;
+			goto setFlagsAndAdvanceOpcode;
+		}
+
+	case 0x14:
+		goto updateInstanceAndReturn;
+
+	case 0x15:
+		numPlayers = gGT->numPlyrCurrGame;
+		gGT->stars.numStars = (short)((int)gGT->level1->stars.numStars / (int)(unsigned int)numPlayers);
+		gGT->stars.spread = gGT->level1->stars.spread;
+		gGT->stars.seed = gGT->level1->stars.seed;
+		gGT->stars.distance = gGT->level1->stars.distance;
+		OVR_233.boolLoadNextSwap = 0;
+		DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+		goto finishOpcodeStep;
+
+	case 0x16:
+		iVar10 = DECOMP_RaceFlag_IsFullyOffScreen();
+		if (iVar10 == 1)
+		{
+			DECOMP_RaceFlag_SetCanDraw(1);
+			DECOMP_RaceFlag_BeginTransition(1);
+		}
+		break;
+
+	case 0x17:
+		conditionMet = DECOMP_RaceFlag_IsFullyOnScreen();
+		goto advanceIfConditionMet;
+
+	case 0x18:
+		iVar10 = DECOMP_RaceFlag_IsFullyOnScreen();
+		if (iVar10 == 1)
+			DECOMP_RaceFlag_BeginTransition(2);
+		break;
+
+	case 0x19:
+		cs->particleID = opcodeMetaShorts[6];
+		DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+		goto finishOpcodeStep;
+
+	case 0x1a:
+		if (instance != 0)
+			instance->flags |= HIDE_MODEL;
+		break;
+
+	case 0x1b:
+		if (instance != 0)
+			instance->flags &= ~HIDE_MODEL;
+		break;
+
+	case 0x1c:
+		if (instance != 0)
+		{
+			instance->unk50 += (char)opcodeMeta->arg1.i;
+			instance->unk51 += (char)opcodeMeta->arg1.i;
+		}
+		break;
+
+	case 0x1d:
+		if (instance != 0)
+			instance->flags |= opcodeMeta->arg1.u;
+		break;
+
+	case 0x1e:
+		if (instance != 0)
+			instance->flags &= ~opcodeMeta->arg1.u;
+		break;
+
+	case 0x1f:
+		cs->unk4 = 0x1333;
+		break;
+
+	case 0x20:
+		OVR_233.isCutsceneOver = 1;
+		DECOMP_CS_DestroyPodium_StartDriving();
+		OVR_233.bossCutsceneIndex = -1;
+		gGT->overlayTransition = 3;
+		gGT->gameMode2 &= ~VEH_FREEZE_PODIUM;
+		DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+		goto finishOpcodeStep;
+
+	case 0x21:
+		OVR_233.bossCutsceneIndex = opcodeMeta->arg1.i;
+		if ((OVR_233.bossCutsceneIndex == 0) && (0x11 < gGT->currAdvProfile.numRelics))
+			OVR_233.bossCutsceneIndex = 9;
+		OVR_233.cutsceneState = 1;
+		break;
+
+	case 0x22:
+		distanceToScreen = opcodeMeta->arg1.i;
+		gGT->pushBuffer[0].distanceToScreen_PREV = distanceToScreen;
+		gGT->pushBuffer[0].distanceToScreen_CURR = distanceToScreen;
+		cutsceneFlags = cs->flags | 0x20;
+setFlagsAndAdvanceOpcode:
+		cs->flags = cutsceneFlags;
+		DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+		goto finishOpcodeStep;
+
+	case 0x23:
+		conditionMet = CS_Credits_IsTextValid();
+		goto advanceIfConditionMet;
+
+	case 0x24:
+	{
+		struct CsThreadInitData initData;
+		int dancerModelID = opcodeMeta->arg1.i;
+
+		initData.podiumPos[0] = 0;
+		initData.podiumPos[1] = 0;
+		initData.podiumPos[2] = 0;
+		initData.rot[0] = 0;
+		initData.rot[1] = 0;
+		initData.rot[2] = 0;
+		initData.characterPos[0] = 0;
+		initData.characterPos[1] = 0;
+		initData.characterPos[2] = 0;
+
+		gGT->podium_modelIndex_First = (u_char)dancerModelID;
+		gGT->podium_modelIndex_Second = 0;
+		gGT->podium_modelIndex_Third = 0;
+
+		if (dancerModelID == STATIC_OXIDEDANCE)
+		{
+			gGT->podium_modelIndex_First = 0;
+			gGT->podium_modelIndex_Second = STATIC_OXIDEDANCE;
+		}
+		if (dancerModelID == STATIC_CRASHDANCE)
+			initData.rot[1] += 0x800;
+
+		initData.rot[0] += OVR_233.creditsDancerRotOffset[0];
+		initData.rot[1] += OVR_233.creditsDancerRotOffset[1];
+		initData.rot[2] += OVR_233.creditsDancerRotOffset[2];
+
+		dancerThread = (struct Thread *)DECOMP_CS_Thread_Init(
+			dancerModelID, OVR_233.s_g_dancer, (short *)&initData, 0, 0);
+		CS_Credits_NewDancer(dancerThread, (int)opcodeMetaShorts[6]);
+	}
+	break;
+
+	case 0x25:
+		conditionMet = CS_Credits_NewCreditGhosts();
+advanceIfConditionMet:
+		conditionMet &= 0xffff;
+		if (conditionMet == 0)
+			goto updateInstanceAndReturn;
+		break;
+
+	case 0x26:
+		if (opcodeMeta->frameEnd == 0)
+		{
+			if ((opcodeMeta->arg0.i != (int)gGarage.unusedArr_garageChars[sdata->advCharSelectIndex_curr]) ||
+				(gGarage.boolSelected == 0))
+			{
+				opcodeAt = opcodeMeta->arg1.ptr;
+branchToGarageOpcode:
+				opcodeChanged = 1;
+				DECOMP_CS_ScriptCmd_OpcodeAt(cs, opcodeAt);
+			}
+		}
+		else
+		{
+			if ((opcodeMeta->arg0.i == (int)gGarage.unusedArr_garageChars[sdata->advCharSelectIndex_curr]) &&
+				(gGarage.boolSelected == 1))
+			{
+				opcodeAt = opcodeMeta->arg1.ptr;
+				goto branchToGarageOpcode;
+			}
+		}
+		break;
+
+	case 0x27:
+		if ((unsigned int)gGT->msInThisLEV >> 5 < opcodeMeta->arg1.u)
+			goto updateInstanceAndReturn;
+		break;
+
+	case 0x28:
+		iVar12 = DECOMP_CS_Instance_SafeCheckAnimFrame(instance, animIndex, iVar8, iVar12 >> 5);
+		iVar12 = iVar12 << 5;
+		goto updateInstanceAndReturn;
+
+	case 0x29:
+		CS_Credits_End();
+		CS_RestoreDecodedOpcode(cs, metadataBackup);
+		return 1;
+
+	case 0x2c:
+		gameModeTarget = opcodeMeta->animIndex;
+		if (gameModeTarget == 1)
+			gGT->gameMode2 |= opcodeMeta->arg1.u;
+		else
+		{
+			if (gameModeTarget < 2)
+			{
+				if (gameModeTarget == 0)
+					gGT->gameMode1 |= opcodeMeta->arg1.u;
+			}
+			else
+			{
+				if (gameModeTarget == 2)
+					gGT->renderFlags |= opcodeMeta->arg1.u;
+				else
+				{
+					if (gameModeTarget == 3)
+						gGT->renderFlags &= ~opcodeMeta->arg1.u;
+				}
+			}
+		}
+		break;
+
+	case 0x2d:
+		cs->Subtitles.textPos[0] = opcodeMeta->animIndex;
+		cs->Subtitles.textPos[1] = opcodeMeta->frameStart;
+		cs->Subtitles.lngIndex = opcodeMeta->frameEnd;
+		cs->Subtitles.font = opcodeMeta->rotStart;
+		cs->Subtitles.colors = opcodeMeta->rotEnd;
+		DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+		goto finishOpcodeStep;
+
+	case 0x2e:
+		gGT->pushBuffer_UI.fadeFromBlack_desiredResult = 0;
+		gGT->pushBuffer_UI.fade_step = 0xfd56;
+		DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+		goto finishOpcodeStep;
+
+	case 0x2f:
+		if (0 < gGT->pushBuffer_UI.fadeFromBlack_currentValue)
+			goto updateInstanceAndReturn;
+		break;
+
+	case 0x30:
+		OVR_233.CutsceneManipulatesAudio = 1;
+		DECOMP_howl_VolumeSet(0, (unsigned int)*((unsigned char *)opcodeMeta + 2));
+		DECOMP_howl_VolumeSet(1, (unsigned int)*((unsigned char *)opcodeMeta + 4));
+		DECOMP_howl_VolumeSet(2, (unsigned int)*((unsigned char *)opcodeMeta + 6));
+		break;
+
+	default:
+		CS_RestoreDecodedOpcode(cs, metadataBackup);
+		return 0;
+	}
+
+	DECOMP_CS_ScriptCmd_OpcodeNext(cs);
+
+finishOpcodeStep:
+	if ((elapsedTimeRemaining != 0) || (opcodeChanged != 0))
+		goto processOpcode;
+	goto updateInstanceAndReturn;
+}

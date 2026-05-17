@@ -245,6 +245,7 @@
 #include "game/HOWL/h116_Music_Start.c"
 #include "game/HOWL/h117_Music_End.c"
 #include "game/HOWL/h118_Music_GetHighestSongPlayIndex.c"
+#include "game/HOWL/h140_Garage_PlayFX.c"
 
 #include "game/INSTANCE/INSTANCE_00_Birth.c"
 #include "game/INSTANCE/INSTANCE_01_Birth3D.c"
@@ -303,6 +304,7 @@
 #include "game/MAIN/MainRaceTrack_01_RequestLoad.c"
 
 #include "game/MATH/MATH_1_Cos.c"
+#include "game/MATH/MATH_MatrixRotate.c"
 
 #include "game/MEMCARD/MEMCARD_06_InitCard.c"
 
@@ -547,7 +549,27 @@
 
 #include "game/232/232_Full.c"
 
+#include "game/233/233_09_CS_Instance_GetFrameData.c"
+#include "game/233/233_02_09_CS_ScriptCmd.c"
+#include "game/233/233_10_CS_Instance_GetNumAnimFrames.c"
+#include "game/233/233_11_CS_Instance_SafeCheckAnimFrame.c"
+#include "game/233/233_12_CS_Instance_BoolPlaySound.c"
+#include "game/233/233_13_CS_DestroyPodium_StartDriving.c"
+#include "game/233/233_14_CS_Thread_UseOpcode.c"
+#include "game/233/233_24_CS_Thread_Init.c"
+#include "game/233/233_25_CS_Instance_InitMatrix.c"
+#include "game/233/233_29_CS_Podium_Prize_ThDestroy.c"
+#include "game/233/233_35_CS_Cutscene_Start.c"
+#include "game/233/233_44_CS_Credits_GetNextString.c"
+#include "game/233/233_45_CS_Credits_DestroyCreditGhost.c"
+#include "game/233/233_47_CS_Credits_Init.c"
+#include "game/233/233_48_CS_Credits_IsTextValid.c"
+#include "game/233/233_49_CS_Credits_NewDancer.c"
+#include "game/233/233_51_CS_Credits_End.c"
+#include "game/233/233_50_CS_Credits_NewCreditGhosts.c"
 #include "game/233/233_37_40_CS_Garage.c"
+#include "game/233/D233.c"
 #include "game/233/233_zGlobal_gGarage.c"
+#include "game/233/233_stubs.c"
 
 #endif

@@ -16,6 +16,8 @@ int DECOMP_CS_Instance_GetNumAnimFrames(struct Instance *modelInst, int animInde
   if (LOD >= model->numHeaders) 
 	  return 0;
   
+  header = &model->headers[LOD];
+
   if (animIndex >= header->numAnimations)
 	  return 0;
 

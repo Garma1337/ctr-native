@@ -11,7 +11,7 @@ int DECOMP_CS_Instance_SafeCheckAnimFrame(struct Instance *inst, int unused1, in
   if (desiredFrame <= 0)
 	  return animFrame;
 
-  int numFrames = CS_Instance_GetNumAnimFrames();
+  int numFrames = DECOMP_CS_Instance_GetNumAnimFrames(inst, inst->animIndex, 0);
   
   // if negative
   if (numFrames < 1)

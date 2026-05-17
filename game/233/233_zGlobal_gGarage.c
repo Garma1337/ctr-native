@@ -1,5 +1,9 @@
 #include <common.h>
 
+// OVR_233 overlay data starts at 0x800ABCA0
+// (s_spawn at 0x800ABCA4 minus 4 for fill_beginning)
+typeof(OVR_233) OVR_233 __attribute__((section(".data")));
+
 // must be 0x800b8598 because CS_Thread_UseOpcode
 // is referencing these globals for character select animations
 struct OVR233_Garage gGarage =

@@ -27,8 +27,9 @@ struct Thread* DECOMP_PROC_BirthWithObject(
 	// quit if bucket is invalid
 	if(bucketID >= NUM_BUCKETS) 
 	{
-		// Sep3:
-		// printf("invalid thread bucket %ld \'%s\'\n",bucketID,name);
+#ifdef CTR_INTERNAL
+		fprintf(stderr, "BIRTH FAIL [invalid bucket]: bucket=%d name='%s'\n", bucketID, name);
+#endif
 		return 0;
 	}
 	
@@ -53,26 +54,41 @@ struct Thread* DECOMP_PROC_BirthWithObject(
 	// if can't fit in pool
 	if ((unsigned int)(flags >> 0x10) > (myPool->itemSize-8))
 	{
-		// Sep3
-		// printf("stack size (%ld) too small for statics (%ld) \'%s\'\n",
-		//	myPool->itemSize-8, flags >> 0x10, name);
-		
+#ifdef CTR_INTERNAL
+		fprintf(stderr, "BIRTH FAIL [size]: objSize=%d poolItemSize=%d poolIdx=%d name='%s'\n",
+			flags >> 0x10, myPool->itemSize - 8, index, name);
+#endif
 		return 0;
 	}
 	
 	// if no threads remain
 	if (allPools[0].free.last == 0)
 	{
-		// sep 3
-		// printf("out of threads \'%s\'\n",name);
+#ifdef CTR_INTERNAL
+		fprintf(stderr, "BIRTH FAIL [thread pool empty]: name='%s'\n", name);
+#endif
 		return 0;
 	}
 	
 	if (myPool->free.last == 0)
 	{
-		// sep 3
-		// printf("%ld byte stack allocate failed for thread \'%s\'\n",
-		//	myPool->itemSize, name);
+#ifdef CTR_INTERNAL
+		fprintf(stderr, "BIRTH FAIL [stack pool empty]: poolIdx=%d itemSize=%d name='%s'\n",
+			index, myPool->itemSize, name);
+		fprintf(stderr, "  pool: free.count=%d taken.count=%d maxItems=%d\n",
+			myPool->free.count, myPool->taken.count, myPool->maxItems);
+		{
+			int dead = 0, alive = 0;
+			struct Thread *tt;
+			for (tt = (struct Thread *)allPools[0].taken.first; tt != 0; tt = tt->next)
+			{
+				if (tt->flags & 0x800) dead++;
+				else alive++;
+			}
+			fprintf(stderr, "  threads: total_taken=%d alive=%d dead(0x800)=%d\n",
+				allPools[0].taken.count, alive, dead);
+		}
+#endif
 		return 0;
 	}
 	

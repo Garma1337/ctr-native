@@ -1,8 +1,12 @@
 #include <common.h>
 
+void DECOMP_CS_OVR233_LoadData(void);
+
 void DECOMP_LOAD_Callback_Overlay_233(void)
 {
   sdata->gGT->overlayIndex_Threads = 3;
+  
+  DECOMP_CS_OVR233_LoadData();
   
   // My bad, this wasn't safe to relocate -- Niko
   // Patch call to LOAD_Hub_ReadFile from CS_Thread_UseOpcode

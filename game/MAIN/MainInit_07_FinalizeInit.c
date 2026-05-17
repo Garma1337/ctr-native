@@ -1,5 +1,7 @@
 #include <common.h>
 
+void DECOMP_CS_Cutscene_Start(void);
+
 void DECOMP_MainInit_FinalizeInit(struct GameTracker *gGT)
 {
     int i;
@@ -379,11 +381,6 @@ void DECOMP_MainInit_FinalizeInit(struct GameTracker *gGT)
 	return;
 #endif
 
-#ifndef REBUILD_PS1
-    if ((gGT->gameMode1 & ADVENTURE_ARENA) != 0)
-		if (gGT->podiumRewardID != NOFUNC) //0
-			CS_Podium_FullScene_Init();
-    
     if ((gGT->gameMode1 & GAME_CUTSCENE) != 0)
     {
         // freecam mode
@@ -392,8 +389,13 @@ void DECOMP_MainInit_FinalizeInit(struct GameTracker *gGT)
         // disable all HUD flags
         gGT->hudFlags = 0;
 
-        CS_Cutscene_Start();
+        DECOMP_CS_Cutscene_Start();
     }
+
+#ifndef REBUILD_PS1
+    if ((gGT->gameMode1 & ADVENTURE_ARENA) != 0)
+		if (gGT->podiumRewardID != NOFUNC) //0
+			CS_Podium_FullScene_Init();
 
     PickupBots_Init();
 #endif

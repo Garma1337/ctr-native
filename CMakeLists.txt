@@ -89,6 +89,7 @@ target_compile_definitions(ctr_native PRIVATE
     USE_PCDRV
     USE_MOREPRIM
     BUILD=926
+    CTR_INTERNAL
 )
 target_compile_options(ctr_native PRIVATE -O2)
 target_link_libraries(ctr_native OpenAL psycross SDL2-static)
