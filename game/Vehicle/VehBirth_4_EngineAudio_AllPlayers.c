@@ -2,33 +2,28 @@
 
 void DECOMP_VehBirth_EngineAudio_AllPlayers(void)
 {
-  struct Thread* th;
-  struct GameTracker* gGT;
-  gGT = sdata->gGT;
+	struct Thread *th;
+	struct GameTracker *gGT;
+	gGT = sdata->gGT;
 
-  for(
-		th = gGT->threadBuckets[PLAYER].thread;
-		th != 0;
-		th = th->siblingThread
-	)
-  {
-	struct Driver* d = th->object;
-	
-	#ifdef USE_ONLINE
-	d = gGT->drivers[0];
-	#endif
-	
-    u_char driverID = d->driverID;
+	for (th = gGT->threadBuckets[PLAYER].thread; th != 0; th = th->siblingThread)
+	{
+		struct Driver *d = th->object;
 
-	int engine = data.MetaDataCharacters
-		[data.characterIDs[driverID]].engineID;
+#ifdef USE_ONLINE
+		d = gGT->drivers[0];
+#endif
 
-	#ifndef REBUILD_PS1
-    EngineAudio_InitOnce((engine * 4) + driverID, 0x8080);
-	#endif
+		u_char driverID = d->driverID;
 
-	#ifdef USE_ONLINE
-	return;
-	#endif
-  }
+		int engine = data.MetaDataCharacters[data.characterIDs[driverID]].engineID;
+
+#ifndef REBUILD_PS1
+		EngineAudio_InitOnce((engine * 4) + driverID, 0x8080);
+#endif
+
+#ifdef USE_ONLINE
+		return;
+#endif
+	}
 }

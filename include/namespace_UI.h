@@ -10,16 +10,16 @@ struct UiElement3D
 {
 	// 0x0
 	short rot[4];
-	
+
 	// 0x8
 	MATRIX m;
-	
+
 	// 0x28
 	short lightDir[4];
-	
+
 	// 0x30
 	short vel[4];
-	
+
 	// 0x38 bytes
 };
 

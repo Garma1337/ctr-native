@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_VehStuckProc_MaskGrab_PhysLinear(struct Thread* t, struct Driver* d)
+void DECOMP_VehStuckProc_MaskGrab_PhysLinear(struct Thread *t, struct Driver *d)
 {
 	DECOMP_VehPhysProc_Driving_PhysLinear(t, d);
 

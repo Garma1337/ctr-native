@@ -7,14 +7,12 @@ static int bi = 0;
 inline
 #endif
 #endif
-int GetSignedBits(unsigned int* vertData, int bits)
+    int GetSignedBits(unsigned int *vertData, int bits)
 {
 	int const b = bi >> 5;
 	int const e = 32 - bits;
 	int const s = e - (bi & 31);
-	int const ret = s < 0 ?
-		(vertData[b] << -s) | (vertData[b + 1] >> (s & 31)) :
-		vertData[b] >> s;
+	int const ret = s < 0 ? (vertData[b] << -s) | (vertData[b + 1] >> (s & 31)) : vertData[b] >> s;
 	bi += bits;
 	return (ret << e) >> e;
 }
@@ -22,7 +20,7 @@ int GetSignedBits(unsigned int* vertData, int bits)
 // copied out of PsyCross library,
 // is this equal to the CTR function?
 #ifndef REBUILD_PC
-VECTOR* ApplyMatrixLV(MATRIX* m, VECTOR* v0, VECTOR* v1)
+VECTOR *ApplyMatrixLV(MATRIX *m, VECTOR *v0, VECTOR *v1)
 {
 #if 1
 	// correct Psy-Q implementation
@@ -102,13 +100,15 @@ VECTOR* ApplyMatrixLV(MATRIX* m, VECTOR* v0, VECTOR* v1)
 }
 #endif
 
-typedef struct CompVertex {
+typedef struct CompVertex
+{
 	u_char X;
 	u_char Y;
 	u_char Z;
 } CompVertex;
 
-typedef struct V4 {
+typedef struct V4
+{
 	u_char X;
 	u_char Y;
 	u_char Z;
@@ -117,14 +117,12 @@ typedef struct V4 {
 
 int Debug_GetPreciseTime2()
 {
-	int sysClock =
-		GetRCnt(0xf2000001) +
-		sdata->rcntTotalUnits;
-		
+	int sysClock = GetRCnt(0xf2000001) + sdata->rcntTotalUnits;
+
 	return sysClock;
 }
 
-void DrawOneInst(struct Instance* curr)
+void DrawOneInst(struct Instance *curr)
 {
 	short posScreen1[4];
 	short posWorld1[4];
@@ -133,17 +131,18 @@ void DrawOneInst(struct Instance* curr)
 	short posScreen3[4];
 	short posWorld3[4];
 
-	struct GameTracker* gGT = sdata->gGT;
+	struct GameTracker *gGT = sdata->gGT;
 
-	struct OTMem* otMem = &gGT->backBuffer->otMem;
-	struct PrimMem* primMem = &gGT->backBuffer->primMem;
+	struct OTMem *otMem = &gGT->backBuffer->otMem;
+	struct PrimMem *primMem = &gGT->backBuffer->primMem;
 
 	for (int i = 0; i < gGT->numPlyrCurrGame; i++)
 	{
-		struct InstDrawPerPlayer* idpp = INST_GETIDPP(curr);
+		struct InstDrawPerPlayer *idpp = INST_GETIDPP(curr);
 
-		struct PushBuffer* pb = idpp[i].pushBuffer;
-		if (pb == 0) continue;
+		struct PushBuffer *pb = idpp[i].pushBuffer;
+		if (pb == 0)
+			continue;
 
 #if 1
 		// temporary, until CAMERA_ThTick is done
@@ -154,10 +153,10 @@ void DrawOneInst(struct Instance* curr)
 #endif
 
 		// ============ Get Scale ==============
-		
-		struct Model* m = curr->model;
-		struct ModelHeader* mh = &m->headers[0];
-		
+
+		struct Model *m = curr->model;
+		struct ModelHeader *mh = &m->headers[0];
+
 		// Can this be applied to the GTE matrix,
 		// to remove the need to multiply vertices by scale?
 		int scale[3];
@@ -168,20 +167,11 @@ void DrawOneInst(struct Instance* curr)
 		// ============ Get ModelViewProj Matrix ==============
 
 		MATRIX mvp;
-		MATRIX* mat2 = &mvp;
-		
+		MATRIX *mat2 = &mvp;
+
 		// why is this shifting by 0x10 instead of 0xC?
-		
-#define RCC(row, col, index) 						\
-	(												\
-		(											\
-			pb->matrix_ViewProj.m[row][index] * 	\
-			((										\
-				curr->matrix.m[index][col] *		\
-				scale[col]						\
-			) >> 8)									\
-		) >> 0x10									\
-	)
+
+#define RCC(row, col, index) ((pb->matrix_ViewProj.m[row][index] * ((curr->matrix.m[index][col] * scale[col]) >> 8)) >> 0x10)
 
 		mvp.m[0][0] = RCC(0, 0, 0) + RCC(0, 0, 1) + RCC(0, 0, 2);
 		mvp.m[0][1] = RCC(0, 1, 0) + RCC(0, 1, 1) + RCC(0, 1, 2);
@@ -223,8 +213,8 @@ void DrawOneInst(struct Instance* curr)
 		// ============ Draw Instance ==============
 
 		// assume unanimated
-		struct ModelFrame* mf = mh->ptrFrameData;
-		struct ModelAnim* ma = 0;
+		struct ModelFrame *mf = mh->ptrFrameData;
+		struct ModelAnim *ma = 0;
 
 		// 0xD4 -> 0x350
 		// 0xA0 -> 0x284
@@ -240,47 +230,47 @@ void DrawOneInst(struct Instance* curr)
 			int frameIndex = FPS_HALF(curr->animFrame);
 
 			// Get first frame, then current frame
-			char* firstFrame = MODELANIM_GETFRAME(ma);
+			char *firstFrame = MODELANIM_GETFRAME(ma);
 			mf = &firstFrame[ma->frameSize * frameIndex];
 		}
 
 		// may be compressed vertData, or uncompresed
-		char* vertData = MODELFRAME_GETVERT(mf);
+		char *vertData = MODELFRAME_GETVERT(mf);
 
 		// 3FF is background, 0x0 is minimum depth
-		void* ot = &pb->ptrOT[0];
+		void *ot = &pb->ptrOT[0];
 
-		//flag values and end of list
-#define END_OF_LIST 0xFFFFFFFF
-#define DRAW_CMD_FLAG_NEW_STRIP (1 << 7)
-#define DRAW_CMD_FLAG_SWAP_VERTEX (1 << 6)
-#define DRAW_CMD_FLAG_FLIP_NORMAL (1 << 5)
-#define DRAW_CMD_FLAG_CULLING (1 << 4)
+		// flag values and end of list
+#define END_OF_LIST                    0xFFFFFFFF
+#define DRAW_CMD_FLAG_NEW_STRIP        (1 << 7)
+#define DRAW_CMD_FLAG_SWAP_VERTEX      (1 << 6)
+#define DRAW_CMD_FLAG_FLIP_NORMAL      (1 << 5)
+#define DRAW_CMD_FLAG_CULLING          (1 << 4)
 #define DRAW_CMD_FLAG_COLOR_SCRATCHPAD (1 << 3)
-#define DRAW_CMD_FLAG_NEW_VERTEX (1 << 2)
-//bits 0 and 1 assumed unused
+#define DRAW_CMD_FLAG_NEW_VERTEX       (1 << 2)
+		// bits 0 and 1 assumed unused
 
-//variables
-//sequentially point to the next vertex, increases once NEW_VERTEX flag comes in
+		// variables
+		// sequentially point to the next vertex, increases once NEW_VERTEX flag comes in
 		int vertexIndex = 0;
-		//current strip length
+		// current strip length
 		int stripLength = 0;
-		u_int* pCmd = mh->ptrCommandList;
+		u_int *pCmd = mh->ptrCommandList;
 
-		//a "shifting window", here we update the vertices and read triangle once it's ready
-		//you need same cache for both colors and texture layouts
+		// a "shifting window", here we update the vertices and read triangle once it's ready
+		// you need same cache for both colors and texture layouts
 		V4 tempCoords[4] = {0};
 		int tempColor[4] = {0};
 
-		//i believe this must be scratchpad, but it uses 4 bytes, this array is only 3 bytes (like array buffer for simplicity).
-		//the idea is that it loads vertices to scratchpad and with proper sorting,
-		//you can draw may trigles of the list with minimum additional loads
-		//then once you don't need vertex data, you can overwrite same indices with new data
-		#ifdef REBUILD_PC
-		V4 stack[256] = { 0 };
-		#else
-		V4* stack = 0x1f800000;
-		#endif
+// i believe this must be scratchpad, but it uses 4 bytes, this array is only 3 bytes (like array buffer for simplicity).
+// the idea is that it loads vertices to scratchpad and with proper sorting,
+// you can draw may trigles of the list with minimum additional loads
+// then once you don't need vertex data, you can overwrite same indices with new data
+#ifdef REBUILD_PC
+		V4 stack[256] = {0};
+#else
+		V4 *stack = 0x1f800000;
+#endif
 
 		// pCmd[0] is number of commands
 		pCmd++;
@@ -290,21 +280,19 @@ void DrawOneInst(struct Instance* curr)
 		int y_alu = 0;
 		int z_alu = 0;
 		bi = 0;
-		
-		//loop commands until we hit the end marker 
+
+		// loop commands until we hit the end marker
 		for (
-				/* */;
-				*pCmd != END_OF_LIST;
-				
-				pCmd++, stripLength++
-			)
+		    /* */; *pCmd != END_OF_LIST;
+
+		    pCmd++, stripLength++)
 		{
-			//extract individual values from the command
-			//refactor to a set of inline macros?
-			u_short flags = (*pCmd >> (8 * 3)) & 0xFF; //8 bits
-			u_short stackIndex = (*pCmd >> 16) & 0xFF; //8 bits
-			u_short colorIndex = (*pCmd >> 9) & 0x7F; // 7 bits
-			u_short texIndex = *pCmd & 0x1FF; //9 bits
+			// extract individual values from the command
+			// refactor to a set of inline macros?
+			u_short flags = (*pCmd >> (8 * 3)) & 0xFF; // 8 bits
+			u_short stackIndex = (*pCmd >> 16) & 0xFF; // 8 bits
+			u_short colorIndex = (*pCmd >> 9) & 0x7F;  // 7 bits
+			u_short texIndex = *pCmd & 0x1FF;          // 9 bits
 
 			// if got a new vertex, load it
 			// TODO: Adjust naming of NEW_VERTEX
@@ -317,13 +305,13 @@ void DrawOneInst(struct Instance* curr)
 				// for now just check if anim exists and take 1st frame
 				if (ma != NULL && ma->ptrDeltaArray != NULL)
 				{
-					//store temporal vertex packed uint
+					// store temporal vertex packed uint
 					u_int temporal = ma->ptrDeltaArray[vertexIndex];
 
-					//printf("temporal: %08x\n", temporal);
+					// printf("temporal: %08x\n", temporal);
 
-					//extract data from packed uint
-					//deltaArray bits: 0bXXXXXXXZZZZZZZZYYYYYYYYAAABBBCCC
+					// extract data from packed uint
+					// deltaArray bits: 0bXXXXXXXZZZZZZZZYYYYYYYYAAABBBCCC
 
 					u_char XBits = (temporal >> 6) & 7;
 					u_char YBits = (temporal >> 3) & 7;
@@ -334,11 +322,14 @@ void DrawOneInst(struct Instance* curr)
 					u_char bz = (temporal << 0xf) >> 0x18;
 
 					// If reading a full 8 bits (7+1)
-					// reset accumulator, this is an 
+					// reset accumulator, this is an
 					// uncompressed 1-byte number
-					if (XBits == 7) x_alu = 0;
-					if (YBits == 7) y_alu = 0;
-					if (ZBits == 7) z_alu = 0;
+					if (XBits == 7)
+						x_alu = 0;
+					if (YBits == 7)
+						y_alu = 0;
+					if (ZBits == 7)
+						z_alu = 0;
 
 					// Read NumBits+1, where the first
 					// extra (+1) bit, determines negative
@@ -348,57 +339,57 @@ void DrawOneInst(struct Instance* curr)
 					int newY = GetSignedBits(vertData, YBits + 1);
 					int newZ = GetSignedBits(vertData, ZBits + 1);
 
-					//calculate decompressed coord value
+					// calculate decompressed coord value
 					x_alu = (x_alu + (int)newX + bx);
 					y_alu = (y_alu + (int)newY + by);
 					z_alu = (z_alu + (int)newZ + bz);
 
-					//store values to stack index, axis swap is important
+					// store values to stack index, axis swap is important
 					stack[stackIndex].X = x_alu;
 					stack[stackIndex].Y = z_alu;
 					stack[stackIndex].Z = y_alu;
 
-					//printf("result: %i %i %i\n\n", x_alu, y_alu, z_alu);
+					// printf("result: %i %i %i\n\n", x_alu, y_alu, z_alu);
 
 					//_sleep(1000);
 				}
 				else
 				{
 					// Copy uncompressed vertices to scratchpad
-					CompVertex* ptrVerts = (CompVertex*)vertData;
-					
+					CompVertex *ptrVerts = (CompVertex *)vertData;
+
 					stack[stackIndex].X = ptrVerts[vertexIndex].X;
 					stack[stackIndex].Y = ptrVerts[vertexIndex].Y;
 					stack[stackIndex].Z = ptrVerts[vertexIndex].Z;
 				}
 
-				//and point to next vertex
+				// and point to next vertex
 				vertexIndex++;
 			}
 
 
-			//push current list back and insert value from stack
-			//this code already have correct value on the stack, be aware of the order
+			// push current list back and insert value from stack
+			// this code already have correct value on the stack, be aware of the order
 			tempCoords[0] = tempCoords[1];
 			tempCoords[1] = tempCoords[2];
 			tempCoords[2] = tempCoords[3];
 			tempCoords[3] = stack[stackIndex];
 
-			//push new color
+			// push new color
 			tempColor[0] = tempColor[1];
 			tempColor[1] = tempColor[2];
 			tempColor[2] = tempColor[3];
 			tempColor[3] = mh->ptrColors[colorIndex];
 
-			//this is probably some tristrip optimization, so we can reuse vertex from the last triangle
-			//and only spend 1 command
+			// this is probably some tristrip optimization, so we can reuse vertex from the last triangle
+			// and only spend 1 command
 			if ((flags & DRAW_CMD_FLAG_SWAP_VERTEX) != 0)
 			{
 				tempCoords[1] = tempCoords[0];
 				tempColor[1] = tempColor[0];
 			}
 
-			//if got reset flag, reset tristrip vertex counter
+			// if got reset flag, reset tristrip vertex counter
 			if ((flags & DRAW_CMD_FLAG_NEW_STRIP) != 0)
 			{
 				stripLength = 0;
@@ -407,9 +398,9 @@ void DrawOneInst(struct Instance* curr)
 			if (stripLength < 2)
 				continue;
 
-			void* pCurr;
-			void* pNext;
-						
+			void *pCurr;
+			void *pNext;
+
 			// The X, Z, Y, is not a typo
 			posWorld1[0] = mf->pos[0] + tempCoords[1].X;
 			posWorld1[1] = mf->pos[1] + tempCoords[1].Z;
@@ -430,9 +421,9 @@ void DrawOneInst(struct Instance* curr)
 			posWorld3[2] = mf->pos[2] + tempCoords[3].Y;
 			posWorld3[3] = 0;
 			gte_ldv2(&posWorld3[0]);
-			
+
 			gte_rtpt();
-			
+
 			// automatic pass, if no frontface or backface culling
 			int boolPassCull = ((flags & DRAW_CMD_FLAG_CULLING) == 0);
 
@@ -453,10 +444,10 @@ void DrawOneInst(struct Instance* curr)
 				if ((curr->flags & REVERSE_CULL_DIRECTION) != 0)
 					boolPassCull = !boolPassCull;
 			}
-			
+
 			if (!boolPassCull)
 				continue;
-			
+
 			// sorting
 			int otZ;
 			gte_avsz3();
@@ -464,80 +455,78 @@ void DrawOneInst(struct Instance* curr)
 
 			// near-range for instances should be higher
 			// for instances than level (not exact number)
-			if (otZ <= 32) continue;
+			if (otZ <= 32)
+				continue;
 
 			// make sure instances draw on top of the road,
 			// reduce depth in the sorting table (not exact number)
 			otZ -= 32;
 
-			if (otZ >= 4080) continue;
+			if (otZ >= 4080)
+				continue;
 
 			// check both fails (0 or 0xFFFFFFFF)
 			if (texIndex == 0)
 			{
-				POLY_G3* p = primMem->curr;
+				POLY_G3 *p = primMem->curr;
 				pNext = p + 1;
 				pCurr = p;
 
-				*(int*)&p->r0 = tempColor[1];
-				*(int*)&p->r1 = tempColor[2];
-				*(int*)&p->r2 = tempColor[3];
+				*(int *)&p->r0 = tempColor[1];
+				*(int *)&p->r1 = tempColor[2];
+				*(int *)&p->r2 = tempColor[3];
 
 				setPolyG3(p);
-				
-				gte_stsxy3(
-					&p->x0,
-					&p->x1,
-					&p->x2);
+
+				gte_stsxy3(&p->x0, &p->x1, &p->x2);
 			}
 			else
 			{
-				POLY_GT3* p = primMem->curr;
+				POLY_GT3 *p = primMem->curr;
 				pNext = p + 1;
 				pCurr = p;
 
-				*(int*)&p->r0 = tempColor[1];
-				*(int*)&p->r1 = tempColor[2];
-				*(int*)&p->r2 = tempColor[3];
-				
-				struct TextureLayout* tempTex;
+				*(int *)&p->r0 = tempColor[1];
+				*(int *)&p->r1 = tempColor[2];
+				*(int *)&p->r2 = tempColor[3];
+
+				struct TextureLayout *tempTex;
 				tempTex = mh->ptrTexLayout[texIndex - 1];
-				*(int*)&p->u0 = *(int*)&tempTex->u0;
-				*(int*)&p->u1 = *(int*)&tempTex->u1;
-				*(short*)&p->u2 = *(short*)&tempTex->u2;
+				*(int *)&p->u0 = *(int *)&tempTex->u0;
+				*(int *)&p->u1 = *(int *)&tempTex->u1;
+				*(short *)&p->u2 = *(short *)&tempTex->u2;
 
 				setPolyGT3(p);
-				
-				gte_stsxy3(
-					&p->x0,
-					&p->x1,
-					&p->x2);
+
+				gte_stsxy3(&p->x0, &p->x1, &p->x2);
 			}
-			
-			AddPrim((u_long*)ot + (otZ >> 2), pCurr);
+
+			AddPrim((u_long *)ot + (otZ >> 2), pCurr);
 			primMem->curr = pNext;
 		}
 	}
 }
 
-void TEST_DrawInstances(struct GameTracker* gGT)
+void TEST_DrawInstances(struct GameTracker *gGT)
 {
 	int start = Debug_GetPreciseTime2();
-	
+
 	if (gGT->level1 != 0)
 	{
 		if (gGT->level1->ptrInstDefs != 0)
 		{
-			struct InstDef* instDef = gGT->level1->ptrInstDefs;
+			struct InstDef *instDef = gGT->level1->ptrInstDefs;
 
 			for (int i = 0; i < gGT->level1->numInstances; i++)
 			{
-				struct Instance* curr = instDef[i].ptrInstance;
+				struct Instance *curr = instDef[i].ptrInstance;
 
 				if (curr != 0)
 				{
-					if ((curr->flags & 0x80) != 0) continue;
-					if ((curr->flags & 1) == 0) continue;
+					if ((curr->flags & 0x80) != 0)
+						continue;
+					if ((curr->flags & 1) == 0)
+						continue;
 
 					DrawOneInst(curr);
 				}
@@ -545,20 +534,19 @@ void TEST_DrawInstances(struct GameTracker* gGT)
 		}
 	}
 
-	for (
-		struct Instance* curr = (struct Instance*)gGT->JitPools.instance.taken.first;
-		curr != NULL;
-		curr = curr->next
-		)
+	for (struct Instance *curr = (struct Instance *)gGT->JitPools.instance.taken.first; curr != NULL; curr = curr->next)
 	{
-		if ((curr->flags & 0x80) != 0) continue;
-		if ((curr->flags & 1) == 0) continue;
-		
+		if ((curr->flags & 0x80) != 0)
+			continue;
+		if ((curr->flags & 1) == 0)
+			continue;
+
 		// skip "scan" in 232
-		if (curr->model->id == 0x78) continue;
+		if (curr->model->id == 0x78)
+			continue;
 
 		DrawOneInst(curr);
 	}
-	
+
 	int end = Debug_GetPreciseTime2();
 }

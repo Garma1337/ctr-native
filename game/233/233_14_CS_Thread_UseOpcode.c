@@ -82,7 +82,7 @@ int DECOMP_CS_Thread_UseOpcode(struct Instance *instance, struct CutsceneObj *cs
 				instance->flags &= ~HIDE_MODEL;
 			}
 		}
-afterPodiumSecondModelCheck:
+	afterPodiumSecondModelCheck:
 
 		if ((int)instance->model->id == (unsigned int)(u_char)gGT->podium_modelIndex_First)
 		{
@@ -99,13 +99,11 @@ afterPodiumSecondModelCheck:
 				instance->flags &= ~HIDE_MODEL;
 			}
 		}
-afterPodiumFirstModelCheck:
+	afterPodiumFirstModelCheck:
 
 		if ((cs->flags & 0x80) != 0)
 		{
-			if (((int)instance->model->id + -0xce ==
-				 (int)gGarage.unusedArr_garageChars[sdata->advCharSelectIndex_curr]) &&
-				(gGarage.boolSelected == 1))
+			if (((int)instance->model->id + -0xce == (int)gGarage.unusedArr_garageChars[sdata->advCharSelectIndex_curr]) && (gGarage.boolSelected == 1))
 			{
 				if ((cs->flags & 0x100) == 0)
 				{
@@ -113,20 +111,15 @@ afterPodiumFirstModelCheck:
 					gGT->pushBuffer[0].fadeFromBlack_desiredResult = 0x1000;
 					gGT->pushBuffer[0].fade_step = 0xfd56;
 					cs->flags |= 0x100;
-					DECOMP_CS_ScriptCmd_OpcodeAt(
-						cs,
-						OVR_233.advCharSelectSelectOpcodes[(int)instance->model->id - STATIC_CRASHSELECT]);
+					DECOMP_CS_ScriptCmd_OpcodeAt(cs, OVR_233.advCharSelectSelectOpcodes[(int)instance->model->id - STATIC_CRASHSELECT]);
 					CS_SaveDecodedOpcode(cs, metadataBackup);
-reloadAdvCharSelectOpcodeState:
+				reloadAdvCharSelectOpcodeState:
 					cs->unk18 = ((int *)&cs->decodedOpcode)[2];
 					iVar8 = DECOMP_MixRNG_Scramble();
 					opcodeMeta = &cs->decodedOpcode;
 					opcodeMetaShorts = (short *)opcodeMeta;
 					cs->unk14 =
-						opcodeMeta->frameStart +
-						(short)((int)((iVar8 >> 2 & 0xfff) *
-									 (((int)opcodeMeta->frameEnd - (int)opcodeMeta->frameStart) + 1)) >>
-								0xc);
+					    opcodeMeta->frameStart + (short)((int)((iVar8 >> 2 & 0xfff) * (((int)opcodeMeta->frameEnd - (int)opcodeMeta->frameStart) + 1)) >> 0xc);
 				}
 			}
 			else
@@ -134,9 +127,7 @@ reloadAdvCharSelectOpcodeState:
 				if ((cs->flags & 0x100) != 0)
 				{
 					cs->flags &= 0xfeff;
-					DECOMP_CS_ScriptCmd_OpcodeAt(
-						cs,
-						OVR_233.advCharSelectDeselectOpcodes[(int)instance->model->id - STATIC_CRASHSELECT]);
+					DECOMP_CS_ScriptCmd_OpcodeAt(cs, OVR_233.advCharSelectDeselectOpcodes[(int)instance->model->id - STATIC_CRASHSELECT]);
 					CS_SaveDecodedOpcode(cs, metadataBackup);
 					goto reloadAdvCharSelectOpcodeState;
 				}
@@ -172,10 +163,7 @@ reloadAdvCharSelectOpcodeState:
 			{
 				if (opcodeMeta->opcode == 0x14)
 					DECOMP_CS_ScriptCmd_OpcodeNext(cs);
-				DECOMP_CAM_Path_Move((int)(short)(numCamPathPoints + -1),
-									 gGT->pushBuffer[0].pos,
-									 gGT->pushBuffer[0].rot,
-									 camPathFlags);
+				DECOMP_CAM_Path_Move((int)(short)(numCamPathPoints + -1), gGT->pushBuffer[0].pos, gGT->pushBuffer[0].rot, camPathFlags);
 			}
 
 			clockEffectFlags = gGT->clockEffectEnabled;
@@ -198,11 +186,7 @@ reloadAdvCharSelectOpcodeState:
 
 			if (((camPathFlags[0] & 0x10) != 0) && ((DECOMP_MixRNG_Scramble() & 0xf) == 0))
 			{
-				DECOMP_CTR_Box_DrawClearBox(
-					&OVR_233.introClearBoxRect,
-					&OVR_233.introClearBoxColor,
-					1,
-					gGT->backBuffer->otMem.startPlusFour);
+				DECOMP_CTR_Box_DrawClearBox(&OVR_233.introClearBoxRect, &OVR_233.introClearBoxColor, 1, gGT->backBuffer->otMem.startPlusFour);
 			}
 
 			if (gGT->levelID == 0x29)
@@ -239,7 +223,7 @@ reloadAdvCharSelectOpcodeState:
 				DECOMP_CDSYS_XAPauseRequest();
 				DECOMP_RaceFlag_SetDrawOrder(0);
 				levelToLoad = MAIN_MENU_LEVEL;
-requestSkipLevelLoad:
+			requestSkipLevelLoad:
 				DECOMP_MainRaceTrack_RequestLoad(levelToLoad);
 				OVR_233.isCutsceneOver = 1;
 				gGT->gameMode2 &= ~VEH_FREEZE_PODIUM;
@@ -254,7 +238,7 @@ afterCameraAndSkipChecks:
 	opcodeChanged = 0;
 	if (elapsedTimeRemaining == 0)
 	{
-updateInstanceAndReturn:
+	updateInstanceAndReturn:
 		cs->unk18 = iVar12;
 		cs->animIndex = (char)animIndex;
 		cs->unk1e = (short)iVar8;
@@ -266,8 +250,7 @@ updateInstanceAndReturn:
 			rotInterpStartFrame = opcodeMeta->arg0.i;
 			if (opcodeMeta->arg1.i != rotInterpStartFrame)
 			{
-				rotInterpNumerator = ((((int)opcodeMeta->rotEnd - iVar10) + 0x800U & 0xfff) - 0x800) *
-									(iVar12 - rotInterpStartFrame);
+				rotInterpNumerator = ((((int)opcodeMeta->rotEnd - iVar10) + 0x800U & 0xfff) - 0x800) * (iVar12 - rotInterpStartFrame);
 				rotInterpFrameRange = opcodeMeta->arg1.i - rotInterpStartFrame;
 				if (rotInterpFrameRange < 0)
 					rotInterpFrameRange = -rotInterpFrameRange;
@@ -275,8 +258,7 @@ updateInstanceAndReturn:
 			}
 		}
 		iVar10 = iVar10 + cs->unk1c;
-		if ((iVar10 != (int)cs->unk22) &&
-			(cs->unk22 = (short)iVar10, instance != 0))
+		if ((iVar10 != (int)cs->unk22) && (cs->unk22 = (short)iVar10, instance != 0))
 		{
 			ConvertRotToMatrix(&instance->matrix, &cs->unk20);
 		}
@@ -325,9 +307,7 @@ processOpcode:
 						iVar12 = 0;
 					else
 					{
-						iVar12 = DECOMP_CS_Instance_SafeCheckAnimFrame(
-							instance, animIndex, iVar8,
-							(sdata->XA_CurrOffset * 0x1e00) / 0xac44);
+						iVar12 = DECOMP_CS_Instance_SafeCheckAnimFrame(instance, animIndex, iVar8, (sdata->XA_CurrOffset * 0x1e00) / 0xac44);
 						iVar12 = iVar12 << 5;
 					}
 					if (opcodeMeta->arg1.i << 5 < iVar12)
@@ -344,7 +324,8 @@ processOpcode:
 			iVar12 = iVar12 << 5;
 			iVar10 = DECOMP_MixRNG_Scramble();
 			opcodeChanged = 0;
-			opcodeDuration = ((int)((iVar10 >> 2 & 0xfff) * (((int)opcodeMeta->frameEnd - (int)opcodeMeta->frameStart) + 1)) >> 0xc) + (int)opcodeMeta->frameStart;
+			opcodeDuration =
+			    ((int)((iVar10 >> 2 & 0xfff) * (((int)opcodeMeta->frameEnd - (int)opcodeMeta->frameStart) + 1)) >> 0xc) + (int)opcodeMeta->frameStart;
 		}
 		frameBoundaryHit = 0;
 		if (opcodeMeta->arg1.i < opcodeMeta->arg0.i)
@@ -354,7 +335,7 @@ processOpcode:
 			if (iVar12 < iVar10)
 			{
 				elapsedTimeRemaining = iVar10 - iVar12;
-markAnimationBoundary:
+			markAnimationBoundary:
 				frameBoundaryHit = 1;
 			}
 		}
@@ -411,13 +392,8 @@ markAnimationBoundary:
 			struct CsThreadInitData initData;
 			int spawnModelID = opcodeMeta->arg1.i;
 
-			DECOMP_CS_Instance_GetFrameData(
-				instance,
-				(int)opcodeMeta->animIndex,
-				opcodeMeta->arg0.i,
-				(u_short *)initData.podiumPos,
-				(u_short *)initData.rot,
-				0);
+			DECOMP_CS_Instance_GetFrameData(instance, (int)opcodeMeta->animIndex, opcodeMeta->arg0.i, (u_short *)initData.podiumPos, (u_short *)initData.rot,
+			                                0);
 
 			initData.podiumPos[0] += (short)instance->matrix.t[0];
 			initData.podiumPos[1] += (short)instance->matrix.t[1];
@@ -550,7 +526,7 @@ markAnimationBoundary:
 		if (iVar10 == 0x1e)
 		{
 			DECOMP_RaceFlag_SetCanDraw(0);
-requestDirectLevelLoad:
+		requestDirectLevelLoad:
 			gGT->gameMode2 &= ~VEH_FREEZE_PODIUM;
 			DECOMP_MainRaceTrack_RequestLoad((int)(short)iVar10);
 		}
@@ -561,7 +537,7 @@ requestDirectLevelLoad:
 				if (iVar10 == 0x19)
 				{
 					levelToLoad = GEM_STONE_VALLEY;
-requestMappedLevelLoad:
+				requestMappedLevelLoad:
 					gGT->gameMode2 &= ~VEH_FREEZE_PODIUM;
 					DECOMP_MainRaceTrack_RequestLoad(levelToLoad);
 					break;
@@ -584,9 +560,7 @@ requestMappedLevelLoad:
 		break;
 
 	case 0x11:
-		if ((OVR_233.boolLoadNextSwap == 0) ||
-			(sdata->queueReady == 0) ||
-			(sdata->queueLength != 0))
+		if ((OVR_233.boolLoadNextSwap == 0) || (sdata->queueReady == 0) || (sdata->queueLength != 0))
 			goto updateInstanceAndReturn;
 		break;
 
@@ -693,7 +667,7 @@ requestMappedLevelLoad:
 		gGT->pushBuffer[0].distanceToScreen_PREV = distanceToScreen;
 		gGT->pushBuffer[0].distanceToScreen_CURR = distanceToScreen;
 		cutsceneFlags = cs->flags | 0x20;
-setFlagsAndAdvanceOpcode:
+	setFlagsAndAdvanceOpcode:
 		cs->flags = cutsceneFlags;
 		DECOMP_CS_ScriptCmd_OpcodeNext(cs);
 		goto finishOpcodeStep;
@@ -702,8 +676,7 @@ setFlagsAndAdvanceOpcode:
 		conditionMet = CS_Credits_IsTextValid();
 		goto advanceIfConditionMet;
 
-	case 0x24:
-	{
+	case 0x24: {
 		struct CsThreadInitData initData;
 		int dancerModelID = opcodeMeta->arg1.i;
 
@@ -733,15 +706,14 @@ setFlagsAndAdvanceOpcode:
 		initData.rot[1] += OVR_233.creditsDancerRotOffset[1];
 		initData.rot[2] += OVR_233.creditsDancerRotOffset[2];
 
-		dancerThread = (struct Thread *)DECOMP_CS_Thread_Init(
-			dancerModelID, OVR_233.s_g_dancer, (short *)&initData, 0, 0);
+		dancerThread = (struct Thread *)DECOMP_CS_Thread_Init(dancerModelID, OVR_233.s_g_dancer, (short *)&initData, 0, 0);
 		CS_Credits_NewDancer(dancerThread, (int)opcodeMetaShorts[6]);
 	}
 	break;
 
 	case 0x25:
 		conditionMet = CS_Credits_NewCreditGhosts();
-advanceIfConditionMet:
+	advanceIfConditionMet:
 		conditionMet &= 0xffff;
 		if (conditionMet == 0)
 			goto updateInstanceAndReturn;
@@ -750,19 +722,17 @@ advanceIfConditionMet:
 	case 0x26:
 		if (opcodeMeta->frameEnd == 0)
 		{
-			if ((opcodeMeta->arg0.i != (int)gGarage.unusedArr_garageChars[sdata->advCharSelectIndex_curr]) ||
-				(gGarage.boolSelected == 0))
+			if ((opcodeMeta->arg0.i != (int)gGarage.unusedArr_garageChars[sdata->advCharSelectIndex_curr]) || (gGarage.boolSelected == 0))
 			{
 				opcodeAt = opcodeMeta->arg1.ptr;
-branchToGarageOpcode:
+			branchToGarageOpcode:
 				opcodeChanged = 1;
 				DECOMP_CS_ScriptCmd_OpcodeAt(cs, opcodeAt);
 			}
 		}
 		else
 		{
-			if ((opcodeMeta->arg0.i == (int)gGarage.unusedArr_garageChars[sdata->advCharSelectIndex_curr]) &&
-				(gGarage.boolSelected == 1))
+			if ((opcodeMeta->arg0.i == (int)gGarage.unusedArr_garageChars[sdata->advCharSelectIndex_curr]) && (gGarage.boolSelected == 1))
 			{
 				opcodeAt = opcodeMeta->arg1.ptr;
 				goto branchToGarageOpcode;

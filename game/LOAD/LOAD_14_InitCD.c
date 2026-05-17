@@ -2,11 +2,11 @@
 
 void DECOMP_LOAD_InitCD()
 {
-	#ifdef USE_PCDRV
+#ifdef USE_PCDRV
 	PCinit();
 	DECOMP_CDSYS_Init(0);
 	return;
-	#endif
-	
+#endif
+
 	DECOMP_CDSYS_Init(1);
 }

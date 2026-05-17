@@ -2,31 +2,31 @@
 struct Mempack
 {
 	// 0x0
-	int packSize;			  // end - start, 0x144E10
+	int packSize; // end - start, 0x144E10
 
 	// 0x4
-	void* start;			  // 0x800ba9f0
+	void *start; // 0x800ba9f0
 
 	// 0x8
-	void* lastFreeByte; 	  // where you can put new data on High-End,
+	void *lastFreeByte; // where you can put new data on High-End,
 
 	// 0xC
-	void* endOfAllocator;  	  // always 0x801FF800
+	void *endOfAllocator; // always 0x801FF800
 
 	// 0x10
-	void* endOfMemory;   	  // 0x80200000 (2mb) (never used)
+	void *endOfMemory; // 0x80200000 (2mb) (never used)
 
 	// 0x14
-	void* firstFreeByte;	  // where you can put new data on Low-End
+	void *firstFreeByte; // where you can put new data on Low-End
 
 	// 0x18
 	int sizeOfPrevAllocation; // self-explanatory
 
 	// 0x1C
-	int numBookmarks;		  // amount of bookmarks used
+	int numBookmarks; // amount of bookmarks used
 
 	// 0x20
-	void* bookmarks[0x10];	  // address of each bookmark
+	void *bookmarks[0x10]; // address of each bookmark
 
 	// 0x60 -- size of struct
 };

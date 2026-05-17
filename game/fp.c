@@ -11,11 +11,11 @@ force_inline unsigned short iDiv(unsigned int rem, unsigned short base)
 	if (high >= base)
 	{
 		high /= base;
-		res = (unsigned int) high << 16;
-		rem -= (unsigned int) (high * base) << 16;
+		res = (unsigned int)high << 16;
+		rem -= (unsigned int)(high * base) << 16;
 	}
 
-	while ((unsigned int) b > 0 && b < rem)
+	while ((unsigned int)b > 0 && b < rem)
 	{
 		b *= 2;
 		d *= 2;

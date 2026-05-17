@@ -10,15 +10,16 @@ struct SndVolume
 #ifndef REBUILD_PC
 // from TOMB5, not from psyq
 // https://github.com/TOMB5/TOMB5/blob/master/EMULATOR/LIBSPU.H
-typedef struct {
-    unsigned long	mask;
-    long mode;
+typedef struct
+{
+	unsigned long mask;
+	long mode;
 
 	// SpuVolume from psn00b headers
-    SpuVolume depth;	/* reverb depth */
+	SpuVolume depth; /* reverb depth */
 
-    long delay;			/* Delay Time  (ECHO, DELAY only)   */
-    long feedback;		/* Feedback    (ECHO only)          */
+	long delay;    /* Delay Time  (ECHO, DELAY only)   */
+	long feedback; /* Feedback    (ECHO only)          */
 } SpuReverbAttr;
 #endif
 
@@ -26,7 +27,7 @@ typedef struct {
 struct ChannelAttr
 {
 	// 0x0
-	void* spuStartAddr;
+	void *spuStartAddr;
 
 	// as + dr = ASDR (envelope standard)
 
@@ -53,10 +54,10 @@ struct ChannelAttr
 struct ChannelStats
 {
 	// 0x0
-	struct ChannelStats* next;
+	struct ChannelStats *next;
 
 	// 0x4
-	struct ChannelStats* prev;
+	struct ChannelStats *prev;
 
 	// 0x8
 	u_char flags;
@@ -121,16 +122,16 @@ struct GarageFX
 	// enum GarageSoundPos
 	char gsp_curr;
 	char gsp_prev;
-	
+
 	// 0x2
 	short volume;
-	
+
 	// 0x4
 	int LR;
-	
+
 	// 0x8
-	void* audioPtr;
-	
+	void *audioPtr;
+
 	// 0xC - size of each member
 };
 
@@ -139,13 +140,13 @@ struct OtherFX
 	// 0x0
 	unsigned char flags;
 	unsigned char volume;
-	
+
 	// 0x2
 	unsigned short pitch;
-	
+
 	// 0x4
 	unsigned short spuIndex;
-	
+
 	// 0x6
 	unsigned short duration;
 
@@ -157,16 +158,16 @@ struct EngineFX
 	// 0x0
 	unsigned char flags;
 	unsigned char volume;
-	
+
 	// 0x2
 	unsigned short pitch;
-	
+
 	// 0x4
 	unsigned short unk;
-	
+
 	// 0x6
 	unsigned short spuIndex;
-	
+
 	// 0x8 -- size
 };
 
@@ -176,29 +177,29 @@ struct HowlHeader
 	int version;
 	int unk1;
 	int unk2;
-	
+
 	// 0x10
 	int numSpuAddrs;
 	int numOtherFX;
 	int numEngineFX;
 	int numBanks;
-	
+
 	// 0x20
 	int numSequences;
 	int headerSize;
-	
+
 	// 0x28 -- size
 };
 
 // Start of a Cseq Pack,
-// contains CseqHeader, 
-// then SampleInstrument array, 
-// then ShortSamples array, 
+// contains CseqHeader,
+// then SampleInstrument array,
+// then ShortSamples array,
 // then songs (CseqSongHeader + Seq/Note array)
 struct CseqHeader
 {
 	int songSize;
-	
+
 	// 0x4
 	char numLongSamples;
 	char numShortSamples;
@@ -253,32 +254,30 @@ struct CseqSongHeader
 	// 0x0
 	char unk;
 	char numSeqs;
-	
+
 	// 0x2
-	short bpm; 		// beats per minute
-	
+	short bpm; // beats per minute
+
 	// 0x4
-	short tpqn; 	// ticks per quarter note
-	
+	short tpqn; // ticks per quarter note
+
 	// size of numSeqs
 	// each seq is an array of SongNote
-	//short seqOffsetArr[0];
+	// short seqOffsetArr[0];
 };
-#define SONGHEADER_GETSEQOFFARR(x) \
-	((unsigned int)x + sizeof(struct CseqSongHeader))
+#define SONGHEADER_GETSEQOFFARR(x) ((unsigned int)x + sizeof(struct CseqSongHeader))
 
 // right before first note
 struct SongNoteHeader
 {
 	// instrument or drums
 	char flags;
-	
+
 	char unk;
-	
-	//char notes[0];
+
+	// char notes[0];
 };
-#define NOTEHEADER_GETNOTES(x) \
-	((unsigned int)x + sizeof(struct SongNoteHeader))
+#define NOTEHEADER_GETNOTES(x) ((unsigned int)x + sizeof(struct SongNoteHeader))
 
 #if 0
 // AKA: SongNote
@@ -308,62 +307,62 @@ struct SongSeq
 	// pointer in SongPool->CseqSequences
 	// stored in global array 800902cc songSeq[NUM_SFX_CHANNELS]
 
-	// 0x0 
+	// 0x0
 	// & 1 - playing
 	// & 2 - song loops
 	// & 4 - instrument or drums
 	// & 8 - restart song
 	char flags;
-	
-	// 0x1 
+
+	// 0x1
 	unsigned char soundID;
 	char unk;
 
 	// 0x3 (SampleInstrument*)
 	char instrumentID;
-	
+
 	// 0x4
 	char reverb;
-	
+
 	// one is curr, one is desired
-	
+
 	// 0x5
 	unsigned char vol_Curr;
-	
+
 	// 0x6
 	unsigned char vol_New;
-	
+
 	// 0x7
 	char vol_StepRate;
-	
+
 	// one is curr, one is desired
-	
+
 	// 0x8
 	unsigned char distort;
-	
+
 	// 0x9
 	unsigned char LR;
-	
+
 	// 0xA
 	char unk0A;
 
-	// 0xb 
+	// 0xb
 	char songPoolIndex;
-	
+
 	// 0xc (time until next note is played)
 	int NoteLength;
-	
-	// 0x10 
+
+	// 0x10
 	int NoteTimeElapsed;
-	
+
 	// 0x14
 	// SongOpcode
-	char* firstNote;
+	char *firstNote;
 
 	// 0x18
 	// SongOpcode
-	char* currNote;
-	
+	char *currNote;
+
 	// 0x1C -- size
 };
 
@@ -414,23 +413,22 @@ struct Song
 	char numSequences;
 
 	// 0x1c array of all cseq sequences in song
-	struct SongSeq* CseqSequences[0x18];
+	struct SongSeq *CseqSequences[0x18];
 };
 
 struct SongSet
 {
 	int numSeqs;
-	char* ptrSongSetBits;
+	char *ptrSongSetBits;
 };
 
 struct SampleBlockHeader
 {
 	short numSamples;
-	
-	//short spuIndexArr[0];
+
+	// short spuIndexArr[0];
 };
-#define SBHEADER_GETARR(x) \
-	(short*)((unsigned int)x + sizeof(struct SampleBlockHeader))
+#define SBHEADER_GETARR(x) (short *)((unsigned int)x + sizeof(struct SampleBlockHeader))
 
 struct SpuAddrEntry
 {

@@ -1,27 +1,20 @@
 #include <common.h>
 
-void DECOMP_RB_Baron_LInB(struct Instance* inst)
+void DECOMP_RB_Baron_LInB(struct Instance *inst)
 {
-	struct Baron* baronObj;
+	struct Baron *baronObj;
 
-	struct Thread* t =
-		DECOMP_PROC_BirthWithObject
-		(
-			// creation flags
-			SIZE_RELATIVE_POOL_BUCKET
-			(
-				sizeof(struct Baron),
-				NONE,
-				SMALL,
-				STATIC
-			),
+	struct Thread *t = DECOMP_PROC_BirthWithObject(
+	    // creation flags
+	    SIZE_RELATIVE_POOL_BUCKET(sizeof(struct Baron), NONE, SMALL, STATIC),
 
-			DECOMP_RB_Baron_ThTick,	// behavior
-			0,						// debug name
-			0						// thread relative
-		);
+	    DECOMP_RB_Baron_ThTick, // behavior
+	    0,                      // debug name
+	    0                       // thread relative
+	);
 
-	if (t == 0) return;
+	if (t == 0)
+		return;
 	inst->thread = t;
 	t->inst = inst;
 
@@ -35,7 +28,7 @@ void DECOMP_RB_Baron_LInB(struct Instance* inst)
 	// the other one at pointIndex=NumPoints/2
 #endif
 
-	baronObj = ((struct Baron*)t->object);
+	baronObj = ((struct Baron *)t->object);
 	baronObj->otherInst = 0;
 	baronObj->pointIndex = 1;
 	baronObj->soundID_flags = 0;

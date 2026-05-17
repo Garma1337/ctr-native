@@ -2,5 +2,5 @@
 
 int DECOMP_RaceFlag_GetCanDraw(void)
 {
-    return sdata->RaceFlag_CanDraw;
+	return sdata->RaceFlag_CanDraw;
 }

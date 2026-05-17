@@ -2,7 +2,7 @@ struct ZoomData
 {
 	// get distance by mapping camera speeed from:
 	// [speedMin, speedMax] to [distMin, distMax]
-	
+
 	// 0x0
 	short distMin;
 	short distMax;
@@ -10,11 +10,11 @@ struct ZoomData
 	// 0x4
 	short speedMin;
 	short speedMax;
-	
+
 	// 0x8
 	unsigned char percentage1;
 	unsigned char percentage2;
-	
+
 	// 0xA
 	short angle[3];
 
@@ -43,10 +43,10 @@ struct CameraDC
 	// 0x08
 	// camera mode, zoom out and such
 	unsigned short mode;
-	
+
 	// 0x0A
 	unsigned short nearOrFar;
-	
+
 	// 0xC
 	unsigned int unk0xC;
 
@@ -62,55 +62,55 @@ struct CameraDC
 	// 0x1c - ptrQuadBlock
 	// similar to driver +a0,
 	// quadblock camera is currently above
-	struct QuadBlock* ptrQuadBlock;
-	
+	struct QuadBlock *ptrQuadBlock;
+
 	// 0x20
 	// VisMem->0x40[player], quadblock->0x44->0x0
-	int* visLeafSrc;
+	int *visLeafSrc;
 
 	// 0x24
 	// VisMem->0x50[player], quadblock->0x44->0x4
-	int* visFaceSrc;
+	int *visFaceSrc;
 
 	// 0x28
 	// quadblock->0x44->0x8
 	// which instances are visible from quadblock
-	struct Instance** visInstSrc;
+	struct Instance **visInstSrc;
 
 	// 0x2c
 	// VisMem->0x60[player]
-	int* visOVertSrc;
+	int *visOVertSrc;
 
 	// 0x30
 	// VisMem->0x70[player],
-	int* visSCVertSrc;
+	int *visSCVertSrc;
 
 	// 0x34
 	char unk30fill[0xC];
 
 	// 96b20+14c0
-	
+
 	// 0x40
 	int cameraMoveSpeed;
 
 	// 0x44
-	struct Driver* driverToFollow;
+	struct Driver *driverToFollow;
 
 	// 0x48
-	struct PushBuffer* pushBuffer;
+	struct PushBuffer *pushBuffer;
 
 	// 0x4C
 	// vel[3]
 	int unkTriplet1[3];
-	
+
 	// 0x58
 	// pos[3]
 	int unkTriplet2[3];
-	
+
 	// 0x64
 	// rot[3]
 	int unkTriplet3[3];
-	
+
 	// 0x70 - flags
 	// & 1 - search "+ 0x1508) | 1;", resets RainBuffer cameraPos
 	// & 4 - battle end-of-race
@@ -129,7 +129,7 @@ struct CameraDC
 	// 0x74 (cam->0x9a is 8 or 0xe)
 	short driverOffset_CamEyePos[3];
 	short unk7A;
-	
+
 	// 0x7c (cam->0x9a is 8 or 0xe)
 	short driverOffset_CamLookAtPos[3];
 	short unk82;
@@ -138,7 +138,7 @@ struct CameraDC
 	unsigned int driver5B0_prevFrame;
 
 	// 0x88 - used in CAM_FollowDriver_TrackPath
-	void* unk88;
+	void *unk88;
 
 	// 0x8C - Interpolate from fly-in
 	// camera to driver, 0x0000 is fly-in,
@@ -152,13 +152,13 @@ struct CameraDC
 
 	// 0x90 - used in Spin360
 	short unk90;
-	
+
 	// zoom variable
 	short unk92;
-	
+
 	// 0x94
 	int unk94;
-	
+
 	// 0x98
 	short unk98;
 
@@ -172,8 +172,8 @@ struct CameraDC
 	short frameCounterTransition;
 
 	// 0xa0
-	void* currEOR;
-	
+	void *currEOR;
+
 	// difference between 8e and 9e?
 
 	// 0xa4
@@ -197,7 +197,7 @@ struct CameraDC
 	// 0xbc - ms countdown timer
 
 	// Y axis (0xc0)
-	int  unk_c0;
+	int unk_c0;
 
 	// 0xc0 - distance per frame
 
@@ -206,13 +206,13 @@ struct CameraDC
 	// 0xc4
 	short framesZoomingOut;
 
-	// Sep3
-	#if BUILD < UsaRetail
-	
+// Sep3
+#if BUILD < UsaRetail
+
 	// 0xc6
 	short paddingC6;
-	
-	#else // >= UsaRetail
+
+#else // >= UsaRetail
 
 	// Store data on first frame of BLASTED,
 	// Use data on first frame of NOT BLASTED,
@@ -221,23 +221,23 @@ struct CameraDC
 	{
 		// 0xC6
 		short boolLerpPending;
-		
+
 		// 0xc8
 		short unkOffset[2];
-	
+
 		// 0xcc
 		short desiredRot[4];
-	
+
 		// 0xd4
 		short desiredPos[3];
-		
+
 		// 0xda
 		short framesRemaining;
-		
+
 	} BlastedLerp;
 
-	// 0xdc - end of struct
-	#endif
+// 0xdc - end of struct
+#endif
 
 	// 0xC8 bytes large in sep3
 	// 0xDC bytes large in usaRetail

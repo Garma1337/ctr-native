@@ -1,8 +1,8 @@
 #include <common.h>
 
-void DECOMP_VehStuckProc_MaskGrab_Update(struct Thread* t, struct Driver* d)
+void DECOMP_VehStuckProc_MaskGrab_Update(struct Thread *t, struct Driver *d)
 {
-	struct GameTracker* gGT = sdata->gGT;
+	struct GameTracker *gGT = sdata->gGT;
 
 	d->NoInputTimer -= gGT->elapsedTimeMS;
 
@@ -15,7 +15,7 @@ void DECOMP_VehStuckProc_MaskGrab_Update(struct Thread* t, struct Driver* d)
 	// when input is allowed,
 	// which is when driver is spawned back over track
 
-	struct MaskHeadWeapon* mask = d->KartStates.MaskGrab.maskObj;
+	struct MaskHeadWeapon *mask = d->KartStates.MaskGrab.maskObj;
 
 	if (mask != NULL)
 	{
@@ -35,7 +35,7 @@ void DECOMP_VehStuckProc_MaskGrab_Update(struct Thread* t, struct Driver* d)
 		gGT->cameraDC[d->driverID].flags |= 8;
 
 
-	VehStuckProc_MaskGrab_FindDestPos((struct Thread*)d, (struct Driver*)d->lastValid);
+	VehStuckProc_MaskGrab_FindDestPos((struct Thread *)d, (struct Driver *)d->lastValid);
 
 	DECOMP_VehBirth_TeleportSelf(d, 0, 0x80);
 

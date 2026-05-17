@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_VehStuckProc_Tumble_Animate(struct Thread* thread, struct Driver* driver)
+void DECOMP_VehStuckProc_Tumble_Animate(struct Thread *thread, struct Driver *driver)
 {
 	int matrixIndex;
 	int arrLength;

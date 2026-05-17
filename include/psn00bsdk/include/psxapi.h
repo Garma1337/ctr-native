@@ -28,36 +28,39 @@
 
 /* Definitions */
 
-typedef enum _SeekMode {
+typedef enum _SeekMode
+{
 	SEEK_SET = 0,
 	SEEK_CUR = 1,
 	SEEK_END = 2
 } SeekMode;
 
-typedef enum _EventDescriptor {
+typedef enum _EventDescriptor
+{
 	DescMask = 0xff000000, // Event descriptor mask
-	DescTH   = 0xff000000,
-	DescHW   = 0xf0000000, // Hardware event (IRQ)
-	DescEV   = 0xf1000000, // Event event
-	DescRC   = 0xf2000000, // Root counter event
-	DescUEV  = 0xf3000000, // User event
-	DescSW   = 0xf4000000  // BIOS event
+	DescTH = 0xff000000,
+	DescHW = 0xf0000000,  // Hardware event (IRQ)
+	DescEV = 0xf1000000,  // Event event
+	DescRC = 0xf2000000,  // Root counter event
+	DescUEV = 0xf3000000, // User event
+	DescSW = 0xf4000000   // BIOS event
 } EventDescriptor;
 
-typedef enum _EventType {
+typedef enum _EventType
+{
 	HwVBLANK = DescHW | 0x01, // VBlank
-	HwGPU    = DescHW | 0x02, // GPU
-	HwCdRom  = DescHW | 0x03, // CDROM
-	HwDMAC   = DescHW | 0x04, // DMA
-	HwRTC0   = DescHW | 0x05, // Timer 0
-	HwRTC1   = DescHW | 0x06, // Timer 1
-	HwRTC2   = DescHW | 0x07, // Timer 2
-	HwCNTL   = DescHW | 0x08, // Controller
-	HwSPU    = DescHW | 0x09, // SPU
-	HwPIO    = DescHW | 0x0a, // PIO & lightgun
-	HwSIO    = DescHW | 0x0b, // Serial
-	HwCPU    = DescHW | 0x10, // Processor exception
-	HwCARD   = DescHW | 0x11, // Memory card (lower level BIOS functions)
+	HwGPU = DescHW | 0x02,    // GPU
+	HwCdRom = DescHW | 0x03,  // CDROM
+	HwDMAC = DescHW | 0x04,   // DMA
+	HwRTC0 = DescHW | 0x05,   // Timer 0
+	HwRTC1 = DescHW | 0x06,   // Timer 1
+	HwRTC2 = DescHW | 0x07,   // Timer 2
+	HwCNTL = DescHW | 0x08,   // Controller
+	HwSPU = DescHW | 0x09,    // SPU
+	HwPIO = DescHW | 0x0a,    // PIO & lightgun
+	HwSIO = DescHW | 0x0b,    // Serial
+	HwCPU = DescHW | 0x10,    // Processor exception
+	HwCARD = DescHW | 0x11,   // Memory card (lower level BIOS functions)
 	HwCARD_0 = DescHW | 0x12,
 	HwCARD_1 = DescHW | 0x13,
 
@@ -66,105 +69,114 @@ typedef enum _EventType {
 	RCntCNT2 = DescRC | 0x02,
 	RCntCNT3 = DescRC | 0x03,
 
-	SwCARD   = DescSW | 0x01, // Memory card (higher level BIOS functions)
-	SwMATH   = DescSW | 0x02
+	SwCARD = DescSW | 0x01, // Memory card (higher level BIOS functions)
+	SwMATH = DescSW | 0x02
 } EventType;
 
-typedef enum _EventFlag {
-	EvSpIOE    = 1 <<  2,
-	EvSpTIMOUT = 1 <<  8,
-	EvSpNEW    = 1 <<  13,
-	EvSpERROR  = 1 << 15,
+typedef enum _EventFlag
+{
+	EvSpIOE = 1 << 2,
+	EvSpTIMOUT = 1 << 8,
+	EvSpNEW = 1 << 13,
+	EvSpERROR = 1 << 15,
 
-	EvMdINTR   = 1 << 12,
+	EvMdINTR = 1 << 12,
 	EvMdNOINTR = 1 << 13,
 
-	RCntMdSP     = 0 <<  0,
-	RCntMdFR     = 0 <<  0,
-	RCntMdSC     = 1 <<  0, // IRQ when counter target
-	RCntMdGATE   = 1 <<  4,
-	RCntMdINTR   = 1 << 12, // Turns on IRQ
-	RCntMdNOINTR = 1 << 13  // Polling mode
+	RCntMdSP = 0 << 0,
+	RCntMdFR = 0 << 0,
+	RCntMdSC = 1 << 0, // IRQ when counter target
+	RCntMdGATE = 1 << 4,
+	RCntMdINTR = 1 << 12,  // Turns on IRQ
+	RCntMdNOINTR = 1 << 13 // Polling mode
 } EventFlag;
 
 /* Structure definitions */
 
-typedef struct {	// Thread control block
-	int					status;
-	int					mode;
-	union {
-		uint32_t		reg[37];
-		struct {
-			uint32_t	zero, at;
-			uint32_t	v0, v1;
-			uint32_t	a0, a1, a2, a3;
-			uint32_t	t0, t1, t2, t3, t4, t5, t6, t7;
-			uint32_t	s0, s1, s2, s3, s4, s5, s6, s7;
-			uint32_t	t8, t9;
-			uint32_t	k0, k1;
-			uint32_t	gp, sp, fp, ra;
+typedef struct
+{ // Thread control block
+	int status;
+	int mode;
+	union
+	{
+		uint32_t reg[37];
+		struct
+		{
+			uint32_t zero, at;
+			uint32_t v0, v1;
+			uint32_t a0, a1, a2, a3;
+			uint32_t t0, t1, t2, t3, t4, t5, t6, t7;
+			uint32_t s0, s1, s2, s3, s4, s5, s6, s7;
+			uint32_t t8, t9;
+			uint32_t k0, k1;
+			uint32_t gp, sp, fp, ra;
 
-			uint32_t	cop0r14;
-			uint32_t	hi;
-			uint32_t	lo;
-			uint32_t	cop0r12;
-			uint32_t	cop0r13;
+			uint32_t cop0r14;
+			uint32_t hi;
+			uint32_t lo;
+			uint32_t cop0r12;
+			uint32_t cop0r13;
 		};
 	};
-	int					_reserved[9];
+	int _reserved[9];
 } TCB;
 
-typedef struct {	// Process control block
+typedef struct
+{ // Process control block
 	TCB *thread;
 } PCB;
 
-typedef struct {					// Device control block
-	char	*name;
-	int		flags;
-	int		ssize;
-	char	*desc;
-	void	*f_init;
-	void	*f_open;
-	void	*f_inout;
-	void	*f_close;
-	void	*f_ioctl;
-	void	*f_read;
-	void	*f_write;
-	void	*f_erase;
-	void	*f_undelete;
-	void	*f_firstfile;
-	void	*f_nextfile;
-	void	*f_format;
-	void	*f_chdir;
-	void	*f_rename;
-	void	*f_remove;
-	void	*f_testdevice;
+typedef struct
+{ // Device control block
+	char *name;
+	int flags;
+	int ssize;
+	char *desc;
+	void *f_init;
+	void *f_open;
+	void *f_inout;
+	void *f_close;
+	void *f_ioctl;
+	void *f_read;
+	void *f_write;
+	void *f_erase;
+	void *f_undelete;
+	void *f_firstfile;
+	void *f_nextfile;
+	void *f_format;
+	void *f_chdir;
+	void *f_rename;
+	void *f_remove;
+	void *f_testdevice;
 } DCB;
 
-typedef struct {			// File control block
-	int			status;
-	uint32_t	diskid;
-	void		*trns_addr;
-	uint32_t	trns_len;
-	uint32_t	filepos;
-	uint32_t	flags;
-	uint32_t	lasterr;
-	DCB			*dcb;
-	uint32_t	filesize;
-	uint32_t	lba;
-	uint32_t	fcbnum;
+typedef struct
+{ // File control block
+	int status;
+	uint32_t diskid;
+	void *trns_addr;
+	uint32_t trns_len;
+	uint32_t filepos;
+	uint32_t flags;
+	uint32_t lasterr;
+	DCB *dcb;
+	uint32_t filesize;
+	uint32_t lba;
+	uint32_t fcbnum;
 } FCB;
 
-struct DIRENTRY {			// Directory entry
-	char			name[20];
-	int				attr;
-	int				size;
-	struct DIRENTRY	*next;
-	int				head;
-	char			system[4];
+struct DIRENTRY
+{ // Directory entry
+	char name[20];
+	int attr;
+	int size;
+	struct DIRENTRY *next;
+	int head;
+	char system[4];
 };
 
-struct EXEC {
+struct EXEC
+{
 	uint32_t pc0, gp0;
 	uint32_t t_addr, t_size;
 	uint32_t d_addr, d_size;
@@ -173,17 +185,19 @@ struct EXEC {
 	uint32_t sp, fp, rp, ret, base;
 };
 
-struct JMP_BUF {
+struct JMP_BUF
+{
 	uint32_t ra, sp, fp;
 	uint32_t s0, s1, s2, s3, s4, s5, s6, s7;
 	uint32_t gp;
 };
 
-typedef struct {
-	uint32_t	*next;
-	uint32_t	*func2;
-	uint32_t	*func1;
-	int			_reserved;
+typedef struct
+{
+	uint32_t *next;
+	uint32_t *func2;
+	uint32_t *func1;
+	int _reserved;
 } INT_RP;
 
 /* Fast interrupt disabling macros */
@@ -195,34 +209,32 @@ typedef struct {
 // the IRQ_STAT register will get set even if the respective enable bits in
 // IRQ_MASK are cleared, so doing this will properly defer IRQs rather than
 // dropping them.
-#define FastEnterCriticalSection() \
-	uint16_t __saved_irq_mask = IRQ_MASK; (IRQ_MASK = 0)
-#define FastExitCriticalSection() \
-	(IRQ_MASK = __saved_irq_mask)
+#define FastEnterCriticalSection()        \
+	uint16_t __saved_irq_mask = IRQ_MASK; \
+	(IRQ_MASK = 0)
+#define FastExitCriticalSection() (IRQ_MASK = __saved_irq_mask)
 
 #if 0
-#define FastEnterCriticalSection() { \
-	uint32_t r0, r1; \
-	__asm__ volatile( \
-		"mfc0 %0, $12;" \
-		"li   %1, -1026;" \
-		"and  %1, %0;" \
-		"mtc0 %1, $12;" \
-		"nop;" \
-		: "=r"(r0), "=r"(r1) :: \
-	); \
-}
-#define FastExitCriticalSection() { \
-	uint32_t r0; \
-	__asm__ volatile( \
-		"mfc0 %0, $12;" \
-		"nop;" \
-		"ori  %0, 0x0401;" \
-		"mtc0 %0, $12;" \
-		"nop;" \
-		: "=r"(r0) :: \
-	); \
-}
+#define FastEnterCriticalSection()                \
+	{                                             \
+		uint32_t r0, r1;                          \
+		__asm__ volatile("mfc0 %0, $12;"          \
+		                 "li   %1, -1026;"        \
+		                 "and  %1, %0;"           \
+		                 "mtc0 %1, $12;"          \
+		                 "nop;"                   \
+		                 : "=r"(r0), "=r"(r1)::); \
+	}
+#define FastExitCriticalSection()           \
+	{                                       \
+		uint32_t r0;                        \
+		__asm__ volatile("mfc0 %0, $12;"    \
+		                 "nop;"             \
+		                 "ori  %0, 0x0401;" \
+		                 "mtc0 %0, $12;"    \
+		                 "nop;"             \
+		                 : "=r"(r0)::);     \
+	}
 #endif
 
 /* BIOS API */

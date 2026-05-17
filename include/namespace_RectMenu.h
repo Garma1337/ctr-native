@@ -78,8 +78,8 @@ struct RectMenu
 	short stringIndexTitle; // string index of title (null, with no row)
 
 	// position for current frame
-	unsigned short posX_curr;   // X position
-	unsigned short posY_curr;   // Y position
+	unsigned short posX_curr; // X position
+	unsigned short posY_curr; // Y position
 
 	// 0x6
 	unsigned short unk1;
@@ -106,10 +106,10 @@ struct RectMenu
 	unsigned int state;
 
 	// 0xC
-	struct MenuRow* rows;
+	struct MenuRow *rows;
 
 	// 0x10
-	void (*funcPtr)(struct RectMenu* m);
+	void (*funcPtr)(struct RectMenu *m);
 
 	// 0x14
 	// text color, box color, etc
@@ -137,18 +137,18 @@ struct RectMenu
 	short height;
 
 	// 0x24
-	struct RectMenu* ptrNextBox_InHierarchy;
+	struct RectMenu *ptrNextBox_InHierarchy;
 
 	// 0x28
-	struct RectMenu* ptrPrevBox_InHierarchy;
+	struct RectMenu *ptrPrevBox_InHierarchy;
 
 	// End of struct
 	// in UsaRetail, full struct
 	// size is 0x2C
 
-	#if BUILD == SepReview
+#if BUILD == SepReview
 	unsigned char theRest[8]; // extra size?
-	#endif
+#endif
 };
 
 _Static_assert(sizeof(struct MenuRow) == 6);

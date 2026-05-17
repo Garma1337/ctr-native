@@ -1,11 +1,11 @@
 #include <common.h>
 
-void DECOMP_VehStuckProc_Tumble_PhysLinear(struct Thread* thread, struct Driver* driver)
+void DECOMP_VehStuckProc_Tumble_PhysLinear(struct Thread *thread, struct Driver *driver)
 {
 	driver->NoInputTimer -= sdata->gGT->elapsedTimeMS;
 
 	if (driver->NoInputTimer < 0)
-	    driver->NoInputTimer = 0;
+		driver->NoInputTimer = 0;
 
 	DECOMP_VehPhysProc_Driving_PhysLinear(thread, driver);
 

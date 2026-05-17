@@ -1,11 +1,13 @@
 #include <common.h>
 
 #define read_mt(r0, r1, r2) \
-	{ r0 = MFC2(25); r1 = MFC2(26); r2 = MFC2(27); }
+	{                       \
+		r0 = MFC2(25);      \
+		r1 = MFC2(26);      \
+		r2 = MFC2(27);      \
+	}
 
-u_int DECOMP_CS_Instance_GetFrameData(
-	struct Instance *inst, int animIndex, u_int animFrame,
-	u_short *pos, u_short *param_5, int offset)
+u_int DECOMP_CS_Instance_GetFrameData(struct Instance *inst, int animIndex, u_int animFrame, u_short *pos, u_short *param_5, int offset)
 {
 	int isOdd;
 	int numFrames;
@@ -50,9 +52,9 @@ u_int DECOMP_CS_Instance_GetFrameData(
 	boneValX = (u_int)bonePtr[0];
 	boneValY = (u_int)bonePtr[2];
 	boneValZ = (u_int)bonePtr[1];
-	boneDX   = (u_int)bonePtr[3];
-	boneDZ   = (u_int)bonePtr[5];
-	boneDY   = (u_int)bonePtr[4];
+	boneDX = (u_int)bonePtr[3];
+	boneDZ = (u_int)bonePtr[5];
+	boneDY = (u_int)bonePtr[4];
 
 	if (isOdd)
 	{
@@ -64,10 +66,10 @@ u_int DECOMP_CS_Instance_GetFrameData(
 
 		boneValX = (int)(boneValX + bonePtr[0]) >> 1;
 		boneValY = (int)(boneValY + bonePtr[2]) >> 1;
-		boneDZ  = (int)(boneDZ  + bonePtr[5]) >> 1;
+		boneDZ = (int)(boneDZ + bonePtr[5]) >> 1;
 		boneValZ = (int)(boneValZ + bonePtr[1]) >> 1;
-		boneDX   = (int)(boneDX   + bonePtr[3]) >> 1;
-		boneDY   = (int)(boneDY   + bonePtr[4]) >> 1;
+		boneDX = (int)(boneDX + bonePtr[3]) >> 1;
+		boneDY = (int)(boneDY + bonePtr[4]) >> 1;
 	}
 
 	deltaDX = boneValX - boneDX;

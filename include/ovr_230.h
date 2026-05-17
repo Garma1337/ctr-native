@@ -31,7 +31,7 @@ struct MainMenu_LevelRow
 	// etc
 	short levID;
 
-// NTSC-J also has this, 
+// NTSC-J also has this,
 // but changing it now without proper refactor will break pointer compiles
 #if BUILD >= EurRetail
 	// Do not represent AI Difficulty
@@ -333,9 +333,9 @@ struct OverlayDATA_230
 		u_short boolTrophy;
 	}
 #if BUILD == JpnRetail
-	 titleInstances[7];
+	titleInstances[7];
 #else
-	 titleInstances[6];
+	titleInstances[6];
 #endif
 
 	// 800B4830 - UsaRetail
@@ -357,7 +357,7 @@ struct OverlayDATA_230
 
 	// 800B4840
 	int title_numFrameTotal;
-	
+
 	// 800B4844
 	int title_numTransition;
 
@@ -368,25 +368,25 @@ struct OverlayDATA_230
 	// 800B484c
 	short title_advPosX;
 	short title_advPosY;
-	
+
 	// 800B4850
 	short title_racePosX;
 	short title_racePosY;
-	
+
 	// 800B4854
 	short title_plyrPosX;
 	short title_plyrPosY;
-	
+
 	// 800B4858
 	short title_diffPosX;
 	short title_diffPosY;
-	
+
 	// 800B485c
 	short title_camPos[4];
-	
+
 	// 800B4864
 	struct TransitionMeta transitionMeta_Menu[8];
-	
+
 	// 800B48B4
 	char title_unkEmpty[0x10];
 
@@ -553,24 +553,24 @@ struct OverlayDATA_230
 	// 800b5374 - UsaRetail
 	// 800b5b50 - EurRetail
 	// points to s_1, s_2, s_3, s_4
-	char* PlayerNumberStrings[4];
+	char *PlayerNumberStrings[4];
 
 	// 800b5384
 	char getNextDriver1[4];
-	
+
 	// 800b5388
 	char getNextDriver2[4];
 
 	// 800b538c -- UsaRetail
-	u_int characterSelect_Outline; //should be `Color` instead of `u_int`?
+	u_int characterSelect_Outline; // should be `Color` instead of `u_int`?
 
 	// 800b5390 - UsaRetail
 	// 800b5b6c - EurRetail
-	u_int characterSelect_NeutralColor; //should be `Color` instead of `u_int`?
+	u_int characterSelect_NeutralColor; // should be `Color` instead of `u_int`?
 
 	// 800b5394 - UsaRetail
 	// 800b5b70 - EurRetail
-	u_int characterSelect_ChosenColor; //should be `Color` instead of `u_int`?
+	u_int characterSelect_ChosenColor; // should be `Color` instead of `u_int`?
 
 	// 800b5398 - UsaRetail
 	// 800b5b74 - EurRetail
@@ -595,28 +595,28 @@ struct OverlayDATA_230
 	// Not all of this is actually transitionmeta, needs proper look
 	struct TransitionMeta transitionMeta_trackSel[5];
 	short padding_800B5572;
-	
+
 	// 800b5574
 	short lapRowVal[4];
-	
+
 	// 800b557c
 	struct MenuRow rowsLapSel[4];
-	
+
 	// 800B5594
 	struct RectMenu menuLapSel;
-	
+
 	// 800B55C0
 	int videoCol;
-	
+
 	// 800B55C4
 	short timeTrialStarCol[2];
 	short timeTrialFlagGet[2];
-	
+
 #if BUILD == JpnRetail
 	// 800b966c
 	char wumpaShadowRGBA[4];
 #endif
-	
+
 	// 800b55cc -- UsaRetail
 	// 800b9670 -- JpnRetail
 	struct
@@ -761,7 +761,7 @@ struct OverlayDATA_230
 	short colorIndexArray[2];
 
 	// 800b594c - UsaRetail
-	// 800b618c - EurRetail 
+	// 800b618c - EurRetail
 	// 800b99f0 - JpnRetail
 	u_short highscore_ghostBeatFlags[2];
 
@@ -789,7 +789,7 @@ struct OverlayDATA_230
 	short highScore_rowCurr;
 
 #if BUILD == EurRetail
-	
+
 	// 800b61e0 - EurRetail
 	// why not just use the one at 800b4e28?
 	short fileIndexLngBoot[6];
@@ -1033,95 +1033,95 @@ struct OverlayDATA_230
 // starts at 800b67ac
 struct OVR_230_VideoBSS
 {
-    int field0_0x0;
-    int field1_0x4;
-    int field2_0x8;
-    int field3_0xc;
+	int field0_0x0;
+	int field1_0x4;
+	int field2_0x8;
+	int field3_0xc;
 
-    // 800b67bc
-    short totalFrames;
+	// 800b67bc
+	short totalFrames;
 
-    // 800b67be
-    short frameCounter;
+	// 800b67be
+	short frameCounter;
 
-    // 800b67c0
-    short DCT_MODE;
+	// 800b67c0
+	short DCT_MODE;
 
-    // 800b67c2
-    short drawNextFrame;
+	// 800b67c2
+	short drawNextFrame;
 
 	// 800b67c4
-    short field8_0x18;
-    short field9_0x1a;
-	
+	short field8_0x18;
+	short field9_0x1a;
+
 	// 800b67c8
-    short field10_0x1c;
+	short field10_0x1c;
 
-    // 800b67ca
-    short imgId;
+	// 800b67ca
+	short imgId;
 
-	// 800b67cc 
-    short field12_0x20;
-    short field13_0x22;
-	
+	// 800b67cc
+	short field12_0x20;
+	short field13_0x22;
+
 	// 800b67d0
-    int field14_0x24;
+	int field14_0x24;
 
-    // 800b67d4
-    int numFrames;
+	// 800b67d4
+	int numFrames;
 
-    // 800b67d8
-    int frameCount;
-    int field19_0x30;
-    int field20_0x34;
-    int field21_0x38;
+	// 800b67d8
+	int frameCount;
+	int field19_0x30;
+	int field20_0x34;
+	int field21_0x38;
 
-    // 800b67e8
-    // 1 - IS_RGB24
-    // 2 - has Audio
-    // 4 - is looping
-    // 8 - is Scrapbook (?)
-    u_int flags;
+	// 800b67e8
+	// 1 - IS_RGB24
+	// 2 - has Audio
+	// 4 - is looping
+	// 8 - is Scrapbook (?)
+	u_int flags;
 
-    // 800b67ec
-    int RING_SIZE;
+	// 800b67ec
+	int RING_SIZE;
 
-    // 800b67f0
-    u_int isDone;
+	// 800b67f0
+	u_int isDone;
 
-    int field25_0x48;
+	int field25_0x48;
 
 	// field 26,27,28,29
-    char unk800b67f8[4];
+	char unk800b67f8[4];
 
 	// 30,31...
-    // 800b67fc
-    u_long* in_Buf[2];
-	
+	// 800b67fc
+	u_long *in_Buf[2];
+
 	int field32_0x58;
 
-    char field33_0x5c;
-    char field34_0x5d;
-    char field35_0x5e;
-    char field36_0x5f;
+	char field33_0x5c;
+	char field34_0x5d;
+	char field35_0x5e;
+	char field36_0x5f;
 
-    // 800b680c
-    u_long *out_Buf[4];
+	// 800b680c
+	u_long *out_Buf[4];
 
-    // 800b681c
-    RECT slice;
+	// 800b681c
+	RECT slice;
 
-    // 800b6824
-    CdlLOC cdLocation1;
+	// 800b6824
+	CdlLOC cdLocation1;
 
-    // 800b6828
-    CdlLOC cdLocation2;
+	// 800b6828
+	CdlLOC cdLocation2;
 
-    // 800b682c
-    CdlLOC cdLocation3;
-	
+	// 800b682c
+	CdlLOC cdLocation3;
+
 	// 800b6830
-    CdlLOC* ptrCdLoc;
+	CdlLOC *ptrCdLoc;
 };
 
 extern struct OverlayRDATA_230 R230;
@@ -1130,9 +1130,9 @@ extern struct OVR_230_VideoBSS V230;
 
 
 #if BUILD >= EurRetail
-	_Static_assert(sizeof(struct MainMenu_LevelRow) == 0x14);
+_Static_assert(sizeof(struct MainMenu_LevelRow) == 0x14);
 #else
-	_Static_assert(sizeof(struct MainMenu_LevelRow) == 0x10);
+_Static_assert(sizeof(struct MainMenu_LevelRow) == 0x10);
 #endif
-	_Static_assert(sizeof(struct CharacterSelectMeta) == 0xC);
-	_Static_assert(sizeof(struct TransitionMeta) == 0xA);
+_Static_assert(sizeof(struct CharacterSelectMeta) == 0xC);
+_Static_assert(sizeof(struct TransitionMeta) == 0xA);

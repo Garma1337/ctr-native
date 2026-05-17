@@ -8,12 +8,12 @@ struct NavFrame
 
 	// 0xA
 	short unk[2];
-	
+
 	// 0xA
 	// 0xC
 	// two shorts, usually same as each other
 	// search for "[5]" and "[6]"
-	
+
 	// 0xE - flags
 	// bit 1 (0x1): TurboIncrement(normal turbo)
 	// bit 2 (0x2): skid front wheels
@@ -28,14 +28,14 @@ struct NavFrame
 	// 0x4000: ???
 	// 0x8000: instance split-line
 	short flags;
-	
+
 	// 0x10
 	short pathChangeOpcode;
-	
+
 	// 0x12
 	// how many nodes to go back, if AI hits killplane
 	unsigned char goBackCount;
-	
+
 	// 0x13 - flags
 	// & 0x10 - need rampPhys
 	// & 0x20 - is reflective
@@ -43,10 +43,10 @@ struct NavFrame
 	// & 0xF - (if & 0x20) reflection variable
 	// & 0xF - (if not 0x10 and not 0x20)
 	// & 0x80 - tagged as "moon gravity"
-		// 15 levels of alpha,
-		// for darkening model in coco park tunnel)
+	// 15 levels of alpha,
+	// for darkening model in coco park tunnel)
 	unsigned char specialBits;
-	
+
 	// 0x14 - size of struct
 };
 
@@ -63,20 +63,18 @@ struct NavHeader
 	int posY_firstNode;
 
 	// 8
-	struct NavFrame* last;
+	struct NavFrame *last;
 
 	// 0xC
 	short rampPhys1[0x10]; // speedXZ? driver->0x5d4
 	short rampPhys2[0x10]; // speedY? driver->0x5d0
 
 	// 0x4C
-	//struct NavFrame frame[0];
+	// struct NavFrame frame[0];
 };
-#define NAVHEADER_GETFRAME(x) \
-	((struct NavFrame*)((unsigned int)x + sizeof(struct NavHeader)))
+#define NAVHEADER_GETFRAME(x)    ((struct NavFrame *)((unsigned int)x + sizeof(struct NavHeader)))
 
-#define NAVFRAME_GETNEXTFRAME(x) \
-	(((struct NavFrame*)x) + 1)
+#define NAVFRAME_GETNEXTFRAME(x) (((struct NavFrame *)x) + 1)
 
 _Static_assert(sizeof(struct NavFrame) == 0x14);
 _Static_assert(sizeof(struct NavHeader) == 0x4c);

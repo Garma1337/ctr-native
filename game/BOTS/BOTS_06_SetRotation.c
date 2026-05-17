@@ -1,12 +1,12 @@
 #include <common.h>
 
-void DECOMP_BOTS_SetRotation(struct Driver* bot, short param_2) //UNTESTED
+void DECOMP_BOTS_SetRotation(struct Driver *bot, short param_2) // UNTESTED
 {
-	struct NavFrame* nf = bot->botNavFrame;
+	struct NavFrame *nf = bot->botNavFrame;
 
-	(*(int*)&bot->unk5bc[0x28]) = 0;
-	(*(int*)&bot->unk5bc[0x2C]) = 0;
-	(*(int*)&bot->unk5bc[0x30]) = 0;
+	(*(int *)&bot->unk5bc[0x28]) = 0;
+	(*(int *)&bot->unk5bc[0x2C]) = 0;
+	(*(int *)&bot->unk5bc[0x30]) = 0;
 
 	// ======== Get Driver Position =============
 
@@ -22,10 +22,10 @@ void DECOMP_BOTS_SetRotation(struct Driver* bot, short param_2) //UNTESTED
 
 	// ======== Calculate Distance =============
 
-	//xz dist from driver to nav
+	// xz dist from driver to nav
 	int xzDist = SquareRoot0_stub(dx * dx + dz * dz);
 	bot->distToNextNavXZ = xzDist;
-	//xyz distance from driver to nav
+	// xyz distance from driver to nav
 	int xyzDist = SquareRoot0_stub(dx * dx + dy * dy + dz * dz);
 	bot->distToNextNavXYZ = xyzDist;
 
@@ -50,7 +50,7 @@ void DECOMP_BOTS_SetRotation(struct Driver* bot, short param_2) //UNTESTED
 
 	short v = bot->estimateRotNav[1] << 4;
 
-	//why does the Driver class have so many ways to store y rotation >:(
+	// why does the Driver class have so many ways to store y rotation >:(
 	bot->ai_rotY_608 = v;
 	bot->angle = v;
 	bot->rotCurr.y = v;

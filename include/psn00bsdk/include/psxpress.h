@@ -29,52 +29,59 @@
 
 /* Structure definitions */
 
-typedef struct _DECDCTENV {
-	uint8_t iq_y[64];	// Luma quantization table, stored in zigzag order
-	uint8_t iq_c[64];	// Chroma quantization table, stored in zigzag order
-	int16_t dct[64];	// Inverse DCT matrix (2.14 fixed-point)
+typedef struct _DECDCTENV
+{
+	uint8_t iq_y[64]; // Luma quantization table, stored in zigzag order
+	uint8_t iq_c[64]; // Chroma quantization table, stored in zigzag order
+	int16_t dct[64];  // Inverse DCT matrix (2.14 fixed-point)
 } DECDCTENV;
 
-typedef struct _VLC_TableV2 {
+typedef struct _VLC_TableV2
+{
 	uint16_t ac0[2];
 	uint32_t ac2[8], ac3[64];
 	uint16_t ac4[8], ac5[8], ac7[16], ac8[32];
 	uint16_t ac9[32], ac10[32], ac11[32], ac12[32];
 } VLC_TableV2;
 
-typedef struct _VLC_TableV3 {
+typedef struct _VLC_TableV3
+{
 	uint16_t ac0[2];
 	uint32_t ac2[8], ac3[64];
 	uint16_t ac4[8], ac5[8], ac7[16], ac8[32];
 	uint16_t ac9[32], ac10[32], ac11[32], ac12[32];
-	uint8_t  dc[128], dc_len[9];
-	uint8_t  _reserved[3];
+	uint8_t dc[128], dc_len[9];
+	uint8_t _reserved[3];
 } VLC_TableV3;
 
-typedef struct _DECDCTTAB {
+typedef struct _DECDCTTAB
+{
 	uint32_t ac[8192], ac00[512];
 } DECDCTTAB;
 
-typedef enum _DECDCTMODE {
-	DECDCT_MODE_24BPP		= 1,
-	DECDCT_MODE_16BPP		= 0,
-	DECDCT_MODE_16BPP_BIT15	= 2,
-	DECDCT_MODE_RAW			= -1
+typedef enum _DECDCTMODE
+{
+	DECDCT_MODE_24BPP = 1,
+	DECDCT_MODE_16BPP = 0,
+	DECDCT_MODE_16BPP_BIT15 = 2,
+	DECDCT_MODE_RAW = -1
 } DECDCTMODE;
 
-typedef struct _VLC_Context {
-	const uint32_t	*input;
-	uint32_t		window, next_window, remaining;
-	int8_t			is_v3, bit_offset, block_index, coeff_index;
-	uint16_t		quant_scale;
-	int16_t			last_y, last_cr, last_cb;
+typedef struct _VLC_Context
+{
+	const uint32_t *input;
+	uint32_t window, next_window, remaining;
+	int8_t is_v3, bit_offset, block_index, coeff_index;
+	uint16_t quant_scale;
+	int16_t last_y, last_cr, last_cb;
 } VLC_Context;
 
 // Despite what some docs claim, the "number of 32-byte blocks" and "always
 // 0x3800" fields are actually a single 32-bit field which is copied over to
 // the output buffer, then parsed by DecDCTin() and written to the MDEC0
 // register.
-typedef struct {
+typedef struct
+{
 	uint32_t mdec0_header;
 	uint16_t quant_scale;
 	uint16_t version;
@@ -163,7 +170,7 @@ void DecDCTin(const uint32_t *data, int mode);
  * This is a low-level variant of DecDCTin() that only sets up the DMA transfer
  * and does not write anything to the MDEC0 register. The actual transfer won't
  * start until the MDEC is given a valid command.
- * 
+ *
  * @param data
  * @param length Number of 32-bit words to read (must be multiple of 32)
  *

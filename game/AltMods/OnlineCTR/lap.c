@@ -4,7 +4,7 @@
 extern unsigned int checkpointTimes[(MAX_LAPS * CPS_PER_LAP) + 1];
 CheckpointTracker checkpointTracker[MAX_NUM_PLAYERS];
 
-void ElapsedTimeToTotalTime(TotalTime * totalTime, int elapsedTime)
+void ElapsedTimeToTotalTime(TotalTime *totalTime, int elapsedTime)
 {
 	totalTime->hours = elapsedTime / HOURS(1);
 	elapsedTime -= HOURS(1) * totalTime->hours;
@@ -19,7 +19,7 @@ void UpdateCheckpointTracker(int driverID)
 {
 	char time[6];
 	int trackPoints[CPS_PER_LAP + 1];
-	struct Driver * driver = sdata->gGT->drivers[driverID];
+	struct Driver *driver = sdata->gGT->drivers[driverID];
 	int progress = driver->distanceToFinish_checkpoint;
 	int trackLen = sdata->gGT->level1->ptr_restart_points[0].distToFinish << 3;
 	for (int i = 0; i < CPS_PER_LAP; i++)
@@ -31,7 +31,10 @@ void UpdateCheckpointTracker(int driverID)
 	int cp = checkpointTracker[driverID].currCheckpoint;
 	if (cp == 0)
 	{
-		if (progress < trackLen) { checkpointTracker[driverID].currCheckpoint++; }
+		if (progress < trackLen)
+		{
+			checkpointTracker[driverID].currCheckpoint++;
+		}
 	}
 	else
 	{
@@ -61,7 +64,10 @@ void UpdateCheckpointTracker(int driverID)
 				checkpointTracker[driverID].timer = HOURS(100);
 				checkpointTracker[driverID].raceFinished = 1;
 			}
-			else { checkpointTracker[driverID].timer = SECONDS(3); }
+			else
+			{
+				checkpointTracker[driverID].timer = SECONDS(3);
+			}
 			checkpointTracker[driverID].currCheckpoint++;
 		}
 	}

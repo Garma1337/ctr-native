@@ -1,19 +1,17 @@
 #include <common.h>
 
-void DECOMP_PushBuffer_SetDrawEnv_Normal(
-		void* ot, struct PushBuffer* pb, struct DB* backBuffer,
-		DRAWENV* copyDrawEnvNULL, int isbg)
+void DECOMP_PushBuffer_SetDrawEnv_Normal(void *ot, struct PushBuffer *pb, struct DB *backBuffer, DRAWENV *copyDrawEnvNULL, int isbg)
 {
 	DRAWENV newDrawEnv;
-	
-	int* dst = (int*)&newDrawEnv;
-	int* src = (int*)&backBuffer->drawEnv;
-	
-	for(unsigned int i = 0; i < sizeof(DRAWENV) / 4; i++)
+
+	int *dst = (int *)&newDrawEnv;
+	int *src = (int *)&backBuffer->drawEnv;
+
+	for (unsigned int i = 0; i < sizeof(DRAWENV) / 4; i++)
 		dst[i] = src[i];
-	
+
 	// always?
-	if(copyDrawEnvNULL == 0)
+	if (copyDrawEnvNULL == 0)
 	{
 		newDrawEnv.clip.x += pb->rect.x;
 		newDrawEnv.clip.y += pb->rect.y;
@@ -22,21 +20,23 @@ void DECOMP_PushBuffer_SetDrawEnv_Normal(
 		newDrawEnv.ofs[0] += pb->rect.x;
 		newDrawEnv.ofs[1] += pb->rect.y;
 	}
-	
+
 	// never?
 	else
 	{
 		// OG game has stuff here
-		while(1) {}
+		while (1)
+		{
+		}
 	}
-	
+
 	newDrawEnv.isbg = isbg;
-	
-	void* p = backBuffer->primMem.curr;
-	if(p <= backBuffer->primMem.endMin100)
+
+	void *p = backBuffer->primMem.curr;
+	if (p <= backBuffer->primMem.endMin100)
 	{
-		backBuffer->primMem.curr = (void*)((unsigned int)backBuffer->primMem.curr + 0x40);
-		
+		backBuffer->primMem.curr = (void *)((unsigned int)backBuffer->primMem.curr + 0x40);
+
 		SetDrawEnv(p, &newDrawEnv);
 
 		// This doesn't really draw a primitive,

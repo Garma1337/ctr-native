@@ -26,27 +26,22 @@ void DECOMP_LOAD_LangFile(int bigfilePtr, int lang)
 
 	if (sdata->lngFile == 0)
 	{
-		sdata->lngFile =
-			DECOMP_MEMPACK_AllocMem(sdata->langBufferSize /* "lang buffer" */);
+		sdata->lngFile = DECOMP_MEMPACK_AllocMem(sdata->langBufferSize /* "lang buffer" */);
 	}
-	
+
 	lngFile = sdata->lngFile;
 
-	DECOMP_LOAD_ReadFile(0, 
-		LT_SETADDR | LT_SYNC,
-		BI_LANGUAGEFILE + lang, (void*)lngFile);
+	DECOMP_LOAD_ReadFile(0, LT_SETADDR | LT_SYNC, BI_LANGUAGEFILE + lang, (void *)lngFile);
 
 	numStrings = lngFile->numStrings;
-	strArray = (char**)((unsigned int)lngFile + lngFile->offsetToPtrArr);
+	strArray = (char **)((unsigned int)lngFile + lngFile->offsetToPtrArr);
 
 	sdata->numLngStrings = numStrings;
 	sdata->lngStrings = strArray;
 
 	for (i = 0; i < numStrings; i++)
 	{
-		strArray[i] =
-			(char*)((unsigned int)strArray[i] +
-			(unsigned int)lngFile);
+		strArray[i] = (char *)((unsigned int)strArray[i] + (unsigned int)lngFile);
 	}
 #if BUILD == EurRetail
 	// set voicelines to new lang

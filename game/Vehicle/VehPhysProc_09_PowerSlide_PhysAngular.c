@@ -1,11 +1,11 @@
 #include <common.h>
 
-void DECOMP_VehPhysProc_PowerSlide_PhysAngular(struct Thread* th, struct Driver* driver)
+void DECOMP_VehPhysProc_PowerSlide_PhysAngular(struct Thread *th, struct Driver *driver)
 {
 	char cVar1;
 	char bVar2;
 	char bVar3;
-	struct GameTracker* gGT;
+	struct GameTracker *gGT;
 	short sVar5;
 	u_short uVar6;
 	u_short uVar7;
@@ -31,22 +31,22 @@ void DECOMP_VehPhysProc_PowerSlide_PhysAngular(struct Thread* th, struct Driver*
 	iVar12_A = ((driver->axisRotationX - driver->angle) + 0x800U & 0xfff) - 0x800;
 	if (iVar12_A != 0)
 	{
-		// 30fps
-		#ifndef USE_60FPS
+// 30fps
+#ifndef USE_60FPS
 
 		// decrease by 1/8
 		// val = val * 7/8
 		iVar13 = iVar12_A >> 3;
 
-		// 60fps
-		#else
+// 60fps
+#else
 
 		// how to split division by 8,
 		// into two separate frames, which is
 		// exponentional at 30fps, but a hybrid
 		// linear/exponential at 60fps
 
-		if(gGT->timer&1)
+		if (gGT->timer & 1)
 		{
 			// 1/16, half of 1/8
 			iVar13 = iVar12_A >> 4;
@@ -61,7 +61,7 @@ void DECOMP_VehPhysProc_PowerSlide_PhysAngular(struct Thread* th, struct Driver*
 			iVar13 = iVar13 >> 3;
 		}
 
-		#endif
+#endif
 
 		if (iVar13 == 0)
 		{
@@ -92,7 +92,7 @@ void DECOMP_VehPhysProc_PowerSlide_PhysAngular(struct Thread* th, struct Driver*
 		iVar13 = -iVar13;
 	}
 
-	void PhysLerpRot(struct Driver* driver, int iVar13);
+	void PhysLerpRot(struct Driver * driver, int iVar13);
 	PhysLerpRot(driver, iVar13);
 
 	// turning rate
@@ -152,18 +152,11 @@ void DECOMP_VehPhysProc_PowerSlide_PhysAngular(struct Thread* th, struct Driver*
 	// Map "simpTurnState" from [0, const_TurnRate] to [0, driftDirection]
 	iVar13 = DECOMP_VehCalc_MapToRange(iVar13, 0, ((u_int)driver->const_TurnRate + ((int)driver->turnConst << 1) / 5) * 0x100, 0, iVar9 << 8);
 
-	if
-	(
-		(iVar13 < 0) ||
-		(
-			(
-				// compare two turning rates
-				bVar2 = iVar13 < iVar12_D,
+	if ((iVar13 < 0) || ((
+	                        // compare two turning rates
+	                        bVar2 = iVar13 < iVar12_D,
 
-				iVar13 == 0 && (iVar12_D < 0)
-			)
-		)
-	)
+	                        iVar13 == 0 && (iVar12_D < 0))))
 	{
 		bVar3 = true;
 		iVar13 = -iVar13;
@@ -194,43 +187,42 @@ void DECOMP_VehPhysProc_PowerSlide_PhysAngular(struct Thread* th, struct Driver*
 	// interpolate to "neutral" drift
 	if ((iVar13 == 0) || (iVar15 == 0))
 	{
-LAB_80063244:
+	LAB_80063244:
 
-		#ifdef USE_60FPS
-		if(gGT->timer & 1)
-		#endif
+#ifdef USE_60FPS
+		if (gGT->timer & 1)
+#endif
 
-		// Interpolate by 1 unit, until zero
-		driver->KartStates.Drifting.numFramesDrifting =
-			DECOMP_VehCalc_InterpBySpeed((int)driver->KartStates.Drifting.numFramesDrifting, 1, 0);
+			// Interpolate by 1 unit, until zero
+			driver->KartStates.Drifting.numFramesDrifting = DECOMP_VehCalc_InterpBySpeed((int)driver->KartStates.Drifting.numFramesDrifting, 1, 0);
 	}
 
 	// if holding a drift
 	else
 	{
 		// if drifting right
-		if(iVar15 < 1)
+		if (iVar15 < 1)
 		{
-			#ifdef USE_60FPS
-			if(gGT->timer & 1)
-			#endif
+#ifdef USE_60FPS
+			if (gGT->timer & 1)
+#endif
 
-			driver->KartStates.Drifting.numFramesDrifting--;
+				driver->KartStates.Drifting.numFramesDrifting--;
 
-			if(driver->KartStates.Drifting.numFramesDrifting > 0)
+			if (driver->KartStates.Drifting.numFramesDrifting > 0)
 				driver->KartStates.Drifting.numFramesDrifting = 0;
 		}
 
 		// if drifting left
 		else
 		{
-			#ifdef USE_60FPS
-			if(gGT->timer & 1)
-			#endif
+#ifdef USE_60FPS
+			if (gGT->timer & 1)
+#endif
 
-			driver->KartStates.Drifting.numFramesDrifting++;
+				driver->KartStates.Drifting.numFramesDrifting++;
 
-			if(driver->KartStates.Drifting.numFramesDrifting < 0)
+			if (driver->KartStates.Drifting.numFramesDrifting < 0)
 				driver->KartStates.Drifting.numFramesDrifting = 0;
 		}
 	}
@@ -242,7 +234,8 @@ LAB_80063244:
 
 	// Map value from [oldMin, oldMax] to [newMin, newMax]
 	// inverting newMin and newMax will give an inverse range mapping
-	iVar13 = DECOMP_VehCalc_MapToRange((int)driver->KartStates.Drifting.driftTotalTimeMS, 0, (u_int)driver->unk462 << 5, (int)driver->unk461 * (int)driver->multDrift >> 8, iVar15);
+	iVar13 = DECOMP_VehCalc_MapToRange((int)driver->KartStates.Drifting.driftTotalTimeMS, 0, (u_int)driver->unk462 << 5,
+	                                   (int)driver->unk461 * (int)driver->multDrift >> 8, iVar15);
 	if (-1 < iVar13)
 	{
 		if (iVar12_D < -iVar13)
@@ -250,7 +243,8 @@ LAB_80063244:
 			iVar12_D = -iVar13;
 		}
 		sVar5 = (short)iVar12_D;
-		if (0 < iVar13) goto LAB_800632cc;
+		if (0 < iVar13)
+			goto LAB_800632cc;
 	}
 	sVar5 = (short)iVar12_D;
 	if (-iVar13 < iVar12_D)
@@ -281,7 +275,7 @@ LAB_800632cc:
 
 	// if both numbers have same sign,
 	// either both < 0, or both >= 0
-	if((iVar13 ^ iVar9) >= 0)
+	if ((iVar13 ^ iVar9) >= 0)
 	{
 		iVar8 = (int)driver->unk470;
 		iVar11 = (int)driver->const_SteerVel_DriftStandard;
@@ -299,12 +293,12 @@ LAB_800632cc:
 
 	iVar12_D = (iVar12_D + iVar15) - driver->turnAngleCurr;
 
-	// Same trick as above ">>3"
-	// which has more comments there
-	#ifndef USE_60FPS
+// Same trick as above ">>3"
+// which has more comments there
+#ifndef USE_60FPS
 	iVar15 = iVar12_D >> 3;
-	#else
-	if(gGT->timer&1)
+#else
+	if (gGT->timer & 1)
 	{
 		iVar15 = iVar12_D >> 4;
 	}
@@ -313,7 +307,7 @@ LAB_800632cc:
 		iVar15 = (iVar12_D * 16) / 15;
 		iVar15 = iVar15 >> 3;
 	}
-	#endif
+#endif
 
 	sVar5 = (short)iVar15;
 	if (iVar12_D != 0)
@@ -325,8 +319,7 @@ LAB_800632cc:
 		driver->turnAngleCurr += sVar5;
 	}
 
-	absVal_NumFrameDrift =
-		driver->KartStates.Drifting.numFramesDrifting;
+	absVal_NumFrameDrift = driver->KartStates.Drifting.numFramesDrifting;
 
 	if (absVal_NumFrameDrift < 0)
 		absVal_NumFrameDrift = -absVal_NumFrameDrift;
@@ -394,8 +387,7 @@ LAB_800632cc:
 			absVal_DistortVel = -absVal_DistortVel;
 
 		// move down until zero
-		sVar5 = DECOMP_VehCalc_InterpBySpeed(
-			driver->unk3D4[0], absVal_DistortVel, 0);
+		sVar5 = DECOMP_VehCalc_InterpBySpeed(driver->unk3D4[0], absVal_DistortVel, 0);
 	}
 
 	// frames counting down
@@ -443,11 +435,11 @@ LAB_800632cc:
 		driver->KartStates.Drifting.driftTotalTimeMS = (u_short)driver->unk462 << 5;
 
 	// Located in Drifting_FuncPtrs.c
-	void PhysTerrainSlope(struct Driver* driver);
+	void PhysTerrainSlope(struct Driver * driver);
 	PhysTerrainSlope(driver);
 }
 
-void PhysLerpRot(struct Driver* driver, int iVar13)
+void PhysLerpRot(struct Driver *driver, int iVar13)
 {
 	int uVar14;
 
@@ -456,12 +448,12 @@ void PhysLerpRot(struct Driver* driver, int iVar13)
 	if (iVar12_C < 0)
 		iVar12_C = -iVar12_C;
 
-	// Same trick as above ">>3"
-	// which has more comments there
-	#ifndef USE_60FPS
+// Same trick as above ">>3"
+// which has more comments there
+#ifndef USE_60FPS
 	uVar14 = iVar12_C >> 3;
-	#else
-	if(sdata->gGT->timer&1)
+#else
+	if (sdata->gGT->timer & 1)
 	{
 		uVar14 = iVar12_C >> 4;
 	}
@@ -470,7 +462,7 @@ void PhysLerpRot(struct Driver* driver, int iVar13)
 		uVar14 = (iVar12_C * 16) / 15;
 		uVar14 = uVar14 >> 3;
 	}
-	#endif
+#endif
 
 	if (uVar14 == 0)
 	{
@@ -485,25 +477,17 @@ void PhysLerpRot(struct Driver* driver, int iVar13)
 	}
 
 	// Interpolate rotation by speed
-	driver->rotPrev.w =
-		DECOMP_VehCalc_InterpBySpeed(
-			(int)driver->rotPrev.w,
-			8,
-			uVar10);
+	driver->rotPrev.w = DECOMP_VehCalc_InterpBySpeed((int)driver->rotPrev.w, 8, uVar10);
 
 	// Interpolate rotation by speed
-	driver->rotCurr.w =
-		DECOMP_VehCalc_InterpBySpeed(
-			(int)driver->rotCurr.w,
-			(int)(driver->rotPrev.w * sdata->gGT->elapsedTimeMS) >> 5,
-			iVar13);
+	driver->rotCurr.w = DECOMP_VehCalc_InterpBySpeed((int)driver->rotCurr.w, (int)(driver->rotPrev.w * sdata->gGT->elapsedTimeMS) >> 5, iVar13);
 }
 
-void PhysTerrainSlope(struct Driver* driver)
+void PhysTerrainSlope(struct Driver *driver)
 {
-	#ifndef REBUILD_PS1
+#ifndef REBUILD_PS1
 	VehPhysForce_RotAxisAngle(&driver->matrixMovingDir, &driver->AxisAngle1_normalVec.x, (int)driver->angle);
 	gte_SetRotMatrix(&driver->matrixMovingDir);
 	DECOMP_VehPhysForce_CounterSteer(driver);
-	#endif
+#endif
 }

@@ -1,7 +1,7 @@
 #include <common.h>
 
 // temporary workaround
-extern struct Ovr233_Credits_BSS* creditsBSS;
+extern struct Ovr233_Credits_BSS *creditsBSS;
 
 // ASM-verified: 0x800b885c-0x800b88c8
 void CS_Credits_DestroyCreditGhost(void)

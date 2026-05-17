@@ -1,27 +1,27 @@
 #include <common.h>
 
-unsigned char DECOMP_MM_TransitionInOut(struct TransitionMeta* meta, int framesPassed, int numFrames)
+unsigned char DECOMP_MM_TransitionInOut(struct TransitionMeta *meta, int framesPassed, int numFrames)
 {
 	unsigned char bool_Transitioning;
 	short start;
 	short framesLeft;
-	
+
 	bool_Transitioning = 1;
 	start = meta->headStart;
 	framesLeft = ((short)framesPassed - start);
 
-    if (framesLeft == FPS_DOUBLE(4))
-    {
-        // Play "swoosh" sound for menu transition
-        DECOMP_OtherFX_Play(0x65, 0);
-    }
+	if (framesLeft == FPS_DOUBLE(4))
+	{
+		// Play "swoosh" sound for menu transition
+		DECOMP_OtherFX_Play(0x65, 0);
+	}
 
 	// last member of array is null-terminated with 0xFFFF
-	for(/**/; start > -1; meta++)
+	for (/**/; start > -1; meta++)
 	{
 		start = meta->headStart;
 		framesLeft = ((short)framesPassed - start);
-		
+
 		if (framesLeft < 1)
 		{
 			bool_Transitioning = 0;

@@ -5,10 +5,10 @@
 
 struct ctr_state
 {
-    SDL_Window *window;
-    int window_width;
-    int window_height;
-    int running;
+	SDL_Window *window;
+	int window_width;
+	int window_height;
+	int running;
 };
 
 #endif

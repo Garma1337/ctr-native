@@ -1,21 +1,23 @@
 #include <common.h>
 
-void* DECOMP_MEMPACK_AllocMem(int allocSize)
+void *DECOMP_MEMPACK_AllocMem(int allocSize)
 {
 	int firstFreeByte;
 	int newAllocSize;
-	struct Mempack* ptrMempack;
+	struct Mempack *ptrMempack;
 
 	// Get the pointer to the memory allocation system
 	ptrMempack = sdata->PtrMempack;
 
 	// if out of memory
-	if(DECOMP_MEMPACK_GetFreeBytes() < allocSize)
+	if (DECOMP_MEMPACK_GetFreeBytes() < allocSize)
 	{
-		DECOMP_CTR_ErrorScreen(0xFF,0,0);
+		DECOMP_CTR_ErrorScreen(0xFF, 0, 0);
 
 		// infinite loop
-		for(;;) {}
+		for (;;)
+		{
+		}
 	}
 
 	// align up
@@ -31,5 +33,5 @@ void* DECOMP_MEMPACK_AllocMem(int allocSize)
 	// append allocator for next allocation
 	ptrMempack->firstFreeByte = (void *)(firstFreeByte + newAllocSize);
 
-	return (void*)firstFreeByte;
+	return (void *)firstFreeByte;
 }

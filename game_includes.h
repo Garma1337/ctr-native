@@ -13,9 +13,9 @@
 #include "game/TEST_ThTickSetAndExec.c"
 
 #define ConvertRotToMatrix TEST_ConvertRotToMatrix
-#define ThTick_SetAndExec TEST_ThTickSetAndExec
+#define ThTick_SetAndExec  TEST_ThTickSetAndExec
 
-#define SquareRoot0_stub SquareRoot0
+#define SquareRoot0_stub   SquareRoot0
 
 #include "game/AltMods/Mods1.c"
 #include "game/AltMods/Mods2.c"

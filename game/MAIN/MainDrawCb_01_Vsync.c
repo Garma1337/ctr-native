@@ -2,15 +2,16 @@
 
 void DECOMP_MainDrawCb_Vsync()
 {
-	struct GameTracker* gGT;
-	
+	struct GameTracker *gGT;
+
 	sdata->vsyncTillFlip--;
-	
+
 	gGT = sdata->gGT;
 	gGT->frameTimer_VsyncCallback++;
 	gGT->vSync_between_drawSync++;
-	if ((gGT->gameMode1 & PAUSE_ALL) == 0) gGT->frameTimer_Confetti++;
-	
+	if ((gGT->gameMode1 & PAUSE_ALL) == 0)
+		gGT->frameTimer_Confetti++;
+
 	// 1 unit = 1/16th millisecond
 	// 1 second = ~16,000 units
 	// increment timer, and reset system clock
@@ -28,32 +29,32 @@ void DECOMP_MainDrawCb_Vsync()
 	{
 		DECOMP_howl_PlayAudio_Update();
 	}
-	
-	#ifdef REBUILD_PC
+
+#ifdef REBUILD_PC
 	PsyX_UpdateInput();
-	#endif
-	
+#endif
+
 	DECOMP_GAMEPAD_PollVsync(sdata->gGamepads);
-	
+
 #if 1
-	
-	#ifdef USE_PROFILER
+
+#ifdef USE_PROFILER
 	void DebugProfiler_Subsection(int flag);
 	DebugProfiler_Subsection(1);
-	#endif
-	
+#endif
+
 	// wait two vsyncs for VRAM upload to finish
 	if (sdata->frameFinishedVRAM != 0)
 	{
 		sdata->frameFinishedVRAM--;
-		
+
 		if (sdata->frameFinishedVRAM == 0)
 		{
 			sdata->queueReady = 1;
 		}
 	}
-	
+
 #endif
-	
+
 	return;
 }

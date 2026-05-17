@@ -2,16 +2,16 @@
 
 void DECOMP_LOAD_Robots1P(int characterID)
 {
-	#ifdef USE_ONLINE
+#ifdef USE_ONLINE
 	return;
-	#endif
-	
+#endif
+
 	int newCharacterID = 0;
-	for(int i = 1; i < 8; i++, newCharacterID++)
+	for (int i = 1; i < 8; i++, newCharacterID++)
 	{
-		if(newCharacterID == characterID)
+		if (newCharacterID == characterID)
 			newCharacterID++;
-		
+
 		data.characterIDs[i] = newCharacterID;
 	}
 }

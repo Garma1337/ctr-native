@@ -33,13 +33,13 @@
 #include <time.h>
 static clock_t startClock;
 #define ResetRCnt(x) startClock = clock();
-#define GetRCnt(x) ((clock() - startClock) * 15720) / CLOCKS_PER_SEC_FIX
+#define GetRCnt(x)   ((clock() - startClock) * 15720) / CLOCKS_PER_SEC_FIX
 
-#define BUILD 926
-#define u_char unsigned char
-#define u_short unsigned short
-#define u_int unsigned int
-#define u_long unsigned int
+#define BUILD        926
+#define u_char       unsigned char
+#define u_short      unsigned short
+#define u_int        unsigned int
+#define u_long       unsigned int
 
 #ifndef __GNUC__
 #define _Static_assert(x)
@@ -47,7 +47,8 @@ static clock_t startClock;
 #define __attribute__(x)
 
 #define RECT RECT16
-typedef enum {
+typedef enum
+{
 	PAD_ID_MOUSE = 0x1,
 	PAD_ID_NEGCON = 0x2,
 	PAD_ID_IRQ10_GUN = 0x3,
@@ -75,7 +76,8 @@ static int oldTicks = 0;
 
 static void CalcFPS(void)
 {
-	if (frameCount++ != frameGap) return;
+	if (frameCount++ != frameGap)
+		return;
 
 	frameCount = 0;
 	int newTicks = SDL_GetTicks();
@@ -95,33 +97,33 @@ void PsyXKeyboardHandler(int key, char down)
 }
 
 #ifndef CC
-	#if __GNUC__
-		#if _WIN32
-			#ifndef __clang__
-				#define CC "MINGW-GCC"
-			#else
-				#define CC "MINGW-CLANG"
-			#endif
-		#else
-			#ifndef __clang__
-				#define CC "GCC"
-			#else
-				#define CC "CLANG"
-			#endif
-		#endif
-	#elif defined(_MSC_VER)
-		#define CC "MSVC"
-	#else
-		#define CC "Unknown"
-	#endif
+#if __GNUC__
+#if _WIN32
+#ifndef __clang__
+#define CC "MINGW-GCC"
+#else
+#define CC "MINGW-CLANG"
+#endif
+#else
+#ifndef __clang__
+#define CC "GCC"
+#else
+#define CC "CLANG"
+#endif
+#endif
+#elif defined(_MSC_VER)
+#define CC "MSVC"
+#else
+#define CC "Unknown"
+#endif
 #endif
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	printf("[CTR Native] Starting...\n");
 	fflush(stdout);
 
-	char* sdlBasePath = SDL_GetBasePath();
+	char *sdlBasePath = SDL_GetBasePath();
 	printf("[CTR Native] SDL base path: %s\n", sdlBasePath ? sdlBasePath : "(null)");
 	fflush(stdout);
 
@@ -131,12 +133,16 @@ int main(int argc, char* argv[])
 	{
 		strncpy(baseDir, sdlBasePath, sizeof(baseDir));
 		SDL_free(sdlBasePath);
-		char* sep = strrchr(baseDir, '\\');
-		if (!sep) sep = strrchr(baseDir, '/');
-		if (sep) *sep = '\0';
+		char *sep = strrchr(baseDir, '\\');
+		if (!sep)
+			sep = strrchr(baseDir, '/');
+		if (sep)
+			*sep = '\0';
 		sep = strrchr(baseDir, '\\');
-		if (!sep) sep = strrchr(baseDir, '/');
-		if (sep) *sep = '\0';
+		if (!sep)
+			sep = strrchr(baseDir, '/');
+		if (sep)
+			*sep = '\0';
 	}
 	else
 	{
@@ -204,5 +210,10 @@ void Platform_InitFilesystem(const char *disc_image)
 }
 
 // NOTE(aalhendi): stubs to make compile work for now
-int NikoGetEnterKey(void) { return 0; }
-void NikoCalcFPS(void) {}
+int NikoGetEnterKey(void)
+{
+	return 0;
+}
+void NikoCalcFPS(void)
+{
+}

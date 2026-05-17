@@ -5,9 +5,9 @@
 
 #pragma once
 
-#define EOF			-1
+#define EOF       -1
 
-#define FIONBLOCK	(('f'<<8)|1)
-#define FIOCSCAN	(('f'<<8)|2)
+#define FIONBLOCK (('f' << 8) | 1)
+#define FIOCSCAN  (('f' << 8) | 2)
 
-#define DIOFORMAT	(('d'<<8)|1)
+#define DIOFORMAT (('d' << 8) | 1)

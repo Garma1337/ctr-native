@@ -1,11 +1,11 @@
 #include <common.h>
 
-void DECOMP_MainInit_OTMem(struct GameTracker* gGT)
+void DECOMP_MainInit_OTMem(struct GameTracker *gGT)
 {
 	int size;
 	int levelID = gGT->levelID;
 
-	// cutscenes, main menu, garage, ND Box, 
+	// cutscenes, main menu, garage, ND Box,
 	// any% end, 101% end, credits
 	if (levelID >= INTRO_RACE_TODAY)
 	{

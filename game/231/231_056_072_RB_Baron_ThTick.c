@@ -63,13 +63,10 @@ short bubbleScaleArr3[] =
 #endif
 
 
-
 // === WARNING ===
 // All the MinePool stuff is now double-allocated
 // because the block compiles to Baron instead of
 // RB_GetThread_ClosestTracker
-
-
 
 
 // OG game allocated 50 of these,
@@ -77,9 +74,9 @@ short bubbleScaleArr3[] =
 // causing Nitro Court Crystal Challenge bug.
 // Here, only allocate 40, save some RAM
 #include <common.h>
-//struct WeaponSlot231 minePoolItem[40]; //moved to d231
-//struct LinkedList minePoolTaken;
-//struct LinkedList minePoolFree;
+// struct WeaponSlot231 minePoolItem[40]; //moved to d231
+// struct LinkedList minePoolTaken;
+// struct LinkedList minePoolFree;
 
 #include "231_056_RB_Baron_ThTick.c"
 #include "231_057_RB_Baron_LInB.c"

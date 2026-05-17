@@ -18,7 +18,7 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 	u_int cursorCharacter;
 	int cursorPosition;
 	u_int keyboardCharacter;
-	char* currNameEntered;
+	char *currNameEntered;
 	u_short strColorBlink;
 	u_short blinkWhite;
 	int j;
@@ -34,7 +34,7 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 	u_int keyboardCharacterTopByte;
 	u_char character;
 
-	struct GameTracker* gGT = sdata->gGT;
+	struct GameTracker *gGT = sdata->gGT;
 
 	soundID = 0;
 	local_38 = 0;
@@ -45,7 +45,7 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 	currNameEntered = gGT->currNameEntered;
 	blinkWhite = ((sdata->typeTimer >> FPS_RIGHTSHIFT(0)) & 1) << 2;
 
-	while(currNameEntered[0] != 0)
+	while (currNameEntered[0] != 0)
 	{
 		if (currNameEntered[0] > 2)
 		{
@@ -103,7 +103,7 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 
 			// this works fine?
 #if 1
-// Turn two-byte value into four-byte string (int)
+			// Turn two-byte value into four-byte string (int)
 			int keyboardString = data.unicodeAscii[letterID];
 #endif
 
@@ -113,14 +113,12 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 				strColorBlink = blinkWhite;
 
 			// LETTER button draw
-			DECOMP_DecalFont_DrawLine(
-				(char*)&keyboardString,
+			DECOMP_DecalFont_DrawLine((char *)&keyboardString,
 
-				//j*22 + 116,
-				j * WIDE_PICK(22, 17) + WIDE_PICK(116, 148),
+			                          // j*22 + 116,
+			                          j * WIDE_PICK(22, 17) + WIDE_PICK(116, 148),
 
-				i * 18 + 88,
-				FONT_BIG, strColorBlink);
+			                          i * 18 + 88, FONT_BIG, strColorBlink);
 
 			letterID++;
 		}
@@ -130,26 +128,21 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 	DECOMP_DecalFont_DrawLine(sdata->lngStrings[318], 256, 44, FONT_BIG, (JUSTIFY_CENTER | ORANGE));
 
 	// player name
-	DECOMP_DecalFont_DrawLine(
-		gGT->currNameEntered,
+	DECOMP_DecalFont_DrawLine(gGT->currNameEntered,
 
-		// original name max len = 8,
-		// 192 = 256 - iconW(16) * halfMaxLen(4)
-		WIDE_PICK(192,  208),
+	                          // original name max len = 8,
+	                          // 192 = 256 - iconW(16) * halfMaxLen(4)
+	                          WIDE_PICK(192, 208),
 
-		68,
-		FONT_BIG, WHITE);
+	                          68, FONT_BIG, WHITE);
 
 	if (((sdata->typeTimer & FPS_DOUBLE(2)) != 0) && (currNameLength < 16))
 	{
 		currNameWidth = DECOMP_DecalFont_GetLineWidth(gGT->currNameEntered, FONT_BIG);
 
-		DECOMP_DecalFont_DrawLine(
-			sdata->str_underscore,
-			currNameWidth + WIDE_PICK(192,  208),
+		DECOMP_DecalFont_DrawLine(sdata->str_underscore, currNameWidth + WIDE_PICK(192, 208),
 
-			68,
-			FONT_BIG, ORANGE);
+		                          68, FONT_BIG, ORANGE);
 	}
 
 	// SAVE button blink
@@ -158,28 +151,24 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 		strColorBlink = blinkWhite;
 
 	// SAVE button draw
-	DECOMP_DecalFont_DrawLine(
-		sdata->lngStrings[stringCopy],
+	DECOMP_DecalFont_DrawLine(sdata->lngStrings[stringCopy],
 
-		// 472 is (r.x + r.w - 8)
-		WIDE_PICK(472, 416),
+	                          // 472 is (r.x + r.w - 8)
+	                          WIDE_PICK(472, 416),
 
-		150,
-		FONT_BIG, (JUSTIFY_RIGHT | strColorBlink));
+	                          150, FONT_BIG, (JUSTIFY_RIGHT | strColorBlink));
 
 	// CANCEL button blink
 	strColorBlink = 0;
 	if (cursorPosition == 1000)
 		strColorBlink = blinkWhite;
 
-	DECOMP_DecalFont_DrawLine(
-		sdata->lngStrings[321],
+	DECOMP_DecalFont_DrawLine(sdata->lngStrings[321],
 
-		// 40 is (r.x + 8)
-		WIDE_PICK(40, 96),
+	                          // 40 is (r.x + 8)
+	                          WIDE_PICK(40, 96),
 
-		150,
-		1, strColorBlink);
+	                          150, 1, strColorBlink);
 
 	// leftX = 32 (256-224)
 	// rightX = 480 (256+224)
@@ -200,9 +189,7 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 
 	r.y = 39;
 	r.h = 130;
-	DECOMP_RECTMENU_DrawInnerRect(
-		&r, 0,
-		gGT->backBuffer->otMem.startPlusFour);
+	DECOMP_RECTMENU_DrawInnerRect(&r, 0, gGT->backBuffer->otMem.startPlusFour);
 
 	int tap = sdata->buttonTapPerPlayer[0];
 
@@ -211,10 +198,7 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 	if (kbCurr != kbPrev)
 	{
 		// Between A and Z
-		if (
-				(kbCurr >= 4) &&
-				(kbCurr <= 29)
-			)
+		if ((kbCurr >= 4) && (kbCurr <= 29))
 		{
 			// SDL_KEY_A = 4
 			kbCurr -= 4;
@@ -230,21 +214,18 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 		// '0' key
 		if (kbCurr == 39)
 		{
-			cursorPosition = 2*13;
+			cursorPosition = 2 * 13;
 			tap = BTN_CIRCLE;
 		}
 
 		// Between 1 and 9
-		if (
-			(kbCurr >= 30) &&
-			(kbCurr <= 38)
-			)
+		if ((kbCurr >= 30) && (kbCurr <= 38))
 		{
 			// SDL_SCANCODE_1 = 30
 			kbCurr -= 30;
 
 			// cursor position of '1'
-			kbCurr += 2*13 + 1;
+			kbCurr += 2 * 13 + 1;
 
 			cursorPosition = kbCurr;
 			tap = BTN_CIRCLE;
@@ -260,7 +241,7 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 		// Backspace
 		if (kbCurr == 42)
 		{
-			cursorPosition = kbCurr-4;
+			cursorPosition = kbCurr - 4;
 			tap = BTN_CIRCLE;
 		}
 
@@ -347,7 +328,8 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 						else
 						{
 							soundID = 0;
-							if (cursorPosition != 1000) goto LAB_8004b0dc;
+							if (cursorPosition != 1000)
+								goto LAB_8004b0dc;
 							soundID = 3;
 							local_38 = -1;
 						}
@@ -436,7 +418,7 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 
 LAB_8004b0dc:
 
-if (soundID != 0)
+	if (soundID != 0)
 	{
 		DECOMP_OtherFX_Play(data.soundIndexArray[soundID], 1);
 	}

@@ -2,5 +2,5 @@
 
 void DECOMP_MM_Video_ClearMem(void)
 {
-    MEMPACK_PopState();
+	MEMPACK_PopState();
 }

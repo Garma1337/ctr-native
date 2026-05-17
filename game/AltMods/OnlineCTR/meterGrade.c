@@ -1,8 +1,6 @@
-void AssignMeterGrade(struct Driver * driver, int meterLeft)
+void AssignMeterGrade(struct Driver *driver, int meterLeft)
 {
-	const int gradeTreshold[] = {SECONDS(1) * FP(0.50), SECONDS(1) * FP(0.65),
-						SECONDS(1) * FP(0.80), SECONDS(1) * FP(0.90),
-						SECONDS(1) * FP(0.95)};
+	const int gradeTreshold[] = {SECONDS(1) * FP(0.50), SECONDS(1) * FP(0.65), SECONDS(1) * FP(0.80), SECONDS(1) * FP(0.90), SECONDS(1) * FP(0.95)};
 	const int gradeColors[] = {TROPY_LIGHT_BLUE, TINY_GREEN, PAPU_YELLOW, ROO_ORANGE, ORANGE_RED};
 
 	driver->meterGradeTimer = SECONDS(0.5);

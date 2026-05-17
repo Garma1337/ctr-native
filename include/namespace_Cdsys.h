@@ -4,9 +4,9 @@ enum XA_TYPE
 	CDSYS_XA_TYPE_EXTRA,
 	CDSYS_XA_TYPE_GAME,
 
-	#if BUILD <= SepReview
+#if BUILD <= SepReview
 	CDSYS_XA_TYPE_WARP,
-	#endif
+#endif
 
 	CDSYS_XA_NUM_TYPES
 };
@@ -48,10 +48,9 @@ struct XNF
 
 	// 0x54
 	// size = numXAs_total
-	//int XaCdPos[0];
+	// int XaCdPos[0];
 };
-#define XNF_GETXACDPOS(x) \
-	(int*)((unsigned int)x + sizeof(struct XNF))
+#define XNF_GETXACDPOS(x) (int *)((unsigned int)x + sizeof(struct XNF))
 
 struct XaSize
 {
@@ -73,8 +72,7 @@ struct AudioMeta
 	// \XA\MUSIC\S01.XA;1
 	// \XA\ENG\EXTRA\S05.XA;1
 	// \XA\ENG\GAME\S20.XA;1
-	char* name;
-
+	char *name;
 };
 
 _Static_assert(sizeof(struct AudioMeta) == 8);

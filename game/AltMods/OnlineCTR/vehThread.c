@@ -1,20 +1,26 @@
 
 void UpdateCheckpointTracker(int driverID);
-typedef void (*VehicleFuncPtr)(struct Thread* thread, struct Driver* driver);
+typedef void (*VehicleFuncPtr)(struct Thread *thread, struct Driver *driver);
 
-void RunVehicleThread(VehicleFuncPtr func, struct Thread* thread, struct Driver* driver)
+void RunVehicleThread(VehicleFuncPtr func, struct Thread *thread, struct Driver *driver)
 {
-    UpdateCheckpointTracker(driver->driverID);
-    if (func == nullptr) { return; }
+	UpdateCheckpointTracker(driver->driverID);
+	if (func == nullptr)
+	{
+		return;
+	}
 
-    bool restore = false;
-    if ((sdata->gGT->gameMode1 & END_OF_RACE) && (checkpointTracker[driver->driverID].raceFinished == 0))
-    {
-        sdata->gGT->gameMode1 &= ~(END_OF_RACE);
-        restore = true;
-    }
-    func(thread, driver);
-    if (restore) { sdata->gGT->gameMode1 |= END_OF_RACE; }
+	bool restore = false;
+	if ((sdata->gGT->gameMode1 & END_OF_RACE) && (checkpointTracker[driver->driverID].raceFinished == 0))
+	{
+		sdata->gGT->gameMode1 &= ~(END_OF_RACE);
+		restore = true;
+	}
+	func(thread, driver);
+	if (restore)
+	{
+		sdata->gGT->gameMode1 |= END_OF_RACE;
+	}
 }
 
 
@@ -41,9 +47,9 @@ void RunVehicleSet13(struct Thread* dThread, struct Driver* dOnline)
 			continue;
 		
 		RunVehicleThread(pcVar5, dThread, dOnline);
-		
-		#ifdef USE_60FPS
-			#ifndef REBUILD_PS1
+
+#ifdef USE_60FPS
+#ifndef REBUILD_PS1
 				// if this function just ran
 				if(pcVar5 == VehFrameProc_Driving)
 				{
@@ -55,8 +61,8 @@ void RunVehicleSet13(struct Thread* dThread, struct Driver* dOnline)
 						dOnline->matrixIndex >> 1;
 					}
 				}
-			#endif
-		#endif
+#endif
+#endif
 	}
 }
 #endif

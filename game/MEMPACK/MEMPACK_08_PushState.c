@@ -2,7 +2,7 @@
 
 int DECOMP_MEMPACK_PushState()
 {
-	struct Mempack* ptrMempack;
+	struct Mempack *ptrMempack;
 	int numBookmarks;
 
 	// Get the pointer to the memory allocation system
@@ -12,7 +12,7 @@ int DECOMP_MEMPACK_PushState()
 	numBookmarks = ptrMempack->numBookmarks;
 
 	// if less than 16
-	if(numBookmarks < 0x10)
+	if (numBookmarks < 0x10)
 	{
 		// set bookmark address
 		ptrMempack->bookmarks[numBookmarks] = ptrMempack->firstFreeByte;

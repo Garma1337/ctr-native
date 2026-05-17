@@ -7,13 +7,13 @@ struct ScratchpadFrustum
 {
 	// 1f800000
 	int pos[3];
-	
+
 	// 1f80000C
 	struct FrustumCornerOUT fc[4];
-	
+
 	// 1f800024
 	short camPos[3];
-	
+
 	// 1f80002A
 	// -- end --
 };
@@ -22,16 +22,16 @@ struct ScratchpadFrustum
 // the bitshifting annoys me
 union FrustumCornerIN
 {
-  struct
-  {
-	  short x;
-	  short y;
-  };
-  
-  struct
-  {
-	  int self;
-  };
+	struct
+	{
+		short x;
+		short y;
+	};
+
+	struct
+	{
+		int self;
+	};
 };
 
 struct PushBuffer
@@ -56,9 +56,9 @@ struct PushBuffer
 	// 0x14
 	short fadeFromBlack_desiredResult;
 
-	//0x16 controls speed of fade in effect
-	//if negative then it's fading to black.
-	//in this case 0x12 should be positive and 0x14 should be 0
+	// 0x16 controls speed of fade in effect
+	// if negative then it's fading to black.
+	// in this case 0x12 should be positive and 0x14 should be 0
 	short fade_step;
 
 	// 0x18
@@ -98,16 +98,16 @@ struct PushBuffer
 
 	// 0xA8
 	char frustumData[0x28];
-	
+
 	// 0xD0
 	int RenderListJmpIndex[6];
-	
+
 	// 0xE8
 	struct BoundingBox bbox;
 
 	// 0xF4
 	// u_long* is the type in the psn00b header
-	u_long* ptrOT;
+	u_long *ptrOT;
 
 	// 0xF8 also OT,
 	// only pixel LOD, what's the difference

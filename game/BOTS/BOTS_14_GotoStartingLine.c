@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_BOTS_GotoStartingLine(struct Driver* d)
+void DECOMP_BOTS_GotoStartingLine(struct Driver *d)
 {
 	int accelDuration;
 	short rotY;
@@ -12,16 +12,16 @@ void DECOMP_BOTS_GotoStartingLine(struct Driver* d)
 	// get position where driver should spawn
 	char spawnPos = sdata->kartSpawnOrderArray[d->driverID];
 
-	//all within unk5bc
-	*(int*)((unsigned int)d + 0x5ec) = 0;
-	*(int*)((unsigned int)d + 0x5e8) = 0;
-	*(int*)((unsigned int)d + 0x5e4) = 0;
-	*(int*)((unsigned int)d + 0x5e0) = 0;
-	*(int*)((unsigned int)d + 0x5dc) = 0;
-	*(int*)((unsigned int)d + 0x5d8) = 0;
-	*(int*)((unsigned int)d + 0x5d4) = 0;
-	*(int*)((unsigned int)d + 0x5d0) = 0;
-	*(int*)((unsigned int)d + 0x5cc) = 0;
+	// all within unk5bc
+	*(int *)((unsigned int)d + 0x5ec) = 0;
+	*(int *)((unsigned int)d + 0x5e8) = 0;
+	*(int *)((unsigned int)d + 0x5e4) = 0;
+	*(int *)((unsigned int)d + 0x5e0) = 0;
+	*(int *)((unsigned int)d + 0x5dc) = 0;
+	*(int *)((unsigned int)d + 0x5d8) = 0;
+	*(int *)((unsigned int)d + 0x5d4) = 0;
+	*(int *)((unsigned int)d + 0x5d0) = 0;
+	*(int *)((unsigned int)d + 0x5cc) = 0;
 
 	d->botData.ai_posBackup[0] = d->posCurr.x;
 	d->botData.ai_posBackup[1] = d->posCurr.y;

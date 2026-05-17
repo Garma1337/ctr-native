@@ -22,13 +22,15 @@
 
 #include <stddef.h>
 
-typedef enum _PCDRV_OpenMode {
-	PCDRV_MODE_READ       = 0,
-	PCDRV_MODE_WRITE      = 1,
+typedef enum _PCDRV_OpenMode
+{
+	PCDRV_MODE_READ = 0,
+	PCDRV_MODE_WRITE = 1,
 	PCDRV_MODE_READ_WRITE = 2
 } PCDRV_OpenMode;
 
-typedef enum _PCDRV_SeekMode {
+typedef enum _PCDRV_SeekMode
+{
 	PCDRV_SEEK_SET = 0,
 	PCDRV_SEEK_CUR = 1,
 	PCDRV_SEEK_END = 2

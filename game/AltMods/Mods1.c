@@ -22,13 +22,13 @@
 void RelocMemory_DefragUI_Mods1_XNF()
 {
 	// 0x730 = 1840 bytes
-	FILLER(0,7,3,0);
+	FILLER(0, 7, 3, 0);
 }
 
 void RelocMemory_DefragUI_Mods1_ThreadPool()
 {
 	// 0x1b00 = 6912 bytes
-	FILLER(1,B,0,0);
+	FILLER(1, B, 0, 0);
 }
 
 #endif

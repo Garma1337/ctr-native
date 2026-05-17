@@ -2,63 +2,63 @@
 #define ONLINE_GLOBAL_H
 
 #define VERSION 1021
-//#define ONLINE_BETA_MODE
+// #define ONLINE_BETA_MODE
 
 #ifndef WINDOWS_INCLUDE
-	#include <common.h>
+#include <common.h>
 #endif
 
 #ifdef __GNUC__ // GCC and Clang
 
-	#ifdef WINDOWS_INCLUDE
-		#include <unistd.h> // for the 'usleep()' function
-	#endif
+#ifdef WINDOWS_INCLUDE
+#include <unistd.h> // for the 'usleep()' function
+#endif
 
-	#define STATIC_ASSERT2(test_for_true, message) _Static_assert((test_for_true), message)
+#define STATIC_ASSERT2(test_for_true, message) _Static_assert((test_for_true), message)
 
 #else // MSVC (Visual Studio)
 
-	#define STATIC_ASSERT2 static_assert
+#define STATIC_ASSERT2 static_assert
 
 #endif
 
-//#define true				1
-//#define false				0
+// #define true				1
+// #define false				0
 
-#define DONT_SHOW_NAME		            0
-#define SHOW_NAME			            1
+#define DONT_SHOW_NAME       0
+#define SHOW_NAME            1
 
-#define DEFAULT_IP			            "127.0.0.1" // the default IP address we want to use for private lobbies
-#define IP_ADDRESS_SIZE		            16 // assuming IPv4 (which is "xxx.xxx.xxx.xxx" + '\0')
-#define PORT_SIZE			            6 // the port number as a string (0-65535 + '\0')
+#define DEFAULT_IP           "127.0.0.1" // the default IP address we want to use for private lobbies
+#define IP_ADDRESS_SIZE      16          // assuming IPv4 (which is "xxx.xxx.xxx.xxx" + '\0')
+#define PORT_SIZE            6           // the port number as a string (0-65535 + '\0')
 
-//these let you adjust the number of rooms allocated to game types
+// these let you adjust the number of rooms allocated to game types
 //"START" is the starting index [0-15]
 //"LENGTH" is the length of that game type.
 
-//itemless rooms are 0 1 2 3 4
-#define ROOM_ITEMLESSSTART 0
-#define ROOM_ITEMLESSLENGTH 5
-//item rooms are 5 6 7 8 9
-#define ROOM_ITEMSTART 5
-#define ROOM_ITEMLENGTH 5
-//retro rooms are 10 11 12
-#define ROOM_RETROSTART 10
-#define ROOM_RETROLENGTH 3
-//item + retro rooms are 13 14 15
-#define ROOM_ITEMRETROSTART 13
+// itemless rooms are 0 1 2 3 4
+#define ROOM_ITEMLESSSTART   0
+#define ROOM_ITEMLESSLENGTH  5
+// item rooms are 5 6 7 8 9
+#define ROOM_ITEMSTART       5
+#define ROOM_ITEMLENGTH      5
+// retro rooms are 10 11 12
+#define ROOM_RETROSTART      10
+#define ROOM_RETROLENGTH     3
+// item + retro rooms are 13 14 15
+#define ROOM_ITEMRETROSTART  13
 #define ROOM_ITEMRETROLENGTH 3
 
-#define ROOM_IS_ITEMS(rn) ((rn >= ROOM_ITEMSTART && rn < (ROOM_ITEMSTART + ROOM_ITEMLENGTH)) || \
-(rn >= ROOM_ITEMRETROSTART && rn < (ROOM_ITEMRETROSTART + ROOM_ITEMRETROLENGTH)))
-#define ROOM_IS_RETRO(rn) ((rn >= ROOM_RETROSTART && rn < (ROOM_RETROSTART + ROOM_RETROLENGTH)) || \
-(rn >= ROOM_ITEMRETROSTART && rn < (ROOM_ITEMRETROSTART + ROOM_ITEMRETROLENGTH)))
+#define ROOM_IS_ITEMS(rn) \
+	((rn >= ROOM_ITEMSTART && rn < (ROOM_ITEMSTART + ROOM_ITEMLENGTH)) || (rn >= ROOM_ITEMRETROSTART && rn < (ROOM_ITEMRETROSTART + ROOM_ITEMRETROLENGTH)))
+#define ROOM_IS_RETRO(rn) \
+	((rn >= ROOM_RETROSTART && rn < (ROOM_RETROSTART + ROOM_RETROLENGTH)) || (rn >= ROOM_ITEMRETROSTART && rn < (ROOM_ITEMRETROSTART + ROOM_ITEMRETROLENGTH)))
 
- // 2 seconds to be very tolerant on client
+// 2 seconds to be very tolerant on client
 #ifdef USE_60FPS
-#define DISCONNECT_AT_UNSYNCED_FRAMES   120
+#define DISCONNECT_AT_UNSYNCED_FRAMES 120
 #else
-#define DISCONNECT_AT_UNSYNCED_FRAMES   60
+#define DISCONNECT_AT_UNSYNCED_FRAMES 60
 #endif
 
 enum ClientState
@@ -79,7 +79,7 @@ enum ClientState
 	NUM_STATES
 };
 
-#define NAME_LEN 9
+#define NAME_LEN        9
 #define MAX_NUM_PLAYERS 8
 
 typedef struct raceStats
@@ -156,10 +156,10 @@ struct OnlineCTR
 		unsigned char boolNow;
 	} Shoot[MAX_NUM_PLAYERS];
 
-    // Frames that the client didn't update
-    int frames_unsynced;
+	// Frames that the client didn't update
+	int frames_unsynced;
 
-    // Last windowsClientSync counter
+	// Last windowsClientSync counter
 	char lastWindowsClientSync;
 
 	// when to start the client.exe loop
@@ -170,7 +170,7 @@ struct OnlineCTR
 
 STATIC_ASSERT2(sizeof(struct OnlineCTR) <= 0x400, "Size of OnlineCTR must be lte 1kb");
 
-#define MAX_LAPS 7
+#define MAX_LAPS    7
 #define CPS_PER_LAP 2
 
 typedef struct TotalTime
@@ -181,7 +181,7 @@ typedef struct TotalTime
 	int miliseconds;
 } TotalTime;
 
-void ElapsedTimeToTotalTime(TotalTime * totalTime, int elapsedTime);
+void ElapsedTimeToTotalTime(TotalTime *totalTime, int elapsedTime);
 
 typedef struct CheckpointTracker
 {
@@ -202,7 +202,7 @@ void EndOfRace_Icons();
 #include <time.h>
 
 #ifndef __GNUC__
-	#include <windows.h>
+#include <windows.h>
 #endif
 
 enum ServerGiveMessageType
@@ -520,7 +520,7 @@ struct CG_MessageEndRace
 	int lapTime;
 };
 
-#define DRIVER_COURSE_OFFSET 0x514
+#define DRIVER_COURSE_OFFSET  0x514
 #define DRIVER_BESTLAP_OFFSET 0x63c
 
 STATIC_ASSERT2(sizeof(struct CG_Header) == 1, "Size of CG_Header must be 1 byte");
@@ -553,30 +553,30 @@ void StopAnimation();
 #endif
 
 #ifndef WINDOWS_INCLUDE
-	// set zero to fix DuckStation,
-	// is it needed on console?
-	#define USE_K1 0
+// set zero to fix DuckStation,
+// is it needed on console?
+#define USE_K1 0
 
-	#if USE_K1 == 1
-		register struct OnlineCTR* octr asm("k1");
-	#else
-		static struct OnlineCTR* octr = (struct OnlineCTR*)0x8000C000;
-	#endif
+#if USE_K1 == 1
+register struct OnlineCTR *octr asm("k1");
+#else
+static struct OnlineCTR *octr = (struct OnlineCTR *)0x8000C000;
+#endif
 
-	// my functions
-	void StatePS1_Launch_EnterPID();
-	void StatePS1_Launch_PickServer();
-	void StatePS1_Launch_Error();
-	void StatePS1_Launch_PickRoom();
-	void StatePS1_Lobby_AssignRole();
-	void StatePS1_Lobby_HostTrackPick();
-	void StatePS1_Lobby_GuestTrackWait();
-	void StatePS1_Lobby_CharacterPick();
-	void StatePS1_Lobby_WaitForLoading();
-	void StatePS1_Lobby_StartLoading();
-	void StatePS1_Game_WaitForRace();
-	void StatePS1_Game_StartRace();
-	void StatePS1_Game_EndRace();
+// my functions
+void StatePS1_Launch_EnterPID();
+void StatePS1_Launch_PickServer();
+void StatePS1_Launch_Error();
+void StatePS1_Launch_PickRoom();
+void StatePS1_Lobby_AssignRole();
+void StatePS1_Lobby_HostTrackPick();
+void StatePS1_Lobby_GuestTrackWait();
+void StatePS1_Lobby_CharacterPick();
+void StatePS1_Lobby_WaitForLoading();
+void StatePS1_Lobby_StartLoading();
+void StatePS1_Game_WaitForRace();
+void StatePS1_Game_StartRace();
+void StatePS1_Game_EndRace();
 #endif
 
 #endif

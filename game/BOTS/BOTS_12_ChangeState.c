@@ -1,6 +1,6 @@
 #include <common.h>
 
-u_int DECOMP_BOTS_ChangeState(struct Driver* driverVictim, int damageType, struct Driver* driverAttacker, int reason)
+u_int DECOMP_BOTS_ChangeState(struct Driver *driverVictim, int damageType, struct Driver *driverAttacker, int reason)
 {
 	driverVictim->ChangeState_param2 = 0;
 
@@ -26,10 +26,7 @@ u_int DECOMP_BOTS_ChangeState(struct Driver* driverVictim, int damageType, struc
 			driverVictim->botData.unk5ba = 1;
 			driverVictim->botData.unk5bc.ai_turboMeter = 0;
 
-			if (
-					(data.characterIDs[driverVictim->driverID] != NITROS_OXIDE) || 
-					((driverVictim->actionsFlagSet & 1) != 0)
-				)
+			if ((data.characterIDs[driverVictim->driverID] != NITROS_OXIDE) || ((driverVictim->actionsFlagSet & 1) != 0))
 			{
 				driverVictim->reserves = 0;
 				driverVictim->turbo_outsideTimer = 0;
@@ -66,7 +63,7 @@ u_int DECOMP_BOTS_ChangeState(struct Driver* driverVictim, int damageType, struc
 		}
 		break;
 	case 2:
-		driverVictim->botData.unk626 = 0; //OG code just assigns 0 to 1 byte at +0x626, not 2 bytes
+		driverVictim->botData.unk626 = 0; // OG code just assigns 0 to 1 byte at +0x626, not 2 bytes
 		driverVictim->botData.unk5bc.ai_turboMeter = 0;
 		driverVictim->botData.unk5ba = 2;
 		driverVictim->reserves = 0;
@@ -133,7 +130,8 @@ u_int DECOMP_BOTS_ChangeState(struct Driver* driverVictim, int damageType, struc
 	if (damageType)
 	{
 		driverAttacker->numTimesAttacked++;
-		switch (damageType) {
+		switch (damageType)
+		{
 		case 1:
 			driverAttacker->numTimesBombsHitSomeone++;
 			break;

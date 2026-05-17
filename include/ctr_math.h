@@ -71,7 +71,8 @@ typedef union Vec4
 	s32 v[4];
 } Vec4;
 
-typedef struct Matrix {
+typedef struct Matrix
+{
 	s16 m[3][3];
 	Vec3 t;
 } Matrix;
@@ -80,36 +81,36 @@ typedef struct Matrix {
 
 struct TrigTable
 {
-    s16 sin;
-    s16 cos;
+	s16 sin;
+	s16 cos;
 };
 
-#define ANG_TWO_PI 0x1000        // 360
-#define ANG_PI (ANG_TWO_PI / 2)  // 180
-#define ANG_HALF_PI (ANG_PI / 2) // 90
+#define ANG_TWO_PI                         0x1000           // 360
+#define ANG_PI                             (ANG_TWO_PI / 2) // 180
+#define ANG_HALF_PI                        (ANG_PI / 2)     // 90
 
-#define ANG_MODULO_TWO_PI(x) ((x) & (ANG_TWO_PI - 1))   // ang % 360
-#define ANG_MODULO_PI(x) ((x) & (ANG_PI - 1))           // ang % 180
-#define ANG_MODULO_HALF_PI(x) ((x) & (ANG_HALF_PI - 1)) // ang % 90
+#define ANG_MODULO_TWO_PI(x)               ((x) & (ANG_TWO_PI - 1))  // ang % 360
+#define ANG_MODULO_PI(x)                   ((x) & (ANG_PI - 1))      // ang % 180
+#define ANG_MODULO_HALF_PI(x)              ((x) & (ANG_HALF_PI - 1)) // ang % 90
 
-#define ANG(x) ANG_MODULO_TWO_PI(((short)((((float) x) * ANG_TWO_PI) / 360))) // works for any float, pos or neg
+#define ANG(x)                             ANG_MODULO_TWO_PI(((short)((((float)x) * ANG_TWO_PI) / 360))) // works for any float, pos or neg
 
-#define IS_ANG_FIRST_OR_THIRD_QUADRANT(x) (((x) & ANG_HALF_PI) == 0) // [0, 90[ \/ [180, 270[
-#define IS_ANG_THIRD_OR_FOURTH_QUADRANT(x) ((x) & ANG_PI)            // [180, 360[
+#define IS_ANG_FIRST_OR_THIRD_QUADRANT(x)  (((x) & ANG_HALF_PI) == 0) // [0, 90[ \/ [180, 270[
+#define IS_ANG_THIRD_OR_FOURTH_QUADRANT(x) ((x) & ANG_PI)             // [180, 360[
 
 // fixed point //
 
-#define FRACTIONAL_BITS_8 8
-#define FP8_ONE (1 << FRACTIONAL_BITS_8)
-#define FP8_INT(x) ((x) >> FRACTIONAL_BITS_8)
-#define FP8_MULT(x, y) (((x) * (y)) >> FRACTIONAL_BITS_8)
-#define FP8(x) ((int)(((float)x) * FP8_ONE))
+#define FRACTIONAL_BITS_8                  8
+#define FP8_ONE                            (1 << FRACTIONAL_BITS_8)
+#define FP8_INT(x)                         ((x) >> FRACTIONAL_BITS_8)
+#define FP8_MULT(x, y)                     (((x) * (y)) >> FRACTIONAL_BITS_8)
+#define FP8(x)                             ((int)(((float)x) * FP8_ONE))
 
-#define FRACTIONAL_BITS 12
-#define FP_ONE (1 << FRACTIONAL_BITS)
-#define FP_INT(x) ((x) >> FRACTIONAL_BITS)
-#define FP_MULT(x, y) (((x) * (y)) >> FRACTIONAL_BITS)
-#define FP(x) ((int)(((float)x) * FP_ONE))
+#define FRACTIONAL_BITS                    12
+#define FP_ONE                             (1 << FRACTIONAL_BITS)
+#define FP_INT(x)                          ((x) >> FRACTIONAL_BITS)
+#define FP_MULT(x, y)                      (((x) * (y)) >> FRACTIONAL_BITS)
+#define FP(x)                              ((int)(((float)x) * FP_ONE))
 
 short FP_Div(short a, short b); // see fp.c
 

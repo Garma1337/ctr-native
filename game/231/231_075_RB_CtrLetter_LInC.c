@@ -1,25 +1,24 @@
 #include <common.h>
 
-int DECOMP_RB_CtrLetter_LInC(
-	struct Instance* letterInst,
-	struct Thread* driverTh,
-	struct ScratchpadStruct* sps)
+int DECOMP_RB_CtrLetter_LInC(struct Instance *letterInst, struct Thread *driverTh, struct ScratchpadStruct *sps)
 {
 	short posScreen[2];
-	MATRIX* m;
-	struct Driver* driver;
-	struct PushBuffer* pb;
+	MATRIX *m;
+	struct Driver *driver;
+	struct PushBuffer *pb;
 	int driverID;
 	int modelID;
 
 	modelID = sps->Input1.modelID;
 
-	// if crystal did not collide with 
+	// if crystal did not collide with
 	// DYNAMIC_PLAYER, quit function
-	if (modelID != DYNAMIC_PLAYER) return 0;
+	if (modelID != DYNAMIC_PLAYER)
+		return 0;
 
 	// handle scale
-	if (letterInst->scale[0] == 0) return 0;
+	if (letterInst->scale[0] == 0)
+		return 0;
 	letterInst->scale[0] = 0;
 	letterInst->scale[1] = 0;
 	letterInst->scale[2] = 0;

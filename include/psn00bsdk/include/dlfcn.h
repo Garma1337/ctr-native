@@ -22,28 +22,29 @@
  * This macro is not required when calling a DLL function from another DLL, as
  * GCC will generate code to set $t9 appropriately.
  */
-#define DL_PRE_CALL(func) \
-	__asm__ volatile("move $t9, %0;" :: "r"(func) : "$t9")
+#define DL_PRE_CALL(func) __asm__ volatile("move $t9, %0;" ::"r"(func) : "$t9")
 
 /* Structure and enum definitions */
 
-typedef enum _DL_ResolveMode {
-	DL_LAZY				= 1, // Resolve functions when they are first called (default)
-	DL_NOW				= 2, // Resolve all symbols immediately on load
-	DL_FREE_ON_DESTROY	= 4  // Automatically free DLL buffer when closing DLL
+typedef enum _DL_ResolveMode
+{
+	DL_LAZY = 1,           // Resolve functions when they are first called (default)
+	DL_NOW = 2,            // Resolve all symbols immediately on load
+	DL_FREE_ON_DESTROY = 4 // Automatically free DLL buffer when closing DLL
 } DL_ResolveMode;
 
 // Members of this struct should not be accessed directly in most cases, but
 // they are intentionally exposed for easier expandability.
-typedef struct _DLL {
-	void			*ptr, *malloc_ptr;
-	size_t			size;
-	const uint32_t	*hash;
-	uint32_t		*got;
-	Elf32_Sym		*symtab;
-	const char		*strtab;
-	uint16_t		symbol_count, first_got_symbol;
-	uint16_t		got_local_count, got_extern_count;
+typedef struct _DLL
+{
+	void *ptr, *malloc_ptr;
+	size_t size;
+	const uint32_t *hash;
+	uint32_t *got;
+	Elf32_Sym *symtab;
+	const char *strtab;
+	uint16_t symbol_count, first_got_symbol;
+	uint16_t got_local_count, got_extern_count;
 } DLL;
 
 /* Public API */
@@ -107,7 +108,7 @@ void DL_AddMapSymbol(const char *name, void *ptr);
  * @details Initializes the internal symbol hash table, then parses entries
  * from the provided string buffer (which may or may not be null-terminated)
  * and adds each one to the table. The string buffer won't be further
- * referenced and can be safely deallocated after parsing. Returns the number 
+ * referenced and can be safely deallocated after parsing. Returns the number
  * of entries successfully parsed.
  *
  * The string buffer shall contain one or more lines, each of which must follow

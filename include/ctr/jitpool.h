@@ -10,10 +10,10 @@ typedef struct JitPool
 	s32 maxItems;
 	u32 itemSize;
 	s32 poolSize;
-	void* ptrPoolData;
+	void *ptrPoolData;
 } JitPool;
 
-void JitPool_Clear(JitPool* AP);
-void JitPool_Init(JitPool* AP, s32 maxItems, s32 itemSize);
-Item* JitPool_Add(JitPool* AP);
-void JitPool_Remove(JitPool* AP, Item* item);
+void JitPool_Clear(JitPool *AP);
+void JitPool_Init(JitPool *AP, s32 maxItems, s32 itemSize);
+Item *JitPool_Add(JitPool *AP);
+void JitPool_Remove(JitPool *AP, Item *item);

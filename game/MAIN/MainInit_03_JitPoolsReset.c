@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_MainInit_JitPoolsReset(struct GameTracker* gGT)
+void DECOMP_MainInit_JitPoolsReset(struct GameTracker *gGT)
 {
 	DECOMP_JitPool_Clear(&gGT->JitPools.thread);
 	DECOMP_JitPool_Clear(&gGT->JitPools.instance);

@@ -34,9 +34,9 @@
  *	@{
  */
 //! Initial remainder value for lzCRC16()
-#define LZP_CRC16_REMAINDER		0x0000
+#define LZP_CRC16_REMAINDER  0x0000
 //! Initial remainder value for lzCRC32()
-#define LZP_CRC32_REMAINDER		0xFFFFFFFF
+#define LZP_CRC32_REMAINDER  0xFFFFFFFF
 /*! @} */
 
 
@@ -45,11 +45,11 @@
  *	@{
  */
 //! Minimal (but fast) compression
-#define LZP_COMPRESS_FAST	0
+#define LZP_COMPRESS_FAST    0
 //! Normal compression level
-#define LZP_COMPRESS_NORMAL	1
+#define LZP_COMPRESS_NORMAL  1
 //! Maximum compression level
-#define LZP_COMPRESS_MAX	2
+#define LZP_COMPRESS_MAX     2
 /*!	@}	*/
 
 
@@ -57,41 +57,41 @@
  *	@{
  */
 //! No error
-#define LZP_ERR_NONE			0
+#define LZP_ERR_NONE         0
 //! Decompression error
-#define LZP_ERR_DECOMPRESS		-1
+#define LZP_ERR_DECOMPRESS   -1
 //! Not a valid LZP/QLP/PCK archive
-#define LZP_ERR_INVALID_PACK	-2
+#define LZP_ERR_INVALID_PACK -2
 //! File not found
-#define LZP_ERR_NOTFOUND		-3
+#define LZP_ERR_NOTFOUND     -3
 //! CRC check mismatch (data corruption)
-#define LZP_ERR_CRC_MISMATCH	-4
+#define LZP_ERR_CRC_MISMATCH -4
 /*! @} */
 
 
 //! Header structure of an LZP format archive file
-typedef struct {
-
+typedef struct
+{
 	//! File ID (must always be 'LZP')
-	char	    id[3];
+	char id[3];
 	//! File count
-	uint8_t 	numFiles;
+	uint8_t numFiles;
 
 } LZP_HEAD;
 
 //! File entry structure for an LZP format archive file
-typedef struct {
-
+typedef struct
+{
 	//! File name
-    char	    fileName[16];
-    //! CRC32 checksum of file
-    uint32_t	crc;
-    //! Original size of file in bytes
-    uint32_t	fileSize;
-    //! Compressed size of file
-    uint32_t	packedSize;
-    //! File data offset
-    uint32_t	offset;
+	char fileName[16];
+	//! CRC32 checksum of file
+	uint32_t crc;
+	//! Original size of file in bytes
+	uint32_t fileSize;
+	//! Compressed size of file
+	uint32_t packedSize;
+	//! File data offset
+	uint32_t offset;
 
 } LZP_FILE;
 
@@ -120,7 +120,7 @@ extern "C" {
  *
  *	\returns The size of the compressed data in bytes.
  */
-int lzCompress(void* outBuff, const void* inBuff, int inSize, int level);
+int lzCompress(void *outBuff, const void *inBuff, int inSize, int level);
 
 /*! Decompress a compressed block of data.
  *
@@ -139,9 +139,9 @@ int lzCompress(void* outBuff, const void* inBuff, int inSize, int level);
  *	\returns Size of decompressed data in bytes or LZP_ERR_DECOMPRESS if a
  *	decompression error occurred.
  */
-int lzDecompress(void* outBuff, const void* inBuff, int inSize);
+int lzDecompress(void *outBuff, const void *inBuff, int inSize);
 
-int lzDecompressLen(void* outBuff, int outSize, const void* inBuff, int inSize);
+int lzDecompressLen(void *outBuff, int outSize, const void *inBuff, int inSize);
 
 /*! Sets the sizes of hash tables for data compression.
  *
@@ -171,7 +171,7 @@ void lzResetHashSizes();
  *
  *	\returns CRC16 hash of specified buffer.
  */
-uint16_t lzCRC16(const void* buff, int bytes, uint16_t crc);
+uint16_t lzCRC16(const void *buff, int bytes, uint16_t crc);
 
 /*!	Calculates a CRC32 hash of the specified buffer.
  *
@@ -181,7 +181,7 @@ uint16_t lzCRC16(const void* buff, int bytes, uint16_t crc);
  *
  *	\returns CRC32 hash of specified buffer.
  */
-uint32_t lzCRC32(const void* buff, int bytes, uint32_t crc);
+uint32_t lzCRC32(const void *buff, int bytes, uint32_t crc);
 
 /*!	@}	*/
 
@@ -198,9 +198,9 @@ uint32_t lzCRC32(const void* buff, int bytes, uint32_t crc);
  *
  *	\returns File index of found file or one of \ref libraryErrorCodes if an error occurred.
  */
-int lzpSearchFile(const char* fileName, const LZP_HEAD* lzpack);
+int lzpSearchFile(const char *fileName, const LZP_HEAD *lzpack);
 
-int lzpFileSize(const LZP_HEAD* lzpack, int fileNum);
+int lzpFileSize(const LZP_HEAD *lzpack, int fileNum);
 
 /*! Get a pointer to a file entry inside of an LZP archive.
  *
@@ -209,7 +209,7 @@ int lzpFileSize(const LZP_HEAD* lzpack, int fileNum);
  *
  *	\returns A pointer to an LZP_FILE struct or NULL if an error occurred.
  */
-const LZP_FILE* lzpFileEntry(const LZP_HEAD* lzpack, int fileNum);
+const LZP_FILE *lzpFileEntry(const LZP_HEAD *lzpack, int fileNum);
 
 /*! Unpacks a file from an LZP archive to the specified memory buffer.
  *
@@ -219,7 +219,7 @@ const LZP_FILE* lzpFileEntry(const LZP_HEAD* lzpack, int fileNum);
  *
  *	\returns Size of decompressed file in bytes or one of \ref libraryErrorCodes if an error occurred.
  */
-int lzpUnpackFile(void* buff, const LZP_HEAD* lzpack, int fileNum);
+int lzpUnpackFile(void *buff, const LZP_HEAD *lzpack, int fileNum);
 
 /*!	@}	*/
 

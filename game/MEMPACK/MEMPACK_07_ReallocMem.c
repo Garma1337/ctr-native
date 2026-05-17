@@ -1,10 +1,10 @@
 #include <common.h>
 
-void* DECOMP_MEMPACK_ReallocMem(int allocSize)
+void *DECOMP_MEMPACK_ReallocMem(int allocSize)
 {
 	int firstFreeByte;
 	int newAllocSize;
-	struct Mempack* ptrMempack;
+	struct Mempack *ptrMempack;
 
 	// Get the pointer to the memory allocation system
 	ptrMempack = sdata->PtrMempack;
@@ -15,10 +15,7 @@ void* DECOMP_MEMPACK_ReallocMem(int allocSize)
 	newAllocSize = (allocSize + 3) & 0xfffffffc;
 
 	// undo old, allocate new
-	ptrMempack->firstFreeByte = (void*)(
-			(int)ptrMempack->firstFreeByte -
-			ptrMempack->sizeOfPrevAllocation +
-			newAllocSize);
+	ptrMempack->firstFreeByte = (void *)((int)ptrMempack->firstFreeByte - ptrMempack->sizeOfPrevAllocation + newAllocSize);
 
 	// save the amount of memory we allocated
 	// so that it can be used for Realloc, if needed

@@ -2,10 +2,11 @@
 
 void DECOMP_LOAD_Hub_Main(int bigfilePtr)
 {
-	struct GameTracker* gGT;
+	struct GameTracker *gGT;
 
 	// quit if already loading
-	if (sdata->Loading.stage != -1) return;
+	if (sdata->Loading.stage != -1)
+		return;
 
 	gGT = sdata->gGT;
 
@@ -16,10 +17,7 @@ void DECOMP_LOAD_Hub_Main(int bigfilePtr)
 	// if new level does not need to load
 	if (nextLevelID == 0)
 	{
-		if (
-			(needSwapNow != 0) ||
-			(gGT->bool_AdvHub_NeedToSwapLEV != 0)
-			)
+		if ((needSwapNow != 0) || (gGT->bool_AdvHub_NeedToSwapLEV != 0))
 		{
 			gGT->bool_AdvHub_NeedToSwapLEV = 0;
 			DECOMP_LOAD_Hub_SwapNow();
@@ -32,16 +30,13 @@ void DECOMP_LOAD_Hub_Main(int bigfilePtr)
 		// only in AdvHub, or else the game
 		// crashes in 4P Nitro Court Life Limit
 		unsigned int currLevelID = gGT->levelID - GEM_STONE_VALLEY;
-		
-		//ctr hubs are 0-4
-		if (currLevelID >= 5) return;
 
-		#ifndef REBUILD_PS1
-		DECOMP_LOAD_Hub_ReadFile(
-			bigfilePtr,
-			rdata.MetaDataHubs[currLevelID].connectedHub_LevID[nextLevelID - 1],
-			3 - gGT->activeMempackIndex
-		);
-		#endif
+		// ctr hubs are 0-4
+		if (currLevelID >= 5)
+			return;
+
+#ifndef REBUILD_PS1
+		DECOMP_LOAD_Hub_ReadFile(bigfilePtr, rdata.MetaDataHubs[currLevelID].connectedHub_LevID[nextLevelID - 1], 3 - gGT->activeMempackIndex);
+#endif
 	}
 }

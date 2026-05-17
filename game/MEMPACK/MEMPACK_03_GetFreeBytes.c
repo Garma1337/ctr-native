@@ -2,7 +2,7 @@
 
 int DECOMP_MEMPACK_GetFreeBytes()
 {
-	struct Mempack* ptrMempack;
+	struct Mempack *ptrMempack;
 
 	// Get the pointer to the memory allocation system
 	ptrMempack = sdata->PtrMempack;

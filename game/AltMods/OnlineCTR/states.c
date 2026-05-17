@@ -5,12 +5,10 @@ extern struct RectMenu menu;
 
 void StatePS1_Launch_EnterPID()
 {
-	DECOMP_DecalFont_DrawLine(
-		"Attach Windows Client To Continue",
-		0x100,0xA8,FONT_SMALL,JUSTIFY_CENTER|ORANGE);
+	DECOMP_DecalFont_DrawLine("Attach Windows Client To Continue", 0x100, 0xA8, FONT_SMALL, JUSTIFY_CENTER | ORANGE);
 }
 
-extern char* countryNames[8];
+extern char *countryNames[8];
 bool initString = true;
 
 void StatePS1_Launch_PickServer()
@@ -24,7 +22,7 @@ void StatePS1_Launch_PickServer()
 	MenuWrites_ServerCountry();
 
 	// If already picked
-	if(MenuFinished() == 1)
+	if (MenuFinished() == 1)
 	{
 		if (!initString)
 		{
@@ -41,20 +39,20 @@ void StatePS1_Launch_PickServer()
 void ResetPsxGlobals()
 {
 	// unlock everything (0,1,2,3,4,5)
-	for(int i = 0; i < 6; i++)
+	for (int i = 0; i < 6; i++)
 		sdata->advProgress.rewards[i] = 0xffffffff;
 
 	// 8mb RAM expansion, for emulators that support it.
 	// Needed for 3 or more players on Adv Hub
-	sdata->mempack[0].lastFreeByte = (void*)0x80800000;
-	sdata->mempack[0].endOfAllocator = (void*)0x80800000;
+	sdata->mempack[0].lastFreeByte = (void *)0x80800000;
+	sdata->mempack[0].endOfAllocator = (void *)0x80800000;
 
 	sdata->ptrActiveMenu = 0;
 
 	// keep running till the client gets a result,
 	// DriverID is set to -1 on windows-side before this.
 
-	for(int i = 0; i < 8; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		data.characterIDs[i] = 0;
 		octr->boolLockedInCharacters[i] = 0;
@@ -64,15 +62,15 @@ void ResetPsxGlobals()
 // should rename to EnterRoom
 void StatePS1_Launch_PickRoom()
 {
-	#if 0
+#if 0
 	DecalFont_DrawLine("Itemless games on first page",0x100,0x14,FONT_SMALL,JUSTIFY_CENTER|PAPU_YELLOW);
 	DecalFont_DrawLine("Items games on second page",0x100,0x1c,FONT_SMALL,JUSTIFY_CENTER|PAPU_YELLOW);
-	#endif
+#endif
 
 	MenuWrites_ServerRoom();
 
 	// If already picked
-	if(MenuFinished() == 1)
+	if (MenuFinished() == 1)
 	{
 		ResetPsxGlobals();
 		return;
@@ -82,26 +80,24 @@ void StatePS1_Launch_PickRoom()
 	NewPage_ServerRoom();
 
 	int serverTotal = 0;
-	for(int i = 0; i < 16; i++)
+	for (int i = 0; i < 16; i++)
 	{
 		int curr = octr->clientCount[i];
-		if(curr > 8) curr -= 8;
+		if (curr > 8)
+			curr -= 8;
 		serverTotal += curr;
 	}
 
-	char* text = "Server Total: 000";
+	char *text = "Server Total: 000";
 	text[14] = '0' + ((serverTotal / 100) % 10);
 	text[15] = '0' + ((serverTotal / 10) % 10);
 	text[16] = '0' + (serverTotal % 10);
 
-	DecalFont_DrawLine(
-		text,
-		menu.posX_curr,0xb8,
-		FONT_SMALL,JUSTIFY_CENTER|PAPU_YELLOW);
+	DecalFont_DrawLine(text, menu.posX_curr, 0xb8, FONT_SMALL, JUSTIFY_CENTER | PAPU_YELLOW);
 
 	if (octr->autoRetryJoinRoomIndex != -1)
 	{
-		char* wtj = "Waiting to join ->";
+		char *wtj = "Waiting to join ->";
 		int lineInd = octr->autoRetryJoinRoomIndex % 8;
 		int pageNum = octr->autoRetryJoinRoomIndex / 8;
 		if (pageNum == octr->PageNumber)
@@ -111,15 +107,15 @@ void StatePS1_Launch_PickRoom()
 			octr->serverRoom = octr->autoRetryJoinRoomIndex;
 			octr->serverLockIn2 = 1;
 			octr->autoRetryJoinRoomIndex = -1;
-			//0 = cursor move noise
-			//1 = cursor select noise
-			//2 = triangle noise
-			//3 = Ding!
-			//4 = different ding!
-			//5 = womp
-			//6 = slammed into wall sfx
+			// 0 = cursor move noise
+			// 1 = cursor select noise
+			// 2 = triangle noise
+			// 3 = Ding!
+			// 4 = different ding!
+			// 5 = womp
+			// 6 = slammed into wall sfx
 			//...
-			DECOMP_OtherFX_Play(3, 1); //play SFX to notify user
+			DECOMP_OtherFX_Play(3, 1); // play SFX to notify user
 		}
 	}
 }
@@ -129,16 +125,16 @@ void StatePS1_Launch_Error()
 	char str[32];
 
 	sprintf(str, "XDELTA: %d", octr->ver_psx);
-	DECOMP_DecalFont_DrawLine(str,0x100,0x98-2,FONT_SMALL,JUSTIFY_CENTER);
+	DECOMP_DecalFont_DrawLine(str, 0x100, 0x98 - 2, FONT_SMALL, JUSTIFY_CENTER);
 
 	sprintf(str, "CLIENT: %d", octr->ver_pc);
-	DECOMP_DecalFont_DrawLine(str,0x100,0xA0-2,FONT_SMALL,JUSTIFY_CENTER);
+	DECOMP_DecalFont_DrawLine(str, 0x100, 0xA0 - 2, FONT_SMALL, JUSTIFY_CENTER);
 
 	sprintf(str, "SERVER: %d", octr->ver_server);
-	DECOMP_DecalFont_DrawLine(str,0x100,0xA8-2,FONT_SMALL,JUSTIFY_CENTER);
+	DECOMP_DecalFont_DrawLine(str, 0x100, 0xA8 - 2, FONT_SMALL, JUSTIFY_CENTER);
 
-	char* str2 = "PLEASE UPDATE ALL 3 TO PLAY";
-	DECOMP_DecalFont_DrawLine(str2,0x100,0xB0-2,FONT_SMALL,JUSTIFY_CENTER);
+	char *str2 = "PLEASE UPDATE ALL 3 TO PLAY";
+	DECOMP_DecalFont_DrawLine(str2, 0x100, 0xB0 - 2, FONT_SMALL, JUSTIFY_CENTER);
 
 	sdata->ptrActiveMenu = 0;
 }
@@ -146,9 +142,9 @@ void StatePS1_Launch_Error()
 void StatePS1_Lobby_AssignRole()
 {
 	menu.posX_curr = 0x70; // X position
-	menu.posY_curr = 0x84;  // Y position
+	menu.posY_curr = 0x84; // Y position
 
-	if(octr->DriverID == 0)
+	if (octr->DriverID == 0)
 	{
 		octr->CurrState = LOBBY_HOST_TRACK_PICK;
 	}
@@ -164,9 +160,9 @@ void StatePS1_Lobby_HostTrackPick()
 	MenuWrites_Tracks();
 
 	// If already picked
-	if(MenuFinished() == 1)
+	if (MenuFinished() == 1)
 	{
-		if(octr->levelID > TURBO_TRACK)
+		if (octr->levelID > TURBO_TRACK)
 		{
 			octr->lapID = 0;
 			octr->boolLockedInLap = 1;
@@ -190,7 +186,8 @@ void FakeState_Lobby_HostLapPick()
 	MenuWrites_Laps();
 
 	// If already picked
-	if(MenuFinished() == 1) return;
+	if (MenuFinished() == 1)
+		return;
 
 	PrintCharacterStats();
 
@@ -205,13 +202,9 @@ void StatePS1_Lobby_GuestTrackWait()
 	// close menu
 	sdata->ptrActiveMenu = 0;
 
-	DECOMP_DecalFont_DrawLine(
-		"waiting for host",
-		menu.posX_curr,0xA8,FONT_SMALL,JUSTIFY_CENTER|ORANGE);
+	DECOMP_DecalFont_DrawLine("waiting for host", menu.posX_curr, 0xA8, FONT_SMALL, JUSTIFY_CENTER | ORANGE);
 
-	DECOMP_DecalFont_DrawLine(
-		"to pick the track",
-		menu.posX_curr,0xB0,FONT_SMALL,JUSTIFY_CENTER|ORANGE);
+	DECOMP_DecalFont_DrawLine("to pick the track", menu.posX_curr, 0xB0, FONT_SMALL, JUSTIFY_CENTER | ORANGE);
 }
 
 void StatePS1_Lobby_CharacterPick()
@@ -219,7 +212,8 @@ void StatePS1_Lobby_CharacterPick()
 	MenuWrites_Characters();
 
 	// If already picked
-	if(MenuFinished() == 1) return;
+	if (MenuFinished() == 1)
+		return;
 
 	PrintCharacterStats();
 	PrintRecvTrack();
@@ -228,9 +222,9 @@ void StatePS1_Lobby_CharacterPick()
 	NewPage_Characters();
 
 	// get menu
-	struct RectMenu* b = sdata->ptrActiveMenu;
+	struct RectMenu *b = sdata->ptrActiveMenu;
 
-	if(b != 0)
+	if (b != 0)
 	{
 		// update real-time
 		data.characterIDs[0] = (8 * octr->PageNumber) + b->rowSelected;
@@ -243,10 +237,7 @@ void StatePS1_Lobby_WaitForLoading()
 	PrintRecvTrack();
 
 	// waiting for all charactesr
-	DECOMP_DecalFont_DrawLine(
-		"Hope you win!",
-		menu.posX_curr,menu.posY_curr,
-		FONT_SMALL,JUSTIFY_CENTER|ORANGE);
+	DECOMP_DecalFont_DrawLine("Hope you win!", menu.posX_curr, menu.posY_curr, FONT_SMALL, JUSTIFY_CENTER | ORANGE);
 }
 
 static bool initRace = true;
@@ -259,38 +250,33 @@ void StatePS1_Lobby_StartLoading()
 	PrintCharacterStats();
 	PrintRecvTrack();
 
-	DECOMP_DecalFont_DrawLine(
-		"LOADING...",
-		menu.posX_curr,menu.posY_curr,
-		FONT_SMALL,JUSTIFY_CENTER|ORANGE);
+	DECOMP_DecalFont_DrawLine("LOADING...", menu.posX_curr, menu.posY_curr, FONT_SMALL, JUSTIFY_CENTER | ORANGE);
 
 	// variable reuse, wait a few frames,
 	// so screen updates with green names
 	octr->CountPressX++;
-	if(octr->CountPressX < FPS_DOUBLE(15)) return;
+	if (octr->CountPressX < FPS_DOUBLE(15))
+		return;
 
 	// stop music,
 	// stop "most FX", let menu FX ring
 	Music_Stop();
-	howl_StopAudio(1,1,0);
+	howl_StopAudio(1, 1, 0);
 	sdata->unkAudioState = 0;
 
-	struct GameTracker* gGT = sdata->gGT;
+	struct GameTracker *gGT = sdata->gGT;
 
 	// for battle tracks
 	gGT->gameMode1 = LOADING | BATTLE_MODE;
 
-	if(
-		(octr->levelID <= TURBO_TRACK) ||
-		(octr->levelID >= GEM_STONE_VALLEY)
-	  )
+	if ((octr->levelID <= TURBO_TRACK) || (octr->levelID >= GEM_STONE_VALLEY))
 	{
 		// for all other tracks
 		gGT->gameMode1 = LOADING | ARCADE_MODE;
 	}
 
 	// instant load
-	//sdata->Loading.stage = 0;
+	// sdata->Loading.stage = 0;
 
 	// load with flag animation
 	DECOMP_MainRaceTrack_RequestLoad(octr->levelID);
@@ -299,17 +285,14 @@ void StatePS1_Lobby_StartLoading()
 	// it will die when loading screen covers screen
 }
 
-RECT drawTimeRECT =
-{
-	.x = 0xffec,
-	.y = 0x46 - 3,
-	.w = 0x228,
-	.h = 0
-};
+RECT drawTimeRECT = {.x = 0xffec, .y = 0x46 - 3, .w = 0x228, .h = 0};
 
 static void Instance_Ghostify(struct Instance *inst, unsigned driverID, unsigned isDriver)
 {
-	if (!inst) { return; }
+	if (!inst)
+	{
+		return;
+	}
 
 	if (isDriver)
 	{
@@ -335,7 +318,10 @@ static void Ghostify()
 	{
 		gGT->drivers[driverID]->wheelSprites = ICONGROUP_GETICONS(gGT->iconGroup[0xC]);
 		inst = gGT->drivers[driverID]->instSelf;
-		if (!inst) { continue; }
+		if (!inst)
+		{
+			continue;
+		}
 		inst->flags |= 0x60000;
 		inst->alphaScale = 0xA00;
 	}
@@ -360,7 +346,7 @@ static void OnRaceInit()
 
 void StatePS1_Game_WaitForRace()
 {
-	struct GameTracker* gGT = sdata->gGT;
+	struct GameTracker *gGT = sdata->gGT;
 	if (initRace)
 	{
 		OnRaceInit();
@@ -369,10 +355,10 @@ void StatePS1_Game_WaitForRace()
 
 	gGT->trafficLightsTimer = 0xf40;
 	int rn = octr->serverRoom;
-	if (!ROOM_IS_ITEMS(rn)) //itemless only
+	if (!ROOM_IS_ITEMS(rn)) // itemless only
 		Ghostify();
 
-	if((gGT->gameMode1 & START_OF_RACE) != 0)
+	if ((gGT->gameMode1 & START_OF_RACE) != 0)
 		return;
 
 	// Copy from DrawUnpluggedMsg
@@ -382,10 +368,7 @@ void StatePS1_Game_WaitForRace()
 	posY = 0x46;
 	drawTimeRECT.h = 0;
 
-	DECOMP_DecalFont_DrawLine(
-		"WAITING FOR PLAYERS...",
-		0x100, posY + drawTimeRECT.h,
-		FONT_SMALL, (JUSTIFY_CENTER | ORANGE));
+	DECOMP_DecalFont_DrawLine("WAITING FOR PLAYERS...", 0x100, posY + drawTimeRECT.h, FONT_SMALL, (JUSTIFY_CENTER | ORANGE));
 
 	// add for each line
 	drawTimeRECT.h += 8;
@@ -393,10 +376,9 @@ void StatePS1_Game_WaitForRace()
 	// add 3 pixels above, 3 pixels bellow
 	drawTimeRECT.h += 6;
 
-	DECOMP_RECTMENU_DrawInnerRect(
-		&drawTimeRECT, 1, gGT->backBuffer->otMem.startPlusFour);
+	DECOMP_RECTMENU_DrawInnerRect(&drawTimeRECT, 1, gGT->backBuffer->otMem.startPlusFour);
 
-	for(i = 0; i < 8; i++)
+	for (i = 0; i < 8; i++)
 	{
 		octr->Shoot[i].boolNow = 0;
 	}
@@ -409,27 +391,27 @@ void StatePS1_Game_StartRace()
 	int i;
 
 	int rn = octr->serverRoom;
-	if (!ROOM_IS_ITEMS(rn)) //itemless only
+	if (!ROOM_IS_ITEMS(rn)) // itemless only
 		Ghostify();
 
-	for(i = 1; i < 8; i++)
+	for (i = 1; i < 8; i++)
 	{
-		if(octr->Shoot[i].boolNow != 0)
+		if (octr->Shoot[i].boolNow != 0)
 		{
 			octr->Shoot[i].boolNow = 0;
 
-			struct Driver* d = sdata->gGT->drivers[i];
+			struct Driver *d = sdata->gGT->drivers[i];
 			if (d->instBombThrow != 0)
 			{
 				// Detonate the bomb
-				struct TrackerWeapon* bomb = (struct TrackerWeapon*)d->instBombThrow->thread->object;
+				struct TrackerWeapon *bomb = (struct TrackerWeapon *)d->instBombThrow->thread->object;
 				bomb->flags |= 2;
 				d->instBombThrow = NULL;
 			}
 			else if (d->instBubbleHold != 0)
 			{
 				// Shoot the shield
-				struct Shield* shield = (struct Shield*)d->instBubbleHold->thread->object;
+				struct Shield *shield = (struct Shield *)d->instBubbleHold->thread->object;
 				shield->flags |= 2;
 				d->instBubbleHold = NULL;
 			}
@@ -446,19 +428,12 @@ void StatePS1_Game_StartRace()
 
 				// Missiles and Bombs share code,
 				// Change Bomb1x, Bomb3x, Missile3x, to Missile1x
-				if (
-					(weapon == 1) ||
-					(weapon == 10) ||
-					(weapon == 11)
-					)
+				if ((weapon == 1) || (weapon == 10) || (weapon == 11))
 				{
 					weapon = 2;
 				}
 
-				DECOMP_VehPickupItem_ShootNow(
-					d,
-					weapon,
-					octr->Shoot[i].flags);
+				DECOMP_VehPickupItem_ShootNow(d, weapon, octr->Shoot[i].flags);
 			}
 		}
 	}
@@ -466,8 +441,8 @@ void StatePS1_Game_StartRace()
 
 static void OnRaceEnd()
 {
-	struct Driver* before = sdata->gGT->cameraDC[0].driverToFollow;
-	struct Driver** drivers = sdata->gGT->drivers;
+	struct Driver *before = sdata->gGT->cameraDC[0].driverToFollow;
+	struct Driver **drivers = sdata->gGT->drivers;
 	bool foundRacer = false;
 	for (int driverID = 1; driverID < MAX_NUM_PLAYERS; driverID++)
 	{
@@ -480,7 +455,7 @@ static void OnRaceEnd()
 			foundRacer = true;
 		}
 	}
-	//tbh I don't think this fixes the spectator name bug.
+	// tbh I don't think this fixes the spectator name bug.
 	sdata->gGT->cameraDC[0].driverToFollow = before;
 }
 

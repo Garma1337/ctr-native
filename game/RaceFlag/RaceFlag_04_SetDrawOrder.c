@@ -2,5 +2,5 @@
 
 void DECOMP_RaceFlag_SetDrawOrder(int drawOrder)
 {
-    sdata->RaceFlag_DrawOrder = (drawOrder != 0) ? 1 : -1;
+	sdata->RaceFlag_DrawOrder = (drawOrder != 0) ? 1 : -1;
 }

@@ -5,8 +5,8 @@
 
 typedef struct GameTracker
 {
-    u8 fill[0x252c];
-    RNGSeed seed;
+	u8 fill[0x252c];
+	RNGSeed seed;
 } GameTracker;
 
-extern GameTracker* e_gameTracker;
+extern GameTracker *e_gameTracker;

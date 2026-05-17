@@ -1,7 +1,7 @@
 #include <common.h>
 
 // temporary workaround
-extern struct Ovr233_Credits_BSS* creditsBSS;
+extern struct Ovr233_Credits_BSS *creditsBSS;
 
 // ASM-verified: 0x800b8810-0x800b885c
 char *CS_Credits_GetNextString(char *str)

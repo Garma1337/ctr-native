@@ -2,9 +2,9 @@
 
 void DECOMP_PushBuffer_FadeAllWindows()
 {
-	struct GameTracker* gGT = sdata->gGT;
+	struct GameTracker *gGT = sdata->gGT;
 
-	for(int i=0; i < gGT->numPlyrCurrGame; i++)
+	for (int i = 0; i < gGT->numPlyrCurrGame; i++)
 	{
 		DECOMP_PushBuffer_FadeOneWindow(&gGT->pushBuffer[i]);
 	}

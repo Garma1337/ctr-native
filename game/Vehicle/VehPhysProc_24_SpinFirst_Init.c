@@ -7,80 +7,79 @@ void COLL_FIXED_PlayerSearch();
 void Hook60_DriverMain(struct Thread *t, struct Driver *d);
 #endif
 
-void* PlayerSpinningFuncTable[0xD] =
-{
-	DECOMP_VehPhysProc_SpinFirst_InitSetUpdate,
-	0,
-	DECOMP_VehPhysProc_SpinFirst_PhysLinear,
-	DECOMP_VehPhysProc_Driving_Audio,
-	DECOMP_VehPhysProc_SpinFirst_PhysAngular,
-	DECOMP_VehPhysForce_OnApplyForces,
-	
-	#ifndef REBUILD_PS1
-	COLL_MOVED_PlayerSearch,
-	VehPhysForce_CollideDrivers,
-	COLL_FIXED_PlayerSearch,
-	VehPhysGeneral_JumpAndFriction,
-	VehPhysForce_TranslateMatrix,
-	VehFrameProc_Spinning,
+void *PlayerSpinningFuncTable[0xD] = {
+    DECOMP_VehPhysProc_SpinFirst_InitSetUpdate,
+    0,
+    DECOMP_VehPhysProc_SpinFirst_PhysLinear,
+    DECOMP_VehPhysProc_Driving_Audio,
+    DECOMP_VehPhysProc_SpinFirst_PhysAngular,
+    DECOMP_VehPhysForce_OnApplyForces,
 
-		#ifdef USE_60FPS
-		Hook60_DriverMain,
-		#else
-		VehEmitter_DriverMain
-		#endif
+#ifndef REBUILD_PS1
+    COLL_MOVED_PlayerSearch,
+    VehPhysForce_CollideDrivers,
+    COLL_FIXED_PlayerSearch,
+    VehPhysGeneral_JumpAndFriction,
+    VehPhysForce_TranslateMatrix,
+    VehFrameProc_Spinning,
 
-	#endif
+#ifdef USE_60FPS
+    Hook60_DriverMain,
+#else
+    VehEmitter_DriverMain
+#endif
+
+#endif
 };
 
-void DECOMP_VehPhysProc_SpinFirst_Init(struct Thread* t, struct Driver* d)
+void DECOMP_VehPhysProc_SpinFirst_Init(struct Thread *t, struct Driver *d)
 {
 	int i;
-	
+
 	d->kartState = KS_SPINNING;
-	
+
 	d->unk_LerpToForwards = 0;
 	d->turbo_MeterRoomLeft = 0;
-	
-	if(DECOMP_LOAD_IsOpen_RacingOrBattle())
+
+	if (DECOMP_LOAD_IsOpen_RacingOrBattle())
 	{
 		DECOMP_RB_Player_ModifyWumpa(d, -1);
 	}
 
-	#ifdef USE_ONLINE
-	if(d->driverID == 0)
-	#endif
+#ifdef USE_ONLINE
+	if (d->driverID == 0)
+#endif
 
-		#ifndef REBUILD_PS1	
+#ifndef REBUILD_PS1
 		Voiceline_RequestPlay(3, data.characterIDs[d->driverID], 0x10);
-		#endif
-	
+#endif
+
 	// if spinning left
 	d->KartStates.Spinning.spinDir = 1;
 	d->KartStates.Spinning.driftSpinRate = FPS_HALF(300);
-	
-	if(d->ampTurnState < 0)
+
+	if (d->ampTurnState < 0)
 	{
 		// if spinning right
 		d->KartStates.Spinning.spinDir = -1;
 		d->KartStates.Spinning.driftSpinRate = FPS_HALF(-300);
 	}
-	
-	if(d->simpTurnState < 1)
+
+	if (d->simpTurnState < 1)
 	{
 		i = 0x19;
 	}
-	
+
 	else
 	{
 		i = 0x29;
 	}
-	
-	for(i = 0; i < 0xD; i++)
+
+	for (i = 0; i < 0xD; i++)
 	{
 		d->funcPtrs[i] = PlayerSpinningFuncTable[i];
 	}
-	
+
 #ifndef REBUILD_PS1
 	GAMEPAD_JogCon1(d, i, 0x60);
 #endif

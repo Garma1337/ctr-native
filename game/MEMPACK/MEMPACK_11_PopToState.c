@@ -2,7 +2,7 @@
 
 void DECOMP_MEMPACK_PopToState(int id)
 {
-	struct Mempack* ptrMempack;
+	struct Mempack *ptrMempack;
 	int numBookmarks;
 
 	// Get the pointer to the memory allocation system

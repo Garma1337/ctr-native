@@ -40,7 +40,7 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 	u_int scaleDown;
 	u_int txtColor;
 	int bitIndex;
-	
+
 
 	bitIndex = -1;
 	gGT = sdata->gGT;
@@ -65,7 +65,7 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 
 	if (driver->instBigNum->scale[0] != 0x1e00)
 	{
-		struct Instance* instFruitDisp = driver->instFruitDisp;
+		struct Instance *instFruitDisp = driver->instFruitDisp;
 		instFruitDisp->scale[0] = 0;
 		instFruitDisp->scale[1] = 0;
 		instFruitDisp->scale[2] = 0;
@@ -74,7 +74,7 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 	// if not in Token mode, these won't be used until later;
 	lerpStartY = 0;
 	lerpEndY = 0;
-	
+
 	// For trophy race, check 1st place
 	int boolWin = (driver->driverRank == 0);
 
@@ -83,7 +83,7 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 	{
 		// add requirement of C-T-R letters
 		boolWin = (boolWin) && (driver->PickupLetterHUD.numCollected == 3);
-		
+
 		if (boolWin)
 		{
 			// lerp C-T-R letters closer to center by 16 pixels
@@ -93,9 +93,8 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 			lerpEndX = lerpStartX + 0x10;
 			lerpEndY = lerpStartY + 0x10;
 			lerpFrames = FPS_DOUBLE(8);
-            
 
-			
+
 			// If you have not unlocked this CTR Token
 			bitIndex = gGT->levelID + 0x4c;
 			*(int *)&letterPos[0] = *(int *)&hudCTR[0];
@@ -160,25 +159,14 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 					txtStartX = 0x264;
 					txtEndX = 0x100;
 
-					DECOMP_UI_Lerp2D_Linear(
-						&txtPos[0],
-						txtStartX, 0xA6,
-						txtEndX, 0xA6,
-						elapsedFrames, FPS_DOUBLE(8));
+					DECOMP_UI_Lerp2D_Linear(&txtPos[0], txtStartX, 0xA6, txtEndX, 0xA6, elapsedFrames, FPS_DOUBLE(8));
 
 					txtColor = (gGT->timer & FPS_DOUBLE(1)) ? 0xFFFF8003 : 0xFFFF8004;
 
-					DecalFont_DrawLine(
-						sdata->lngStrings[0x16F],
-						txtPos[0], txtPos[1],
-						1, txtColor);
+					DecalFont_DrawLine(sdata->lngStrings[0x16F], txtPos[0], txtPos[1], 1, txtColor);
 				}
 
-				DECOMP_UI_Lerp2D_Linear(
-					&letterPos[0],
-					lerpStartX, lerpStartY,
-					lerpEndX, lerpEndY,
-					elapsedFrames, FPS_DOUBLE(8));
+				DECOMP_UI_Lerp2D_Linear(&letterPos[0], lerpStartX, lerpStartY, lerpEndX, lerpEndY, elapsedFrames, FPS_DOUBLE(8));
 
 				hudToken->flags &= ~HIDE_MODEL;
 				hudToken->matrix.t[0] = hudT->matrix.t[0];
@@ -203,11 +191,7 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 					lerpFrames = FPS_DOUBLE(10);
 				}
 
-				DECOMP_UI_Lerp2D_Linear(
-					&letterPos[0],
-					lerpStartX, lerpStartY,
-					lerpEndX, lerpEndY,
-					elapsedFrames, lerpFrames);
+				DECOMP_UI_Lerp2D_Linear(&letterPos[0], lerpStartX, lerpStartY, lerpEndX, lerpEndY, elapsedFrames, lerpFrames);
 
 				// variable reuse, frame timers
 				lerpStartY = 0;
@@ -232,15 +216,14 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 			for (i = 0; i < 3; i++)
 			{
 				if (
-						// letter is visible
-						((hudLetters[i]->flags & HIDE_MODEL) == 0) &&
+				    // letter is visible
+				    ((hudLetters[i]->flags & HIDE_MODEL) == 0) &&
 
-						// delay letter (6 frames apart)
-						(elapsedFrames > FPS_DOUBLE(6*i)) &&
+				    // delay letter (6 frames apart)
+				    (elapsedFrames > FPS_DOUBLE(6 * i)) &&
 
-						// letter not fully off-screen
-						(-300 < hudLetters[i]->matrix.t[1])
-					)
+				    // letter not fully off-screen
+				    (-300 < hudLetters[i]->matrix.t[1]))
 				{
 					letter = hudLetters[i]->thread->object;
 
@@ -264,7 +247,7 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 		// Draw how much time it took to finish laps and race
 		DECOMP_AA_EndEvent_DisplayTime(i, lerpEndY);
 	}
-	
+
 	elapsedFrames = sdata->framesSinceRaceEnded;
 
 	// If it hasn't been 1 second from race ended
@@ -278,14 +261,14 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 		t = (elapsedFrames & 0xffff) - FPS_DOUBLE(30);
 
 		if (
-			// Every 0.5 seconds or so
-			((t % FPS_DOUBLE(10) & 0xffff) == 0) &&
+		    // Every 0.5 seconds or so
+		    ((t % FPS_DOUBLE(10) & 0xffff) == 0) &&
 
-			// sdata->numIconsEOR is the number of icons being
-			// drawn on the end-of-race menu in 1P mode
+		    // sdata->numIconsEOR is the number of icons being
+		    // drawn on the end-of-race menu in 1P mode
 
-			// If you have not drawn all drivers yet
-			(sdata->numIconsEOR < totalPlyr))
+		    // If you have not drawn all drivers yet
+		    (sdata->numIconsEOR < totalPlyr))
 		{
 			// add an icon to draw
 			sdata->numIconsEOR++;
@@ -294,8 +277,7 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 		// loop through all the driver icons
 		for (i = 0; i < sdata->numIconsEOR; i++)
 		{
-			int iVar11 = gGT->pushBuffer[0].rect.x +
-						 (gGT->pushBuffer[0].rect.w - totalPlyr * 56 + 12) / 2 + (i * 56);
+			int iVar11 = gGT->pushBuffer[0].rect.x + (gGT->pushBuffer[0].rect.w - totalPlyr * 56 + 12) / 2 + (i * 56);
 
 			if (elapsedFrames + lerpEndY > FPS_DOUBLE(300))
 			{
@@ -313,47 +295,36 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 			t -= FPS_DOUBLE(10);
 
 			// interpolate fly-in
-			DECOMP_UI_Lerp2D_Linear(
-				&letterPos[0],
-				lerpStartX, 0x60,
-				lerpEndX, 0x60,
-				currFrame, FPS_DOUBLE(10));
+			DECOMP_UI_Lerp2D_Linear(&letterPos[0], lerpStartX, 0x60, lerpEndX, 0x60, currFrame, FPS_DOUBLE(10));
 
 			str_number = (char)i + '1';
 
 			// print a single character, a number 1-8,
-			DecalFont_DrawLine(
-				(char*)&str_number, letterPos[0] + 0x20, 0x5f, 2, 4);
+			DecalFont_DrawLine((char *)&str_number, letterPos[0] + 0x20, 0x5f, 2, 4);
 
 			// Draw the driver's character icon
 			DECOMP_UI_DrawDriverIcon(
 
-				gGT->ptrIcons[
-					data.MetaDataCharacters[
-						data.characterIDs[
-							gGT->driversInRaceOrder[i]->driverID
-						]
-					].iconID],
+			    gGT->ptrIcons[data.MetaDataCharacters[data.characterIDs[gGT->driversInRaceOrder[i]->driverID]].iconID],
 
-				MakePoint(letterPos[0], 0x60),
+			    MakePoint(letterPos[0], 0x60),
 
-				// pointer to OT mem
-				gGT->pushBuffer_UI.ptrOT,
+			    // pointer to OT mem
+			    gGT->pushBuffer_UI.ptrOT,
 
-				1, 0x1000, MakeColor(0x80, 0x80, 0x80));
+			    1, 0x1000, MakeColor(0x80, 0x80, 0x80));
 		}
 	}
 
 	// 0x78 + 0x6e = 0xe6 (230) frames waited for Token Race
-	if ((elapsedFrames-lerpStartY) < FPS_DOUBLE(110))
+	if ((elapsedFrames - lerpStartY) < FPS_DOUBLE(110))
 		return;
 	if (
-		// If you are in Adventure cup
-		((gGT->gameMode1 & ADVENTURE_CUP) != 0) ||
+	    // If you are in Adventure cup
+	    ((gGT->gameMode1 & ADVENTURE_CUP) != 0) ||
 
-		// If you are in Arcade or VS cup
-		((gGT->gameMode2 & CUP_ANY_KIND) != 0)
-	   )
+	    // If you are in Arcade or VS cup
+	    ((gGT->gameMode2 & CUP_ANY_KIND) != 0))
 	{
 		// but text near middle of screen
 		short posX = (numPlyr < 2) ? 0xbe : 100;
@@ -409,11 +380,11 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 	// If you have not pressed X
 	if ((sdata->AnyPlayerTap & 0x50) == 0)
 		return;
-	
+
 	// === If Pressed X ===
-	
+
 	RECTMENU_ClearInput();
-	
+
 	sdata->Loading.OnBegin.AddBitsConfig0 |= ADVENTURE_ARENA;
 	sdata->Loading.OnBegin.RemBitsConfig0 |= ADVENTURE_BOSS;
 	sdata->Loading.OnBegin.RemBitsConfig8 |= TOKEN_RACE;
@@ -442,7 +413,6 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 	// If you are in boss mode
 	if (gGT->gameMode1 < 0)
 	{
-		
 		// bitIndex of keys unlocked, and boss beaten
 		bitIndex = gGT->bossID + 0x5e;
 
@@ -476,7 +446,7 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 			adv->rewards[3] |= 0x80004;
 
 			// if beaten oxide 2nd time
-			if(gGT->bossID == 5)
+			if (gGT->bossID == 5)
 			{
 				// beat 2nd time
 				adv->rewards[3] |= 0x100008;
@@ -485,7 +455,7 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 	}
 
 	// if something needs unlocking
-	if(bitIndex > 0)
+	if (bitIndex > 0)
 	{
 		// Unlock reward
 		UNLOCK_ADV_BIT(adv->rewards, bitIndex);
@@ -529,7 +499,7 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 	driver = gGT->drivers[driverId];
 
 	// stop after 12 seconds
-	if(driver->framesSinceRaceEnded_forThisDriver > FPS_DOUBLE(360))
+	if (driver->framesSinceRaceEnded_forThisDriver > FPS_DOUBLE(360))
 		return;
 
 	numPlyr = gGT->numPlyrCurrGame;
@@ -558,14 +528,14 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 	framesElapsed = driver->framesSinceRaceEnded_forThisDriver;
 
 	if (
-		// if player ended race less than 110 frames ago
-		(framesElapsed < FPS_DOUBLE(110)) &&
+	    // if player ended race less than 110 frames ago
+	    (framesElapsed < FPS_DOUBLE(110)) &&
 
-		// If you press Cross or Circle
-		((sdata->AnyPlayerTap & 0x50) != 0) &&
+	    // If you press Cross or Circle
+	    ((sdata->AnyPlayerTap & 0x50) != 0) &&
 
-		// only one player
-		(numPlyr == 1))
+	    // only one player
+	    (numPlyr == 1))
 	{
 		// Assume race ended 110 frames ago
 		framesElapsed = FPS_DOUBLE(110);
@@ -585,10 +555,10 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 	// Player 2
 	lerpEndY = 0x41;
 
-	// Player 1
-	#ifdef USE_NEW2P
-	if(numPlyr == 1)
-	#endif
+// Player 1
+#ifdef USE_NEW2P
+	if (numPlyr == 1)
+#endif
 		if (driverId == 0)
 			lerpEndY = -0x3d;
 
@@ -602,13 +572,13 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 		lerpEndX = DECOMP_UI_ConvertX_2(-100, hud[2].z);
 		lerpStartY = lerpEndY;
 
-		#ifdef USE_NEW2P
-		if(driverId == 1)
+#ifdef USE_NEW2P
+		if (driverId == 1)
 		{
 			lerpStartX = 0xae;
 			lerpEndX = 0x200 - lerpEndX;
 		}
-		#endif
+#endif
 	}
 
 	// If not
@@ -621,28 +591,20 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 		lerpStartY = DECOMP_UI_ConvertY_2(hud[2].y, hud[2].z);
 		lerpEndX = -0xae;
 
-		#ifdef USE_NEW2P
-		if(driverId == 1)
+#ifdef USE_NEW2P
+		if (driverId == 1)
 			lerpEndX = 0xae;
-		#endif
+#endif
 	}
 
 	// interpolate fly-in positionXY
-	DECOMP_UI_Lerp2D_Linear(
-		&posXY[0],
-		lerpStartX, lerpStartY,
-		lerpEndX, lerpEndY,
-		currFrame, endFrame);
+	DECOMP_UI_Lerp2D_Linear(&posXY[0], lerpStartX, lerpStartY, lerpEndX, lerpEndY, currFrame, endFrame);
 
 	bigNum->matrix.t[0] = posXY[0];
 	bigNum->matrix.t[1] = posXY[1];
 
 	// interpolate scale to 0x1e00
-	DECOMP_UI_Lerp2D_Linear(
-		&posXY[0],
-		hud[2].scale, 0,
-		0x1e00, 0,
-		framesElapsed, FPS_DOUBLE(30));
+	DECOMP_UI_Lerp2D_Linear(&posXY[0], hud[2].scale, 0, 0x1e00, 0, framesElapsed, FPS_DOUBLE(30));
 
 	bigNum->scale[0] = posXY[0];
 	bigNum->scale[1] = posXY[0];
@@ -653,10 +615,10 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 	// Player 2
 	lerpEndY = 0x89;
 
-	// Player 1
-	#ifdef USE_NEW2P
-	if(numPlyr == 1)
-	#endif
+// Player 1
+#ifdef USE_NEW2P
+	if (numPlyr == 1)
+#endif
 		if (driverId == 0)
 			lerpEndY = 9;
 
@@ -666,13 +628,13 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 		lerpStartY = lerpEndY;
 		lerpEndX = -0x3c;
 
-		#ifdef USE_NEW2P
+#ifdef USE_NEW2P
 		if (driverId == 1)
 		{
 			lerpStartX = 0x1d0;
 			lerpEndX = 0x260;
 		}
-		#endif
+#endif
 	}
 	else
 	{
@@ -680,27 +642,23 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 		lerpStartY = hud[5].y;
 		lerpEndX = 0x78;
 
-		#ifdef USE_NEW2P
+#ifdef USE_NEW2P
 		if (driverId == 1)
 			lerpEndX = 0x1d0;
-		#endif
+#endif
 	}
 
-	DECOMP_UI_Lerp2D_Linear(
-		&posXY[0],
-		lerpStartX, lerpStartY,
-		lerpEndX, lerpEndY,
-		currFrame, endFrame);
+	DECOMP_UI_Lerp2D_Linear(&posXY[0], lerpStartX, lerpStartY, lerpEndX, lerpEndY, currFrame, endFrame);
 
 	DECOMP_UI_DrawPosSuffix(posXY[0], posXY[1], driver, 0);
 
-	// === DrawRaceClock ===
+// === DrawRaceClock ===
 
-	// default
-	#ifdef USE_NEW2P
-	if(numPlyr == 1)
+// default
+#ifdef USE_NEW2P
+	if (numPlyr == 1)
 	{
-	#endif
+#endif
 
 		lerpEndY = 0xc3;
 		if (driverId == 0)
@@ -718,8 +676,8 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 			lerpEndX = 0x150;
 		}
 
-	// new
-	#ifdef USE_NEW2P
+// new
+#ifdef USE_NEW2P
 	}
 
 	else
@@ -750,13 +708,9 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 			lerpEndX = gGT->pushBuffer[driverId].rect.x + 0x70;
 		}
 	}
-	#endif
+#endif
 
-	DECOMP_UI_Lerp2D_Linear(
-		&posXY[0],
-		lerpStartX, lerpEndY,
-		lerpEndX, lerpEndY,
-		currFrame, endFrame);
+	DECOMP_UI_Lerp2D_Linear(&posXY[0], lerpStartX, lerpEndY, lerpEndX, lerpEndY, currFrame, endFrame);
 
 	DECOMP_UI_DrawRaceClock(posXY[0], posXY[1], 1, driver);
 
@@ -773,59 +727,56 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 	return;
 }
 
-struct MenuRow rows222[5] =
-{
-	// Retry
-	{
-		.stringIndex = 4,
-		.rowOnPressUp = 0,
-		.rowOnPressDown = 1,
-		.rowOnPressLeft = 0,
-		.rowOnPressRight = 0,
-	},
-	// Change Level
-	{
-		.stringIndex = 6,
-		.rowOnPressUp = 0,
-		.rowOnPressDown = 2,
-		.rowOnPressLeft = 1,
-		.rowOnPressRight = 1,
-	},
-	// Change Character
-	{
-		.stringIndex = 5,
-		.rowOnPressUp = 1,
-		.rowOnPressDown = 3,
-		.rowOnPressLeft = 2,
-		.rowOnPressRight = 2,
-	},
-	// Quit
-	{
-		.stringIndex = 3,
-		.rowOnPressUp = 2,
-		.rowOnPressDown = 3,
-		.rowOnPressLeft = 3,
-		.rowOnPressRight = 3,
-	},
-	// NULL, end of menu
-	{
-		.stringIndex = 0xFFFF,
-		.rowOnPressUp = 0,
-		.rowOnPressDown = 0,
-		.rowOnPressLeft = 0,
-		.rowOnPressRight = 0,
-	}
-};
+struct MenuRow rows222[5] = {
+    // Retry
+    {
+        .stringIndex = 4,
+        .rowOnPressUp = 0,
+        .rowOnPressDown = 1,
+        .rowOnPressLeft = 0,
+        .rowOnPressRight = 0,
+    },
+    // Change Level
+    {
+        .stringIndex = 6,
+        .rowOnPressUp = 0,
+        .rowOnPressDown = 2,
+        .rowOnPressLeft = 1,
+        .rowOnPressRight = 1,
+    },
+    // Change Character
+    {
+        .stringIndex = 5,
+        .rowOnPressUp = 1,
+        .rowOnPressDown = 3,
+        .rowOnPressLeft = 2,
+        .rowOnPressRight = 2,
+    },
+    // Quit
+    {
+        .stringIndex = 3,
+        .rowOnPressUp = 2,
+        .rowOnPressDown = 3,
+        .rowOnPressLeft = 3,
+        .rowOnPressRight = 3,
+    },
+    // NULL, end of menu
+    {
+        .stringIndex = 0xFFFF,
+        .rowOnPressUp = 0,
+        .rowOnPressDown = 0,
+        .rowOnPressLeft = 0,
+        .rowOnPressRight = 0,
+    }};
 
-struct RectMenu menu222 =
-{
-	.stringIndexTitle = 0xFFFF,
-	.posX_curr = 256,
-	.posY_curr = 170,
-	.unk1 = 0,
-	.state = (0x800 | USE_SMALL_FONT | CENTER_ON_COORDS), // 0x883
-	.rows = rows222,
-	.funcPtr = DECOMP_UI_RaceEnd_MenuProc,
-	.drawStyle = 4,
-	// rest of variables all default zero
+struct RectMenu menu222 = {
+    .stringIndexTitle = 0xFFFF,
+    .posX_curr = 256,
+    .posY_curr = 170,
+    .unk1 = 0,
+    .state = (0x800 | USE_SMALL_FONT | CENTER_ON_COORDS), // 0x883
+    .rows = rows222,
+    .funcPtr = DECOMP_UI_RaceEnd_MenuProc,
+    .drawStyle = 4,
+    // rest of variables all default zero
 };

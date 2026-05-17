@@ -1,12 +1,15 @@
 #include <common.h>
 
-void DECOMP_UI_DrawDriverIcon(struct Icon* icon, Point point, u_long* ot, unsigned transparency, int scale, Color color)
+void DECOMP_UI_DrawDriverIcon(struct Icon *icon, Point point, u_long *ot, unsigned transparency, int scale, Color color)
 {
-	PolyFT4 * p;
+	PolyFT4 *p;
 	GetPrimMem(p);
-	if (p == nullptr) { return; }
+	if (p == nullptr)
+	{
+		return;
+	}
 
-	const PrimCode primCode = { .poly = { .renderCode = RenderCode_Polygon, .quad = 1, .textured = 1 } };
+	const PrimCode primCode = {.poly = {.renderCode = RenderCode_Polygon, .quad = 1, .textured = 1}};
 	color.code = primCode;
 	p->colorCode = color;
 
@@ -14,24 +17,24 @@ void DECOMP_UI_DrawDriverIcon(struct Icon* icon, Point point, u_long* ot, unsign
 	int height = icon->texLayout.v2 - icon->texLayout.v0;
 	int topX = point.x;
 	int bottomX = topX + FP_Mult(width, scale);
-	#ifdef USE_ONLINE
-		int topY = point.y;
-		int bottomY = topY + FP_Mult(height, scale);
-	#else
-		#if BUILD != EurRetail
-			int topY = (point.y < 166) ? point.y : 165;
-			int bottomY = ((topY + FP_Mult(height, scale)) < 166) ? (topY + FP_Mult(height, scale)) : 165;
-		#else
-			int topY = (point.y < 176) ? point.y : 175;
-			int bottomY = ((topY + FP_Mult(height, scale)) < 176) ? (topY + FP_Mult(height, scale)) : 175;
-		#endif
-	#endif
+#ifdef USE_ONLINE
+	int topY = point.y;
+	int bottomY = topY + FP_Mult(height, scale);
+#else
+#if BUILD != EurRetail
+	int topY = (point.y < 166) ? point.y : 165;
+	int bottomY = ((topY + FP_Mult(height, scale)) < 166) ? (topY + FP_Mult(height, scale)) : 165;
+#else
+	int topY = (point.y < 176) ? point.y : 175;
+	int bottomY = ((topY + FP_Mult(height, scale)) < 176) ? (topY + FP_Mult(height, scale)) : 175;
+#endif
+#endif
 
-	#ifdef USE_16BY9
+#ifdef USE_16BY9
 	int len = ((bottomX - topX) * 125) / 1000;
 	topX += len;
 	bottomX -= len;
-	#endif
+#endif
 
 	p->v[0].pos.x = topX;
 	p->v[0].pos.y = topY;
@@ -51,7 +54,7 @@ void DECOMP_UI_DrawDriverIcon(struct Icon* icon, Point point, u_long* ot, unsign
 		p->colorCode.code.poly.semiTransparency = 1;
 	}
 
-	#ifdef USE_ONLINE
+#ifdef USE_ONLINE
 	p->v[0].texCoords.u = icon->texLayout.u0;
 	p->v[0].texCoords.v = icon->texLayout.v0;
 	p->v[1].texCoords.u = icon->texLayout.u1;
@@ -60,7 +63,7 @@ void DECOMP_UI_DrawDriverIcon(struct Icon* icon, Point point, u_long* ot, unsign
 	p->v[2].texCoords.v = icon->texLayout.v2;
 	p->v[3].texCoords.u = icon->texLayout.u3;
 	p->v[3].texCoords.v = icon->texLayout.v3;
-	#else
+#else
 	unsigned int bottomV = (icon->texLayout.v0 + bottomY) - point.y;
 	p->v[0].texCoords.u = icon->texLayout.u0;
 	p->v[0].texCoords.v = icon->texLayout.v0;
@@ -70,7 +73,7 @@ void DECOMP_UI_DrawDriverIcon(struct Icon* icon, Point point, u_long* ot, unsign
 	p->v[2].texCoords.v = bottomV;
 	p->v[3].texCoords.u = icon->texLayout.u3;
 	p->v[3].texCoords.v = bottomV;
-	#endif
+#endif
 
 	AddPrimitive(p, ot);
 }

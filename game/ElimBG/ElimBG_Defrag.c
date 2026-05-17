@@ -11,7 +11,7 @@
 #if defined(USE_ALTMODS)
 #include "../AltMods/Mods6.c"
 
-void __attribute__ ((section (".end"))) Mods6_EndOfFile()
+void __attribute__((section(".end"))) Mods6_EndOfFile()
 {
 	// leave empty
 }

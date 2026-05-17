@@ -1,12 +1,12 @@
 #include <common.h>
 
-void DECOMP_BOTS_ThTick_RevEngine(struct Thread* botThread)
+void DECOMP_BOTS_ThTick_RevEngine(struct Thread *botThread)
 {
-	struct Driver* botDriver = (struct Driver*)botThread->object;
-	struct MaskHeadWeapon* mask = botDriver->botData.maskObj;
+	struct Driver *botDriver = (struct Driver *)botThread->object;
+	struct MaskHeadWeapon *mask = botDriver->botData.maskObj;
 
 	if (botDriver->botData.ai_posBackup[1] < botDriver->posCurr.y)
-	{ //mask grabbed
+	{ // mask grabbed
 		botDriver->posCurr.y -= ((sdata->gGT->elapsedTimeMS << 9) >> 5);
 
 		if (mask != NULL)
@@ -21,7 +21,7 @@ void DECOMP_BOTS_ThTick_RevEngine(struct Thread* botThread)
 		VehEmitter_DriverMain(botThread, botDriver);
 	}
 	else
-	{ //not a mask grab
+	{ // not a mask grab
 		if (mask != NULL)
 		{
 			mask->scale = 0x1000;

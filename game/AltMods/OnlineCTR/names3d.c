@@ -14,9 +14,9 @@ struct MyData
 	int Screen_posZ;
 };
 
-int GetOverheadLen(struct Driver* d)
+int GetOverheadLen(struct Driver *d)
 {
-	struct MyData* ptrDest = (struct MyData*)0x1f800108;
+	struct MyData *ptrDest = (struct MyData *)0x1f800108;
 	ptrDest->World_posX = d->posCurr.x >> 8;
 	ptrDest->World_posY = (d->posCurr.y >> 8) + 25;
 	ptrDest->World_posZ = d->posCurr.z >> 8;
@@ -30,12 +30,18 @@ int GetOverheadLen(struct Driver* d)
 
 	int posZ = ptrDest->Screen_posZ;
 
-	if(posZ < 150) return 0;
-	if(posZ < 190) return 6;
-	if(posZ < 234) return 5;
-	if(posZ < 331) return 4;
-	if(posZ < 475) return 3;
-	if(posZ < 906) return 2;
+	if (posZ < 150)
+		return 0;
+	if (posZ < 190)
+		return 6;
+	if (posZ < 234)
+		return 5;
+	if (posZ < 331)
+		return 4;
+	if (posZ < 475)
+		return 3;
+	if (posZ < 906)
+		return 2;
 	return 0;
 }
 
@@ -168,39 +174,39 @@ void DrawOverheadCalibration()
 void DrawOverheadNames()
 {
 	int i;
-	MATRIX* m;
+	MATRIX *m;
 
-	struct GameTracker* gGT = sdata->gGT;
-	struct MyData* ptrDest = (struct MyData*)0x1f800108;
+	struct GameTracker *gGT = sdata->gGT;
+	struct MyData *ptrDest = (struct MyData *)0x1f800108;
 
 	// pushBuffer offset 0x28
 	m = &gGT->pushBuffer[0].matrix_ViewProj;
-    gte_SetRotMatrix(m);
-    gte_SetTransMatrix(m);
+	gte_SetRotMatrix(m);
+	gte_SetTransMatrix(m);
 
-	#if 0
+#if 0
 	DrawOverheadCalibration();
-	#endif
+#endif
 
 	// start from P2
 	i = 1;
 	int color = (JUSTIFY_CENTER | ORANGE);
 
-	if((gGT->gameMode1 & START_OF_RACE) != 0)
+	if ((gGT->gameMode1 & START_OF_RACE) != 0)
 	{
 		// start from P1
 		i = 0;
 		color = (JUSTIFY_CENTER | BLUE);
-
 	}
 
-	for(i; i < octr->NumDrivers; i++)
+	for (i; i < octr->NumDrivers; i++)
 	{
 		int len = GetOverheadLen(gGT->drivers[i]);
-		if(len == 0) continue;
+		if (len == 0)
+			continue;
 
-		// Mirror Mode Disabled
-		#if 0
+// Mirror Mode Disabled
+#if 0
 
 		// if mirror mode
 		if(octr->special != 0)
@@ -209,14 +215,9 @@ void DrawOverheadNames()
 			0x200 - ptrDest->Screen_posX;
 		}
 
-		#endif
+#endif
 
-		DECOMP_DecalFont_DrawLineStrlen(
-			octr->nameBuffer[i],
-			len,
-			ptrDest->Screen_posX,
-			ptrDest->Screen_posY-0x4,
-			FONT_SMALL, color);
+		DECOMP_DecalFont_DrawLineStrlen(octr->nameBuffer[i], len, ptrDest->Screen_posX, ptrDest->Screen_posY - 0x4, FONT_SMALL, color);
 
 		// all players except P1
 		color = (JUSTIFY_CENTER | ORANGE);

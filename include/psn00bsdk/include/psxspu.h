@@ -56,98 +56,79 @@ typedef enum _SPU_AttrMask {
 } SPU_AttrMask;
 #endif
 
-typedef enum _SPU_TransferMode {
-	SPU_TRANSFER_BY_DMA	= 0,
-	SPU_TRANSFER_BY_IO	= 1
+typedef enum _SPU_TransferMode
+{
+	SPU_TRANSFER_BY_DMA = 0,
+	SPU_TRANSFER_BY_IO = 1
 } SPU_TransferMode;
 
-typedef enum _SPU_WaitMode {
-	SPU_TRANSFER_PEEK	= 0,
-	SPU_TRANSFER_WAIT	= 1
+typedef enum _SPU_WaitMode
+{
+	SPU_TRANSFER_PEEK = 0,
+	SPU_TRANSFER_WAIT = 1
 } SPU_WaitMode;
 
 /* Structure definitions */
 
 #if 1
-typedef struct _SpuVolume {
+typedef struct _SpuVolume
+{
 	int16_t left, right;
 } SpuVolume;
 
-typedef struct _SpuVoiceAttr {
-	uint32_t	voice;
-	uint32_t	mask;
-	SpuVolume	volume, volmode, volumex;
-	uint16_t	pitch, note, sample_note;
-	int16_t		envx;
-	uint32_t	addr, loop_addr;
-	int			a_mode, s_mode, r_mode;
-	uint16_t	ar, dr, sr, rr, sl;
-	uint16_t	adsr1, adsr2;
+typedef struct _SpuVoiceAttr
+{
+	uint32_t voice;
+	uint32_t mask;
+	SpuVolume volume, volmode, volumex;
+	uint16_t pitch, note, sample_note;
+	int16_t envx;
+	uint32_t addr, loop_addr;
+	int a_mode, s_mode, r_mode;
+	uint16_t ar, dr, sr, rr, sl;
+	uint16_t adsr1, adsr2;
 } SpuVoiceAttr;
 
-typedef struct _SpuExtAttr {
-	SpuVolume	volume;
-	int			reverb, mix;
+typedef struct _SpuExtAttr
+{
+	SpuVolume volume;
+	int reverb, mix;
 } SpuExtAttr;
 
-typedef struct _SpuCommonAttr {
-	uint32_t	mask;
-	SpuVolume	mvol, mvolmode, mvolx;
-	SpuExtAttr	cd, ext;
+typedef struct _SpuCommonAttr
+{
+	uint32_t mask;
+	SpuVolume mvol, mvolmode, mvolx;
+	SpuExtAttr cd, ext;
 } SpuCommonAttr;
 #endif
 
 /* Macros */
 
-#define getSPUAddr(addr)		((uint16_t) (((addr) + 7) / 8))
-#define getSPUSampleRate(rate)	((uint16_t) (((rate) * (1 << 12)) / 44100))
+#define getSPUAddr(addr)                        ((uint16_t)(((addr) + 7) / 8))
+#define getSPUSampleRate(rate)                  ((uint16_t)(((rate) * (1 << 12)) / 44100))
 
-#define getSPUADSR(ar, dr, sr, rr, sl) ( \
-	(sl) | \
-	((dr) <<  4) | \
-	((ar) <<  8) | \
-	((rr) << 16) | \
-	((sr) << 22) | \
-	(1    << 30) \
-)
+#define getSPUADSR(ar, dr, sr, rr, sl)          ((sl) | ((dr) << 4) | ((ar) << 8) | ((rr) << 16) | ((sr) << 22) | (1 << 30))
 
 /* "Useless" macros for official SDK compatibility */
 
-#define SpuSetCommonMasterVolume(left, right) \
-	(SPU_MASTER_VOL_L = (left), SPU_MASTER_VOL_R = (right))
-#define SpuSetCommonCDVolume(left, right) \
-	(SPU_CD_VOL_L = (left), SPU_CD_VOL_R = (right))
-#define SpuSetCommonCDReverb(enable) \
-	((enable) ? (SPU_CTRL |= 0x0004) : (SPU_CTRL &= 0xfffb))
-#define SpuSetCommonExtVolume(left, right) \
-	(SPU_EXT_VOL_L = (left), SPU_EXT_VOL_R = (right))
-#define SpuSetCommonExtReverb(enable) \
-	((enable) ? (SPU_CTRL |= 0x0002) : (SPU_CTRL &= 0xfffd))
+#define SpuSetCommonMasterVolume(left, right)   (SPU_MASTER_VOL_L = (left), SPU_MASTER_VOL_R = (right))
+#define SpuSetCommonCDVolume(left, right)       (SPU_CD_VOL_L = (left), SPU_CD_VOL_R = (right))
+#define SpuSetCommonCDReverb(enable)            ((enable) ? (SPU_CTRL |= 0x0004) : (SPU_CTRL &= 0xfffb))
+#define SpuSetCommonExtVolume(left, right)      (SPU_EXT_VOL_L = (left), SPU_EXT_VOL_R = (right))
+#define SpuSetCommonExtReverb(enable)           ((enable) ? (SPU_CTRL |= 0x0002) : (SPU_CTRL &= 0xfffd))
 
-#define SpuSetReverbAddr(addr) \
-	(SPU_REVERB_ADDR = getSPUAddr(addr))
-#define SpuSetIRQAddr(addr) \
-	(SPU_IRQ_ADDR = getSPUAddr(addr))
+#define SpuSetReverbAddr(addr)                  (SPU_REVERB_ADDR = getSPUAddr(addr))
+#define SpuSetIRQAddr(addr)                     (SPU_IRQ_ADDR = getSPUAddr(addr))
 
-#define SpuSetVoiceVolume(ch, left, right) \
-	(SPU_CH_VOL_L(ch) = (left), SPU_CH_VOL_R(ch) = (right))
-#define SpuSetVoicePitch(ch, pitch) \
-	(SPU_CH_FREQ(ch) = (pitch))
-#define SpuSetVoiceStartAddr(ch, addr) \
-	(SPU_CH_ADDR(ch) = getSPUAddr(addr))
-#define SpuSetVoiceADSR(ch, ar, dr, sr, rr, sl) ( \
-	SPU_CH_ADSR1(ch) = (sl) | ((dr) << 4) | ((ar) << 8), \
-	SPU_CH_ADSR2(ch) = (rr) | ((sr) << 6) | (1 << 14) \
-)
+#define SpuSetVoiceVolume(ch, left, right)      (SPU_CH_VOL_L(ch) = (left), SPU_CH_VOL_R(ch) = (right))
+#define SpuSetVoicePitch(ch, pitch)             (SPU_CH_FREQ(ch) = (pitch))
+#define SpuSetVoiceStartAddr(ch, addr)          (SPU_CH_ADDR(ch) = getSPUAddr(addr))
+#define SpuSetVoiceADSR(ch, ar, dr, sr, rr, sl) (SPU_CH_ADSR1(ch) = (sl) | ((dr) << 4) | ((ar) << 8), SPU_CH_ADSR2(ch) = (rr) | ((sr) << 6) | (1 << 14))
 
-#define SpuSetKey(enable, voice_bit) \
-	((enable) ? ( \
-		SPU_KEY_ON1 = (uint16_t) (voice_bit), \
-		SPU_KEY_ON2 = (uint16_t) ((voice_bit) >> 16) \
-	) : ( \
-		SPU_KEY_OFF1 = (uint16_t) (voice_bit), \
-		SPU_KEY_OFF2 = (uint16_t) ((voice_bit) >> 16) \
-	))
+#define SpuSetKey(enable, voice_bit)                                                               \
+	((enable) ? (SPU_KEY_ON1 = (uint16_t)(voice_bit), SPU_KEY_ON2 = (uint16_t)((voice_bit) >> 16)) \
+	          : (SPU_KEY_OFF1 = (uint16_t)(voice_bit), SPU_KEY_OFF2 = (uint16_t)((voice_bit) >> 16)))
 
 /* Public API */
 

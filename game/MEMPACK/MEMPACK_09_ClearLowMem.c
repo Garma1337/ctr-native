@@ -2,7 +2,7 @@
 
 void DECOMP_MEMPACK_ClearLowMem()
 {
-	struct Mempack* ptrMempack;
+	struct Mempack *ptrMempack;
 
 	// Get the pointer to the memory allocation system
 	ptrMempack = sdata->PtrMempack;

@@ -2,27 +2,20 @@
 
 void DECOMP_COLL_MOVED_QUADBLK_TestTriangles(struct QuadBlock *quad, struct ScratchpadStruct *sps)
 {
-    struct BspSearchVertex* bsv = &sps->bspSearchVert[0];
+	struct BspSearchVertex *bsv = &sps->bspSearchVert[0];
 
-    sps->Set1.ptrQuadblock = quad;
-	
-    if (
-        ((sps->Union.QuadBlockColl.qbFlagsWanted & quad->quadFlags) != 0) &&
-		((sps->Union.QuadBlockColl.qbFlagsIgnored & quad->quadFlags) == 0) &&
-		(quad->bbox.min[0] < sps->bbox.max[0]) &&
-		(quad->bbox.min[1] < sps->bbox.max[1]) &&
-		(quad->bbox.min[2] < sps->bbox.max[2]) &&
-        (sps->bbox.min[0] < quad->bbox.max[0]) &&
-        (sps->bbox.min[1] < quad->bbox.max[1]) &&
-        (sps->bbox.min[2] < quad->bbox.max[2])
-		)
-    {
+	sps->Set1.ptrQuadblock = quad;
+
+	if (((sps->Union.QuadBlockColl.qbFlagsWanted & quad->quadFlags) != 0) && ((sps->Union.QuadBlockColl.qbFlagsIgnored & quad->quadFlags) == 0) &&
+	    (quad->bbox.min[0] < sps->bbox.max[0]) && (quad->bbox.min[1] < sps->bbox.max[1]) && (quad->bbox.min[2] < sps->bbox.max[2]) &&
+	    (sps->bbox.min[0] < quad->bbox.max[0]) && (sps->bbox.min[1] < quad->bbox.max[1]) && (sps->bbox.min[2] < quad->bbox.max[2]))
+	{
 		// if 3P or 4P mode,
 		// then use low-LOD quadblock collision (two triangles)
 		if ((sps->Union.QuadBlockColl.searchFlags & 2) == 0)
 		{
 			COLL_FIXED_QUADBLK_GetNormVecs_LoLOD(sps, quad);
-	
+
 			sps->unk63_someIndex = 0;
 			COLL_MOVED_TRIANGL_TestPoint(sps, &bsv[0], &bsv[1], &bsv[2]); // 0, 1, 2
 
@@ -39,7 +32,7 @@ void DECOMP_COLL_MOVED_QUADBLK_TestTriangles(struct QuadBlock *quad, struct Scra
 			{
 				COLL_FIXED_QUADBLK_GetNormVecs_HiLOD(sps, quad);
 			}
-	
+
 			sps->unk63_someIndex = 2;
 			COLL_MOVED_TRIANGL_TestPoint(sps, &bsv[0], &bsv[4], &bsv[5]); // 0, 4, 5
 			sps->unk63_someIndex = 3;
@@ -62,5 +55,5 @@ void DECOMP_COLL_MOVED_QUADBLK_TestTriangles(struct QuadBlock *quad, struct Scra
 				COLL_MOVED_TRIANGL_TestPoint(sps, &bsv[2], &bsv[6], &bsv[8]); // 2, 6, 8
 			}
 		}
-    }
+	}
 }

@@ -8,34 +8,33 @@ force_inline char RaceFlag_CalculateBrightness(u_int sine, u_char darkTile)
 {
 	if (darkTile)
 	{
-		return((sine * -55 + 0x140000) >> 0xD);
+		return ((sine * -55 + 0x140000) >> 0xD);
 	}
-	return((sine * -125 + 0x1fe000) >> 0xD);
+	return ((sine * -125 + 0x1fe000) >> 0xD);
 }
 
 // inline Sine operation
 // drops clock from ~130 to
-force_inline
-int MathSinInline(u_int param_1)
+force_inline int MathSinInline(u_int param_1)
 {
-  int iVar1;
+	int iVar1;
 
-  // approximate trigonometry
-  iVar1 = *(int*)&data.trigApprox[param_1 & 0x3ff];
+	// approximate trigonometry
+	iVar1 = *(int *)&data.trigApprox[param_1 & 0x3ff];
 
-  if ((param_1 & 0x400) == 0)
-  {
-    iVar1 = iVar1 << 0x10;
-  }
+	if ((param_1 & 0x400) == 0)
+	{
+		iVar1 = iVar1 << 0x10;
+	}
 
-  iVar1 = iVar1 >> 0x10;
+	iVar1 = iVar1 >> 0x10;
 
-  if ((param_1 & 0x800) != 0)
-  {
-	// make negative
-    iVar1 = -iVar1;
-  }
-  return iVar1;
+	if ((param_1 & 0x800) != 0)
+	{
+		// make negative
+		iVar1 = -iVar1;
+	}
+	return iVar1;
 }
 
 void DECOMP_RaceFlag_DrawSelf()
@@ -43,30 +42,30 @@ void DECOMP_RaceFlag_DrawSelf()
 	int i, j;
 	int column, row;
 	int toggle;
-	
+
 	short flagPos;
 	u_long *ot;
 	u_int *scratchpad;
 	u_int screenlimit;
 	u_int dimensions;
-	
+
 	int var2;
 	int var3;
 	u_int var1;
-	
+
 	POLY_G4 *p;
 	struct GameTracker *gGT = sdata->gGT;
 
 	int time;
 	int lightL;
 	int lightR;
-	
+
 	// scratchpad
 	u_int *posL;
 	u_int *posR;
-	int* local;
-	SVECTOR* pos;
-	
+	int *local;
+	SVECTOR *pos;
+
 
 	if (sdata->RaceFlag_CanDraw == 0)
 		return;
@@ -100,14 +99,14 @@ SKIP_LOADING_TEXT:
 	scratchpad = &scratchpadBuf[0];
 	memset(&scratchpadBuf[0], 0, 0x1000 * 4);
 #else
-	scratchpad = (u_int*)0x1f800000;
+	scratchpad = (u_int *)0x1f800000;
 #endif
-	
+
 	dimensions = 0xd80200;
 	screenlimit = 0x80008000;
 
 	toggle = 0;
-	
+
 	// === First Loop Iteration ===
 	// Remove 36*10 branching instructions,
 	// Reduces clock from ~150 to ~130
@@ -116,8 +115,8 @@ SKIP_LOADING_TEXT:
 		posL = &scratchpadBuf[(toggle * 0x78 / 4) - 1];
 		toggle = toggle ^ 1;
 		posR = &scratchpadBuf[(toggle * 0x78 / 4)];
-		local = &scratchpadBuf[0xF0/4];
-		pos = &scratchpadBuf[0x108/4];
+		local = &scratchpadBuf[0xF0 / 4];
+		pos = &scratchpadBuf[0x108 / 4];
 #else
 		posL = (u_int *)(0x1f800000 + toggle * 0x78 - 4);
 		toggle = toggle ^ 1;
@@ -136,7 +135,7 @@ SKIP_LOADING_TEXT:
 		int stepRate = gGT->elapsedTimeMS;
 		local[4] += local[3] * stepRate;
 		var1 = (int)local[4] >> 5;
-		
+
 		// === Step 2 ===
 		if (0xfff < var1)
 		{
@@ -146,10 +145,10 @@ SKIP_LOADING_TEXT:
 
 			local[0] += 0x200;
 			local[2] += 200;
-			
+
 			int sin0 = MathSinInline(local[0]) + 0xfff;
 			int sin2 = MathSinInline(local[2]) + 0xfff;
-			
+
 			// reset based on trig
 			local[1] = (sin0 * 0x20 >> 0xd) + 0x96;
 			local[3] = (sin2 * 0x40 >> 0xd) + 0xb4;
@@ -175,7 +174,7 @@ SKIP_LOADING_TEXT:
 		data.checkerFlagVariables[2] = local[2];
 		data.checkerFlagVariables[3] = local[3];
 		data.checkerFlagVariables[4] = local[4];
-		
+
 		time = sdata->RaceFlag_ElapsedTime >> 5;
 		var1 = time;
 
@@ -189,11 +188,8 @@ SKIP_LOADING_TEXT:
 		// === Step 7 ===
 		for (row = 0; row < 10; row++)
 		{
-			SVECTOR* vect;
-			for (
-				vect = &pos[0];
-				vect < &pos[3];
-				vect++)
+			SVECTOR *vect;
+			for (vect = &pos[0]; vect < &pos[3]; vect++)
 			{
 				// Range: [1.0, 2.0]
 				var3 = MathSinInline(var1) + 0xfff;
@@ -205,18 +201,18 @@ SKIP_LOADING_TEXT:
 
 			gte_ldv3(&pos[0], &pos[1], &pos[2]);
 			gte_rtpt();
-			
+
 			pos[0].vy += 0x11a;
 			pos[1].vy += 0x11a;
 			pos[2].vy += 0x11a;
-			
+
 			gte_stsxy3((long *)(posL + 1), (long *)(posL + 2), (long *)(posL + 3));
 			posL += 3;
 		}
 
 		lightR = lightL;
 	}
-		
+
 
 	// === Rest of Iterations ===
 	// Now executing without branching
@@ -236,7 +232,7 @@ SKIP_LOADING_TEXT:
 		int stepRate = 0x40;
 		local[4] += local[3] * stepRate;
 		var1 = (int)local[4] >> 5;
-		
+
 		// === Step 2 ===
 		if (0xfff < var1)
 		{
@@ -246,10 +242,10 @@ SKIP_LOADING_TEXT:
 
 			local[0] += 0x200;
 			local[2] += 200;
-			
+
 			int sin0 = MathSinInline(local[0]) + 0xfff;
 			int sin2 = MathSinInline(local[2]) + 0xfff;
-			
+
 			// reset based on trig
 			local[1] = (sin0 * 0x20 >> 0xd) + 0x96;
 			local[3] = (sin2 * 0x40 >> 0xd) + 0xb4;
@@ -281,11 +277,8 @@ SKIP_LOADING_TEXT:
 		// === Step 7 ===
 		for (row = 0; row < 10; row++)
 		{
-			SVECTOR* vect;
-			for (
-				vect = &pos[0];
-				vect < &pos[3];
-				vect++)
+			SVECTOR *vect;
+			for (vect = &pos[0]; vect < &pos[3]; vect++)
 			{
 				// Range: [1.0, 2.0]
 				var3 = MathSinInline(var1) + 0xfff;
@@ -297,15 +290,15 @@ SKIP_LOADING_TEXT:
 
 			gte_ldv3(&pos[0], &pos[1], &pos[2]);
 			gte_rtpt();
-			
+
 			pos[0].vy += 0x11a;
 			pos[1].vy += 0x11a;
 			pos[2].vy += 0x11a;
-			
+
 			gte_stsxy3((long *)(posL + 1), (long *)(posL + 2), (long *)(posL + 3));
-			
+
 			// ============================
-			
+
 			j = 0;
 			if (i == 0)
 			{
@@ -315,20 +308,19 @@ SKIP_LOADING_TEXT:
 
 			for (/**/; j < 3; posR++, posL++, j++, i++)
 			{
-				if (
-					((posR[0] & posR[1] & posL[0] & posL[1] & screenlimit) == 0) &&
-					((dimensions - posR[0] & dimensions - posR[1] & dimensions - posL[0] & dimensions - posL[1] & screenlimit) == 0))
+				if (((posR[0] & posR[1] & posL[0] & posL[1] & screenlimit) == 0) &&
+				    ((dimensions - posR[0] & dimensions - posR[1] & dimensions - posL[0] & dimensions - posL[1] & screenlimit) == 0))
 				{
 					// TRUE for gray, FALSE for white
 					u_char boolDark = (((column >> 2) + (i >> 2) & 1U) != 0);
 
 					u_char colorR = RaceFlag_CalculateBrightness(lightR, boolDark);
 					setRGB0(p, colorR, colorR, colorR);
-					*(int*)&p->r2 = *(int*)&p->r0;
-					
+					*(int *)&p->r2 = *(int *)&p->r0;
+
 					u_char colorL = RaceFlag_CalculateBrightness(lightL, boolDark);
 					setRGB1(p, colorL, colorL, colorL);
-					*(int*)&p->r3 = *(int*)&p->r1;
+					*(int *)&p->r3 = *(int *)&p->r1;
 
 					// positions
 					*(int *)&p->x0 = posR[0];
@@ -343,15 +335,15 @@ SKIP_LOADING_TEXT:
 					// addPrim(ot, p); works but uses more instructions.
 					*(int *)p = *ot | 0x8000000;
 					*ot = (u_int)p & 0xffffff;
-					
+
 					p++;
 				}
 			}
 		}
-		
+
 		lightR = lightL;
 	}
-	
+
 	gGT->backBuffer->primMem.curr = p;
 	sdata->RaceFlag_ElapsedTime += gGT->elapsedTimeMS * 100;
 }

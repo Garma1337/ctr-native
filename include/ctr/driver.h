@@ -4,5 +4,5 @@
 
 typedef enum StepFlags
 {
-    STEPFLAGS_OUT_OF_BOUNDS = 0x4000,
+	STEPFLAGS_OUT_OF_BOUNDS = 0x4000,
 } StepFlags;

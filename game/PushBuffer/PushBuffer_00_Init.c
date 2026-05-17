@@ -1,16 +1,16 @@
 #include <common.h>
 
-void DECOMP_PushBuffer_Init(struct PushBuffer* pb, int id, int total)
+void DECOMP_PushBuffer_Init(struct PushBuffer *pb, int id, int total)
 {
-	// need to add to this later
-	#if BUILD == EurRetail
-	#define SIZEY_TOP 0x74
-	#define SIZEY_1P 0xEC
-	#else
-	#define SIZEY_TOP 0x6a
-	#define SIZEY_1P 0xD8
-	#endif
-	
+// need to add to this later
+#if BUILD == EurRetail
+#define SIZEY_TOP 0x74
+#define SIZEY_1P  0xEC
+#else
+#define SIZEY_TOP 0x6a
+#define SIZEY_1P  0xD8
+#endif
+
 	pb->fade_step = 0x88;
 	pb->cameraID = id;
 
@@ -21,7 +21,7 @@ void DECOMP_PushBuffer_Init(struct PushBuffer* pb, int id, int total)
 	// dont write Aspect Ratio, waste of time,
 
 	// 3P 4P
-	if(total > 2)
+	if (total > 2)
 	{
 		pb->distanceToScreen_PREV = 0x80;
 		pb->distanceToScreen_CURR = 0x80;
@@ -29,8 +29,8 @@ void DECOMP_PushBuffer_Init(struct PushBuffer* pb, int id, int total)
 		pb->rect.w = 0xfd;
 		pb->rect.h = SIZEY_TOP;
 
-		pb->rect.x = (id&1) * 0x103;
-		pb->rect.y = (id>>1) * (SIZEY_TOP+4);
+		pb->rect.x = (id & 1) * 0x103;
+		pb->rect.y = (id >> 1) * (SIZEY_TOP + 4);
 
 		return;
 	}
@@ -44,7 +44,7 @@ void DECOMP_PushBuffer_Init(struct PushBuffer* pb, int id, int total)
 	pb->rect.w = (total == 1) ? 0x200 : 0xfd;
 	pb->rect.h = SIZEY_1P;
 
-	pb->rect.x = (id&1) * 0x103;
+	pb->rect.x = (id & 1) * 0x103;
 	pb->rect.y = 0;
 
 // default 4:3
@@ -54,9 +54,9 @@ void DECOMP_PushBuffer_Init(struct PushBuffer* pb, int id, int total)
 	pb->rect.h = (total == 1) ? SIZEY_1P : SIZEY_TOP;
 
 	pb->rect.x = 0;
-	pb->rect.y = (id == 0) ? 0 : SIZEY_TOP+4;
-	
+	pb->rect.y = (id == 0) ? 0 : SIZEY_TOP + 4;
+
 #endif
-	
+
 	return;
 }

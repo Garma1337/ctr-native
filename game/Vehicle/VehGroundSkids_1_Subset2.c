@@ -8,17 +8,17 @@
 // v1 - some vector1
 // v2 - some vector2
 // v3 - some vector3
-void VehGroundSkids_Subset2(SVECTOR* unk, SVECTOR* v1, SVECTOR* v2, SVECTOR* v3)
+void VehGroundSkids_Subset2(SVECTOR *unk, SVECTOR *v1, SVECTOR *v2, SVECTOR *v3)
 {
-	//TODO: investigate parent function to give better names
+	// TODO: investigate parent function to give better names
 
-	//unk is SVECTOR[3] at sp 0x0, but for some reason it crashes
-	//we can just hardcode the sp address instead
-	//cause it's always called with the sp address 0 (check r0)
-	SVECTOR* sp = (SVECTOR*)0x1F800000;
+	// unk is SVECTOR[3] at sp 0x0, but for some reason it crashes
+	// we can just hardcode the sp address instead
+	// cause it's always called with the sp address 0 (check r0)
+	SVECTOR *sp = (SVECTOR *)0x1F800000;
 
-	//translation vector on scratchpad
-	VECTOR* t = (VECTOR*)0x1F8000B8;
+	// translation vector on scratchpad
+	VECTOR *t = (VECTOR *)0x1F8000B8;
 
 	sp[0].vx = (v1->vx - t->vx) * SOME_SCALE;
 	sp[0].vy = (v1->vy - t->vy) * SOME_SCALE;

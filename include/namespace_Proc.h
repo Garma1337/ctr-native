@@ -1,11 +1,10 @@
-#define SIZE_RELATIVE_POOL_BUCKET(a,b,c,d) \
-	(a << 16) | b | c | d
+#define SIZE_RELATIVE_POOL_BUCKET(a, b, c, d) (a << 16) | b | c | d
 
 enum STACK_POOL
 {
-	LARGE=0x100,
-	MEDIUM=0x200,
-	SMALL=0x300
+	LARGE = 0x100,
+	MEDIUM = 0x200,
+	SMALL = 0x300
 };
 
 enum THREAD_RELATIVE
@@ -13,60 +12,60 @@ enum THREAD_RELATIVE
 	// yes, both are zero
 	// specify PARENT if thread relative is given,
 	// specify NONE if no thread relative is given
-	
-	NONE=0,
-	CHILD_SIBLING=0,
-	SELF_SIBLING=0x400,
-	CHILD_BETWEEN=0x2000
+
+	NONE = 0,
+	CHILD_SIBLING = 0,
+	SELF_SIBLING = 0x400,
+	CHILD_BETWEEN = 0x2000
 };
 
 enum THREAD_BUCKET
 {
-  PLAYER,	// 0x00: 1b2c
-  ROBOT,	// 0x01: 1b40
-  GHOST,	// 0x02: 1b54 (no string, also ND box)
-  STATIC,	// 0x03: 1b68
-  MINE,		// 0x04: 1b7c
-  WARPPAD,	// 0x05: 1b90
-  TRACKING,	// 0x06: 1ba4
-  BURST,	// 0x07: 1bb8
-  BLOWUP,	// 0x08: 1bcc
-  TURBO,	// 0x09: 1be0
-  SPIDER,	// 0x0A: 1bf4
-  FOLLOWER,	// 0x0B: 1c08
-  STARTTEXT,// 0x0C: 1c1c
-  OTHER,	// 0x0D: 1c30
-  AKUAKU,	// 0x0E: 1c44
-  CAMERA,	// 0x0F: 1c58
-  HUD,		// 0x10: 1c6c
-  PAUSE,	// 0x11: 1c80
+	PLAYER,    // 0x00: 1b2c
+	ROBOT,     // 0x01: 1b40
+	GHOST,     // 0x02: 1b54 (no string, also ND box)
+	STATIC,    // 0x03: 1b68
+	MINE,      // 0x04: 1b7c
+	WARPPAD,   // 0x05: 1b90
+	TRACKING,  // 0x06: 1ba4
+	BURST,     // 0x07: 1bb8
+	BLOWUP,    // 0x08: 1bcc
+	TURBO,     // 0x09: 1be0
+	SPIDER,    // 0x0A: 1bf4
+	FOLLOWER,  // 0x0B: 1c08
+	STARTTEXT, // 0x0C: 1c1c
+	OTHER,     // 0x0D: 1c30
+	AKUAKU,    // 0x0E: 1c44
+	CAMERA,    // 0x0F: 1c58
+	HUD,       // 0x10: 1c6c
+	PAUSE,     // 0x11: 1c80
 
-  NUM_BUCKETS	// 0x12
+	NUM_BUCKETS // 0x12
 };
 
 struct Thread
 {
 	// 0x0
-	struct Thread* next;
+	struct Thread *next;
 
 	// 0x4
-	struct Thread* prev;
+	struct Thread *prev;
 
 	// 0x8
-	char* name;
+	char *name;
 
 	// 0xc
 	// weapons hold drivers as parentThreads when fired
-	struct Thread* parentThread;
+	struct Thread *parentThread;
 
 	// 0x10
 	// players hold other players,
 	// cameras hold other cameras, etc
-	struct Thread* siblingThread;
+	struct Thread *siblingThread;
 
 	// 0x14
 	// drivers hold weapons as childThreads when fired
-	struct Thread* childThread;
+	struct Thread *childThread;
 
 	// 0x18
 	// unused, can pause a thread for
@@ -94,24 +93,24 @@ struct Thread
 	int timesDestroyed;
 
 	// 0x24
-	void (*funcThDestroy)(struct Thread* self);
+	void (*funcThDestroy)(struct Thread *self);
 
-	//TheUbMunster: I've noticed various usage around the codebase might indicate that funcThCollide returns int and not void.
-	// 0x28
-	void (*funcThCollide)(struct Thread* self);
+	// TheUbMunster: I've noticed various usage around the codebase might indicate that funcThCollide returns int and not void.
+	//  0x28
+	void (*funcThCollide)(struct Thread *self);
 
 	// 0x2c
-	void (*funcThTick)(struct Thread* self);
+	void (*funcThTick)(struct Thread *self);
 
 	// This would be 9900C for players, or a pointer
 	// to a camera, etc
 	// 0x30
-	void* object;
+	void *object;
 
 	// Thread and Instance are linked together,
 	// except Camera storing CameraDC here
 	// 0x34
-	struct Instance* inst;
+	struct Instance *inst;
 
 	// FUN_80058d2c uses 0x38 - 0x44
 
@@ -141,13 +140,13 @@ struct BucketSearchParams
 {
 	// 0x0
 	short pos[4];
-	
+
 	// 0x8
-	struct Thread* th;
-	
+	struct Thread *th;
+
 	// 0xC
-	int radius; //actually probably (radius or diameter) squared
-	
+	int radius; // actually probably (radius or diameter) squared
+
 	// 0x10
 	short distX;
 	short distY;
@@ -161,19 +160,18 @@ struct BucketSearchParams
 struct ThreadBucket
 {
 	// 0x0
-	struct Thread* thread;
-
+	struct Thread *thread;
 
 
 	// ==== ONLY FOR DEBUG MENU ====
 
 	// could be PLAYER
 	// 0x4
-	char* s_longName;
+	char *s_longName;
 
 	// could be PLYR
 	// 0x8
-	char* s_shortName;
+	char *s_shortName;
 
 	// 0xC
 	int boolCantPause;
@@ -182,7 +180,7 @@ struct ThreadBucket
 	char rectCol[4];
 
 	// ============================
-	
+
 
 	// size is 0x14
 };

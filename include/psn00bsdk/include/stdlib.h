@@ -13,12 +13,13 @@
 
 /* Structure definitions */
 
-typedef struct _HeapUsage {
-	size_t total;		// Total size of heap + stack
-	size_t heap;		// Amount of memory currently reserved for heap
-	size_t stack;		// Amount of memory currently reserved for stack
-	size_t alloc;		// Amount of memory currently allocated
-	size_t alloc_max;	// Maximum amount of memory ever allocated
+typedef struct _HeapUsage
+{
+	size_t total;     // Total size of heap + stack
+	size_t heap;      // Amount of memory currently reserved for heap
+	size_t stack;     // Amount of memory currently reserved for stack
+	size_t alloc;     // Amount of memory currently allocated
+	size_t alloc_max; // Maximum amount of memory ever allocated
 } HeapUsage;
 
 /* API */
@@ -27,8 +28,8 @@ typedef struct _HeapUsage {
 extern "C" {
 #endif
 
-extern int			__argc;
-extern const char	**__argv;
+extern int __argc;
+extern const char **__argv;
 
 void abort(void);
 
@@ -40,9 +41,9 @@ long labs(long i);
 
 long strtol(const char *str, char **str_end, int base);
 long long strtoll(const char *str, char **str_end, int base);
-//float strtof(const char *str, char **str_end);
-//double strtod(const char *str, char **str_end);
-//long double strtold(const char *str, char **str_end);
+// float strtof(const char *str, char **str_end);
+// double strtod(const char *str, char **str_end);
+// long double strtold(const char *str, char **str_end);
 
 void InitHeap(void *addr, size_t size);
 void *sbrk(ptrdiff_t incr);

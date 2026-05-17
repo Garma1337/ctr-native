@@ -6,17 +6,20 @@ void DECOMP_CTR_ErrorScreen(char r, char g, char b)
 	int i;
 
 #ifdef REBUILD_PC
-	while (1) {}
+	while (1)
+	{
+	}
 #endif
 
-	for(i = 0; i < 3; i++)
+	for (i = 0; i < 3; i++)
 	{
 		DrawSync(0);
 		VSync(0);
 		DECOMP_DISPLAY_Swap();
 
 		// save a little asm
-		if(i == 2) return;
+		if (i == 2)
+			return;
 
 		// prim code = 0 (cause bitshifted),
 		// with bit-flag parameter '2'

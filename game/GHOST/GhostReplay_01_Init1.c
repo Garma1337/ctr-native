@@ -11,31 +11,32 @@ void DECOMP_GhostReplay_Init1(void)
 	struct Instance *inst;
 	struct Instance *wakeInst;
 	struct Driver *ghostDriver;
-	struct Model* wake;
+	struct Model *wake;
 	int timeTrialFlags;
-	
-	struct GhostHeader* gh;
-	struct GhostTape* tape;
+
+	struct GhostHeader *gh;
+	struct GhostTape *tape;
 	int charID;
-	char* recordBuffer;
-	
-	//for human reading purposes
+	char *recordBuffer;
+
+	// for human reading purposes
 	unsigned char playerID;
-	
+
 	struct GameTracker *gGT = sdata->gGT;
-	
+
 	// This has to run from MainInit_Drivers
 	sdata->boolCanSaveGhost = 0;
 	sdata->boolGhostsDrawing = 0;
 
 	// only continue if you're in time trial, not main menu, and not cutscene
-	if ((gGT->gameMode1 & 0x20022000) != 0x20000) return;
-	
+	if ((gGT->gameMode1 & 0x20022000) != 0x20000)
+		return;
+
 	// === Record Buffer ===
-	
+
 	// In the future, this can move to GhostTape_Start, when byte budget allows
-	
-	gh = DECOMP_MEMPACK_AllocMem(0x3e00/*, "ghost record buffer"*/);
+
+	gh = DECOMP_MEMPACK_AllocMem(0x3e00 /*, "ghost record buffer"*/);
 	recordBuffer = GHOSTHEADER_GETRECORDBUFFER(gh);
 	sdata->GhostRecording.ptrGhost = gh;
 	sdata->GhostRecording.ptrStartOffset = &recordBuffer[0];
@@ -44,7 +45,7 @@ void DECOMP_GhostReplay_Init1(void)
 	// === Replay Buffer ===
 	// 0: human ghost
 	// 1: N Tropy / Oxide ghost
-	
+
 	// ALWAYS initialize ghost threads
 	// even if gh == 0, or else the text
 	// for "Ghost Too Big" will never play
@@ -54,7 +55,7 @@ void DECOMP_GhostReplay_Init1(void)
 
 	for (i = 0; i < 2; i++)
 	{
-		tape = DECOMP_MEMPACK_AllocMem(0x268/*, "ghost tape"*/);
+		tape = DECOMP_MEMPACK_AllocMem(0x268 /*, "ghost tape"*/);
 		sdata->ptrGhostTape[i] = tape;
 
 		// first ghost pointer is a ghost loaded by player
@@ -65,13 +66,13 @@ void DECOMP_GhostReplay_Init1(void)
 			{
 				// assign the ghost you loaded
 				gh = sdata->ptrGhostTapePlaying;
-				
+
 				playerID = 1;
 			}
 
 			// if no human ghost is replayed, do NOT
 			// "return", the ghost[0] thread must be
-			// initialized, or else the "Ghost Too Big" 
+			// initialized, or else the "Ghost Too Big"
 			// text will not play from GhostReplay_ThTick
 		}
 
@@ -84,33 +85,33 @@ void DECOMP_GhostReplay_Init1(void)
 			// 1|2|0 (3) - NTropy Ghost Beaten, Oxide Ghost Open
 			// 1|2|4 (7) - NOxide Ghost Beaten
 			timeTrialFlags = sdata->gameProgress.highScoreTracks[gGT->levelID].timeTrialFlags;
-			
-			void** pointers = ST1_GETPOINTERS(gGT->level1->ptrSpawnType1);
-			
-			#ifdef REBUILD_PC
+
+			void **pointers = ST1_GETPOINTERS(gGT->level1->ptrSpawnType1);
+
+#ifdef REBUILD_PC
 			timeTrialFlags = 7;
-			#endif
-			
-			switch(timeTrialFlags)
+#endif
+
+			switch (timeTrialFlags)
 			{
-				// no ghost
-				case 0:
-					return;
-					
-				// ntropy
-				case 1:
-					gh = pointers[ST1_NTROPY];	
-					playerID = 2;
-					break;
-				
-				// oxide
-				default:
-					gh = pointers[ST1_NOXIDE];	
-					playerID = 3;
-					break;
+			// no ghost
+			case 0:
+				return;
+
+			// ntropy
+			case 1:
+				gh = pointers[ST1_NTROPY];
+				playerID = 2;
+				break;
+
+			// oxide
+			default:
+				gh = pointers[ST1_NOXIDE];
+				playerID = 3;
+				break;
 			}
 		}
-		
+
 		sdata->boolGhostsDrawing = 1;
 		recordBuffer = GHOSTHEADER_GETRECORDBUFFER(gh);
 
@@ -144,43 +145,38 @@ void DECOMP_GhostReplay_Init1(void)
 
 		// characterID and model
 		charID = data.characterIDs[playerID];
-		
-		#ifdef USE_PRELOAD
-		int* arr = 0x8000a000;
-		struct Model* model = arr[charID];
-		#else
-		
-			// set in MainInit_Drivers for PC port
-			#ifndef REBUILD_PS1
-			struct Model* model = VehBirth_GetModelByName(data.MetaDataCharacters[charID].name_Debug);
-			#else
-			struct Model* model = NULL;
-			#endif
 
-		#endif
+#ifdef USE_PRELOAD
+		int *arr = 0x8000a000;
+		struct Model *model = arr[charID];
+#else
+
+// set in MainInit_Drivers for PC port
+#ifndef REBUILD_PS1
+		struct Model *model = VehBirth_GetModelByName(data.MetaDataCharacters[charID].name_Debug);
+#else
+		struct Model *model = NULL;
+#endif
+
+#endif
 
 		inst = DECOMP_INSTANCE_Birth3D(model, NULL, NULL);
 		inst->unk51 = 0xc;
 		inst->flags = 7;
 
 		t = DECOMP_PROC_BirthWithObject(
-			
-			// creation flags
-			SIZE_RELATIVE_POOL_BUCKET(
-				4, NONE, LARGE, GHOST
-			), 
-			
-			DECOMP_GhostReplay_ThTick, 
-			0, 
-			0
-		);
-		
-		t->modelIndex = DYNAMIC_GHOST;	// ghost
-		t->flags |= 0x1000;		// ignore collisions
-		
+
+		    // creation flags
+		    SIZE_RELATIVE_POOL_BUCKET(4, NONE, LARGE, GHOST),
+
+		    DECOMP_GhostReplay_ThTick, 0, 0);
+
+		t->modelIndex = DYNAMIC_GHOST; // ghost
+		t->flags |= 0x1000;            // ignore collisions
+
 		t->inst = inst;
 		inst->thread = t;
-		
+
 		// ghost drivers are 0x638 bytes large
 		ghostDriver = t->object;
 		memset(ghostDriver, 0, 0x638);
@@ -210,17 +206,17 @@ void DECOMP_GhostReplay_Init1(void)
 
 		DECOMP_VehBirth_TireSprites(t);
 		DECOMP_VehBirth_SetConsts(ghostDriver);
-		
-		if(charID == NITROS_OXIDE)
+
+		if (charID == NITROS_OXIDE)
 			ghostDriver->wheelSize = 0;
 
 		// pointer to TrTire, for transparent tires
 		ghostDriver->wheelSprites = ICONGROUP_GETICONS(gGT->iconGroup[0xc]);
-		
+
 		// advance ghost by one frame,
 		// just so Oxide doesn't block your view
 		DECOMP_GhostReplay_ThTick(t);
 	}
-		
+
 	return;
 }

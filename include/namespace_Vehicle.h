@@ -2,7 +2,7 @@
 
 enum Characters
 {
-	CRASH_BANDICOOT=0,
+	CRASH_BANDICOOT = 0,
 	NEO_CORTEX,
 	TINY_TIGER,
 	COCO_BANDICOOT,
@@ -17,32 +17,32 @@ enum Characters
 	N_TROPY,
 	PENTA_PENGUIN,
 	FAKE_CRASH,
-	NITROS_OXIDE=15
+	NITROS_OXIDE = 15
 };
 
 enum KartState
 {
-	KS_NORMAL=0,
-	KS_CRASHING=1,
-	KS_DRIFTING=2,
-	KS_SPINNING=3,
-	KS_ENGINE_REVVING=4,
-	KS_MASK_GRABBED=5,
-	KS_BLASTED=6,
-	KS_ANTIVSHIFT=9,
-	KS_WARP_PAD=10,
-	KS_FREEZE=11
+	KS_NORMAL = 0,
+	KS_CRASHING = 1,
+	KS_DRIFTING = 2,
+	KS_SPINNING = 3,
+	KS_ENGINE_REVVING = 4,
+	KS_MASK_GRABBED = 5,
+	KS_BLASTED = 6,
+	KS_ANTIVSHIFT = 9,
+	KS_WARP_PAD = 10,
+	KS_FREEZE = 11
 };
 
 enum PhysType
 {
 	// MetaPhys[0]
-	GRAVITY=0,
+	GRAVITY = 0,
 	// Driver offset
 	GRAVITY_OFFSET = 0x416,
 
 	// MetaPhys[1]
-	JUMP=1,
+	JUMP = 1,
 	// Driver offset
 	JUMP_OFFSET = 0x418,
 
@@ -82,14 +82,14 @@ enum PhysType
 	DRIFT_FRICTION_OFFSET = 0x426,
 
 	// MetaPhys[9]
-	ACCELERATION_NO_RESERVES=9,
+	ACCELERATION_NO_RESERVES = 9,
 	// Driver offset
 	ACCEL_NO_RESERVES_OFFSET = 0x428,
 
 	// MetaPhys[A]
-	ACCELERATION_WITH_RESERVES=0xA,
+	ACCELERATION_WITH_RESERVES = 0xA,
 	// Driver offset
-	ACCEL_WITH_RESERVES_OFFSET=0x42A,
+	ACCEL_WITH_RESERVES_OFFSET = 0x42A,
 
 	// MetaPhys[B]
 	CLASS_SPEED = 0xB,
@@ -97,7 +97,7 @@ enum PhysType
 	CLASS_SPEED_OFFSET = 0x42C,
 
 	// MetaPhys[C]
-    SPEEDOMETER_UNK42E = 0xC,
+	SPEEDOMETER_UNK42E = 0xC,
 	// Driver offset
 	SPEEDOMETER_UNK42E_OFFSET = 0x42E,
 
@@ -292,12 +292,12 @@ enum PhysType
 
 enum TurboType
 {
-	START_LINE_BOOST 					= 0,
-	FREEZE_RESERVES_ON_TURBO_PAD 		= 0x1,
-	POWER_SLIDE_HANG_TIME 				= 0x2,
-	TURBO_PAD 							= 0x4,
-	TURBO_ITEM							= 0x8,
-	SUPER_ENGINE 						= 0x10
+	START_LINE_BOOST = 0,
+	FREEZE_RESERVES_ON_TURBO_PAD = 0x1,
+	POWER_SLIDE_HANG_TIME = 0x2,
+	TURBO_PAD = 0x4,
+	TURBO_ITEM = 0x8,
+	SUPER_ENGINE = 0x10
 };
 
 enum EngineClass
@@ -322,17 +322,17 @@ enum EngineClass
 
 enum Actions
 {
-	ACTION_TOUCH_GROUND  =		 0x1,
-	ACTION_WARP 		 =    0x4000,
-	ACTION_BOT  		 =  0x100000,
+	ACTION_TOUCH_GROUND = 0x1,
+	ACTION_WARP = 0x4000,
+	ACTION_BOT = 0x100000,
 	ACTION_RACE_FINISHED = 0x2000000,
 };
 
 struct MetaPhys
 {
-	#if (BUILD >= JpnTrial)
-	char* unusedDebugStr;
-	#endif
+#if (BUILD >= JpnTrial)
+	char *unusedDebugStr;
+#endif
 
 	int offset;
 	int size;
@@ -342,43 +342,44 @@ struct MetaPhys
 
 struct Turbo
 {
-   struct Instance* inst;
-   struct Driver* driver;
+	struct Instance *inst;
+	struct Driver *driver;
 
-   // 0x8
-   // Index for the animation frame of the exhaust fire
-   // Value 0 means it uses turbo0, 1 means it uses turbo1, so on until 7 is reached and it loops back to 0
-   short fireAnimIndex;
+	// 0x8
+	// Index for the animation frame of the exhaust fire
+	// Value 0 means it uses turbo0, 1 means it uses turbo1, so on until 7 is reached and it loops back to 0
+	short fireAnimIndex;
 
-   // 0xA
-   // Stores the visual size of the exhaust fire
-   // Integer value ranging from 4 to 8
-   // One power-slide and green hang time is 5
-   // Two power-slides and yellow hang time is 6
-   // Three power-slides, red hang time, and start boost is 7
-   // Turbo pad and USF is 8
-   // 4 appears to be unused
-   // Fire doesn't get any smaller at values lower than 4 nor bigger at values higher than 8
-   short fireSize;
+	// 0xA
+	// Stores the visual size of the exhaust fire
+	// Integer value ranging from 4 to 8
+	// One power-slide and green hang time is 5
+	// Two power-slides and yellow hang time is 6
+	// Three power-slides, red hang time, and start boost is 7
+	// Turbo pad and USF is 8
+	// 4 appears to be unused
+	// Fire doesn't get any smaller at values lower than 4 nor bigger at values higher than 8
+	short fireSize;
 
-   // 0xC
-   // Value that decreases every time VehTurbo_ThTick gets called
-   // If it reaches 0 it makes the fire start disappearing
-   char fireDisappearCountdown;
+	// 0xC
+	// Value that decreases every time VehTurbo_ThTick gets called
+	// If it reaches 0 it makes the fire start disappearing
+	char fireDisappearCountdown;
 
-   // 0xD
-   // Used for the distortion of the sound that indicates active fire/reserves
-   u_char fireAudioDistort;
+	// 0xD
+	// Used for the distortion of the sound that indicates active fire/reserves
+	u_char fireAudioDistort;
 
-   // 0xE
-   // Cooldown for when fire is visible
-   // Set to 96 (which makes fire invisible for 0.1 seconds, 96 / 1000 = 96ms = 0.1s) when obtaining turbo from certain sources, namely those from power-sliding (used to make fire pop with each power-slide)
-   short fireVisibilityCooldown;
+	// 0xE
+	// Cooldown for when fire is visible
+	// Set to 96 (which makes fire invisible for 0.1 seconds, 96 / 1000 = 96ms = 0.1s) when obtaining turbo from certain sources, namely those from
+	// power-sliding (used to make fire pop with each power-slide)
+	short fireVisibilityCooldown;
 };
 
 struct BotData
 {
-	//these offset are from the perspective as they exist from within `struct Driver`
+	// these offset are from the perspective as they exist from within `struct Driver`
 
 	// 0x598, offset in `struct BotData` == 0x0
 	struct Item item;
@@ -387,7 +388,7 @@ struct BotData
 	int unk5a0;
 
 	// 0x5a4, offset in `struct BotData` == 0xc
-	struct NavFrame* botNavFrame;
+	struct NavFrame *botNavFrame;
 
 	// 0x5a8
 	int unk5a8;
@@ -417,17 +418,17 @@ struct BotData
 
 
 	/*
-	* regarding unk5bc:
-	*
-	* 0x5bc - 0x5bd: likely a short, a timer of some sort, similar to squishTimer.
-	*/
+	 * regarding unk5bc:
+	 *
+	 * 0x5bc - 0x5bd: likely a short, a timer of some sort, similar to squishTimer.
+	 */
 
 	// 0x5bc
 	// incline rotXZ
 	// probably only for AIs
 
-	//unk5bc + 18 is botVelocity?
-	//char unk5bc[0x34];
+	// unk5bc + 18 is botVelocity?
+	// char unk5bc[0x34];
 	union
 	{
 		char raw[0x34];
@@ -452,7 +453,7 @@ struct BotData
 			short ai_fireLevel;
 
 			// 0x5c8
-			int ai_squishCooldown; //why does this get interpreted as a short sometimes and an int other times
+			int ai_squishCooldown; // why does this get interpreted as a short sometimes and an int other times
 
 			// 0x5cc
 			int unk5cc;
@@ -487,7 +488,7 @@ struct BotData
 	short ai_rotY_608;
 
 	// 0x60a
-	short ai_quadblock_checkpointIndex; //0x60a almost certainly is a char and not a short.
+	short ai_quadblock_checkpointIndex; // 0x60a almost certainly is a char and not a short.
 
 	// within the regions POTENTALNAVFRAMESTART/END, is this a navframe?
 	// POTENTAL NAV FRAME START
@@ -511,10 +512,10 @@ struct BotData
 
 	// 0x61c
 	int unk61c;
-	//POTENTAL NAV FRAME END
+	// POTENTAL NAV FRAME END
 
 	// 0x620
-	struct MaskHeadWeapon* maskObj;
+	struct MaskHeadWeapon *maskObj;
 
 	// 0x624
 	short weaponCooldown;
@@ -531,16 +532,16 @@ struct BotData
 struct Driver
 {
 	// 0x0
-	struct Icon** wheelSprites;
+	struct Icon **wheelSprites;
 	// 0x4
 	unsigned short wheelSize;
 
-    // 0x6
-    // Front wheel rotation sprite frame offset
-    // Also controls the LR panning of the Engine Sound
-    // Default: 0
-    // Steering left ranges between 0 to 64
-    // Steering right ranges between 0 to -64 (if we display it as a signed number)
+	// 0x6
+	// Front wheel rotation sprite frame offset
+	// Also controls the LR panning of the Engine Sound
+	// Default: 0
+	// Steering left ranges between 0 to 64
+	// Steering right ranges between 0 to -64 (if we display it as a signed number)
 	short wheelRotation;
 	// 0x8
 	unsigned int tireColor;
@@ -549,19 +550,19 @@ struct Driver
 	// 0xE
 	short hazardTimer;
 	// 0x10
-	struct Instance* instBombThrow;
+	struct Instance *instBombThrow;
 	// 0x14
-	struct Instance* instBubbleHold;
+	struct Instance *instBubbleHold;
 	// 0x18
-	struct Instance* instTntRecv; // on your head
+	struct Instance *instTntRecv; // on your head
 	// 0x1C
-	struct Instance* instSelf;
+	struct Instance *instSelf;
 
-	// Not in Aug Review
-	#if BUILD >= SepReview
+// Not in Aug Review
+#if BUILD >= SepReview
 	// 0x20
-	struct Instance* instTntSend; // on the ground
-	#endif
+	struct Instance *instTntSend; // on the ground
+#endif
 
 	// 0x24
 	int invincibleTimer;
@@ -616,29 +617,29 @@ struct Driver
 	// 0x4D
 	unsigned char matrixIndex;
 
-	#if BUILD >= EurRetail
+#if BUILD >= EurRetail
 	short compilerPadding_0x4E;
 
 	// 0x50
 	// highest amount of consecutive turbos in a race
 	// exclusive to Japan Retail
 	int numTurbosHighScore;
-	#endif
+#endif
 
-	#if BUILD >= SepReview
+#if BUILD >= SepReview
 	// 0x4E -- UsaRetail
 	// 0x54 -- EurRetail, JpnRetail
 	short numTurbos;
 	// 0x50
 	unsigned short frameAgainstWall; // allocated in Sep3, does not function
-	#endif
+#endif
 
-	#if BUILD < EurRetail
+#if BUILD < EurRetail
 	// There is no "short" on 0x52,
 	// there is padding for the next
 	// 4-byte void* that is unused
 	short funcPtrs_compilerpadding;
-	#endif
+#endif
 
 	// 0x54 (UsaRetail) / 0x58 (EurRetail, JpnRetail) - OnInit, First function for spawn, drifting, damage, etc
 	// 0x58 - OnUpdate, updates per frame for any generic purpose
@@ -653,7 +654,7 @@ struct Driver
 	// 0x7C - VehPhysForce_TranslateMatrix (pos, rot, scale)
 	// 0x80 - OnAnimate
 	// 0x84 - OnParticles
-	void* funcPtrs[0xD];
+	void *funcPtrs[0xD];
 
 	// 0x88
 	Vec3 velocity;
@@ -663,7 +664,7 @@ struct Driver
 
 	// 0xA0 - quadblock currently touched,
 	// it is zero while airborne
-	struct QuadBlock* currBlockTouching;
+	struct QuadBlock *currBlockTouching;
 
 	// 0xA4
 	SVec3 normalVecUP;
@@ -775,11 +776,11 @@ struct Driver
 	int sfxDistortOffset;
 
 	// 0x300
-    // 0x300 = Kart skidmarks sound
-    // 0x304 = No sound yet defined* (VehEmitter_DriverMain.c: Line#290)
-    // 0x308 = Kart "kirb_dirt" sound
-    // 0x30C = Kart "engine_jet" sound
-	void* driverAudioPtrs[4];
+	// 0x300 = Kart skidmarks sound
+	// 0x304 = No sound yet defined* (VehEmitter_DriverMain.c: Line#290)
+	// 0x308 = Kart "kirb_dirt" sound
+	// 0x30C = Kart "engine_jet" sound
+	void *driverAudioPtrs[4];
 
 	// 0x310
 	MATRIX matrixMovingDir;
@@ -790,19 +791,19 @@ struct Driver
 	// 0x350
 	// continues updating while driver is airborne,
 	// used for VisMem (sometimes?)
-	struct QuadBlock* underDriver;
+	struct QuadBlock *underDriver;
 
 	// 0x354
 	// last "valid" quadblock the driver touched
 	// used for mask grab if next block is invalid
-	struct QuadBlock* lastValid;
+	struct QuadBlock *lastValid;
 
 	// 0x358
 	// is it ice, gravel, or what?
-	struct Terrain* terrainMeta1;
+	struct Terrain *terrainMeta1;
 
 	// 0x35C
-	struct Terrain* terrainMeta2;
+	struct Terrain *terrainMeta2;
 
 	// each normalVec is 8 bytes apart,
 	// used as an array of vec4s, with
@@ -826,8 +827,8 @@ struct Driver
 	short AxisAngle2_normalVec[3];
 
 	// 0x36e
-    // Seems to control the speedometer needle to show base current speed
-    // Altought the needle is also controlled a little bit by other variables that are not constants
+	// Seems to control the speedometer needle to show base current speed
+	// Altought the needle is also controlled a little bit by other variables that are not constants
 	short unk36E;
 
 	// 0x370
@@ -911,10 +912,10 @@ struct Driver
 
 	// 0x3B6
 	// both related to EngineSound
-    // 0x3b6 controls the ¿volume? of the Engine Sound*
-    // 0x3b8 controls the base pitch of the Engine Sound
-    // The final pitch calculation where these vars are used
-    // is also affected by something else I couldn't find
+	// 0x3b6 controls the ¿volume? of the Engine Sound*
+	// 0x3b8 controls the base pitch of the Engine Sound
+	// The final pitch calculation where these vars are used
+	// is also affected by something else I couldn't find
 	short fill_3B6[2];
 
 	// 0x3BA
@@ -959,7 +960,7 @@ struct Driver
 	short unk_LerpToForwards;
 
 	// 0x3d4
-    // This is a UNION between kart states
+	// This is a UNION between kart states
 	short unk3D4[3];
 
 	// 0x3DA
@@ -990,7 +991,7 @@ struct Driver
 	short forwardDir;
 
 	// 0x3EA
-	short previousFrameMultDrift; //previous frame or just repeat?
+	short previousFrameMultDrift; // previous frame or just repeat?
 
 	// 0x3ec
 	short timeUntilDriftSpinout;
@@ -1175,11 +1176,11 @@ struct Driver
 	char unusedPadding;
 
 	// all related to VehPhysGeneral_LerpToForwards
-    // only affected by steering without sliding
+	// only affected by steering without sliding
 	char angleMaxCounterSteer; // 0x22 kart model angle lerp rotation Limit max*
-	char unk458; // 0x23 kart model angle lerp rotation Limit min*
-	char unk459; // 0x24 kart model angle lerp rotation strength/ratio max*
-	char unk45a; // 0x25 kart model angle lerp rotation strength/ratio min*
+	char unk458;               // 0x23 kart model angle lerp rotation Limit min*
+	char unk459;               // 0x24 kart model angle lerp rotation strength/ratio max*
+	char unk45a;               // 0x25 kart model angle lerp rotation strength/ratio min*
 
 	char unk45b; // unused? skips straight to 0x45c
 
@@ -1263,23 +1264,23 @@ struct Driver
 	unsigned short engineVol;
 
 	// 0x498
-	struct Instance* instBigNum;
+	struct Instance *instBigNum;
 
 	// 0x49c
-	struct Instance* instFruitDisp;
+	struct Instance *instFruitDisp;
 
 	// 0x4a0
 	// raincloud when you hit red potion
-	struct Thread* thCloud;
+	struct Thread *thCloud;
 
 	// 0x4a4
 	// pointer Tracking thread that
 	// is chasing this driver (missile/warpball)
-	struct Thread* thTrackingMe;
+	struct Thread *thTrackingMe;
 
 	// 0x4a8
 	// Papu pyramid plants, see 231.c
-	struct Thread* plantEatingMe;
+	struct Thread *plantEatingMe;
 
 	// 0x4ac
 	int damageColorTimer;
@@ -1369,7 +1370,7 @@ struct Driver
 	short quip4;
 
 	// 0x4f8
-	struct Instance* wakeInst;
+	struct Instance *wakeInst;
 
 	// 0x4fc
 	short wakeScale;
@@ -1502,7 +1503,7 @@ struct Driver
 	// characterID "Crash Bandicoot"
 
 	// 0x56c
-	short* EndOfRaceComment_ptrQuip;
+	short *EndOfRaceComment_ptrQuip;
 
 	// 0x570
 	int EndOfRaceComment_characterID;
@@ -1563,7 +1564,7 @@ struct Driver
 		{
 			// 0x580
 			// object connected to thread
-			struct MaskHeadWeapon* maskObj;
+			struct MaskHeadWeapon *maskObj;
 
 			// == Needs More Research ==
 
@@ -1597,7 +1598,7 @@ struct Driver
 		{
 			// 0x580
 			// object connected to thread
-			struct MaskHeadWeapon* maskObj;
+			struct MaskHeadWeapon *maskObj;
 
 			// 0x584
 			short AngleAxis_NormalVec[3];
@@ -1663,7 +1664,7 @@ struct Driver
 	// 0x62C - 0x670 reserved for ghost
 
 	// 0x62C
-	struct GhostTape* ghostTape;
+	struct GhostTape *ghostTape;
 
 	// 0x630
 	short ghostID;
@@ -1675,14 +1676,14 @@ struct Driver
 	short ghostBoolStarted;
 	short unk636;
 
-	#ifdef USE_ONLINE
-	int uncappedReserves; // 0x638
-	int bestLapTime; // 0x63C
-	int currLapTime; // 0x640
-	char meterGrade[2]; // 0x644
+#ifdef USE_ONLINE
+	int uncappedReserves;  // 0x638
+	int bestLapTime;       // 0x63C
+	int currLapTime;       // 0x640
+	char meterGrade[2];    // 0x644
 	short meterGradeTimer; // 0x646
-	int gradeColor; // 0x648
-	#endif
+	int gradeColor;        // 0x648
+#endif
 
 	// 0x638
 	// end of ghost struct (as determined by memset)
@@ -1705,6 +1706,6 @@ _Static_assert(sizeof(struct MetaPhys) == 0x1C);
 _Static_assert(sizeof(struct Driver) == 0x638);
 #endif
 
-#if 1 //idk this might be version dependant
+#if 1 // idk this might be version dependant
 _Static_assert(sizeof(struct BotData) == 0x94);
 #endif

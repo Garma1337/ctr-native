@@ -25,25 +25,23 @@ int DECOMP_RECTMENU_ProcessInput(struct RectMenu *m)
 		button = sdata->buttonTapPerPlayer[0];
 	}
 
-	if
-	(
-		#ifdef USE_PROFILER
-		((sdata->gGT->gameMode1 & DEBUG_MENU) == 0) &&
-		#endif
-	
-		// if not drawing only title bar,
-		// therefore this is the bottom of hierarchy
-		((m->state & ONLY_DRAW_TITLE) == 0) &&
+	if (
+#ifdef USE_PROFILER
+	    ((sdata->gGT->gameMode1 & DEBUG_MENU) == 0) &&
+#endif
 
-		// must be both 0x20000 and 0x40000
-		((m->state & 0x60000) != 0x60000) &&
-		
-		// D-pad or Cross/Triangle
-		((button & 0x4007f) != 0) &&
-		
-		// No cheat code entering
-		((sdata->buttonHeldPerPlayer[0] & (BTN_L1 | BTN_R1)) == 0)
-	)
+	    // if not drawing only title bar,
+	    // therefore this is the bottom of hierarchy
+	    ((m->state & ONLY_DRAW_TITLE) == 0) &&
+
+	    // must be both 0x20000 and 0x40000
+	    ((m->state & 0x60000) != 0x60000) &&
+
+	    // D-pad or Cross/Triangle
+	    ((button & 0x4007f) != 0) &&
+
+	    // No cheat code entering
+	    ((sdata->buttonHeldPerPlayer[0] & (BTN_L1 | BTN_R1)) == 0))
 	{
 		oldRow = m->rowSelected;
 		newRow = oldRow;
@@ -84,14 +82,12 @@ int DECOMP_RECTMENU_ProcessInput(struct RectMenu *m)
 
 		if ((button & (BTN_CROSS | BTN_CIRCLE)) == 0)
 		{
-			if
-			(
-				// if Triangle or Square
-				((button & (BTN_TRIANGLE | BTN_SQUARE)) != 0) &&
+			if (
+			    // if Triangle or Square
+			    ((button & (BTN_TRIANGLE | BTN_SQUARE)) != 0) &&
 
-				// if this is not the top of the menu
-				((m->state & MENU_CANT_GO_BACK) == 0)
-			)
+			    // if this is not the top of the menu
+			    ((m->state & MENU_CANT_GO_BACK) == 0))
 			{
 				// process GO BACK
 
@@ -104,7 +100,7 @@ int DECOMP_RECTMENU_ProcessInput(struct RectMenu *m)
 				returnVal = -1;
 
 				m->unk1e = 0;
-				
+
 				m->rowSelected = -1;
 
 				if (m->funcPtr != 0)
@@ -123,7 +119,7 @@ int DECOMP_RECTMENU_ProcessInput(struct RectMenu *m)
 		{
 			// "womp" sound for LOCKED row
 			int sound = 5;
-			
+
 			// unlocked row
 			if ((m->rows[m->rowSelected].stringIndex & 0x8000) == 0)
 			{

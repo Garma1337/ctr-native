@@ -5,49 +5,45 @@
 
 void DECOMP_GAMEPAD_ProcessHold(struct GamepadSystem *gGamepads)
 {
-    char j;
-    char* btnMapPtr;
-    u_int *puVar2;
-    unsigned short uVar4;
-    u_int uVar5;
+	char j;
+	char *btnMapPtr;
+	u_int *puVar2;
+	unsigned short uVar4;
+	u_int uVar5;
 
-    struct GamepadBuffer *pad;
-    struct ControllerPacket *ptrControllerPacket;
+	struct GamepadBuffer *pad;
+	struct ControllerPacket *ptrControllerPacket;
 
-	#ifdef USE_4PADTEST
+#ifdef USE_4PADTEST
 	ptrControllerPacket = gGamepads->gamepad[0].ptrControllerPacket;
-	#endif
+#endif
 
-    // loop through all 8 gamepadBuffers
-    for(
-			pad = &gGamepads->gamepad[0]; 
-			pad < &gGamepads->gamepad[8]; 
-			pad++
-		)
-    {
-        pad->buttonsHeldPrevFrame = pad->buttonsHeldCurrFrame;
+	// loop through all 8 gamepadBuffers
+	for (pad = &gGamepads->gamepad[0]; pad < &gGamepads->gamepad[8]; pad++)
+	{
+		pad->buttonsHeldPrevFrame = pad->buttonsHeldCurrFrame;
 
-		#ifndef USE_4PADTEST
-        ptrControllerPacket = pad->ptrControllerPacket;
-		#endif
+#ifndef USE_4PADTEST
+		ptrControllerPacket = pad->ptrControllerPacket;
+#endif
 
-        // if pointer is invalid
-        if (ptrControllerPacket == NULL)
-        {
-            // erase buttons held this frame and prev
-            pad->buttonsHeldPrevFrame = 0;
-            pad->buttonsHeldCurrFrame = 0;
-        }
+		// if pointer is invalid
+		if (ptrControllerPacket == NULL)
+		{
+			// erase buttons held this frame and prev
+			pad->buttonsHeldPrevFrame = 0;
+			pad->buttonsHeldCurrFrame = 0;
+		}
 
-        // must be zero to confirm connection
-        else if (ptrControllerPacket->plugged == PLUGGED)
+		// must be zero to confirm connection
+		else if (ptrControllerPacket->plugged == PLUGGED)
 		{
 			// endian flip
 			uVar4 = (ptrControllerPacket->controllerInput1 << 8) | ptrControllerPacket->controllerInput2;
-			
+
 			uVar4 = uVar4 ^ 0xffff;
 			uVar5 = 0;
-			
+
 			// If this is madcatz racing wheel
 			if (ptrControllerPacket->controllerData == ((PAD_ID_NEGCON << 4) | 3))
 			{
@@ -64,7 +60,7 @@ void DECOMP_GAMEPAD_ProcessHold(struct GamepadSystem *gGamepads)
 					uVar4 |= 4;
 				}
 			}
-	
+
 			// If this is not madcatz racing wheel
 			else
 			{
@@ -79,28 +75,24 @@ void DECOMP_GAMEPAD_ProcessHold(struct GamepadSystem *gGamepads)
 			// gamepadMapBtn to map RawInput enum
 			// to Buttons enum, to support different
 			// types of controllers
-			for (
-					btnMapPtr = &data.gamepadMapBtn[0].input[0]; 
-					*(int*)&btnMapPtr[0] != 0;
-					btnMapPtr += 8
-				)
+			for (btnMapPtr = &data.gamepadMapBtn[0].input[0]; *(int *)&btnMapPtr[0] != 0; btnMapPtr += 8)
 			{
-				if ((uVar4 & *(int*)&btnMapPtr[0]) != 0)
+				if ((uVar4 & *(int *)&btnMapPtr[0]) != 0)
 				{
-					uVar5 |= *(int*)&btnMapPtr[4];
+					uVar5 |= *(int *)&btnMapPtr[4];
 				}
 			}
-			
+
 			// record buttons held this frame
 			pad->buttonsHeldCurrFrame = uVar5;
-	
+
 			// if nothing was held
 			if (uVar5 == 0)
 			{
 				if (pad->framesSinceLastInput < 65000)
 					pad->framesSinceLastInput++;
-			} 
-			
+			}
+
 			// if buttons were pressed
 			else
 			{
@@ -108,13 +100,13 @@ void DECOMP_GAMEPAD_ProcessHold(struct GamepadSystem *gGamepads)
 				pad->framesSinceLastInput = 0;
 			}
 		}
-	
-		#ifdef USE_ONLINE
+
+#ifdef USE_ONLINE
 		break;
-		#endif
-		
-		#ifdef USE_REAL60PS1
+#endif
+
+#ifdef USE_REAL60PS1
 		break;
-		#endif
+#endif
 	}
 }

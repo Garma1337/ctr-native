@@ -5,31 +5,32 @@
 // The same is not true in the decomp. When you finish a race, you "hiccup" your speed and slow down significantly when passing the finish line.
 
 
-void DECOMP_BOTS_Driver_Convert(struct Driver* d)
+void DECOMP_BOTS_Driver_Convert(struct Driver *d)
 {
 	// if already AI, quit
 	if ((d->actionsFlagSet & 0x100000) != 0)
 		return;
-	
+
 	DECOMP_UI_RaceEnd_GetDriverClock(d);
 
 	char initialNavPathIndex = sdata->driver_pathIndexIDs[d->driverID];
 	char navPathIndex;
-	short navPathPointsCount;// = sdata->NavPath_ptrHeader[navPathIndex]->numPoints;
+	short navPathPointsCount; // = sdata->NavPath_ptrHeader[navPathIndex]->numPoints;
 
 	navPathIndex = initialNavPathIndex;
-	while(1)
+	while (1)
 	{
 		navPathPointsCount = sdata->NavPath_ptrHeader[navPathIndex]->numPoints;
-		if (1 < navPathPointsCount) break; //success
-		
+		if (1 < navPathPointsCount)
+			break; // success
+
 		navPathIndex--;
-		
+
 		// If subtracted below zero,
 		// go back to highest index (2)
 		if (navPathIndex < 0)
 			navPathIndex = 2;
-		
+
 		// If all 3 are checked, quit
 		if (navPathIndex == initialNavPathIndex)
 			return NULL;
@@ -47,7 +48,7 @@ void DECOMP_BOTS_Driver_Convert(struct Driver* d)
 
 	d->botData.unk5bc.ai_speedLinear = speedApprox;
 
-	struct NavFrame* firstNavFrame = sdata->NavPath_ptrNavFrameArray[navPathIndex];
+	struct NavFrame *firstNavFrame = sdata->NavPath_ptrNavFrameArray[navPathIndex];
 
 	d->botData.unk5a8 = 0;
 	d->turnAngleCurr = 0;
@@ -61,13 +62,13 @@ void DECOMP_BOTS_Driver_Convert(struct Driver* d)
 
 	if ((sdata->gGT->gameMode1 & 0x20) != 0)
 	{ // you are in battle mode
-		struct NavFrame* nf = NAVHEADER_GETFRAME(sdata->NavPath_ptrHeader[navPathIndex]);
+		struct NavFrame *nf = NAVHEADER_GETFRAME(sdata->NavPath_ptrHeader[navPathIndex]);
 		d->posCurr.x = nf->pos[0] << 8;
 		d->posCurr.y = nf->pos[1] << 8;
 		d->posCurr.z = nf->pos[2] << 8;
 	}
 
-	DECOMP_LIST_AddFront(&sdata->navBotList[navPathIndex], (struct Item*)&d->botData);
+	DECOMP_LIST_AddFront(&sdata->navBotList[navPathIndex], (struct Item *)&d->botData);
 
 	BOTS_SetRotation(d, 0);
 
@@ -83,7 +84,8 @@ void DECOMP_BOTS_Driver_Convert(struct Driver* d)
 	}
 
 	int damageType;
-	switch (d->kartState) {
+	switch (d->kartState)
+	{
 	default:
 		return;
 	case KS_SPINNING:
@@ -95,5 +97,4 @@ void DECOMP_BOTS_Driver_Convert(struct Driver* d)
 	}
 
 	BOTS_ChangeState(d, damageType, NULL, 0);
-	
 }

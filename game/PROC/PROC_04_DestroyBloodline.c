@@ -1,7 +1,7 @@
 #include <common.h>
 
 // was in proc_03 for bytebudget reasons
-void DECOMP_PROC_DestroyBloodline(struct Thread* t)
+void DECOMP_PROC_DestroyBloodline(struct Thread *t)
 {
 	while (t != 0)
 	{

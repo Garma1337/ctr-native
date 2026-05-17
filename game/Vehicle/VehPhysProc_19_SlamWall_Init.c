@@ -6,30 +6,29 @@ void DECOMP_VehPhysProc_SlamWall_Animate();
 
 // budget, 0x120 bytes, 288 bytes
 
-void* PlayerCrashingFuncTable[13] =
-{
-	0,
-	0,
-	DECOMP_VehPhysProc_SlamWall_PhysLinear,
-	DECOMP_VehPhysProc_Driving_Audio,
-	DECOMP_VehPhysProc_SlamWall_PhysAngular,
-	DECOMP_VehPhysForce_OnApplyForces,
+void *PlayerCrashingFuncTable[13] = {
+    0,
+    0,
+    DECOMP_VehPhysProc_SlamWall_PhysLinear,
+    DECOMP_VehPhysProc_Driving_Audio,
+    DECOMP_VehPhysProc_SlamWall_PhysAngular,
+    DECOMP_VehPhysForce_OnApplyForces,
 
-	#ifndef REBUILD_PS1
-	COLL_MOVED_PlayerSearch,
-	VehPhysForce_CollideDrivers,
-	COLL_FIXED_PlayerSearch,
-	VehPhysGeneral_JumpAndFriction,
-	VehPhysForce_TranslateMatrix,
-	DECOMP_VehPhysProc_SlamWall_Animate,
-	VehEmitter_DriverMain,
-	#endif
+#ifndef REBUILD_PS1
+    COLL_MOVED_PlayerSearch,
+    VehPhysForce_CollideDrivers,
+    COLL_FIXED_PlayerSearch,
+    VehPhysGeneral_JumpAndFriction,
+    VehPhysForce_TranslateMatrix,
+    DECOMP_VehPhysProc_SlamWall_Animate,
+    VehEmitter_DriverMain,
+#endif
 };
 
-void DECOMP_VehPhysProc_SlamWall_Init(struct Thread* t, struct Driver* d)
+void DECOMP_VehPhysProc_SlamWall_Init(struct Thread *t, struct Driver *d)
 {
 	int i;
-	struct Instance* inst;
+	struct Instance *inst;
 	inst = d->instSelf;
 
 	// it doesn't set 2? does that change anyway?
@@ -69,7 +68,7 @@ void DECOMP_VehPhysProc_SlamWall_Init(struct Thread* t, struct Driver* d)
 	d->velocity.y = 0;
 	d->velocity.z = 0;
 
-	for(i = 0; i < 13; i++)
+	for (i = 0; i < 13; i++)
 	{
 		d->funcPtrs[i] = PlayerCrashingFuncTable[i];
 	}

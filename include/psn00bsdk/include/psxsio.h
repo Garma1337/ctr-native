@@ -24,54 +24,58 @@
 
 /* Enum and register definitions */
 
-typedef enum _SIO_StatusRegFlag {
-	SR_TXRDY	= 1 << 0,
-	SR_RXRDY	= 1 << 1,
-	SR_TXU		= 1 << 2,
-	SR_PERROR	= 1 << 3,
-	SR_OE		= 1 << 4,
-	SR_FE		= 1 << 5,
-	SR_DSR		= 1 << 7,
-	SR_CTS		= 1 << 8,
-	SR_IRQ		= 1 << 9
+typedef enum _SIO_StatusRegFlag
+{
+	SR_TXRDY = 1 << 0,
+	SR_RXRDY = 1 << 1,
+	SR_TXU = 1 << 2,
+	SR_PERROR = 1 << 3,
+	SR_OE = 1 << 4,
+	SR_FE = 1 << 5,
+	SR_DSR = 1 << 7,
+	SR_CTS = 1 << 8,
+	SR_IRQ = 1 << 9
 } SIO_StatusRegFlag;
 
-typedef enum _SIO_ModeRegFlag {
-	MR_BR_1		= 1 << 0,
-	MR_BR_16	= 2 << 0,
-	MR_BR_64	= 3 << 0,
-	MR_CHLEN_5	= 0 << 2,
-	MR_CHLEN_6	= 1 << 2,
-	MR_CHLEN_7	= 2 << 2,
-	MR_CHLEN_8	= 3 << 2,
-	MR_PEN		= 1 << 4,
-	MR_P_EVEN	= 1 << 5,
-	MR_SB_01	= 1 << 6,
-	MR_SB_10	= 2 << 6,
-	MR_SB_11	= 3 << 6
+typedef enum _SIO_ModeRegFlag
+{
+	MR_BR_1 = 1 << 0,
+	MR_BR_16 = 2 << 0,
+	MR_BR_64 = 3 << 0,
+	MR_CHLEN_5 = 0 << 2,
+	MR_CHLEN_6 = 1 << 2,
+	MR_CHLEN_7 = 2 << 2,
+	MR_CHLEN_8 = 3 << 2,
+	MR_PEN = 1 << 4,
+	MR_P_EVEN = 1 << 5,
+	MR_SB_01 = 1 << 6,
+	MR_SB_10 = 2 << 6,
+	MR_SB_11 = 3 << 6
 } SIO_ModeRegFlag;
 
-typedef enum _SIO_ControlRegFlag {
-	CR_TXEN		= 1 <<  0,
-	CR_DTR		= 1 <<  1,
-	CR_RXEN		= 1 <<  2,
-	CR_BRK		= 1 <<  3,
-	CR_INTRST	= 1 <<  4,
-	CR_RTS		= 1 <<  5,
-	CR_ERRRST	= 1 <<  6,
-	CR_BUFSZ_1	= 0 <<  8,
-	CR_BUFSZ_2	= 1 <<  8,
-	CR_BUFSZ_4	= 2 <<  8,
-	CR_BUFSZ_8	= 3 <<  8,
-	CR_TXIEN	= 1 << 10,
-	CR_RXIEN	= 1 << 11,
-	CR_DSRIEN	= 1 << 12
+typedef enum _SIO_ControlRegFlag
+{
+	CR_TXEN = 1 << 0,
+	CR_DTR = 1 << 1,
+	CR_RXEN = 1 << 2,
+	CR_BRK = 1 << 3,
+	CR_INTRST = 1 << 4,
+	CR_RTS = 1 << 5,
+	CR_ERRRST = 1 << 6,
+	CR_BUFSZ_1 = 0 << 8,
+	CR_BUFSZ_2 = 1 << 8,
+	CR_BUFSZ_4 = 2 << 8,
+	CR_BUFSZ_8 = 3 << 8,
+	CR_TXIEN = 1 << 10,
+	CR_RXIEN = 1 << 11,
+	CR_DSRIEN = 1 << 12
 } SIO_ControlRegFlag;
 
-typedef enum _SIO_FlowControl {
-	SIO_FC_NONE		= 0,
-	SIO_FC_RTS_CTS	= 1
-	//SIO_FC_DTR_DSR	= 2
+typedef enum _SIO_FlowControl
+{
+	SIO_FC_NONE = 0,
+	SIO_FC_RTS_CTS = 1
+	// SIO_FC_DTR_DSR	= 2
 } SIO_FlowControl;
 
 /* Public API */

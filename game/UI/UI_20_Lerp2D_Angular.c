@@ -6,7 +6,7 @@
 // param2 = drawn position
 // param3 = absolute position
 // param4 = frame counter
-void DECOMP_UI_Lerp2D_Angular(short* ptrPos, short drawnPosition, short absolutePosition, short frameCounter)
+void DECOMP_UI_Lerp2D_Angular(short *ptrPos, short drawnPosition, short absolutePosition, short frameCounter)
 {
 	int angle;
 	int drawnPositionInt;
@@ -27,50 +27,48 @@ void DECOMP_UI_Lerp2D_Angular(short* ptrPos, short drawnPosition, short absolute
 	// if driver "just" passed another driver
 	if (absolutePositionInt < drawnPositionInt)
 	{
-		#ifdef USE_ONLINE
+#ifdef USE_ONLINE
 		ptrPos[0] = (short)(angle * 0x14 >> 0xc) + 10;
-		#else
+#else
 		ptrPos[0] = (short)(angle * 0x14 >> 0xc) + 0x14;
-		#endif
+#endif
 	}
 
 	// if driver "was" passed by another driver
 	else
 	{
-		#ifdef USE_ONLINE
+#ifdef USE_ONLINE
 		ptrPos[0] = 10 - (short)(angle * 0x14 >> 0xc);
-		#else
+#else
 		ptrPos[0] = 0x14 - (short)(angle * 0x14 >> 0xc);
-		#endif
+#endif
 	}
 
-	// absolutePositionInt - drawnPositionInt is either -1 or +1
-	// 0x1b is vertical size of the icon
-	#ifdef USE_ONLINE
-	ptrPos[1] = 53 + (drawnPosition * 20) + (((((absolutePositionInt - drawnPositionInt) * 20) * (int)frameCounter) * 4) / (FPS_DOUBLE(5)*4));
-	#else
+// absolutePositionInt - drawnPositionInt is either -1 or +1
+// 0x1b is vertical size of the icon
+#ifdef USE_ONLINE
+	ptrPos[1] = 53 + (drawnPosition * 20) + (((((absolutePositionInt - drawnPositionInt) * 20) * (int)frameCounter) * 4) / (FPS_DOUBLE(5) * 4));
+#else
 	ptrPos[1] =
 
-		// Y value where all icons start
-		0x39 +
+	    // Y value where all icons start
+	    0x39 +
 
-		// start Y before transition
-		(drawnPosition * 0x1b) +
+	    // start Y before transition
+	    (drawnPosition * 0x1b) +
 
-		// transition per frame
-		(
-			// distance to travel
-			(
-				(((absolutePositionInt - drawnPositionInt) * 0x1b)
+	    // transition per frame
+	    (
+	        // distance to travel
+	        ((((absolutePositionInt - drawnPositionInt) * 0x1b)
 
-				// move more each frame
-				* (int)frameCounter) * 4
-			)
+	          // move more each frame
+	          * (int)frameCounter) *
+	         4)
 
-			// divide distance down
-			/ (FPS_DOUBLE(5)*4)
-		);
-	#endif
+	        // divide distance down
+	        / (FPS_DOUBLE(5) * 4));
+#endif
 
 	return;
 }

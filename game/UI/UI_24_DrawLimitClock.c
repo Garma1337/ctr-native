@@ -3,9 +3,9 @@
 // countdown clock, used for Battle Mode and Crystal Challenge
 void DECOMP_UI_DrawLimitClock(short posX, short posY, short fontType)
 {
-	struct GameTracker* gGT;
-	char* str;
-	struct Driver* d;
+	struct GameTracker *gGT;
+	char *str;
+	struct Driver *d;
 	u_int flags;
 	int i;
 	int timeRemaining;
@@ -28,19 +28,18 @@ void DECOMP_UI_DrawLimitClock(short posX, short posY, short fontType)
 			// when would that ever be false
 
 			// end race for all players
-			for(i = 0; i < gGT->numPlyrCurrGame; i++)
+			for (i = 0; i < gGT->numPlyrCurrGame; i++)
 			{
 				// pointer of each player (P1, P2, P3, P4)
 				d = gGT->drivers[i];
 
-				//end the race for every racer
+				// end the race for every racer
 				d->actionsFlagSet |= 0x2000000;
 			};
 
 #ifndef REBUILD_PC
 			MainGameEnd_Initialize();
 #endif
-			
 		}
 	}
 
@@ -54,14 +53,12 @@ void DECOMP_UI_DrawLimitClock(short posX, short posY, short fontType)
 	// default color is dark red
 	flags = DARK_RED;
 
-	if
-	(
-		// if less than 15 seconds remain
-		(timeRemaining < 0x3840) &&
+	if (
+	    // if less than 15 seconds remain
+	    (timeRemaining < 0x3840) &&
 
-		// if number of frames is an even number
-		((gGT->timer & FPS_DOUBLE(1)) == 0)
-	)
+	    // if number of frames is an even number
+	    ((gGT->timer & FPS_DOUBLE(1)) == 0))
 	{
 		// set color to white
 		flags = WHITE;

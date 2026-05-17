@@ -1,10 +1,10 @@
 #include <common.h>
 
-extern struct Ovr233_Credits_BSS* creditsBSS;
+extern struct Ovr233_Credits_BSS *creditsBSS;
 
 int CS_Credits_NewCreditGhosts()
 {
-	struct Model* model = creditsBSS->dancerInst_invisible->model;
+	struct Model *model = creditsBSS->dancerInst_invisible->model;
 	int i;
 
 	for (i = 0; i < 5; i++)

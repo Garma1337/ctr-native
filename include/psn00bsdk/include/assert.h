@@ -30,31 +30,31 @@ void _assert_abort(const char *file, int line, const char *expr);
 
 #else
 
-#define assert(expr) \
-	((expr) ? ((void) 0) : _assert_abort(__FILE__, __LINE__, #expr))
+#define assert(expr) ((expr) ? ((void)0) : _assert_abort(__FILE__, __LINE__, #expr))
 
 #ifdef SDK_LIBRARY_NAME
-#define _sdk_log(fmt, ...) \
-	printf(SDK_LIBRARY_NAME ": " fmt __VA_OPT__(,) __VA_ARGS__)
+#define _sdk_log(fmt, ...) printf(SDK_LIBRARY_NAME ": " fmt __VA_OPT__(, ) __VA_ARGS__)
 #else
-#define _sdk_log(fmt, ...) \
-	printf(fmt __VA_OPT__(,) __VA_ARGS__)
+#define _sdk_log(fmt, ...) printf(fmt __VA_OPT__(, ) __VA_ARGS__)
 #endif
 
 #define _sdk_assert(expr, ret, fmt, ...) \
-	if (!(expr)) { \
-		_sdk_log(fmt, __VA_ARGS__); \
-		return ret; \
+	if (!(expr))                         \
+	{                                    \
+		_sdk_log(fmt, __VA_ARGS__);      \
+		return ret;                      \
 	}
-#define _sdk_validate_args_void(expr) \
-	if (!(expr)) { \
+#define _sdk_validate_args_void(expr)                             \
+	if (!(expr))                                                  \
+	{                                                             \
 		_sdk_log("invalid args to %s() (%s)\n", __func__, #expr); \
-		return; \
+		return;                                                   \
 	}
-#define _sdk_validate_args(expr, ret) \
-	if (!(expr)) { \
+#define _sdk_validate_args(expr, ret)                             \
+	if (!(expr))                                                  \
+	{                                                             \
 		_sdk_log("invalid args to %s() (%s)\n", __func__, #expr); \
-		return ret; \
+		return ret;                                               \
 	}
 
 #endif

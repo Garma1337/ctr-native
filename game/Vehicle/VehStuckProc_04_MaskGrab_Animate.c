@@ -1,12 +1,12 @@
 #include <common.h>
 
-void DECOMP_VehStuckProc_MaskGrab_Animate(struct Thread* t, struct Driver* d)
+void DECOMP_VehStuckProc_MaskGrab_Animate(struct Thread *t, struct Driver *d)
 {
 	char frame;
 	short sVar2;
 	int numFrames;
-	struct GameTracker* gGT = sdata->gGT;
-	struct Instance* inst = t->inst;
+	struct GameTracker *gGT = sdata->gGT;
+	struct Instance *inst = t->inst;
 
 	// if driver touched ground before mask grab
 	if (d->KartStates.MaskGrab.boolStillFalling == false)
@@ -16,10 +16,10 @@ void DECOMP_VehStuckProc_MaskGrab_Animate(struct Thread* t, struct Driver* d)
 		inst->animIndex = 0;
 
 		// (instance, anim#0)
-		//numFrames = VehFrameInst_GetNumAnimFrames(inst, 0);
+		// numFrames = VehFrameInst_GetNumAnimFrames(inst, 0);
 
 		// (midpoint, numFrames)
-		inst->animFrame = FPS_DOUBLE(10); //VehFrameInst_GetStartFrame(0, numFrames);
+		inst->animFrame = FPS_DOUBLE(10); // VehFrameInst_GetStartFrame(0, numFrames);
 
 		d->AxisAngle2_normalVec[0] = d->KartStates.MaskGrab.AngleAxis_NormalVec[0];
 		d->AxisAngle2_normalVec[1] = d->KartStates.MaskGrab.AngleAxis_NormalVec[1];
@@ -30,12 +30,11 @@ void DECOMP_VehStuckProc_MaskGrab_Animate(struct Thread* t, struct Driver* d)
 	else
 	{
 		if (
-			// if whistle sound has not played
-			(d->KartStates.MaskGrab.boolWhistle == false) &&
+		    // if whistle sound has not played
+		    (d->KartStates.MaskGrab.boolWhistle == false) &&
 
-			// no input less than 1 sec
-			(d->NoInputTimer < 960)
-			)
+		    // no input less than 1 sec
+		    (d->NoInputTimer < 960))
 
 		{
 			// whistle sound has played
@@ -76,12 +75,14 @@ void DECOMP_VehStuckProc_MaskGrab_Animate(struct Thread* t, struct Driver* d)
 		// logic specific to maskgrab
 #ifdef USE_60FPS
 		frame = maskGrabAnimFrame;
-		if (gGT->timer & 1) frame++;
+		if (gGT->timer & 1)
+			frame++;
 #else
 		frame = maskGrabAnimFrame + 1;
 #endif
 
-		if (frame > 7) frame = 7;
+		if (frame > 7)
+			frame = 7;
 		d->KartStates.MaskGrab.animFrame = frame;
 
 		// no input is less than 1.35 s
@@ -133,7 +134,7 @@ void DECOMP_VehStuckProc_MaskGrab_Animate(struct Thread* t, struct Driver* d)
 		}
 	}
 
-	struct MaskHeadWeapon* mask = d->KartStates.MaskGrab.maskObj;
+	struct MaskHeadWeapon *mask = d->KartStates.MaskGrab.maskObj;
 
 	// if maskObj
 	if (mask == 0)

@@ -1,7 +1,7 @@
 #include <common.h>
 
-#define PSX_OVR233_BASE 0x800AB9F0U
-#define OVR233_PTR(psx_addr) ((char *)((uintptr_t)&OVR_233 + ((psx_addr) - PSX_OVR233_BASE)))
+#define PSX_OVR233_BASE          0x800AB9F0U
+#define OVR233_PTR(psx_addr)     ((char *)((uintptr_t)&OVR_233 + ((psx_addr) - PSX_OVR233_BASE)))
 #define OVR233_PTR_INT(psx_addr) ((int *)((uintptr_t)&OVR_233 + ((psx_addr) - PSX_OVR233_BASE)))
 
 void DECOMP_CS_Thread_ThTick(struct Thread *t)
@@ -27,9 +27,7 @@ struct Thread *DECOMP_CS_Thread_Init(short modelID, char *name, short *param_3, 
 	{
 		inst = NULL;
 
-		t = DECOMP_PROC_BirthWithObject(
-			SIZE_RELATIVE_POOL_BUCKET(0x60, NONE, MEDIUM, CAMERA),
-			DECOMP_CS_Thread_ThTick, name, parent);
+		t = DECOMP_PROC_BirthWithObject(SIZE_RELATIVE_POOL_BUCKET(0x60, NONE, MEDIUM, CAMERA), DECOMP_CS_Thread_ThTick, name, parent);
 
 		if (t == NULL)
 			return NULL;
@@ -44,9 +42,7 @@ struct Thread *DECOMP_CS_Thread_Init(short modelID, char *name, short *param_3, 
 		if ((u_int)(modelID - NDI_KART0) < 4)
 			bucket = GHOST;
 
-		inst = DECOMP_INSTANCE_BirthWithThread(
-			modelID, name, MEDIUM, bucket,
-			DECOMP_CS_Thread_ThTick, 0x60, parent);
+		inst = DECOMP_INSTANCE_BirthWithThread(modelID, name, MEDIUM, bucket, DECOMP_CS_Thread_ThTick, 0x60, parent);
 
 		if (inst == NULL)
 			return NULL;

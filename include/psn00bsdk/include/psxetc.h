@@ -17,29 +17,31 @@
 
 /* IRQ and DMA channel definitions */
 
-typedef enum _IRQ_Channel {
-	IRQ_VBLANK	=  0,
-	IRQ_GPU		=  1,
-	IRQ_CD		=  2,
-	IRQ_DMA		=  3,
-	IRQ_TIMER0	=  4,
-	IRQ_TIMER1	=  5,
-	IRQ_TIMER2	=  6,
-	IRQ_SIO0	=  7,
-	IRQ_SIO1	=  8,
-	IRQ_SPU		=  9,
-	IRQ_GUN		= 10,
-	IRQ_PIO		= 10
+typedef enum _IRQ_Channel
+{
+	IRQ_VBLANK = 0,
+	IRQ_GPU = 1,
+	IRQ_CD = 2,
+	IRQ_DMA = 3,
+	IRQ_TIMER0 = 4,
+	IRQ_TIMER1 = 5,
+	IRQ_TIMER2 = 6,
+	IRQ_SIO0 = 7,
+	IRQ_SIO1 = 8,
+	IRQ_SPU = 9,
+	IRQ_GUN = 10,
+	IRQ_PIO = 10
 } IRQ_Channel;
 
-typedef enum _DMA_Channel {
-	DMA_MDEC_IN		= 0,
-	DMA_MDEC_OUT	= 1,
-	DMA_GPU			= 2,
-	DMA_CD			= 3,
-	DMA_SPU			= 4,
-	DMA_PIO			= 5,
-	DMA_OTC			= 6
+typedef enum _DMA_Channel
+{
+	DMA_MDEC_IN = 0,
+	DMA_MDEC_OUT = 1,
+	DMA_GPU = 2,
+	DMA_CD = 3,
+	DMA_SPU = 4,
+	DMA_PIO = 5,
+	DMA_OTC = 6
 } DMA_Channel;
 
 /* Public API */

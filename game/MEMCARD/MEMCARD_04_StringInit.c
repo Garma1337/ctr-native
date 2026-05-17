@@ -9,7 +9,7 @@ char *DECOMP_MEMCARD_StringInit(int slotIndex, char *dstString)
 	}
 
 	*(int *)&dstString[0] = 0x30307562; // bu00
-	dstString[3] = '0' + slotIndex; 	// bu0X where X = slotIndex
+	dstString[3] = '0' + slotIndex;     // bu0X where X = slotIndex
 
 	// ':' and null terminator
 	*(short *)&dstString[4] = ':';

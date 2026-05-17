@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_VehStuckProc_PlantEaten_PhysLinear(struct Thread* t, struct Driver* d)
+void DECOMP_VehStuckProc_PlantEaten_PhysLinear(struct Thread *t, struct Driver *d)
 {
 	VehPhysProc_Driving_PhysLinear(t, d);
 

@@ -1,40 +1,40 @@
 #include <common.h>
 
-void DECOMP_RB_Hazard_ThCollide_Missile(struct Thread* thread)
+void DECOMP_RB_Hazard_ThCollide_Missile(struct Thread *thread)
 {
-	struct TrackerWeapon* tw;
-	struct Driver* driver;
-	struct Instance* inst;
-	
+	struct TrackerWeapon *tw;
+	struct Driver *driver;
+	struct Instance *inst;
+
 	tw = thread->object;
 	inst = thread->inst;
-	
+
 	// could I also just do thread->modelID?
 	if (inst->model->id == DYNAMIC_ROCKET)
 	{
-		#ifndef REBUILD_PS1
+#ifndef REBUILD_PS1
 		// play audio of explosion
 		PlaySound3D(0x4c, inst);
-		#endif
-		
+#endif
+
 		// kill thread
 		thread->flags |= 0x800;
 
-		#ifndef REBUILD_PS1
+#ifndef REBUILD_PS1
 		// stop audio of moving
 		OtherFX_RecycleMute(&tw->audioPtr);
-		#endif
+#endif
 
 		// get driver
 		driver = tw->driverTarget;
-		
+
 		// if driver is valid
-		if(driver != 0)
+		if (driver != 0)
 		{
-			// remove 2D square-target being drawn on the player's screen 
+			// remove 2D square-target being drawn on the player's screen
 			driver->actionsFlagSet &= 0xfbffffff;
 		}
 	}
-	
+
 	return;
 }

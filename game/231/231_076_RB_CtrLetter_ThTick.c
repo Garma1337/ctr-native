@@ -1,15 +1,12 @@
 #include <common.h>
 
-short letterLightDir[4] =
-{
-	0x94F, 0x94F, -0x94F, 0
-};
+short letterLightDir[4] = {0x94F, 0x94F, -0x94F, 0};
 
-void DECOMP_RB_CtrLetter_ThTick(struct Thread* t)
+void DECOMP_RB_CtrLetter_ThTick(struct Thread *t)
 {
 	int sine;
-	struct Instance* letterInst;
-	struct CtrLetter* letterObj;
+	struct Instance *letterInst;
+	struct CtrLetter *letterObj;
 
 	letterInst = t->inst;
 	letterObj = t->object;

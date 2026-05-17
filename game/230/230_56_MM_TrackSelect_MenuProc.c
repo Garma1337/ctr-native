@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
+void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu *menu)
 {
 	char bVar1;
 	char bVar2;
@@ -97,8 +97,7 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 				if ((gGT->gameMode1 & TIME_TRIAL) != 0)
 				{
 					// allocate room at the end of RAM for ghosts
-					sdata->ptrGhostTapePlaying =
-						DECOMP_MEMPACK_AllocHighMem(0x3e00/*, R230.s_loaded_ghost_data*/);
+					sdata->ptrGhostTapePlaying = DECOMP_MEMPACK_AllocHighMem(0x3e00 /*, R230.s_loaded_ghost_data*/);
 
 					memset(sdata->ptrGhostTapePlaying, 0, 0x28);
 
@@ -132,14 +131,14 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 	selectMenu = &D230.arcadeTracks[0];
 	numTracks = 18;
 
-	#ifdef USE_HIGHMP
+#ifdef USE_HIGHMP
 	numTracks = 23;
 	D230.battleTracks[0].levID = GEM_STONE_VALLEY;
 	D230.battleTracks[1].levID = N_SANITY_BEACH;
 	D230.battleTracks[2].levID = THE_LOST_RUINS;
 	D230.battleTracks[3].levID = GLACIER_PARK;
 	D230.battleTracks[4].levID = CITADEL_CITY;
-	#endif
+#endif
 
 	// if you are in battle mode
 	if ((gGT->gameMode1 & BATTLE_MODE) != 0)
@@ -147,13 +146,13 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 		selectMenu = &D230.battleTracks[0];
 		numTracks = 7;
 
-		#ifdef USE_HIGHMP
+#ifdef USE_HIGHMP
 		D230.battleTracks[0].levID = NITRO_COURT;
 		D230.battleTracks[1].levID = RAMPAGE_RUINS;
 		D230.battleTracks[2].levID = PARKING_LOT;
 		D230.battleTracks[3].levID = SKULL_ROCK;
 		D230.battleTracks[4].levID = THE_NORTH_BOWL;
-		#endif
+#endif
 	}
 
 	currTrack = menu->rowSelected;
@@ -162,24 +161,20 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 	// if lap selection menu is closed
 	if (D230.trackSel_boolOpenLapBox == 0)
 	{
-		int importantButton =
-			sdata->buttonTapPerPlayer[0] &
-			(BTN_UP | BTN_DOWN | BTN_TRIANGLE | BTN_SQUARE_one | BTN_CROSS_one | BTN_CIRCLE);
+		int importantButton = sdata->buttonTapPerPlayer[0] & (BTN_UP | BTN_DOWN | BTN_TRIANGLE | BTN_SQUARE_one | BTN_CROSS_one | BTN_CIRCLE);
 
 		if (
-				// if not changing levels
-				(D230.trackSel_changeTrack_frameCount == 0) &&
+		    // if not changing levels
+		    (D230.trackSel_changeTrack_frameCount == 0) &&
 
-				// only check buttons if IN_MENU
-				(D230.trackSel_transitionState == IN_MENU) &&
+		    // only check buttons if IN_MENU
+		    (D230.trackSel_transitionState == IN_MENU) &&
 
-				// desired button pressed
-				(importantButton != 0)
-			)
+		    // desired button pressed
+		    (importantButton != 0))
 		{
 			switch (importantButton)
 			{
-
 			case BTN_UP:
 
 				// look for unlocked track
@@ -273,12 +268,7 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 			lapSelTransitionState = DECOMP_RECTMENU_ProcessInput(&D230.menuLapSel);
 		}
 
-		DECOMP_RECTMENU_DrawSelf
-		(
-			&D230.menuLapSel,
-			D230.transitionMeta_trackSel[2].currX,
-			D230.transitionMeta_trackSel[2].currY, 0xa4
-		);
+		DECOMP_RECTMENU_DrawSelf(&D230.menuLapSel, D230.transitionMeta_trackSel[2].currX, D230.transitionMeta_trackSel[2].currY, 0xa4);
 
 		// put LapRow back into 8d920
 		sdata->uselessLapRowCopy = D230.menuLapSel.rowSelected;
@@ -326,11 +316,7 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 	uVar14 = 0;
 
 	// if you are transitioning out of level selection
-	if
-	(
-		(D230.trackSel_changeTrack_frameCount != 0) ||
-		(D230.trackSel_transitionState == EXITING_MENU)
-	)
+	if ((D230.trackSel_changeTrack_frameCount != 0) || (D230.trackSel_transitionState == EXITING_MENU))
 	{
 		// transitioning,
 		// which means stop drawing track video,
@@ -374,8 +360,8 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 			uVar15 = uVar15 + (((FPS_DOUBLE(3) - D230.trackSel_changeTrack_frameCount) * 0x73) / FPS_DOUBLE(3)) * (int)D230.trackSel_direction;
 		}
 
-		// This is just MATH_Cos and Math_Sin
-		#if 0
+// This is just MATH_Cos and Math_Sin
+#if 0
 		// approximate trigonometry
 		sVar7 = (short)data.trigApprox[uVar15];
 		iVar9 = data.trigApprox[uVar15] >> 0x10;
@@ -404,17 +390,15 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 				iVar17 = -iVar17;
 			}
 		}
-		#endif
+#endif
 		r.w = WIDE_PICK(256, 200);
 		r.h = 0x19;
 
 		// posX of track list
-		iVar11 = (u_int)D230.transitionMeta_trackSel[0].currX +
-					(DECOMP_MATH_Cos(uVar15) * 0x19 >> 9) + -0xb4;
+		iVar11 = (u_int)D230.transitionMeta_trackSel[0].currX + (DECOMP_MATH_Cos(uVar15) * 0x19 >> 9) + -0xb4;
 
 		// posY of track list
-		iVar9 = (u_int)D230.transitionMeta_trackSel[0].currY +
-					(DECOMP_MATH_Sin(uVar15) * 200 >> 0xc);
+		iVar9 = (u_int)D230.transitionMeta_trackSel[0].currY + (DECOMP_MATH_Sin(uVar15) * 200 >> 0xc);
 
 		sVar7 = (short)iVar9 + 0x60;
 		r.x = (short)iVar11;
@@ -444,27 +428,20 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 					// pointer to color data of star
 					starColor = data.ptrColor[D230.timeTrialStarCol[iVar17]];
 
-					struct Icon** iconPtrArray = ICONGROUP_GETICONS(gGT->iconGroup[5]);
+					struct Icon **iconPtrArray = ICONGROUP_GETICONS(gGT->iconGroup[5]);
 
-					DECOMP_DecalHUD_DrawPolyGT4
-					(
-						iconPtrArray[0x37],
-						iVar11 + WIDE_PICK(256+4, 200+4), (int)sVar7 + iVar17 * 8 + 4,
+					DECOMP_DecalHUD_DrawPolyGT4(iconPtrArray[0x37], iVar11 + WIDE_PICK(256 + 4, 200 + 4), (int)sVar7 + iVar17 * 8 + 4,
 
-						// pointer to PrimMem struct
-						&gGT->backBuffer->primMem,
+					                            // pointer to PrimMem struct
+					                            &gGT->backBuffer->primMem,
 
-						// pointer to OT mem
-						gGT->pushBuffer_UI.ptrOT,
+					                            // pointer to OT mem
+					                            gGT->pushBuffer_UI.ptrOT,
 
-						// color data
-						starColor[0],
-						starColor[1],
-						starColor[2],
-						starColor[3],
+					                            // color data
+					                            starColor[0], starColor[1], starColor[2], starColor[3],
 
-						0, FP(1.0)
-					);
+					                            0, FP(1.0));
 				}
 			}
 			// restore levelID
@@ -482,25 +459,19 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 		// and so on
 
 		// Draw string
-		DECOMP_DecalFont_DrawLine
-		(
-			sdata->lngStrings[data.metaDataLEV[selectMenu[iVar10].levID].name_LNG],
-			(iVar11 + 8),
-			(iVar9 + 0x65),
-			FONT_BIG, ORANGE
-		);
+		DECOMP_DecalFont_DrawLine(sdata->lngStrings[data.metaDataLEV[selectMenu[iVar10].levID].name_LNG], (iVar11 + 8), (iVar9 + 0x65), FONT_BIG, ORANGE);
 
 		if ((D230.trackSel_changeTrack_frameCount == 0) && ((short)iVar18 == 4))
 		{
 			// if you are in time trial mode
 			if ((gGT->gameMode1 & TIME_TRIAL) != 0)
 			{
-				#ifndef REBUILD_PS1
+#ifndef REBUILD_PS1
 				// Check if this track has Ghost Data
 				uVar15 = RefreshCard_BoolGhostForLEV(selectMenu[iVar10].levID);
-				#else
+#else
 				uVar15 = 0;
-				#endif
+#endif
 
 				// If this track has Ghost Data
 				if ((uVar15 & 0xffff) != 0)
@@ -516,13 +487,7 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 					}
 
 					// "GHOST DATA EXISTS"
-					DECOMP_DecalFont_DrawLine
-					(
-						sdata->lngStrings[0x6B],
-						(iVar11 + 8 + WIDE_34(0x78)),
-						(iVar9 + 0x76),
-						FONT_SMALL, uVar14
-					);
+					DECOMP_DecalFont_DrawLine(sdata->lngStrings[0x6B], (iVar11 + 8 + WIDE_34(0x78)), (iVar9 + 0x76), FONT_SMALL, uVar14);
 				}
 			}
 			q.x = r.x + 6;
@@ -534,8 +499,7 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 		}
 
 		// Draw 2D Menu rectangle background
-		DECOMP_RECTMENU_DrawInnerRect(
-			&r, 0, gGT->backBuffer->otMem.startPlusFour);
+		DECOMP_RECTMENU_DrawInnerRect(&r, 0, gGT->backBuffer->otMem.startPlusFour);
 
 		do
 		{
@@ -574,39 +538,26 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 			if (D230.trackSel_boolOpenLapBox == 0)
 			{
 				// "SELECT"
-				DECOMP_DecalFont_DrawLine
-				(
-					sdata->lngStrings[0x69],
-					(D230.transitionMeta_trackSel[3].currX + 0x18c),
-					(D230.transitionMeta_trackSel[3].currY + (u_int)p.y),
-					FONT_BIG, (JUSTIFY_CENTER | ORANGE)
-				);
+				DECOMP_DecalFont_DrawLine(sdata->lngStrings[0x69], (D230.transitionMeta_trackSel[3].currX + 0x18c),
+				                          (D230.transitionMeta_trackSel[3].currY + (u_int)p.y), FONT_BIG, (JUSTIFY_CENTER | ORANGE));
 
 				// "LEVEL"
-				DECOMP_DecalFont_DrawLine
-				(
-					sdata->lngStrings[0x6a],
-					(D230.transitionMeta_trackSel[3].currX + 0x18c),
-					(D230.transitionMeta_trackSel[3].currY + (u_int)p.y + 0x10),
-					FONT_BIG, (JUSTIFY_CENTER | ORANGE)
-				);
+				DECOMP_DecalFont_DrawLine(sdata->lngStrings[0x6a], (D230.transitionMeta_trackSel[3].currX + 0x18c),
+				                          (D230.transitionMeta_trackSel[3].currY + (u_int)p.y + 0x10), FONT_BIG, (JUSTIFY_CENTER | ORANGE));
 			}
 
 			// next, draw the map icon, below "SELECT LEVEL",
 			// exactly 0x22 (34) pixels below the text
 			p.y += 0x22;
 
-			if
-			(
-				(-1 < selectMenu[menu->rowSelected].mapTextureID) &&
+			if ((-1 < selectMenu[menu->rowSelected].mapTextureID) &&
 
-				// If lap selection menu is closed
-				(D230.trackSel_boolOpenLapBox == 0)
-			)
+			    // If lap selection menu is closed
+			    (D230.trackSel_boolOpenLapBox == 0))
 			{
 				int mapID = selectMenu[menu->rowSelected].mapTextureID;
-				struct Icon* iconMap0 = gGT->ptrIcons[mapID+0];
-				struct Icon* iconMap1 = gGT->ptrIcons[mapID+1];
+				struct Icon *iconMap0 = gGT->ptrIcons[mapID + 0];
+				struct Icon *iconMap1 = gGT->ptrIcons[mapID + 1];
 
 				// icon data
 				bVar1 = iconMap0->texLayout.v2;
@@ -627,48 +578,36 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu* menu)
 				{
 					iVar10 = ((((u_int)bVar1 - (u_int)bVar2) + (u_int)bVar3) - (u_int)bVar4);
 
-					DECOMP_UI_Map_DrawMap
-					(
-						// top half
-						iconMap0,
+					DECOMP_UI_Map_DrawMap(
+					    // top half
+					    iconMap0,
 
-						// bottom half
-						iconMap1,
+					    // bottom half
+					    iconMap1,
 
-						// X
-						D230.drawMapOffset[iVar18].offsetX +
-									p.x +
-									(D230.transitionMeta_trackSel[2].currX - D230.transitionMeta_trackSel[1].currX) +
-									(0xb0 >> 1) +
-									(iVar9 >> 1),
+					    // X
+					    D230.drawMapOffset[iVar18].offsetX + p.x + (D230.transitionMeta_trackSel[2].currX - D230.transitionMeta_trackSel[1].currX) +
+					        (0xb0 >> 1) + (iVar9 >> 1),
 
-						// Y
-						D230.drawMapOffset[iVar18].offsetY +
-									p.y +
-									(D230.transitionMeta_trackSel[2].currY - D230.transitionMeta_trackSel[1].currY) +
-									0x49+0x22+
-									0x10 + // idk how bitshifting pulls 0x10 in ghidra, but that's it
-									(iVar10 >> 1),
+					    // Y
+					    D230.drawMapOffset[iVar18].offsetY + p.y + (D230.transitionMeta_trackSel[2].currY - D230.transitionMeta_trackSel[1].currY) + 0x49 +
+					        0x22 + 0x10 + // idk how bitshifting pulls 0x10 in ghidra, but that's it
+					        (iVar10 >> 1),
 
-						// pointer to PrimMem struct
-						&gGT->backBuffer->primMem,
+					    // pointer to PrimMem struct
+					    &gGT->backBuffer->primMem,
 
-						// pointer to OT mem
-						gGT->pushBuffer_UI.ptrOT,
+					    // pointer to OT mem
+					    gGT->pushBuffer_UI.ptrOT,
 
-						// 1 = draw map with regular color (white) - used for the main layer of the minimap in the track select screen
-						// 2 = draw map blue - used for the outline of the minimap in the track select screen
-						// 3 = draw map black - used for the shadow of the minimap in the track select screen
-						D230.drawMapOffset[iVar18].type
-					);
+					    // 1 = draw map with regular color (white) - used for the main layer of the minimap in the track select screen
+					    // 2 = draw map blue - used for the outline of the minimap in the track select screen
+					    // 3 = draw map black - used for the shadow of the minimap in the track select screen
+					    D230.drawMapOffset[iVar18].type);
 				}
 			}
 
-			DECOMP_MM_TrackSelect_Video_Draw
-			(
-				&p, selectMenu, (int)(short)D230.trackSel_currTrack,
-				(u_int)(D230.trackSel_transitionState == EXITING_MENU), 0
-			);
+			DECOMP_MM_TrackSelect_Video_Draw(&p, selectMenu, (int)(short)D230.trackSel_currTrack, (u_int)(D230.trackSel_transitionState == EXITING_MENU), 0);
 
 			return;
 		}

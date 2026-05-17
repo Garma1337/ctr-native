@@ -1,11 +1,11 @@
 #include <common.h>
 
-void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver* driver)
+void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver *driver)
 {
 	struct GameTracker *gGT;
 	u_int colorAndCode;
 	short jumpMeter;
-	struct DB* backDB;
+	struct DB *backDB;
 	int iVar5;
 	u_long *primmemCurr;
 	POLY_F4 *p;
@@ -18,15 +18,15 @@ void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver* driver)
 	int jumpMeterHeight;
 	int whateverThisIs;
 
-	#ifdef USE_ONLINE
+#ifdef USE_ONLINE
 	int numbersYOffset = 0;
 	int numbersYHeight = 10;
 	int barHeight = 53;
-	#else
+#else
 	int numbersYOffset = -45;
 	int numbersYHeight = 10;
 	int barHeight = 38;
-	#endif
+#endif
 
 	gGT = sdata->gGT;
 
@@ -64,7 +64,7 @@ void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver* driver)
 
 	if (p != 0)
 	{
-		#ifdef USE_ONLINE
+#ifdef USE_ONLINE
 		jumpMeter = driver->jumpMeter;
 		colorAndCode = 0x28ffffff;
 		if (0x27f < jumpMeter)
@@ -86,9 +86,9 @@ void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver* driver)
 			}
 		}
 		*(u_int *)&p->r0 = colorAndCode;
-		#else
+#else
 		*(u_int *)&p->r0 = 0x28ffffff;
-		#endif
+#endif
 		p->x1 = posX + WIDE_34(13);
 		p->x3 = posX + WIDE_34(13);
 		p->x0 = box.x;
@@ -101,10 +101,10 @@ void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver* driver)
 		// pointer to OT memory
 		primmemCurr = gGT->pushBuffer_UI.ptrOT;
 
-		*(int*)p = *primmemCurr | 0x5000000;
+		*(int *)p = *primmemCurr | 0x5000000;
 		*primmemCurr = (u_int)p & 0xffffff;
 
-		#ifndef USE_ONLINE
+#ifndef USE_ONLINE
 		box2.y = posY - barHeight;
 		box2.w = WIDE_34(0xc);
 		box2.h = barHeight;
@@ -160,7 +160,7 @@ void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver* driver)
 
 			primmemCurr = gGT->pushBuffer_UI.ptrOT;
 
-			*(int*)p = *primmemCurr | 0x5000000;
+			*(int *)p = *primmemCurr | 0x5000000;
 			*primmemCurr = (u_int)p & 0xffffff;
 
 			backDB = gGT->backBuffer;
@@ -190,11 +190,11 @@ void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver* driver)
 				// pointer to OT memory
 				primmemCurr = gGT->pushBuffer_UI.ptrOT;
 
-				*(int*)p = *primmemCurr | 0x5000000;
+				*(int *)p = *primmemCurr | 0x5000000;
 				*primmemCurr = (u_int)p & 0xffffff;
 			}
 		}
-		#endif
+#endif
 	}
 	return;
 }

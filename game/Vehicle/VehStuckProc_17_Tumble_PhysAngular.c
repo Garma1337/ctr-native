@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_VehStuckProc_Tumble_PhysAngular(struct Thread* thread, struct Driver* driver)
+void DECOMP_VehStuckProc_Tumble_PhysAngular(struct Thread *thread, struct Driver *driver)
 {
 	int elapsedTimeMS = sdata->gGT->elapsedTimeMS;
 
@@ -29,14 +29,12 @@ void DECOMP_VehStuckProc_Tumble_PhysAngular(struct Thread* thread, struct Driver
 	driver->angle += (short)(((int)driver->rotationSpinRate * elapsedTimeMS) >> 0xd);
 	driver->angle &= 0xfff;
 
-	(driver->rotCurr).y =
-		driver->unk3D4[0] + driver->angle + driver->turnAngleCurr;
+	(driver->rotCurr).y = driver->unk3D4[0] + driver->angle + driver->turnAngleCurr;
 
-	(driver->rotCurr).w =
-		DECOMP_VehCalc_InterpBySpeed((int)(driver->rotCurr).w, (elapsedTimeMS << 5) >> 5, 0);
+	(driver->rotCurr).w = DECOMP_VehCalc_InterpBySpeed((int)(driver->rotCurr).w, (elapsedTimeMS << 5) >> 5, 0);
 
 #ifndef REBUILD_PS1
-	VehPhysForce_RotAxisAngle(&driver->matrixMovingDir, (short*)&driver->AxisAngle1_normalVec, driver->angle);
+	VehPhysForce_RotAxisAngle(&driver->matrixMovingDir, (short *)&driver->AxisAngle1_normalVec, driver->angle);
 #endif
 
 	return;

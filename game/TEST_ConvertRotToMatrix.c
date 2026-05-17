@@ -5,11 +5,11 @@ https://en.wikipedia.org/wiki/Rotation_matrix
 CTRL + F and look for "Other 3D rotation matrices can be obtained from these three using"
 */
 
-void TEST_ConvertRotToMatrix(MATRIX* m, short* rot)
+void TEST_ConvertRotToMatrix(MATRIX *m, short *rot)
 {
-	#define mSIN DECOMP_MATH_Sin
-	#define mCOS DECOMP_MATH_Cos
-	
+#define mSIN DECOMP_MATH_Sin
+#define mCOS DECOMP_MATH_Cos
+
 // This is a ZYX
 // gimbal lock on Z axis, bugs Hot Air Skyway's "blade" no good,
 // I need to make an optimal version of YXZ (confirmed to match the game)
@@ -74,8 +74,7 @@ void TEST_ConvertRotToMatrix(MATRIX* m, short* rot)
 
 	MATRIX mix;
 
-#define RCC(row, col, index) \
-	((int)((int)m1.m[row][index] * (int)m2.m[index][col]) >> 0xC)
+#define RCC(row, col, index) ((int)((int)m1.m[row][index] * (int)m2.m[index][col]) >> 0xC)
 
 	mix.m[0][0] = RCC(0, 0, 0) + RCC(0, 0, 1) + RCC(0, 0, 2);
 	mix.m[0][1] = RCC(0, 1, 0) + RCC(0, 1, 1) + RCC(0, 1, 2);
@@ -89,17 +88,16 @@ void TEST_ConvertRotToMatrix(MATRIX* m, short* rot)
 	mix.m[2][1] = RCC(2, 1, 0) + RCC(2, 1, 1) + RCC(2, 1, 2);
 	mix.m[2][2] = RCC(2, 2, 0) + RCC(2, 2, 1) + RCC(2, 2, 2);
 
-#define RCC2(row, col, index) \
-	((int)((int)mix.m[row][index] * (int)m3.m[index][col]) >> 0xC)
+#define RCC2(row, col, index) ((int)((int)mix.m[row][index] * (int)m3.m[index][col]) >> 0xC)
 
 	m->m[0][0] = RCC2(0, 0, 0) + RCC2(0, 0, 1) + RCC2(0, 0, 2);
 	m->m[0][1] = RCC2(0, 1, 0) + RCC2(0, 1, 1) + RCC2(0, 1, 2);
 	m->m[0][2] = RCC2(0, 2, 0) + RCC2(0, 2, 1) + RCC2(0, 2, 2);
-													
+
 	m->m[1][0] = RCC2(1, 0, 0) + RCC2(1, 0, 1) + RCC2(1, 0, 2);
 	m->m[1][1] = RCC2(1, 1, 0) + RCC2(1, 1, 1) + RCC2(1, 1, 2);
 	m->m[1][2] = RCC2(1, 2, 0) + RCC2(1, 2, 1) + RCC2(1, 2, 2);
-													
+
 	m->m[2][0] = RCC2(2, 0, 0) + RCC2(2, 0, 1) + RCC2(2, 0, 2);
 	m->m[2][1] = RCC2(2, 1, 0) + RCC2(2, 1, 1) + RCC2(2, 1, 2);
 	m->m[2][2] = RCC2(2, 2, 0) + RCC2(2, 2, 1) + RCC2(2, 2, 2);

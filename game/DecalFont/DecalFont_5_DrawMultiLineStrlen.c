@@ -24,7 +24,7 @@ int DECOMP_DecalFont_DrawMultiLineStrlen(char *str, short len, short posX, short
 			// get the first character
 			strCharacter = *str;
 
-			while( 1 )
+			while (1)
 			{
 				// pointer to current letter
 				currPointer = strPointer;
@@ -47,12 +47,12 @@ int DECOMP_DecalFont_DrawMultiLineStrlen(char *str, short len, short posX, short
 				strCharacter = *currPointer;
 
 				// if nullptr, or out of letters, quit the loop
-				if ((strCharacter == '\0') || (lettersRemaining == 0)) break;
+				if ((strCharacter == '\0') || (lettersRemaining == 0))
+					break;
 
 				// if this is a letter, number, or symbol
 				if ((strCharacter != ' ') && (strCharacter != '\r'))
 				{
-
 					// get the length of the next word
 					while (lettersRemaining != 0)
 					{
@@ -68,43 +68,41 @@ int DECOMP_DecalFont_DrawMultiLineStrlen(char *str, short len, short posX, short
 						// stop counting at a nullptr,
 						// or a space (end of word),
 						// or the end of the line '\r'
-						if (((strCharacter == '\0') || (strCharacter == ' ')) || (strCharacter == '\r')) break;
+						if (((strCharacter == '\0') || (strCharacter == ' ')) || (strCharacter == '\r'))
+							break;
 					}
 				}
 
 				lineLen = DECOMP_DecalFont_GetLineWidthStrlen(str, (u_int)currPointer - (u_int)str, (int)fontType);
 
-				if
-				(
-					// if parameter line length is longer than string line length
-					(maxPixLen <= lineLen) ||
-					(
-						// get character
-						strCharacter = *currPointer,
+				if (
+				    // if parameter line length is longer than string line length
+				    (maxPixLen <= lineLen) || (
+				                                  // get character
+				                                  strCharacter = *currPointer,
 
-						// update pointer
-						strPointer = currPointer,
+				                                  // update pointer
+				                                  strPointer = currPointer,
 
-						// update number of remaining characters
-						len = lettersRemaining,
+				                                  // update number of remaining characters
+				                                  len = lettersRemaining,
 
-						// check if this is new line
-						strCharacter == '\r'
-					)
-				) break;
+				                                  // check if this is new line
+				                                  strCharacter == '\r'))
+					break;
 			}
 		}
 
-		#if BUILD > UsaRetail
+#if BUILD > UsaRetail
 		if (!(flags & 0x800))
-		#endif
-		DECOMP_DecalFont_DrawLineStrlen(str, (u_int)strPointer - (u_int)str, (int)posX, posY + totalPassageHeight, (int)fontType, (int)flags);
+#endif
+			DECOMP_DecalFont_DrawLineStrlen(str, (u_int)strPointer - (u_int)str, (int)posX, posY + totalPassageHeight, (int)fontType, (int)flags);
 
-		#if BUILD > SepReview
+#if BUILD > SepReview
 
 		totalPassageHeight += data.font_charPixHeight[fontType];
 
-		#else
+#else
 
 		// did font_charPixHeight not exist in 903?
 
@@ -127,11 +125,11 @@ int DECOMP_DecalFont_DrawMultiLineStrlen(char *str, short len, short posX, short
 			str = strPointer;
 		}
 
-		#endif
+#endif
 
 		if (*strPointer == '\0')
 		{
-			EndFunction:
+		EndFunction:
 			return totalPassageHeight;
 		}
 
@@ -140,6 +138,7 @@ int DECOMP_DecalFont_DrawMultiLineStrlen(char *str, short len, short posX, short
 			strPointer = strPointer + 1;
 			len = len + -1;
 		}
-		if ((*strPointer == '\0') || (str = strPointer, len == 0)) goto EndFunction;
-	} while( 1 );
+		if ((*strPointer == '\0') || (str = strPointer, len == 0))
+			goto EndFunction;
+	} while (1);
 }

@@ -2,14 +2,14 @@
 
 #ifdef USE_ONLINE
 #include "../AltMods/OnlineCTR/global.h"
-void FixReservesIncrement(struct Driver * driver, int reserves);
+void FixReservesIncrement(struct Driver *driver, int reserves);
 #endif
 
 // param1 - driver
 // param2 - reserves to add
 // param3 - add type
 // param4 - fire level
-void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, int fireLevel)
+void DECOMP_VehFire_Increment(struct Driver *driver, int reserves, u_int type, int fireLevel)
 {
 	char kartState;
 	u_char count;
@@ -19,35 +19,31 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 	int oldOTT;
 
 	u_int addFlags;
-	struct Turbo* turboObj;
-	struct Thread* turboThread;
-	struct Instance* turboInst1;
-	struct Instance* turboInst2;
+	struct Turbo *turboObj;
+	struct Thread *turboThread;
+	struct Instance *turboInst1;
+	struct Instance *turboInst2;
 
-	struct GameTracker* gGT = sdata->gGT;
-	if
-	(
-		// if this is a turbo pad
-		((type & 4) != 0) &&
+	struct GameTracker *gGT = sdata->gGT;
+	if (
+	    // if this is a turbo pad
+	    ((type & 4) != 0) &&
 
-		// racer is in accel prevention (holding square)
-		((driver->actionsFlagSet & 8) != 0)
-	)
+	    // racer is in accel prevention (holding square)
+	    ((driver->actionsFlagSet & 8) != 0))
 	{
 		// do nothing
 		return;
 	}
 
-	if
-	(
-		// Player / AI structure + 0x4a shows driver index (0-7)
+	if (
+	    // Player / AI structure + 0x4a shows driver index (0-7)
 
-		// If this is the first driver (P1) and
-		(driver->driverID == '\0') &&
+	    // If this is the first driver (P1) and
+	    (driver->driverID == '\0') &&
 
-		// player of any kind
-		(driver->instSelf->thread->modelIndex == DYNAMIC_PLAYER)
-	)
+	    // player of any kind
+	    (driver->instSelf->thread->modelIndex == DYNAMIC_PLAYER))
 	{
 		// Add Reserves to ghost buffer
 		DECOMP_GhostTape_WriteBoosts(reserves, (u_char)type, fireLevel);
@@ -55,22 +51,25 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 
 	kartState = driver->kartState;
 
-	if (kartState == KS_SPINNING) return;
-	if (kartState == KS_MASK_GRABBED) return;
-	if (kartState == KS_BLASTED) return;
+	if (kartState == KS_SPINNING)
+		return;
+	if (kartState == KS_MASK_GRABBED)
+		return;
+	if (kartState == KS_BLASTED)
+		return;
 
-	//turn off 8th flag, turn on 22nd flag of actions flag set
-	//means ? (!(8)) and racer just got an outside turbo (22)
+	// turn off 8th flag, turn on 22nd flag of actions flag set
+	// means ? (!(8)) and racer just got an outside turbo (22)
 	driver->actionsFlagSet = driver->actionsFlagSet & 0xffffff7f | 0x200000;
 
 	// turbo thread bucket
 	turboThread = gGT->threadBuckets[TURBO].thread;
 
 	// check all turbo threads
-	while(turboThread != 0)
+	while (turboThread != 0)
 	{
 		// if this turbo thread is owned by this driver
-		if (((struct Turbo*)turboThread->object)->driver == driver)
+		if (((struct Turbo *)turboThread->object)->driver == driver)
 		{
 			// quit, turboThread is now this driver's turbo thread
 			break;
@@ -81,13 +80,13 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 	}
 
 	// if no turbo exists, create one
-	if(turboThread == 0)
+	if (turboThread == 0)
 	{
-		#if BUILD < JpnRetail
+#if BUILD < JpnRetail
 
 		driver->numTurbos = 1;
 
-		#else
+#else
 
 		// some sort of variable related to drifting? check + 0x3be in japanese output
 		if (driver->japanTurboUnknown == 0)
@@ -107,14 +106,10 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 			}
 		}
 
-		#endif
+#endif
 
 #ifndef REBUILD_PS1
-		turboInst1 = INSTANCE_BirthWithThread(
-			0x2c, 0, SMALL, TURBO,
-			DECOMP_VehTurbo_ThTick,
-			sizeof(struct Turbo), 0
-		);
+		turboInst1 = INSTANCE_BirthWithThread(0x2c, 0, SMALL, TURBO, DECOMP_VehTurbo_ThTick, sizeof(struct Turbo), 0);
 
 		turboObj = 0;
 
@@ -126,10 +121,9 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 			turboThread->funcThDestroy = DECOMP_VehTurbo_ThDestroy;
 
 			// turbo #2
-			turboInst2 = INSTANCE_Birth3D(
-				gGT->modelPtr[STATIC_TURBO_EFFECT], 	// model
-				&sdata->s_turbo2[0], 		// name
-				turboThread					// parent thread
+			turboInst2 = INSTANCE_Birth3D(gGT->modelPtr[STATIC_TURBO_EFFECT], // model
+			                              &sdata->s_turbo2[0],                // name
+			                              turboThread                         // parent thread
 			);
 
 			// get object, set essentials
@@ -142,16 +136,18 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 			// make flame disappear after
 			// 	- powerslide: two frames (quick death)
 			//	- all others: -1 frames (255 = 'no' death)
-			if (type & 2)	count = FPS_DOUBLE(2);
-			else			count = -1;
+			if (type & 2)
+				count = FPS_DOUBLE(2);
+			else
+				count = -1;
 			turboObj->fireDisappearCountdown = count;
 
 			// player of any kind
-			if (driver->instSelf->thread->modelIndex ==  DYNAMIC_PLAYER)
+			if (driver->instSelf->thread->modelIndex == DYNAMIC_PLAYER)
 			{
 				turboObj->fireAudioDistort = 0;
 
-				if(driver->kartState != KS_CRASHING)
+				if (driver->kartState != KS_CRASHING)
 				{
 					DECOMP_VehFire_Audio(driver, fireLevel);
 				}
@@ -199,10 +195,11 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 			{
 				driver->numTurbos++;
 
-				#if BUILD == JpnRetail
+#if BUILD == JpnRetail
 				// the japanese version of the game keeps track of your highest turbo chain in a race
-				if (driver->numTurbosHighScore < driver->numTurbos && (gGT->gameMode1 & END_OF_RACE) == 0) driver->numTurbosHighScore = driver->numTurbos;
-				#endif
+				if (driver->numTurbosHighScore < driver->numTurbos && (gGT->gameMode1 & END_OF_RACE) == 0)
+					driver->numTurbosHighScore = driver->numTurbos;
+#endif
 			}
 		}
 
@@ -215,10 +212,11 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 
 			turboObj->fireVisibilityCooldown = 0x60;
 			driver->numTurbos++;
-			#if BUILD == JpnRetail
+#if BUILD == JpnRetail
 			// the japanese version of the game keeps track of your highest turbo chain in a race
-			if (driver->numTurbosHighScore < driver->numTurbos && (gGT->gameMode1 & END_OF_RACE) == 0) driver->numTurbosHighScore = driver->numTurbos;
-			#endif
+			if (driver->numTurbosHighScore < driver->numTurbos && (gGT->gameMode1 & END_OF_RACE) == 0)
+				driver->numTurbosHighScore = driver->numTurbos;
+#endif
 		}
 
 		turboObj->fireDisappearCountdown = -1;
@@ -226,15 +224,12 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 		turboInst2->alphaScale = 0;
 
 		// player of any kind
-		if(*(short *)&driver->instSelf->thread->modelIndex == DYNAMIC_PLAYER)
+		if (*(short *)&driver->instSelf->thread->modelIndex == DYNAMIC_PLAYER)
 		{
-			if
-			(
-				// if racer is not getting an Outside turbo (turbo pad or powerup),
-				// this prevents audio-spam from multiple boosts
-				((driver->actionsFlagSet & 0x200000) == 0) ||
-				((driver->actionsFlagSetPrevFrame & 0x200000) == 0)
-			)
+			if (
+			    // if racer is not getting an Outside turbo (turbo pad or powerup),
+			    // this prevents audio-spam from multiple boosts
+			    ((driver->actionsFlagSet & 0x200000) == 0) || ((driver->actionsFlagSetPrevFrame & 0x200000) == 0))
 
 			{
 				turboObj->fireAudioDistort = 0;
@@ -245,55 +240,50 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 
 	newFireSpeedCap =
 
-		(int)driver->const_SingleTurboSpeed +
+	    (int)driver->const_SingleTurboSpeed +
 
-		// fireLevel * 8
-		(
-			fireLevel *
+	    // fireLevel * 8
+	    (fireLevel *
 
-			#if 1
+#if 1
 
-			8
+	     8
 
-			#else
+#else
 
-			// this can all be simplified to: 8
-			((int)driver->const_SacredFireSpeed - (int)driver->const_SingleTurboSpeed) >> 8
+	         // this can all be simplified to: 8
+	         ((int)driver->const_SacredFireSpeed - (int)driver->const_SingleTurboSpeed) >>
+	     8
 
-			#endif
-		);
+#endif
+	    );
 
 #if defined(USE_RETROFUELED) && defined(USE_ONLINE)
 	int rn = octr->serverRoom;
 	int doRetroFueled = ROOM_IS_RETRO(rn);
 #endif
-	if
-	(
-		// any gain in boost,
-		// resize to gain boost
-		(
-			// Reserves are equal to zero
-			// OR
-			// speed cap has been raised
-			(driver->reserves == 0) ||
-			(driver->fireSpeedCap < (short)newFireSpeedCap)
-		) ||
+	if (
+	    // any gain in boost,
+	    // resize to gain boost
+	    (
+	        // Reserves are equal to zero
+	        // OR
+	        // speed cap has been raised
+	        (driver->reserves == 0) || (driver->fireSpeedCap < (short)newFireSpeedCap)) ||
 
-		// OR
+	    // OR
 
-		// you have USF, and boosted on a non-STP,
-		// resize fire to lose size
-		(
-			// Current speed cap is greater than 0x1000
-			// AND
-			// You are not on a super turbo pad
-			(int)driver->const_SacredFireSpeed < (int)driver->fireSpeedCap &&
-			((driver->stepFlagSet & 2) == 0)
-			#if defined(USE_RETROFUELED) && defined(USE_ONLINE)
-			&& !doRetroFueled //is not retrofueled mode
-			#endif
-		)
-	)
+	    // you have USF, and boosted on a non-STP,
+	    // resize fire to lose size
+	    (
+	        // Current speed cap is greater than 0x1000
+	        // AND
+	        // You are not on a super turbo pad
+	        (int)driver->const_SacredFireSpeed < (int)driver->fireSpeedCap && ((driver->stepFlagSet & 2) == 0)
+#if defined(USE_RETROFUELED) && defined(USE_ONLINE)
+	        && !doRetroFueled // is not retrofueled mode
+#endif
+	        ))
 
 	{
 		driver->fireSpeedCap = (short)newFireSpeedCap;
@@ -302,7 +292,8 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 		{
 			// modify, cap, and save the size of the fire
 			newFireSize = (fireLevel >> 6) + 5;
-			if(newFireSize > 8) newFireSize = 8;
+			if (newFireSize > 8)
+				newFireSize = 8;
 			turboObj->fireSize = (short)newFireSize;
 		}
 	}
@@ -310,7 +301,7 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 	// boost powerup
 	if (type & 8)
 	{
-		//turn on 14th bit of Actions Flag set (means racer is driving against a wall)
+		// turn on 14th bit of Actions Flag set (means racer is driving against a wall)
 		driver->actionsFlagSet |= 0x200;
 	}
 
@@ -327,12 +318,12 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 	// startline, hang time, powerslide
 	else if (!(type & 1))
 	{
-		// increase reserves BY param2
-		#ifdef USE_ONLINE
+// increase reserves BY param2
+#ifdef USE_ONLINE
 		FixReservesIncrement(driver, reserves);
-		#else
+#else
 		driver->reserves += reserves;
-		#endif
+#endif
 	}
 
 	// turbo pad, boost powerup
@@ -346,22 +337,22 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 
 		if (oldOTT < reserves)
 		{
-			#ifdef USE_ONLINE
+#ifdef USE_ONLINE
 			FixReservesIncrement(driver, reserves - oldOTT);
-			#else
-			driver->reserves += 			(reserves - oldOTT);
-			#endif
-			driver->turbo_outsideTimer += 	(reserves - oldOTT);
+#else
+			driver->reserves += (reserves - oldOTT);
+#endif
+			driver->turbo_outsideTimer += (reserves - oldOTT);
 		}
 	}
 
-	#if defined(USE_ONLINE)
-	if(driver->driverID != 0) //if not ourself
+#if defined(USE_ONLINE)
+	if (driver->driverID != 0) // if not ourself
 		return;
-	#endif
+#endif
 
-	//#if !defined (USE_ONLINE) //uncomment this if you need bytebudget.
-	// player of any kind
+	// #if !defined (USE_ONLINE) //uncomment this if you need bytebudget.
+	//  player of any kind
 	if (driver->instSelf->thread->modelIndex == DYNAMIC_PLAYER)
 	{
 		// CameraDC flag
@@ -370,5 +361,5 @@ void DECOMP_VehFire_Increment(struct Driver* driver, int reserves, u_int type, i
 		// gamepad vibration
 		DECOMP_GAMEPAD_ShockForce1(driver, 8, 0x7f);
 	}
-	//#endif
+	// #endif
 }

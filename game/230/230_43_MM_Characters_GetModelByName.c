@@ -33,31 +33,31 @@ struct Model* DECOMP_MM_Characters_GetModelByName(int *name)
   return NULL;
 }
 #else
-struct Model* MM_Characters_GetModelByID(int id)
+struct Model *MM_Characters_GetModelByID(int id)
 {
-  struct Model** models;
-  struct Model* model;
-  struct Level* level1 = sdata->gGT->level1;
+	struct Model **models;
+	struct Model *model;
+	struct Level *level1 = sdata->gGT->level1;
 
-  // if LEV is invalid
-  if (level1 == NULL)
-    return NULL;
+	// if LEV is invalid
+	if (level1 == NULL)
+		return NULL;
 
-  #ifdef USE_OXIDE
-  if(id == 0xf)
-	  return data.driverModelExtras[0];
-  #endif
-  
-  // Only use Preload in the main menu
-  // if an entirely new roster of characters
-  // is ready. Otherwise it breaks animations
-  
-  // #ifdef USE_PRELOAD
-  // int* arr = 0x8000a000;
-  // return arr[id];
-  // #endif
+#ifdef USE_OXIDE
+	if (id == 0xf)
+		return data.driverModelExtras[0];
+#endif
 
-  models = level1->ptrModelsPtrArray;
-  return models[0xE - id];
+	// Only use Preload in the main menu
+	// if an entirely new roster of characters
+	// is ready. Otherwise it breaks animations
+
+	// #ifdef USE_PRELOAD
+	// int* arr = 0x8000a000;
+	// return arr[id];
+	// #endif
+
+	models = level1->ptrModelsPtrArray;
+	return models[0xE - id];
 }
 #endif

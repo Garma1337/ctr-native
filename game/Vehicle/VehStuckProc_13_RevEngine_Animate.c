@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_VehStuckProc_RevEngine_Animate(struct Thread* t, struct Driver* d)
+void DECOMP_VehStuckProc_RevEngine_Animate(struct Thread *t, struct Driver *d)
 {
 	char bVar1;
 	u_char bVar2;
@@ -13,18 +13,12 @@ void DECOMP_VehStuckProc_RevEngine_Animate(struct Thread* t, struct Driver* d)
 	u_int uVar8;
 	int iVar9;
 
-	struct Instance* inst = t->inst;
+	struct Instance *inst = t->inst;
 
-	if (
-		(d->fireSpeed > 0) &&
-		(d->KartStates.RevEngine.unk58e == 0) &&
-		((d->KartStates.RevEngine.unk[1] & 3) == 0)
-		)
+	if ((d->fireSpeed > 0) && (d->KartStates.RevEngine.unk58e == 0) && ((d->KartStates.RevEngine.unk[1] & 3) == 0))
 	{
 		// Curr revving meter - Max revving meter
-		iVar4 =
-			d->KartStates.RevEngine.fireLevel -
-			d->KartStates.RevEngine.boostMeter;
+		iVar4 = d->KartStates.RevEngine.fireLevel - d->KartStates.RevEngine.boostMeter;
 
 		// absolute value
 		if (iVar4 < 0)
@@ -50,10 +44,7 @@ void DECOMP_VehStuckProc_RevEngine_Animate(struct Thread* t, struct Driver* d)
 			iVar7 = 0x100;
 		}
 
-		iVar4 = DECOMP_VehCalc_InterpBySpeed(
-			d->KartStates.RevEngine.fireLevel,
-			FPS_HALF(iVar7),
-			d->KartStates.RevEngine.boostMeter);
+		iVar4 = DECOMP_VehCalc_InterpBySpeed(d->KartStates.RevEngine.fireLevel, FPS_HALF(iVar7), d->KartStates.RevEngine.boostMeter);
 
 		// Set new curr rev
 		d->KartStates.RevEngine.fireLevel = iVar4;
@@ -100,15 +91,13 @@ void DECOMP_VehStuckProc_RevEngine_Animate(struct Thread* t, struct Driver* d)
 	}
 	if ((d->KartStates.RevEngine.unk[0] != 0) &&
 
-		// curr rev < ???
-		(d->KartStates.RevEngine.fireLevel < d->const_AccelSpeed_ClassStat))
+	    // curr rev < ???
+	    (d->KartStates.RevEngine.fireLevel < d->const_AccelSpeed_ClassStat))
 	{
 		d->KartStates.RevEngine.unk[0] = 0;
 
-		uVar6 = DECOMP_VehCalc_InterpBySpeed(
-			d->KartStates.RevEngine.boostMeter,
-			FPS_HALF(d->const_SacredFireSpeed / 3 + 3),
-			d->const_SacredFireSpeed + d->const_AccelSpeed_ClassStat);
+		uVar6 = DECOMP_VehCalc_InterpBySpeed(d->KartStates.RevEngine.boostMeter, FPS_HALF(d->const_SacredFireSpeed / 3 + 3),
+		                                     d->const_SacredFireSpeed + d->const_AccelSpeed_ClassStat);
 
 		d->KartStates.RevEngine.boostMeter = uVar6;
 	}
@@ -119,14 +108,12 @@ void DECOMP_VehStuckProc_RevEngine_Animate(struct Thread* t, struct Driver* d)
 		d->KartStates.RevEngine.unk[1] &= ~(2);
 
 		// max rev = ???
-		d->KartStates.RevEngine.boostMeter =
-			d->const_AccelSpeed_ClassStat + d->const_SacredFireSpeed / 3;
+		d->KartStates.RevEngine.boostMeter = d->const_AccelSpeed_ClassStat + d->const_SacredFireSpeed / 3;
 	}
 
 	// if curr rev >= 1
 	else
 	{
-
 		// rev deacceleration rate = curr rev / 2
 		uVar8 = d->KartStates.RevEngine.fireLevel >> 1;
 
@@ -137,7 +124,6 @@ void DECOMP_VehStuckProc_RevEngine_Animate(struct Thread* t, struct Driver* d)
 			// if rev deacceleration rate > 1000
 			if (1000 < (int)uVar8)
 			{
-
 				// rev deacceleration rate = 1000
 				uVar8 = 1000;
 				goto LAB_80067d64;
@@ -151,7 +137,6 @@ void DECOMP_VehStuckProc_RevEngine_Animate(struct Thread* t, struct Driver* d)
 			// if rev deacceleration rate > 3000
 			if (3000 < (int)uVar8)
 			{
-
 				// rev deacceleration rate = 3000
 				uVar8 = 3000;
 			LAB_80067d64:
@@ -160,7 +145,6 @@ void DECOMP_VehStuckProc_RevEngine_Animate(struct Thread* t, struct Driver* d)
 		}
 		if (bVar2)
 		{
-
 			// rev deacceleration rate = 0x100
 			uVar8 = 0x100;
 		}
@@ -187,9 +171,8 @@ void DECOMP_VehStuckProc_RevEngine_Animate(struct Thread* t, struct Driver* d)
 
 LAB_80067dec:
 
-	if ((*(u_int*)&d->KartStates.RevEngine.unk590 & 0x200ffff) == 0)
+	if ((*(u_int *)&d->KartStates.RevEngine.unk590 & 0x200ffff) == 0)
 	{
-
 		// if curr rev < ???
 		if (d->KartStates.RevEngine.fireLevel < d->const_AccelSpeed_ClassStat)
 		{
@@ -213,7 +196,6 @@ LAB_80067dec:
 	// if curr rev < ???
 	if (d->KartStates.RevEngine.fireLevel < iVar4)
 	{
-
 		// 476 and 447 can be absolutely any value,
 		// by default they are 15 and 30, but as long as
 		// they are proportional (1 and 2, 4 and 8), they
@@ -240,12 +222,7 @@ LAB_80067dec:
 		iVar9 = iVar4 + d->const_SacredFireSpeed;
 	}
 
-	uVar3 = DECOMP_VehCalc_MapToRange
-	(
-		d->KartStates.RevEngine.fireLevel,
-		iVar7, iVar9,
-		(u_int)bVar1 << 5, local_18
-	);
+	uVar3 = DECOMP_VehCalc_MapToRange(d->KartStates.RevEngine.fireLevel, iVar7, iVar9, (u_int)bVar1 << 5, local_18);
 
 	d->turbo_MeterRoomLeft = uVar3;
 

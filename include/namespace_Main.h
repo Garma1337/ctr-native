@@ -1,57 +1,57 @@
 enum GameMode1
 {
-	PAUSE_1				= 0x1,
-	PAUSE_2				= 0x2,	// unused, debug
-	PAUSE_3				= 0x4,	// unused, debug
-	PAUSE_4				= 0x8,	// unused, debug
-	PAUSE_ALL           = 0xF,
-	DEBUG_MENU			= 0x10,
-	BATTLE_MODE         = 0x20,
-	START_OF_RACE 		= 0x40,
+	PAUSE_1 = 0x1,
+	PAUSE_2 = 0x2, // unused, debug
+	PAUSE_3 = 0x4, // unused, debug
+	PAUSE_4 = 0x8, // unused, debug
+	PAUSE_ALL = 0xF,
+	DEBUG_MENU = 0x10,
+	BATTLE_MODE = 0x20,
+	START_OF_RACE = 0x40,
 	// 0x80?
-	P1_VIBRATE			= 0x100,
-	P2_VIBRATE			= 0x200,
-	P3_VIBRATE			= 0x400,
-	P4_VIBRATE			= 0x800,
-	WARPBALL_HELD       = 0x1000,
-	MAIN_MENU           = 0x2000,
-	POINT_LIMIT			= 0x4000,
-	LIFE_LIMIT			= 0x8000,
-	TIME_LIMIT			= 0x10000,
-	TIME_TRIAL          = 0x20000,
-	BETA_UNLIMITED		= 0x40000, // Spyro 2 demo
-	ADVENTURE_MODE      = 0x80000,
-	ADVENTURE_ARENA     = 0x100000,
-	END_OF_RACE 		= 0x200000,
-	ARCADE_MODE         = 0x400000,
-	ROLLING_ITEM        = 0x800000,
-	AKU_SONG			= 0x1000000,
-	UKA_SONG			= 0x2000000,
-	RELIC_RACE			= 0x4000000,
-	CRYSTAL_CHALLENGE   = 0x8000000,
-	ADVENTURE_CUP       = 0x10000000,
-	GAME_CUTSCENE      	= 0x20000000,
-	LOADING             = 0x40000000,
-	ADVENTURE_BOSS      = 0x80000000
+	P1_VIBRATE = 0x100,
+	P2_VIBRATE = 0x200,
+	P3_VIBRATE = 0x400,
+	P4_VIBRATE = 0x800,
+	WARPBALL_HELD = 0x1000,
+	MAIN_MENU = 0x2000,
+	POINT_LIMIT = 0x4000,
+	LIFE_LIMIT = 0x8000,
+	TIME_LIMIT = 0x10000,
+	TIME_TRIAL = 0x20000,
+	BETA_UNLIMITED = 0x40000, // Spyro 2 demo
+	ADVENTURE_MODE = 0x80000,
+	ADVENTURE_ARENA = 0x100000,
+	END_OF_RACE = 0x200000,
+	ARCADE_MODE = 0x400000,
+	ROLLING_ITEM = 0x800000,
+	AKU_SONG = 0x1000000,
+	UKA_SONG = 0x2000000,
+	RELIC_RACE = 0x4000000,
+	CRYSTAL_CHALLENGE = 0x8000000,
+	ADVENTURE_CUP = 0x10000000,
+	GAME_CUTSCENE = 0x20000000,
+	LOADING = 0x40000000,
+	ADVENTURE_BOSS = 0x80000000
 };
 
 enum GameModeEnd
 {
-	PLAYER_GHOST_BEAT 	= 1,
-	DRAW_HIGH_SCORES	= 2,
+	PLAYER_GHOST_BEAT = 1,
+	DRAW_HIGH_SCORES = 2,
 
 
 #if 0
 	// Same as GameMode1	
 	BATTLE_MODE         = 0x20,
 #endif
-	
-	
+
+
 	// new flags
-	NTROPY_JUST_OPENED	= 0x8000,
-	HIGH_SCORE_SAVED 	= 0x10000,
-	
-	
+	NTROPY_JUST_OPENED = 0x8000,
+	HIGH_SCORE_SAVED = 0x10000,
+
+
 #if 0
 	// Same as GameMode1
 	TIME_TRIAL          = 0x20000,
@@ -59,16 +59,16 @@ enum GameModeEnd
 	ADVENTURE_MODE      = 0x80000,
 	ADVENTURE_ARENA     = 0x100000,
 	END_OF_RACE 		= 0x200000,
-#endif	
+#endif
 
-	
+
 	// new flags
-	NEW_NAME			= 0x1000000,
-	NEW_RELIC			= 0x2000000,
-	NEW_BEST_LAP		= 0x4000000,
-	NEW_HIGH_SCORE		= 0x8000000,
-	NTROPY_JUST_BEAT	= 0x10000000,
-	
+	NEW_NAME = 0x1000000,
+	NEW_RELIC = 0x2000000,
+	NEW_BEST_LAP = 0x4000000,
+	NEW_HIGH_SCORE = 0x8000000,
+	NTROPY_JUST_BEAT = 0x10000000,
+
 };
 
 enum GameMode2
@@ -76,33 +76,34 @@ enum GameMode2
 	SPAWN_AT_BOSS = 1,
 
 	VEH_FREEZE_PODIUM = 4,
-	TOKEN_RACE 		= 0x8,
-	CUP_ANY_KIND 	= 0x10,
-	LEV_SWAP 		= 0x20,
+	TOKEN_RACE = 0x8,
+	CUP_ANY_KIND = 0x10,
+	LEV_SWAP = 0x20,
 	// 0x40?
-	CREDITS 		= 0x80,
+	CREDITS = 0x80,
 	NO_LEV_INSTANCE = 0x100,
-	CHEAT_WUMPA 	= 0x200,
-	CHEAT_MASK 		= 0x400,
-	CHEAT_TURBO		= 0x800,
-	CUP_NEW_WIN 	= 0x1000,
-	CUP_NEW_BATTLE 	= 0x2000,
+	CHEAT_WUMPA = 0x200,
+	CHEAT_MASK = 0x400,
+	CHEAT_TURBO = 0x800,
+	CUP_NEW_WIN = 0x1000,
+	CUP_NEW_BATTLE = 0x2000,
 	VEH_FREEZE_DOOR = 0x4000,
-	CHEAT_INVISIBLE	= 0x8000,
-	CHEAT_ENGINE	= 0x10000,
-	GARAGE_OSK		= 0x20000,
-	CHEAT_ADV		= 0x40000,
-	CHEAT_ICY		= 0x80000,
-	CHEAT_TURBOPAD	= 0x100000,
-	CHEAT_SUPERHARD	= 0x200000,
-	CHEAT_BOMBS		= 0x400000,
-	CHEAT_ONELAP	= 0x800000,
-	INC_RELIC		= 0x1000000,
-	INC_KEY			= 0x2000000,
-	INC_TROPHY		= 0x4000000,
-	CHEAT_TURBOCOUNT= 0x8000000,
-	LNG_CHANGE		= 0x10000000, // (EurRetail Only)
-	CHEAT_ALL 		= CHEAT_ADV | CHEAT_BOMBS | CHEAT_ENGINE | CHEAT_ICY | CHEAT_INVISIBLE | CHEAT_MASK | CHEAT_ONELAP | CHEAT_SUPERHARD | CHEAT_TURBO | CHEAT_TURBOCOUNT | CHEAT_TURBOPAD | CHEAT_WUMPA,
+	CHEAT_INVISIBLE = 0x8000,
+	CHEAT_ENGINE = 0x10000,
+	GARAGE_OSK = 0x20000,
+	CHEAT_ADV = 0x40000,
+	CHEAT_ICY = 0x80000,
+	CHEAT_TURBOPAD = 0x100000,
+	CHEAT_SUPERHARD = 0x200000,
+	CHEAT_BOMBS = 0x400000,
+	CHEAT_ONELAP = 0x800000,
+	INC_RELIC = 0x1000000,
+	INC_KEY = 0x2000000,
+	INC_TROPHY = 0x4000000,
+	CHEAT_TURBOCOUNT = 0x8000000,
+	LNG_CHANGE = 0x10000000, // (EurRetail Only)
+	CHEAT_ALL = CHEAT_ADV | CHEAT_BOMBS | CHEAT_ENGINE | CHEAT_ICY | CHEAT_INVISIBLE | CHEAT_MASK | CHEAT_ONELAP | CHEAT_SUPERHARD | CHEAT_TURBO |
+	            CHEAT_TURBOCOUNT | CHEAT_TURBOPAD | CHEAT_WUMPA,
 };
 
 enum CharacterUnlock
@@ -133,22 +134,22 @@ struct GameTracker
 	int swapchainIndex; // 0 or 1
 
 	// 0x10
-	struct DB* backBuffer;	// the one you render to
+	struct DB *backBuffer; // the one you render to
 
 	// 0x14
-	struct DB* frontBuffer;	// the one being sent to screen
+	struct DB *frontBuffer; // the one being sent to screen
 
 	// 0x18
-	struct DB db[2];			/* packet double buffer */
+	struct DB db[2]; /* packet double buffer */
 
 	// The LEV being drawn
 	// 0x160
-	struct Level* level1;		// real ND name
+	struct Level *level1; // real ND name
 
 	// The LEV being loaded while
 	// the other LEV is being drawn,
 	// used in Adv Hub
-	struct Level* level2;		// real ND name
+	struct Level *level2; // real ND name
 
 	// Four window structs, each 0x110
 	// vec3s pos, vec3s rot, shown in FreecamCTR
@@ -171,7 +172,7 @@ struct GameTracker
 		short boolUpdatedThisFrame;
 
 		// 0x8
-		struct Instance* inst;
+		struct Instance *inst;
 
 		// 0xC
 		char data2[0x100];
@@ -188,7 +189,7 @@ struct GameTracker
 
 		// 0x128 - size
 
-	} DecalMP[3*4];
+	} DecalMP[3 * 4];
 
 	// 0x1388
 	struct PushBuffer pushBuffer_UI;
@@ -211,17 +212,17 @@ struct GameTracker
 		// [4] - 0x20: Water
 		struct
 		{
-			void* ptrQuadBlocksRendered;
-			struct BSP** bspListStart;
+			void *ptrQuadBlocksRendered;
+			struct BSP **bspListStart;
 		} list[5];
 
 		// 0x28
-		struct BSP** bspListStart_FullDynamic;
-		void* ptrQuadBlocksRendered_FullDynamic;
+		struct BSP **bspListStart_FullDynamic;
+		void *ptrQuadBlocksRendered_FullDynamic;
 
 		// 0x30 large
 
-	// one for each player
+		// one for each player
 	} LevRenderLists[4];
 
 	// pointers to OT memory,
@@ -229,45 +230,45 @@ struct GameTracker
 	// 0x18c8
 	// 0x18cc
 	// one for each DB
-	void* otSwapchainDB[2];
+	void *otSwapchainDB[2];
 
 	// 0x18d0
 	struct
 	{
-		struct JitPool thread;		// 0x18d0
-		struct JitPool instance;	// 0x18f8
-		struct JitPool smallStack;	// 0x1920, used for items
-		struct JitPool mediumStack;	// 0x1948, used for ???
-		struct JitPool largeStack;	// 0x1970, used for drivers
-		struct JitPool particle;	// 0x1998
-		struct JitPool oscillator;	// 0x19c0
-		struct JitPool rain;		// 0x19e8
+		struct JitPool thread;      // 0x18d0
+		struct JitPool instance;    // 0x18f8
+		struct JitPool smallStack;  // 0x1920, used for items
+		struct JitPool mediumStack; // 0x1948, used for ???
+		struct JitPool largeStack;  // 0x1970, used for drivers
+		struct JitPool particle;    // 0x1998
+		struct JitPool oscillator;  // 0x19c0
+		struct JitPool rain;        // 0x19e8
 	} JitPools;
 
 	// 1a10
 	int levelID;
 
-	// 1a14
-	#if BUILD == SepReview
+// 1a14
+#if BUILD == SepReview
 	char levelName[0xC];
-	#elif BUILD >= UsaRetail
+#elif BUILD >= UsaRetail
 	char levelName[0x24];
-	#endif
+#endif
 
-	// according to FUN_8003af84,
-	// 0x1a38 is offset 400 (0x190) of LEV
+// according to FUN_8003af84,
+// 0x1a38 is offset 400 (0x190) of LEV
 
-	// 0x1a38
-	// This "region" is only in EurRetail and JpnRetail,
-	// while the other "region" goes back to JpnTrial
-	#if BUILD >= EurRetail
+// 0x1a38
+// This "region" is only in EurRetail and JpnRetail,
+// while the other "region" goes back to JpnTrial
+#if BUILD >= EurRetail
 	char s_region_8byte[8];
-	#endif
+#endif
 
 	// 0x1a38 -- UsaRetail
 	// 0x1a40 -- EurRetail, JpnRetail
-	struct VisMem* visMem1;
-	struct VisMem* visMem2;
+	struct VisMem *visMem1;
+	struct VisMem *visMem2;
 
 	// 0x1a40 -- UsaRetail
 	// one for each player
@@ -293,7 +294,7 @@ struct GameTracker
 
 	// 0x1b0c
 	struct Stars stars;
-	
+
 	// 1b14
 	unsigned int ptrCircle;
 
@@ -318,18 +319,18 @@ struct GameTracker
 	struct ThreadBucket threadBuckets[NUM_BUCKETS];
 
 	// 1c94
-	void* ptrRenderBucketInstance;
+	void *ptrRenderBucketInstance;
 
-	 // 1c98
+	// 1c98
 	int unk_1c98;
 
 	// 1c9c
 	// exhaust, fire, etc
-	void* particleList_ordinary;
+	void *particleList_ordinary;
 
 	// 1ca0
 	// distorts screen above fire
-	void* particleList_heatWarp;
+	void *particleList_heatWarp;
 
 	// 1ca4
 	int numParticles;
@@ -498,11 +499,11 @@ struct GameTracker
 	// usa 1d65
 	char currNameEntered[0x11];
 
-	#if BUILD >= UsaRetail
+#if BUILD >= UsaRetail
 	// 1d76
 	// 1d77
 	short nameEnterPadding;
-	#endif
+#endif
 
 	// usa 1d78 -- found
 	int timeToBeatInTimeTrial_ForCurrentEvent;
@@ -528,49 +529,49 @@ struct GameTracker
 	// 1d88
 	struct
 	{
-	// 1d88
-	int lifeLimit; // 3,6,9
+		// 1d88
+		int lifeLimit; // 3,6,9
 
-	// 1d8c
-	int killLimit; // 5,10,15
+		// 1d8c
+		int killLimit; // 5,10,15
 
-	// 1d90
-	int pointsPerTeam[4];
+		// 1d90
+		int pointsPerTeam[4];
 
-	// 1da0
-	int enabledWeapons;
+		// 1da0
+		int enabledWeapons;
 
-	// 1da4
-	char teamOfEachPlayer[4];
+		// 1da4
+		char teamOfEachPlayer[4];
 
-	// 1da8
-	int finishedRankOfEachTeam[4];
+		// 1da8
+		int finishedRankOfEachTeam[4];
 
-	// 1db8
-	int unk1DB8[4];
+		// 1db8
+		int unk1DB8[4];
 
-	// 1dc8
-	int unk1dc8[4];
+		// 1dc8
+		int unk1dc8[4];
 
-	// 1dd8
-	// 0b0001 for everyone on team 1
-	// 0b0101 for some on team 1 and some on team 3
-	// 0b1111 for all four teams active
-	// etc
-	u_int teamFlags;
+		// 1dd8
+		// 0b0001 for everyone on team 1
+		// 0b0101 for some on team 1 and some on team 3
+		// 0b1111 for all four teams active
+		// etc
+		u_int teamFlags;
 
-	// 1ddc
-	int numTeams;
+		// 1ddc
+		int numTeams;
 
-	// 1de0
-	int unk_afterTeams[4];
+		// 1de0
+		int unk_afterTeams[4];
 
-	// 1df0
-	int numWeapons;
+		// 1df0
+		int numWeapons;
 
-	// 1df4
-	// for custom set of weapons
-	int RNG_itemSetCustom[0xb];
+		// 1df4
+		// for custom set of weapons
+		int RNG_itemSetCustom[0xb];
 
 	} battleSetup;
 
@@ -630,7 +631,7 @@ struct GameTracker
 	// how many times each player (4)
 	// came in 1st, 2nd, or 3rd (3)
 	// Used in VS Standings and Battle Standings
-	int standingsPoints[4*3];
+	int standingsPoints[4 * 3];
 
 	// 1eb0
 	// trackSel, AdvHubProfile, battle, cups, etc
@@ -651,12 +652,12 @@ struct GameTracker
 	// 1ebc
 	int arcadeDifficulty;
 
-	#if BUILD >= UsaRetail
+#if BUILD >= UsaRetail
 	// 1ec0
 	unsigned int numMissiles;
 	// 1ec4
 	int numPlayersWith3Missiles;
-	#endif
+#endif
 
 	// 1e50 sep
 	// 1ec8 usa
@@ -668,7 +669,7 @@ struct GameTracker
 
 	// 1ecc
 	// RedOff, RedOn, GreenOff, GreenOn
-	struct Icon* trafficLightIcon[4];
+	struct Icon *trafficLightIcon[4];
 
 	// 1edc
 	// In retail versions of the game, this is
@@ -685,7 +686,7 @@ struct GameTracker
 
 	// 0x1e74 sep3
 	// 0x1eec UsaRetail
-	struct Icon* ptrIcons[0x88];
+	struct Icon *ptrIcons[0x88];
 
 	// internal name first, followed by what it is
 	// except for current map top and bottom, they're pointers to several icons that get loaded depending on lev
@@ -693,8 +694,10 @@ struct GameTracker
 	// 0 - shadow1 -- half of kart shadow
 	// 1 - shadow2 -- half of kart shadow
 	// 2 - turbo -- Turbo cannister item icon
-	// 0x03 - Current Map Top -- map-island1-01, map-tube1-01, map-temple1-01, map-asphalt1-01, map-cave1-01, map-desert2-01, map-sewer1-01, map-proto8-01, map-temple2-01, map-proto9-01, map-ice1-01, map-castle1-01, map-asphalt2-01, map-blimp1-01, map-labs1-01, map-space1-01, map-secret1-01, map-secret2-01
-	// 0x04 - Current Map Bottom -- map-island1-02, map-tube1-02, map-temple1-02, map-asphalt1-02, map-cave1-02, map-desert2-02, map-sewer1-02, map-proto8-02, map-temple2-02, map-proto9-02, map-ice1-02, map-castle1-02, map-asphalt2-02, map-blimp1-02, map-labs1-02, map-space1-02, map-secret1-02, map-secret2-02
+	// 0x03 - Current Map Top -- map-island1-01, map-tube1-01, map-temple1-01, map-asphalt1-01, map-cave1-01, map-desert2-01, map-sewer1-01, map-proto8-01,
+	// map-temple2-01, map-proto9-01, map-ice1-01, map-castle1-01, map-asphalt2-01, map-blimp1-01, map-labs1-01, map-space1-01, map-secret1-01, map-secret2-01
+	// 0x04 - Current Map Bottom -- map-island1-02, map-tube1-02, map-temple1-02, map-asphalt1-02, map-cave1-02, map-desert2-02, map-sewer1-02, map-proto8-02,
+	// map-temple2-02, map-proto9-02, map-ice1-02, map-castle1-02, map-asphalt2-02, map-blimp1-02, map-labs1-02, map-space1-02, map-secret1-02, map-secret2-02
 	// 0x05 - turbonew -- Duplicate of turbo cannister?
 	// 0x06 - bomb
 	// 0x07 - bomb-tracker -- Missile
@@ -837,18 +840,18 @@ struct GameTracker
 	// 210C
 	int unk210c;
 
-	// No clue if this is right, I just know that
-	// 4 bytes were addded between the start of
-	// the icon array, and teh start of iconGroup,
-	// between Sep3 and UsaRetail
-	#if BUILD >= UsaRetail
+// No clue if this is right, I just know that
+// 4 bytes were addded between the start of
+// the icon array, and teh start of iconGroup,
+// between Sep3 and UsaRetail
+#if BUILD >= UsaRetail
 	int unk2110;
-	#endif
+#endif
 
 	// 2114 -- UsaRetail, JpnTrial
 	// 211c -- JpnRetail
 	// 2098 -- SepReview
-	struct IconGroup* iconGroup[0x11];
+	struct IconGroup *iconGroup[0x11];
 
 	// Different pointer struct than 1f6c
 
@@ -882,14 +885,14 @@ struct GameTracker
 	// 215C
 	int unk215C;
 
-	// 2160
-	// always one more than the
-	// array of Init Func Info
-	#if BUILD == SepReview
-	struct Model* modelPtr[0xdf];
-	#elif BUILD >= UsaRetail
-	struct Model* modelPtr[0xe3];
-	#endif
+// 2160
+// always one more than the
+// array of Init Func Info
+#if BUILD == SepReview
+	struct Model *modelPtr[0xdf];
+#elif BUILD >= UsaRetail
+	struct Model *modelPtr[0xe3];
+#endif
 
 	// 0x00 - NO_FUNC
 	// 0x01 - ANIMATE_IF_HIT
@@ -1168,19 +1171,19 @@ struct GameTracker
 	// 0xe2 - NUM_TYPES
 
 	// +24EC  8009900C
-	struct Driver* drivers[8];
+	struct Driver *drivers[8];
 
 	// +250C  8009902C
-	struct Driver* driversInRaceOrder[8];
+	struct Driver *driversInRaceOrder[8];
 
-	//252c
-	//this stuct is passed to FUN_8006c684 and updates every frame (this is func with 0xdeadc0ed)
+	// 252c
+	// this stuct is passed to FUN_8006c684 and updates every frame (this is func with 0xdeadc0ed)
 	struct
 	{
-		//252c
+		// 252c
 		int unk1;
 
-		//2530
+		// 2530
 		int unk2;
 	} deadcoed_struct;
 
@@ -1193,7 +1196,7 @@ struct GameTracker
 	// set to 0, to immediately spawn at (0,0,0)
 	char Debug_ToggleNormalSpawn;
 
-	//2540
+	// 2540
 	char overlayIndex_LOD;
 	char overlayIndex_Threads;
 	char overlayIndex_null_notUsed;
@@ -1225,35 +1228,35 @@ struct GameTracker
 	// 2568
 	unsigned int numWinners;
 
-	//256c
-	//uint bitwise rendering flags, controls rendering flow. checked a lot in FUN_80035e70, which is game drawing func
+	// 256c
+	// uint bitwise rendering flags, controls rendering flow. checked a lot in FUN_80035e70, which is game drawing func
 
-	//00000001 - draw lev
-	//00000002 - draw rain
-	//00000004 - draw confetti
-	//00000008 - draw stars
-	//00000010 - "rain pool" -- red beaker
-	//00000020 - execute RenderBucket (draw instances)
+	// 00000001 - draw lev
+	// 00000002 - draw rain
+	// 00000004 - draw confetti
+	// 00000008 - draw stars
+	// 00000010 - "rain pool" -- red beaker
+	// 00000020 - execute RenderBucket (draw instances)
 
-	//00000040 - battle mode, player flicker on damage, etc
-	// what? no it's not, happens in Cortex Castle Arcade
+	// 00000040 - battle mode, player flicker on damage, etc
+	//  what? no it's not, happens in Cortex Castle Arcade
 
-	//00000080 - wheels on karts
-	//00000100 - draw model to texture low res lod in 2p-4p
-	//00000200 - draw particles (fire, smoke)
-	//00000400 - draw shadow
-	//00000800 - draw heat effect
-	//00001000 - draw checkered flag
-	//00002000 - clear back buffer between frames
-	//00004000 - ?
-	//00008000 - Draw 2D lines between multiplayer
+	// 00000080 - wheels on karts
+	// 00000100 - draw model to texture low res lod in 2p-4p
+	// 00000200 - draw particles (fire, smoke)
+	// 00000400 - draw shadow
+	// 00000800 - draw heat effect
+	// 00001000 - draw checkered flag
+	// 00002000 - clear back buffer between frames
+	// 00004000 - ?
+	// 00008000 - Draw 2D lines between multiplayer
 	//				screens, plus screen outline (battle)
 
-	//rest unknown or no visible effects
+	// rest unknown or no visible effects
 	unsigned int renderFlags;
 
-	//2570
-	//bit0 enabled clock effect, rest does nothing visually
+	// 2570
+	// bit0 enabled clock effect, rest does nothing visually
 	unsigned short clockEffectEnabled;
 
 	// =======================================
@@ -1262,63 +1265,63 @@ struct GameTracker
 	// all this is in 233 overlay,
 	// all podium related?
 
-	//2572
+	// 2572
 	unsigned short podiumRewardID;
 
-	//2574
+	// 2574
 	unsigned char bool_AdvHub_NeedToSwapLEV;
 
-	//2575
+	// 2575
 	unsigned char podium_modelIndex_First;
 	unsigned char podium_modelIndex_Second;
 	unsigned char podium_modelIndex_Third;
 
-	//2578
+	// 2578
 	unsigned char podium_modelIndex_tawna;
 
 
 	// transition from podium overlay to
 	// adv hub overlay, controls thread spawns
 
-	//2579
-	// 2 or 3 -- request overlay load
-	// 1 - spawn lev threads with 232
-	// 0 - null
+	// 2579
+	//  2 or 3 -- request overlay load
+	//  1 - spawn lev threads with 232
+	//  0 - null
 	unsigned char overlayTransition;
 
 	// =======================================
 	// =======================================
 
-	//257a
-	//only updated for human players
+	// 257a
+	// only updated for human players
 	unsigned char humanPlayerPositions[8];
 
-	//2582
-	// determines if you see Oxide Intro,
-	// or Demo Mode, from main menu inactivity
+	// 2582
+	//  determines if you see Oxide Intro,
+	//  or Demo Mode, from main menu inactivity
 	unsigned short boolSeenOxideIntro;
 
-	//2584 (end of UsaRetail)
+// 2584 (end of UsaRetail)
 
-	// not in UsaRetail
-	#if BUILD >= JpnTrial
+// not in UsaRetail
+#if BUILD >= JpnTrial
 
 	// 2584
 	struct
 	{
-	// Will not draw in ePSXe, emu bug.
-	// should draw while transitioning hubs
+		// Will not draw in ePSXe, emu bug.
+		// should draw while transitioning hubs
 
-	// draws max of 0x5a (90) frames (3 sec)
-	int countdown_ThreeSeconds;
+		// draws max of 0x5a (90) frames (3 sec)
+		int countdown_ThreeSeconds;
 
-	// 2588
-	int lngIndex_AdvHubName;
+		// 2588
+		int lngIndex_AdvHubName;
 
 	} AdvHubTitle_3Seconds;
 
-	// 258C (end of jpnTrial)
-	#endif
+// 258C (end of jpnTrial)
+#endif
 };
 
 #ifndef REBUILD_PC

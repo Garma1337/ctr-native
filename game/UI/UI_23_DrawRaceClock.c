@@ -4,7 +4,7 @@
 struct
 {
 	char s_timeString_empty[12];
-} rdata = { 0 };
+} rdata = {0};
 #endif
 
 #ifdef USE_ONLINE
@@ -12,7 +12,7 @@ struct
 #endif
 
 // used for both finished lap time and current race time
-void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct Driver* driver)
+void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct Driver *driver)
 {
 	// flag parameter bits
 	// despite being a u_int only 6 bits are ever used
@@ -22,7 +22,7 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 	// 3: Only used to check if lap 1 should flash (which is when it's the fastest lap)
 	// 4: Only used to check if lap 2 should flash (which is when it's the fastest lap)
 	// 5: Only used to check if lap 3 should flash (which is when it's the fastest lap)
-	struct GameTracker* gGT;
+	struct GameTracker *gGT;
 	short sVar1;
 	int stringColor;
 	u_int lapIndex;
@@ -52,7 +52,7 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 	u_short stringColor_but_its_also_relicColor;
 	char minutesOnes;
 	char minutesTens;
-	char acStack80 [8];
+	char acStack80[8];
 
 	u_short textPosX;
 	u_short textPosY;
@@ -72,7 +72,7 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 		return;
 	}
 
-	#ifndef USE_ONLINE // 99:59:59:99
+#ifndef USE_ONLINE // 99:59:59:99
 	// set default time to 99:59:99
 	minutesTens = 9;
 	minutesOnes = 9;
@@ -80,15 +80,15 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 	secondsOnes = 9;
 	msTens = 9;
 	msOnes = 9;
-	#endif
+#endif
 
 	// milliseconds elapsed in race
 	msElapsed = driver->timeElapsedInRace;
 
-	#ifdef USE_ONLINE
+#ifdef USE_ONLINE
 	TotalTime tt;
 	ElapsedTimeToTotalTime(&tt, msElapsed);
-	#else
+#else
 	// OG game was "== 7"
 	// but now expand for Online
 	if (gGT->numLaps >= 7)
@@ -108,7 +108,7 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 		// less than 9:59:99
 		if ((char)(msElapsed / 0xe100) < 10)
 		{
-			setRestOfTime:
+		setRestOfTime:
 			minutesOnes = (char)(msElapsed / 0xe100) % 10;
 			secondsTens = (char)((msElapsed / 0x2580) % 6);
 			secondsOnes = (char)((msElapsed / 0x3c0) % 10);
@@ -116,7 +116,7 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 			msOnes = (char)(((msElapsed * 100) / 0x3c0) % 10);
 		}
 	}
-	#endif
+#endif
 
 	if ((flags & 1) == 0)
 	{
@@ -151,8 +151,9 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 		// Draw big string
 		fontType = FONT_BIG;
 
-		// this particular snippet is for drawing the TOTAL text in the time trial lap results screen before it flashes, at which point it moves from the left to the center of the screen
-		// if global game timer is on an odd number (in which case this condition doesn't execute) then set string to end at posX of next DrawLine and use data.ptrColor[WHITE]
+		// this particular snippet is for drawing the TOTAL text in the time trial lap results screen before it flashes, at which point it moves from the left
+		// to the center of the screen if global game timer is on an odd number (in which case this condition doesn't execute) then set string to end at posX of
+		// next DrawLine and use data.ptrColor[WHITE]
 		if (((flags & 4) == 0) || (strFlags_but_its_also_posY = (JUSTIFY_RIGHT | WHITE), (gGT->timer & FPS_DOUBLE(2)) != 0))
 		{
 			strFlags_but_its_also_posY = (JUSTIFY_RIGHT | ORANGE);
@@ -172,25 +173,21 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 	// particularly used for relic race when the time is frozen
 	strFlags_but_its_also_posY = PERIWINKLE;
 
-	if
-	(
-		// if time isn't frozen or we're not in relic race
-		(gGT->frozenTimeRemaining == 0) &&
-		(
-			// set color to orange if the string shouldn't flash
-			strFlags_but_its_also_posY = ORANGE,
+	if (
+	    // if time isn't frozen or we're not in relic race
+	    (gGT->frozenTimeRemaining == 0) && (
+	                                           // set color to orange if the string shouldn't flash
+	                                           strFlags_but_its_also_posY = ORANGE,
 
-			// if the string (which is probably the total time text in the time trial lap results screen) should flash
-			(flags & 4) != 0
-		)
-	)
+	                                           // if the string (which is probably the total time text in the time trial lap results screen) should flash
+	                                           (flags & 4) != 0))
 	{
 		// use timer to change color on even and odd frames
 		// strFlags_but_its_also_posY equals either 4 (white) or 0 (orange)
 		strFlags_but_its_also_posY = (u_short)((gGT->timer & FPS_DOUBLE(2)) == 0) << 2;
 	}
 
-	#ifndef USE_ONLINE
+#ifndef USE_ONLINE
 	// OG game was "== 7"
 	// but now expand for Online
 	if (gGT->numLaps >= 7)
@@ -214,12 +211,12 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 	}
 
 	// Convert each number from the binary version of the number to the ascii version of the number by adding ascii value of '0'
-	totalTimeString[strOffset+0] = minutesOnes + '0';
-	totalTimeString[strOffset+2] = secondsTens + '0';
-	totalTimeString[strOffset+3] = secondsOnes + '0';
-	totalTimeString[strOffset+5] = msTens + '0';
-	totalTimeString[strOffset+6] = msOnes + '0';
-	#endif
+	totalTimeString[strOffset + 0] = minutesOnes + '0';
+	totalTimeString[strOffset + 2] = secondsTens + '0';
+	totalTimeString[strOffset + 3] = secondsOnes + '0';
+	totalTimeString[strOffset + 5] = msTens + '0';
+	totalTimeString[strOffset + 6] = msOnes + '0';
+#endif
 
 	// If in-race, reuse X and Y positions used for the TIME/TIME TRIAL text in the top left corner of the HUD for the actual time itself
 	// Except set the Y position to be lower
@@ -229,23 +226,24 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 		numParamY = ((u_int)textPosY + 8) * 0x10000;
 	}
 
-	// If in the time trial results screen, reuse X and Y positions used for the rightmost margin of the "TOTAL" text used for displaying the total time, and then adjust them accordingly
+	// If in the time trial results screen, reuse X and Y positions used for the rightmost margin of the "TOTAL" text used for displaying the total time, and
+	// then adjust them accordingly
 	else
 	{
 		posX = (int)(((u_int)textPosX + 0x11) * 0x10000) >> 0x10;
 		numParamY = (u_int)textPosY << 0x10;
 	}
 
-	// Draw String
-	#ifdef USE_ONLINE
+// Draw String
+#ifdef USE_ONLINE
 	char displayTime[15]; // 99:59:59.999 or BEST: 9:59.999
 	sprintf(displayTime, "%d:%02d:%02d.%03d", tt.hours, tt.minutes, tt.seconds, tt.miliseconds);
 	DECOMP_DecalFont_DrawLine(displayTime, posX, numParamY >> 0x10, FONT_BIG, (int)strFlags_but_its_also_posY);
-	#else
+#else
 	DECOMP_DecalFont_DrawLine(totalTimeString, posX, numParamY >> 0x10, FONT_BIG, (int)strFlags_but_its_also_posY);
-	#endif
+#endif
 
-	#ifdef USE_ONLINE
+#ifdef USE_ONLINE
 	if ((driver->driverID == 0) && (driver->lapIndex > 0))
 	{
 		ElapsedTimeToTotalTime(&tt, driver->bestLapTime);
@@ -260,13 +258,10 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 		DECOMP_DecalFont_DrawLine("LAST: ", posX, textPosY + 0x18 + 8, FONT_SMALL, RED);
 		DECOMP_DecalFont_DrawLine(displayTime, posX + data.font_charPixWidth[FONT_SMALL] * 5, textPosY + 0x18 + 8, FONT_SMALL, PERIWINKLE);
 	}
-	#else
-	if
-	(
-		// If you're not in a Relic Race
-		((gGT->gameMode1 & RELIC_RACE) == 0) ||
-		((flags & 2) != 0)
-	)
+#else
+	if (
+	    // If you're not in a Relic Race
+	    ((gGT->gameMode1 & RELIC_RACE) == 0) || ((flags & 2) != 0))
 	{
 		// If you're not in Arcade mode,
 		// nor Time Trial, nor adventure mode
@@ -291,10 +286,7 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 		{
 			if ((numLaps <= (int)lapIndex) && (numLaps < (char)gGT->numLaps))
 			{
-				DECOMP_UI_SaveLapTime(
-					lapIndex,
-					gGT->elapsedEventTime - driver->lapTime,
-					(u_int)driver->driverID);
+				DECOMP_UI_SaveLapTime(lapIndex, gGT->elapsedEventTime - driver->lapTime, (u_int)driver->driverID);
 
 				// custom code for optimization using this unrelated variable
 				iVar5 = (u_int)driver->driverID * 7 + numLaps;
@@ -314,17 +306,15 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 				// default
 				stringColor_but_its_also_relicColor = PERIWINKLE;
 
-				if
-				(
-					// if this is lap 1, and if lap 1 should flash
-					((numLaps == 0) && ((flags & 8) != 0)) ||
+				if (
+				    // if this is lap 1, and if lap 1 should flash
+				    ((numLaps == 0) && ((flags & 8) != 0)) ||
 
-					// if this is lap 2, and if lap 2 should flash
-					((numLaps == 1) && ((flags & 0x10) != 0)) ||
+				    // if this is lap 2, and if lap 2 should flash
+				    ((numLaps == 1) && ((flags & 0x10) != 0)) ||
 
-					// if this is lap 3, and if lap 3 should flash
-					((numLaps == 2) && ((flags & 0x20) != 0))
-				)
+				    // if this is lap 3, and if lap 3 should flash
+				    ((numLaps == 2) && ((flags & 0x20) != 0)))
 				{
 					// Change color based on frame counter
 					stringColor_but_its_also_relicColor = ((u_short)(gGT->timer >> FPS_DOUBLE(1)) ^ 1) & 1;
@@ -335,7 +325,8 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 				if ((flags & 1) == 0)
 				{
 					// If you're in Arcade Mode
-					if ((gGT->gameMode1 & ARCADE_MODE) != 0) goto LAB_8004f84c;
+					if ((gGT->gameMode1 & ARCADE_MODE) != 0)
+						goto LAB_8004f84c;
 
 					// Set lap number in "Ln" string
 					sdata->s_Ln[1] = (char)numLaps + '1';
@@ -368,10 +359,14 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 					lapTextHeight = (short *)(&data.font_charPixHeight[lapFontType]);
 
 					// draw string
-					DECOMP_DecalFont_DrawLine(local_38, unbitshiftTextPosX, (int)(((u_int)textPosY - ((char)gGT->numLaps - numLaps) * (int)*lapTextHeight) * 0x10000) >> 0x10, lapFontType, (JUSTIFY_RIGHT | RED));
+					DECOMP_DecalFont_DrawLine(local_38, unbitshiftTextPosX,
+					                          (int)(((u_int)textPosY - ((char)gGT->numLaps - numLaps) * (int)*lapTextHeight) * 0x10000) >> 0x10, lapFontType,
+					                          (JUSTIFY_RIGHT | RED));
 
 					// LAP
-					DECOMP_DecalFont_DrawLine(sdata->lngStrings[0x18], (int)(((u_int)textPosX - (u_int)data.font_charPixWidth[lapFontType])), (int)(((u_int)textPosY - ((char)gGT->numLaps - numLaps) * (int)*lapTextHeight) * 0x10000) >> 0x10, lapFontType, (JUSTIFY_RIGHT | RED));
+					DECOMP_DecalFont_DrawLine(sdata->lngStrings[0x18], (int)(((u_int)textPosX - (u_int)data.font_charPixWidth[lapFontType])),
+					                          (int)(((u_int)textPosY - ((char)gGT->numLaps - numLaps) * (int)*lapTextHeight) * 0x10000) >> 0x10, lapFontType,
+					                          (JUSTIFY_RIGHT | RED));
 
 					stringColor = (int)(short)stringColor_but_its_also_relicColor;
 					iVar7 = (int)(((u_int)textPosY - ((char)gGT->numLaps - numLaps) * (int)*lapTextHeight) * 0x10000) >> 0x10;
@@ -381,7 +376,7 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 				// draw string for total amount of time in race
 				DECOMP_DecalFont_DrawLine(&rdata.s_timeString_empty[0], iVar5, iVar7, lapFontType, stringColor);
 			}
-LAB_8004f84c:
+		LAB_8004f84c:
 			// lap counter
 			lapIndex = (u_int)driver->lapIndex;
 
@@ -391,14 +386,14 @@ LAB_8004f84c:
 			{
 				return;
 			}
-		} while( 1 );
+		} while (1);
 	}
 
 
 	// === Relic Race Only ===
 
-	unsigned int* rewardsSet = sdata->advProgress.rewards;
-	
+	unsigned int *rewardsSet = sdata->advProgress.rewards;
+
 	// If did not unlock relic, draw NEXT goal
 	if ((gGT->gameModeEnd & NEW_RELIC) == 0)
 	{
@@ -410,9 +405,9 @@ LAB_8004f84c:
 		// 16 is bit index for unlocking blue relics
 
 		// if you have gold, draw platinum
-		if(CHECK_ADV_BIT(rewardsSet, (gGT->levelID + 0x28)) != 0)
+		if (CHECK_ADV_BIT(rewardsSet, (gGT->levelID + 0x28)) != 0)
 		{
-DrawPlatinum:
+		DrawPlatinum:
 			str = 200;
 			stringColor_but_its_also_relicColor = SILVER;
 			goto LAB_8004f378;
@@ -429,7 +424,8 @@ DrawPlatinum:
 	else
 	{
 		// if owned plat, draw plat
-		if(CHECK_ADV_BIT(rewardsSet, (gGT->levelID + 0x3a)) != 0) goto DrawPlatinum;
+		if (CHECK_ADV_BIT(rewardsSet, (gGT->levelID + 0x3a)) != 0)
+			goto DrawPlatinum;
 
 		// if own gold, draw gold,
 		// if own blue, draw blue
@@ -485,6 +481,7 @@ LAB_8004f378:
 	sdata->raceClockStr[3] = sdata->relicTime_1sec + '0';
 	sdata->raceClockStr[5] = sdata->relicTime_10ms + '0';
 	sdata->raceClockStr[6] = sdata->relicTime_1ms + '0';
-	DECOMP_DecalFont_DrawLine(sdata->raceClockStr, (int)(short)uVar11, (int)strFlags_but_its_also_posY, FONT_BIG, (int)(short)(stringColor_but_its_also_relicColor & (0xffff ^ JUSTIFY_RIGHT)));
-	#endif
+	DECOMP_DecalFont_DrawLine(sdata->raceClockStr, (int)(short)uVar11, (int)strFlags_but_its_also_posY, FONT_BIG,
+	                          (int)(short)(stringColor_but_its_also_relicColor & (0xffff ^ JUSTIFY_RIGHT)));
+#endif
 }

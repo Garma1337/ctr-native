@@ -11,10 +11,10 @@ void DECOMP_MM_TrackSelect_Init()
 
 	// set track index to the index selected in track selection menu, starts at 0 for both Arcade and Battle
 	D230.menuTrackSelect.rowSelected = sdata->trackSelBackup;
-	
+
 	// 12 frames when moving between selection
 	D230.trackSel_transitionFrames = FPS_DOUBLE(12);
-	
+
 	// Set menu and num of tracks based on game mode
 	if ((sdata->gGT->gameMode1 & BATTLE_MODE) != 0)
 	{

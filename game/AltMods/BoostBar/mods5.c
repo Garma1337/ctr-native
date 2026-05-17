@@ -1,11 +1,11 @@
-void DrawBoostBar(short posX, short posY, struct Driver* driver)
+void DrawBoostBar(short posX, short posY, struct Driver *driver)
 {
 #ifdef USE_ONLINE
 	const int numberBarDivisions = 5;
 	const Color barEmptyColor = MakeColor(0x80, 0x80, 0x80);
 #endif
 
-	struct GameTracker* gGT = sdata->gGT;
+	struct GameTracker *gGT = sdata->gGT;
 	short fullHeight = 3;
 #ifdef USE_ONLINE
 	short fullWidth = WIDE_34(96);
@@ -18,7 +18,10 @@ void DrawBoostBar(short posX, short posY, struct Driver* driver)
 #else
 	short fullWidth = WIDE_34(49);
 	short meterLength = ((driver->reserves * 0xE) / 0x960);
-	if ((meterLength > fullWidth) || (driver->reserves < 0)) { meterLength = fullWidth; }
+	if ((meterLength > fullWidth) || (driver->reserves < 0))
+	{
+		meterLength = fullWidth;
+	}
 #endif
 
 	RECT box;
@@ -29,7 +32,7 @@ void DrawBoostBar(short posX, short posY, struct Driver* driver)
 	box.w = fullWidth;
 	box.h = fullHeight;
 
-	struct DB* backDB = gGT->backBuffer;
+	struct DB *backDB = gGT->backBuffer;
 
 	DECOMP_CTR_Box_DrawWireBox(&box, MakeColor(0, 0, 0), gGT->pushBuffer_UI.ptrOT);
 
@@ -38,15 +41,22 @@ void DrawBoostBar(short posX, short posY, struct Driver* driver)
 	int remainder = fullWidth % numberBarDivisions;
 	for (int i = 0; i < numberBarDivisions - 1; i++)
 	{
-		LineF2* p;
+		LineF2 *p;
 		GetPrimMem(p);
-		if (p == nullptr) { return; }
+		if (p == nullptr)
+		{
+			return;
+		}
 
-		const PrimCode primCode = { .line = {.renderCode = RenderCode_Line } };
+		const PrimCode primCode = {.line = {.renderCode = RenderCode_Line}};
 		const Color colorCode = MakeColorCode(0, 0, 0, primCode);
 		p->colorCode = colorCode;
 		s16 xPos = posX - (spacing * (i + 1));
-		if (remainder > 0) { xPos--; remainder--; }
+		if (remainder > 0)
+		{
+			xPos--;
+			remainder--;
+		}
 		p->v[0].pos.x = xPos;
 		p->v[0].pos.y = topY;
 		p->v[1].pos.x = xPos;
@@ -55,7 +65,7 @@ void DrawBoostBar(short posX, short posY, struct Driver* driver)
 	}
 #endif
 
-	const PrimCode primCode = { .poly = {.quad = 1, .renderCode = RenderCode_Polygon } };
+	const PrimCode primCode = {.poly = {.quad = 1, .renderCode = RenderCode_Polygon}};
 
 #ifdef USE_ONLINE
 	char s_barsCompleted[15];
@@ -65,37 +75,47 @@ void DrawBoostBar(short posX, short posY, struct Driver* driver)
 	ColorCode colorCode;
 	ColorCode bgBarColor = barEmptyColor;
 	Color HsvToRgb(int h, int s, int v);
-	if (numFullBarsFilled > 0) { bgBarColor = HsvToRgb(5 * numberBarDivisions * (numFullBarsFilled - 1), (int)(255 * 0.5), (int)(255 * 0.5)); }
+	if (numFullBarsFilled > 0)
+	{
+		bgBarColor = HsvToRgb(5 * numberBarDivisions * (numFullBarsFilled - 1), (int)(255 * 0.5), (int)(255 * 0.5));
+	}
 	colorCode = HsvToRgb(5 * numBarsFilled, (int)(255 * 0.9), (int)(255 * 1.0));
 	colorCode.code = primCode;
 	bgBarColor.code = primCode;
 #else
 	/* === BoostBar ===
-		red: 0-2s
-		yellow: 2s-4s
-		green: 4s-full
-		blue: full-saffi
-		purple: saffi */
+	    red: 0-2s
+	    yellow: 2s-4s
+	    green: 4s-full
+	    blue: full-saffi
+	    purple: saffi */
 	ColorCode colorCode = MakeColorCode(0xFF, 0, 0, primCode); // red
-	if (driver->reserves < 0) {
+	if (driver->reserves < 0)
+	{
 		colorCode = MakeColorCode(0xFF, 0x0, 0xFF, primCode); // purple
 	}
-	else if (meterLength == fullWidth) {
+	else if (meterLength == fullWidth)
+	{
 		colorCode = MakeColorCode(0, 0, 0xFF, primCode); // blue
 	}
-	else if (driver->reserves >= SECONDS(4)) {
+	else if (driver->reserves >= SECONDS(4))
+	{
 		colorCode = MakeColorCode(0, 0xFF, 0, primCode); // green
 	}
-	else if (driver->reserves >= SECONDS(2)) {
+	else if (driver->reserves >= SECONDS(2))
+	{
 		colorCode = MakeColorCode(0xFF, 0xFF, 0, primCode); // yellow
 	}
 #endif
 
 	for (int i = 0; i < 2; i++)
 	{
-		PolyF4* p;
+		PolyF4 *p;
 		GetPrimMem(p);
-		if (p == nullptr) { return; }
+		if (p == nullptr)
+		{
+			return;
+		}
 
 		p->colorCode = colorCode;
 		p->v[0].pos.x = posX - meterLength;

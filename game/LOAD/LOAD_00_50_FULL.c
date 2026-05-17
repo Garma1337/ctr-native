@@ -52,10 +52,10 @@
 #include "LOAD_49_IsOpen_AdvHub.c"
 #include "LOAD_50_IsOpen_Podiums.c"
 
-#if defined (USE_ALTMODS)
+#if defined(USE_ALTMODS)
 #include "../AltMods/Mods4.c"
 
-void __attribute__ ((section (".end"))) Mods4_EndOfFile()
+void __attribute__((section(".end"))) Mods4_EndOfFile()
 {
 	// leave empty
 }

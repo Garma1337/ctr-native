@@ -5,9 +5,9 @@
 
 #pragma once
 
-//#warning "<sys/types.h> and u_* types are deprecated, use <stdint.h> instead"
+// #warning "<sys/types.h> and u_* types are deprecated, use <stdint.h> instead"
 
-typedef unsigned char		u_char;
-typedef unsigned short		u_short;
-typedef unsigned int		u_int;
-typedef unsigned long		u_long;
+typedef unsigned char u_char;
+typedef unsigned short u_short;
+typedef unsigned int u_int;
+typedef unsigned long u_long;

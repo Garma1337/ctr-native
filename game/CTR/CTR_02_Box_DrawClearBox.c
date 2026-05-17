@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_CTR_Box_DrawClearBox(RECT * r, Color* color, int transparency, u_long * ot)
+void DECOMP_CTR_Box_DrawClearBox(RECT *r, Color *color, int transparency, u_long *ot)
 {
 	typedef struct TPage_PolyF4
 	{
@@ -8,14 +8,17 @@ void DECOMP_CTR_Box_DrawClearBox(RECT * r, Color* color, int transparency, u_lon
 		PolyF4 p;
 	} TPage_PolyF4;
 
-	TPage_PolyF4 * p;
+	TPage_PolyF4 *p;
 	GetPrimMem(p);
-	if (p == nullptr) { return; }
+	if (p == nullptr)
+	{
+		return;
+	}
 
-	p->t.texpage = (Texpage){ .code = 0xE1, .semiTransparency = transparency, .dither = 1 };
+	p->t.texpage = (Texpage){.code = 0xE1, .semiTransparency = transparency, .dither = 1};
 	p->p.tag.self = 0;
 
-	const PrimCode primCode = { .poly = { .renderCode = RenderCode_Polygon, .quad = 1, .semiTransparency = 1 } };
+	const PrimCode primCode = {.poly = {.renderCode = RenderCode_Polygon, .quad = 1, .semiTransparency = 1}};
 	color->code = primCode;
 	p->p.colorCode = *color;
 
@@ -31,10 +34,10 @@ void DECOMP_CTR_Box_DrawClearBox(RECT * r, Color* color, int transparency, u_lon
 	p->p.v[2].pos.y = bottomY;
 	p->p.v[3].pos.x = bottomX;
 	p->p.v[3].pos.y = bottomY;
-	
-	#ifdef REBUILD_PC
+
+#ifdef REBUILD_PC
 	((TPage *)p)->texpage.drawDisplayArea = 1;
-	#endif
+#endif
 
 	AddPrimitive(p, ot);
 }

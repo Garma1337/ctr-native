@@ -26,24 +26,29 @@
 
 /* Structure definitions */
 
-typedef struct _MATRIX {
+typedef struct _MATRIX
+{
 	int16_t m[3][3];
 	int32_t t[3];
 } MATRIX;
 
-typedef struct _VECTOR {
+typedef struct _VECTOR
+{
 	int32_t vx, vy, vz;
 } VECTOR;
 
-typedef struct _SVECTOR {
+typedef struct _SVECTOR
+{
 	int16_t vx, vy, vz, pad;
 } SVECTOR;
 
-typedef struct _CVECTOR {
+typedef struct _CVECTOR
+{
 	uint8_t r, g, b, cd;
 } CVECTOR;
 
-typedef struct _DVECTOR {
+typedef struct _DVECTOR
+{
 	int16_t vx, vy;
 } DVECTOR;
 

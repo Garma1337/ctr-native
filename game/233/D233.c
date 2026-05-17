@@ -6,17 +6,15 @@
 
 #include <common.h>
 
-#define PSX_OVR233_BASE 0x800AB9F0U
+#define PSX_OVR233_BASE  0x800AB9F0U
 #define OVR233_DATA_SIZE 48528
 
-asm(
-	".section .rodata\n"
-	".global _ovr233_overlay_data\n"
-	".align 4\n"
-	"_ovr233_overlay_data:\n"
-	".incbin \"/home/aalhendi/dev/ctr/CTR-ModSDK/build/ctr-u/bigfile/overlays/233_Threads_Cutscene.bin\"\n"
-	".previous\n"
-);
+asm(".section .rodata\n"
+    ".global _ovr233_overlay_data\n"
+    ".align 4\n"
+    "_ovr233_overlay_data:\n"
+    ".incbin \"/home/aalhendi/dev/ctr/CTR-ModSDK/build/ctr-u/bigfile/overlays/233_Threads_Cutscene.bin\"\n"
+    ".previous\n");
 
 extern char _ovr233_overlay_data[];
 

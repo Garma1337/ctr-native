@@ -1,9 +1,9 @@
 #include <common.h>
 
-void DECOMP_ElimBG_ToggleInstance(struct Instance* inst, char boolGameIsPaused)
+void DECOMP_ElimBG_ToggleInstance(struct Instance *inst, char boolGameIsPaused)
 {
 	u_int flags;
-	
+
 	// if game is being paused
 	if (boolGameIsPaused)
 	{

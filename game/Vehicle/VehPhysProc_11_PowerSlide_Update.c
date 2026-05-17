@@ -1,16 +1,16 @@
 #include <common.h>
 
 #ifdef USE_ONLINE
-void AssignMeterGrade(struct Driver* driver, int meterLeft);
+void AssignMeterGrade(struct Driver *driver, int meterLeft);
 #endif
 
-void DECOMP_VehPhysProc_PowerSlide_Update(struct Thread* t, struct Driver* d)
+void DECOMP_VehPhysProc_PowerSlide_Update(struct Thread *t, struct Driver *d)
 {
 	short noInputTime;
 	int incrementReserves;
 	int meterLeft;
 	int highMeter;
-	struct GamepadBuffer* pad = &sdata->gGamepads->gamepad[d->driverID];
+	struct GamepadBuffer *pad = &sdata->gGamepads->gamepad[d->driverID];
 
 	// This is the distance remaining that can be filled
 	meterLeft = d->turbo_MeterRoomLeft;
@@ -89,16 +89,16 @@ void DECOMP_VehPhysProc_PowerSlide_Update(struct Thread* t, struct Driver* d)
 
 				DECOMP_VehFire_Increment(
 
-					// driver
-					d,
+				    // driver
+				    d,
 
-					// amount of reserves
-					incrementReserves,
+				    // amount of reserves
+				    incrementReserves,
 
-					2,
+				    2,
 
-					// fire level, bigger boost for attempt number (1,2, or 3)
-					d->KartStates.Drifting.numBoostsSuccess << 6);
+				    // fire level, bigger boost for attempt number (1,2, or 3)
+				    d->KartStates.Drifting.numBoostsSuccess << 6);
 
 				// increase the counter for number of times you've boosted in a row (0-3)
 				d->KartStates.Drifting.numBoostsSuccess++;
@@ -136,13 +136,12 @@ void DECOMP_VehPhysProc_PowerSlide_Update(struct Thread* t, struct Driver* d)
 	// If the "spin-out" constant is less than your drift counter
 	if ((d->const_Drifting_FramesTillSpinout < d->KartStates.Drifting.numFramesDrifting) ||
 
-		((d->speedApprox < 0 &&
-			(
-				// 2.0 seconds
-				noInputTime = 0x780,
+	    ((d->speedApprox < 0 && (
+	                                // 2.0 seconds
+	                                noInputTime = 0x780,
 
-				// if you're not on any turbo pad
-				(d->stepFlagSet & 3) == 0))))
+	                                // if you're not on any turbo pad
+	                                (d->stepFlagSet & 3) == 0))))
 	{
 		// Make the character spin out from too much drifting
 
@@ -158,16 +157,16 @@ void DECOMP_VehPhysProc_PowerSlide_Update(struct Thread* t, struct Driver* d)
 		// drift counter counts backwards during switchway drift: did switchway too long?
 		if ((d->KartStates.Drifting.numFramesDrifting < -d->const_Drifting_FramesTillSpinout) ||
 
-			// speed is less than half the driver's speed classStat
-			(((d->speed < d->const_Speed_ClassStat >> 1 ||
+		    // speed is less than half the driver's speed classStat
+		    (((d->speed < d->const_Speed_ClassStat >> 1 ||
 
-				((d->actionsFlagSet & 0x2028) != 0)) ||
+		       ((d->actionsFlagSet & 0x2028) != 0)) ||
 
-				// If the gamepad input is...
-				((pad->buttonsHeldCurrFrame &
+		      // If the gamepad input is...
+		      ((pad->buttonsHeldCurrFrame &
 
-					// does not include the jump button that you used to start drifting
-					d->buttonUsedToStartDrift) == 0))))
+		        // does not include the jump button that you used to start drifting
+		        d->buttonUsedToStartDrift) == 0))))
 		{
 			// Stop drifting, just drive
 			DECOMP_VehPhysProc_PowerSlide_Finalize(t, d);

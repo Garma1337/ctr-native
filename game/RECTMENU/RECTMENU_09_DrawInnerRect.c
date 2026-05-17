@@ -21,7 +21,7 @@ void DECOMP_RECTMENU_DrawInnerRect(RECT *r, int type, void *ot)
 	int *colorDataNormal;  // TODO(aalhendi): colorData1?
 	int *colorDataSpecial; // TODO(aalhendi): colorData2?
 	int drawMode;          // TODO(aalhendi): Check type?
-	RECT adjustedRect; // Using a single RECT for adjustments
+	RECT adjustedRect;     // Using a single RECT for adjustments
 
 	colorDataNormal = &sdata->battleSetup_Color_UI_1;
 	if ((type & 0x10) != 0)
@@ -33,11 +33,7 @@ void DECOMP_RECTMENU_DrawInnerRect(RECT *r, int type, void *ot)
 	{
 		Color color;
 		color.self = *colorDataNormal;
-		DECOMP_RECTMENU_DrawOuterRect_HighLevel
-		(
-			r, color,
-			(int)(short)(type | 0x20), ot
-		);
+		DECOMP_RECTMENU_DrawOuterRect_HighLevel(r, color, (int)(short)(type | 0x20), ot);
 	}
 
 	adjustedRect.x = r->x;
@@ -61,11 +57,11 @@ void DECOMP_RECTMENU_DrawInnerRect(RECT *r, int type, void *ot)
 			drawMode = ((type & 0x100) != 0) ? 2 : 0;
 			colorDataSpecial = ((type & 0x100) != 0) ? &sdata->DrawSolidBoxData[1] : &sdata->DrawSolidBoxData[2];
 
-			DECOMP_CTR_Box_DrawClearBox(&adjustedRect, (Color*)colorDataSpecial, drawMode, ot);
+			DECOMP_CTR_Box_DrawClearBox(&adjustedRect, (Color *)colorDataSpecial, drawMode, ot);
 		}
 		else
 		{
-			Color* color = (Color*)&sdata->DrawSolidBoxData[0];
+			Color *color = (Color *)&sdata->DrawSolidBoxData[0];
 			DECOMP_CTR_Box_DrawSolidBox(&adjustedRect, *color, ot);
 		}
 	}
@@ -81,14 +77,14 @@ void DECOMP_RECTMENU_DrawInnerRect(RECT *r, int type, void *ot)
 		adjustedRect.w = horizontalOffset;
 		adjustedRect.h = r->h;
 
-		int* color = &sdata->DrawSolidBoxData[0];
-		DECOMP_CTR_Box_DrawClearBox(&adjustedRect, (Color*)color, 0, ot); // Adjust and draw the box
+		int *color = &sdata->DrawSolidBoxData[0];
+		DECOMP_CTR_Box_DrawClearBox(&adjustedRect, (Color *)color, 0, ot); // Adjust and draw the box
 
 		adjustedRect.x = r->x + horizontalOffset;
 		adjustedRect.y = r->y + r->h;
 		adjustedRect.w = r->w - horizontalOffset;
 		adjustedRect.h = verticalOffset;
-		DECOMP_CTR_Box_DrawClearBox(&adjustedRect, (Color*)color, 0, ot);
+		DECOMP_CTR_Box_DrawClearBox(&adjustedRect, (Color *)color, 0, ot);
 	}
 
 	return;

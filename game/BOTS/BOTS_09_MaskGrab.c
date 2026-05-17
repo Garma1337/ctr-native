@@ -1,17 +1,17 @@
 #include <common.h>
 
-void DECOMP_BOTS_MaskGrab(struct Thread* botThread)
+void DECOMP_BOTS_MaskGrab(struct Thread *botThread)
 {
 	int midpoint;
-	struct NavFrame* frame;
-	struct NavFrame* nextframe;
-	struct Driver* bot;
-	struct MaskHeadWeapon* mask;
+	struct NavFrame *frame;
+	struct NavFrame *nextframe;
+	struct Driver *bot;
+	struct MaskHeadWeapon *mask;
 
-	
-	bot = botThread->object; // get object from thread
+
+	bot = botThread->object;          // get object from thread
 	frame = bot->botData.botNavFrame; // pointer to nav point
-	nextframe = frame + 1; // pointer to next nav point after this
+	nextframe = frame + 1;            // pointer to next nav point after this
 
 	// if the next nav point is a farther address than last point
 	if (sdata->NavPath_ptrHeader[bot->botData.botPath]->last <= nextframe)
@@ -22,7 +22,7 @@ void DECOMP_BOTS_MaskGrab(struct Thread* botThread)
 
 	bot->kartState = KS_MASK_GRABBED;
 
-	bot->botData.unk5a8 = (frame->unk[1]/2) << 8;
+	bot->botData.unk5a8 = (frame->unk[1] / 2) << 8;
 
 	// midpointX between nav frames
 	midpoint = (frame->pos[0] + (nextframe->pos[0] - frame->pos[0]) / 2) * 0x100;

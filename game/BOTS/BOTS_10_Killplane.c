@@ -1,14 +1,14 @@
 #include <common.h>
 
-void DECOMP_BOTS_Killplane(struct Thread* botThread)
+void DECOMP_BOTS_Killplane(struct Thread *botThread)
 {
 	char i;
 	char boolOverride;
 	char currNav;
 	char backCount;
 	short override;
-	struct NavFrame* frame;
-	struct Driver* bot;
+	struct NavFrame *frame;
+	struct Driver *bot;
 
 	// get object from thread
 	bot = botThread->object;

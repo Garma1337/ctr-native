@@ -2,8 +2,8 @@
 
 void DECOMP_Music_End(void)
 {
-    sdata->cseqBoolPlay = false;
+	sdata->cseqBoolPlay = false;
 
-    // no songs are playing
-    sdata->cseqHighestIndex = -1;
+	// no songs are playing
+	sdata->cseqHighestIndex = -1;
 }

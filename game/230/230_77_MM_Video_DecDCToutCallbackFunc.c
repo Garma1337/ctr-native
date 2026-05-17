@@ -2,36 +2,36 @@
 
 void DECOMP_MM_Video_DecDCToutCallbackFunc(void)
 {
-	// part of PSYQ BSS
-	#define StCdIntrFlag *(u_int *)0x8009ebf8
-	
-    if (((V230.flags & 1) != 0) && (StCdIntrFlag != 0))
-    {
-        StCdInterrupt();
+// part of PSYQ BSS
+#define StCdIntrFlag *(u_int *)0x8009ebf8
 
-        StCdIntrFlag = 0;
-    }
+	if (((V230.flags & 1) != 0) && (StCdIntrFlag != 0))
+	{
+		StCdInterrupt();
 
-    u_long *ot = BreakDraw();
+		StCdIntrFlag = 0;
+	}
 
-    LoadImage(&V230.slice, V230.out_Buf[V230.imgId]);
+	u_long *ot = BreakDraw();
 
-    /* update slice (rectangular strip) area to next one on the right */
-    V230.slice.x += V230.slice.w;
-    V230.imgId ^= 1;
+	LoadImage(&V230.slice, V230.out_Buf[V230.imgId]);
 
-    if (V230.frameCounter == V230.totalFrames)
-    {
-        V230.isDone = 1;
-    }
-    else
-    {
-        V230.frameCounter++;
-        DecDCTout(V230.out_Buf[V230.imgId], V230.field32_0x58);
-    }
+	/* update slice (rectangular strip) area to next one on the right */
+	V230.slice.x += V230.slice.w;
+	V230.imgId ^= 1;
 
-    if (ot != 0)
-    {
-        DrawOTag(ot);
-    }
+	if (V230.frameCounter == V230.totalFrames)
+	{
+		V230.isDone = 1;
+	}
+	else
+	{
+		V230.frameCounter++;
+		DecDCTout(V230.out_Buf[V230.imgId], V230.field32_0x58);
+	}
+
+	if (ot != 0)
+	{
+		DrawOTag(ot);
+	}
 }

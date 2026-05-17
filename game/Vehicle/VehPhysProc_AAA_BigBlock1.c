@@ -23,16 +23,16 @@
 #include "VehPhysProc_26_SpinLast_PhysLinear.c"
 #include "VehPhysProc_27_SpinLast_PhysAngular.c"
 #include "VehPhysProc_28_SpinLast_Init.c"
-//#include "VehPhysProc_29_SpinStop_Update.c" //TODO (not needed?)
-//#include "VehPhysProc_30_SpinStop_PhysLinear.c" //TODO (not needed?)
-//#include "VehPhysProc_31_SpinStop_PhysAngular.c" //TODO (not needed?)
+// #include "VehPhysProc_29_SpinStop_Update.c" //TODO (not needed?)
+// #include "VehPhysProc_30_SpinStop_PhysLinear.c" //TODO (not needed?)
+// #include "VehPhysProc_31_SpinStop_PhysAngular.c" //TODO (not needed?)
 #include "VehPhysProc_32_SpinStop_Animate.c"
 #include "VehPhysProc_33_SpinStop_Init.c"
 
-#if defined (USE_ALTMODS)
+#if defined(USE_ALTMODS)
 #include "../AltMods/Mods5.c"
 
-void __attribute__ ((section (".end"))) Mods5_EndOfFile()
+void __attribute__((section(".end"))) Mods5_EndOfFile()
 {
 	// leave empty
 }

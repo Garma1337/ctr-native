@@ -4,24 +4,24 @@
 struct HitboxDesc
 {
 	// check collision
-	struct Instance* inst;
-	struct Thread* thread;
-	struct Thread* bucket;
+	struct Instance *inst;
+	struct Thread *thread;
+	struct Thread *bucket;
 	struct BoundingBox bbox;
-	
+
 	// post collision
-	struct Thread* threadHit; // from bucket
-	void* funcThCollide;
+	struct Thread *threadHit; // from bucket
+	void *funcThCollide;
 };
 
 struct MaskHeadScratch
 {
 	// 0x1f800108
 	MATRIX m;
-	
+
 	// 0x1f800128
 	short rot[4];
-	
+
 	// 0x1f800130
 	short posOffset[4];
 };
@@ -35,7 +35,7 @@ struct MaskHeadWeapon
 	short duration;
 
 	// 0x8
-	struct Instance* maskBeamInst;
+	struct Instance *maskBeamInst;
 
 	// 0xC
 	short pos[3];
@@ -51,16 +51,16 @@ struct MaskHeadWeapon
 struct TrackerWeapon
 {
 	// 0x0
-	struct Driver* driverTarget; // being chased
+	struct Driver *driverTarget; // being chased
 
 	// 0x4
-	struct Driver* driverParent; // who shot me
+	struct Driver *driverParent; // who shot me
 
 	// 0x8
-	struct Instance* instParent; // of driver who shot me
+	struct Instance *instParent; // of driver who shot me
 
 	// 0xC
-	struct Particle* ptrParticle;
+	struct Particle *ptrParticle;
 
 	// 0x10
 	short vel[3];
@@ -72,7 +72,7 @@ struct TrackerWeapon
 
 	// 0x18
 	short dir[3];
-	
+
 	// 0x1e
 	short rotY;
 
@@ -87,50 +87,50 @@ struct TrackerWeapon
 	unsigned int distanceToTarget;
 
 	// === This point and beyond is Warpball ===
-	
+
 	// 0x2c
 	// lev->0x14c + "this" * 0xC
 	int respawnPointIndex;
-	
+
 	// 0x30
 	int fadeAway_frameCount5;
-	
+
 	// 0x34
 	// bitshift with driver->driverID
 	// one bit for every driver hit
 	u_int driversHit;
-	
+
 	// 0x38
 	// distY from track floor
 	int distFromGround;
 
 	// 0x3C
-	struct CheckpointNode* ptrNodeCurr;
+	struct CheckpointNode *ptrNodeCurr;
 
 	// 0x40
-	struct CheckpointNode* ptrNodeNext;
+	struct CheckpointNode *ptrNodeNext;
 
 	// 0x44
 	u_char nodeCurrIndex;
-	
+
 	// 0x45
 	u_char nodeNextIndex;
-	
+
 	// 0x46
 	short padding;
-	
+
 	// 0x48
 	int timeAlive;
-	
+
 	// 0x4c
 	int unk4c;
-	
+
 	// 0x50
 	short unk50;
-	
+
 	// 0x52
 	short turnAround;
-	
+
 	// 0x54
 	int framesSeekMine;
 
@@ -140,39 +140,39 @@ struct TrackerWeapon
 struct RainLocal
 {
 	// 0x0
-	struct RainLocal* next;
-	struct RainLocal* prev;
-	
+	struct RainLocal *next;
+	struct RainLocal *prev;
+
 	// 0x8
 	int frameCount;
-	
+
 	// 0xC
 	short unk1[4];
-	
+
 	// 0x14
 	short vel[4];
-	
+
 	// 0x1c
 	short pos[4];
-	
+
 	// 0x24
-	struct Instance* cloudInst;
-	
+	struct Instance *cloudInst;
+
 	// 0x28 -- size
 };
 
 struct RainCloud
 {
 	// 0x0
-	struct RainLocal* rainLocal;
-	
+	struct RainLocal *rainLocal;
+
 	// 0x4
 	short timeMS;
-	
+
 	// 0x6
 	// I guess this is used for randomizing the items?
 	short boolScrollItem;
-	
+
 	// size - 0x8
 };
 
@@ -180,27 +180,27 @@ struct Shield
 {
 	// 0x0
 	int animFrame;
-	
+
 	// 0x4
 	short duration;
-	
+
 	// 0x6
 	// & 1 - popped by VehPickState_NewState
 	// & 2 - shooting
 	// & 4 - blue shield
 	// & ??? - shooting
 	short flags;
-	
+
 	// 0x8
-	struct Instance* instColor;
-	
+	struct Instance *instColor;
+
 	// 0xC
-	struct Instance* instHighlight;
+	struct Instance *instHighlight;
 
 	// 0x10
 	short highlightRot[3];
 	short highlightTimer;
-	
+
 	// 0x18
 };
 
@@ -209,24 +209,24 @@ struct MineWeapon;
 struct WeaponSlot231
 {
 	// 0x0
-	struct WeaponSlot231* next;
-	struct WeaponSlot231* prev;
-	
+	struct WeaponSlot231 *next;
+	struct WeaponSlot231 *prev;
+
 	// 0x8
-	struct MineWeapon* mineWeapon;
+	struct MineWeapon *mineWeapon;
 };
 
 // Tnt, Nitro, Beaker
 struct MineWeapon
 {
 	// 0x0
-	struct Driver* driverTarget; // who hit me
+	struct Driver *driverTarget; // who hit me
 
 	// 0x4
-	struct Instance* instParent; // of driver who placed me
+	struct Instance *instParent; // of driver who placed me
 
 	// 0x8
-	struct Instance* crateInst; // if colliding with one
+	struct Instance *crateInst; // if colliding with one
 
 	// 0xc
 	short velocity[3];
@@ -245,11 +245,11 @@ struct MineWeapon
 	short numFramesOnHead;
 
 	// 0x18
-	struct WeaponSlot231* weaponSlot231;
+	struct WeaponSlot231 *weaponSlot231;
 
 	// 0x1C
 	// relative to driver
-	short deltaPos[3]; //Maybe SVECTOR but without padding?
+	short deltaPos[3]; // Maybe SVECTOR but without padding?
 
 	// 0x22
 	// how many more jumps until
@@ -259,7 +259,7 @@ struct MineWeapon
 	// 0x24
 	// number of frames that mine can't hurt parent
 	short frameCount_DontHurtParent;
-	
+
 	// 0x26
 	short tntSpinY;
 
@@ -267,9 +267,9 @@ struct MineWeapon
 	// 1 - red beaker
 	// 2 - thrown (papu or komodo joe) (tnt/potion)
 	u_short extraFlags;
-	
+
 	// 0x2a
-	short cooldown; 
+	short cooldown;
 };
 
 struct Baron
@@ -277,18 +277,18 @@ struct Baron
 	// 0x0
 	// for the baron plane
 	char unused[0x24];
-	
+
 	// 0x24
 	u_int soundID_flags;
-	
+
 	// 0x28
 	// unused, for baron
-	struct Instance* otherInst;
-	
+	struct Instance *otherInst;
+
 	// 0x2c
 	short pointIndex;
 	short footerPaddingUnused;
-	
+
 	// 0x30 bytes large
 };
 
@@ -303,7 +303,7 @@ struct Crate
 {
 	int cooldown;
 	int boolPauseCooldown;
-	
+
 	// 0x8 bytes large
 };
 
@@ -418,7 +418,7 @@ struct FlameJet
 	int cooldown;
 
 	// 0x10
-	void* audioPtr;
+	void *audioPtr;
 
 	// 0x14 bytes large
 };
@@ -426,10 +426,10 @@ struct FlameJet
 struct Follower
 {
 	int frameCount;
-	struct Driver* driver;
-	struct Thread* mineTh;
+	struct Driver *driver;
+	struct Thread *mineTh;
 	int backupTimesDestroyed;
-	
+
 	short realPos[4];
 };
 
@@ -516,7 +516,7 @@ struct Plant
 
 	// 0x2
 	short cooldown;
-	
+
 	// 0x4
 	// 0: left side of track
 	// 1: right side of track
@@ -608,7 +608,7 @@ struct Spider
 	short padding;
 
 	// 0xC
-	struct Instance* shadowInst;
+	struct Instance *shadowInst;
 
 	// end of struct, 8 bytes large
 };
@@ -634,12 +634,12 @@ struct Turtle
 {
 	// 0x0
 	short timer;
-	
+
 	// 0x2
 	// 0 from moment it hits top to moment it hits bottom
 	// 1 from moment it hits bottom to moment it hits top
 	short direction;
-	
+
 	// 0x4
 	short unk4;
 
@@ -654,25 +654,25 @@ struct Turtle
 	// 0xC bytes large
 };
 
-//where is this located? need to specify in gcc-syms926.txt
-//struct OverlayRDATA_231
+// where is this located? need to specify in gcc-syms926.txt
+// struct OverlayRDATA_231
 //{
 //
-//};
+// };
 
 struct OverlayDATA_231
 {
-	//written by TheUbMunster, this may be wrong/have mistakes!
+	// written by TheUbMunster, this may be wrong/have mistakes!
 
-	//0x800b2eb4
+	// 0x800b2eb4
 	struct WeaponSlot231 minePoolItem[40];
 
-	//0x800b2e9c
+	// 0x800b2e9c
 	struct LinkedList minePoolTaken;
 
-	//0x800b2ea8
+	// 0x800b2ea8
 	struct LinkedList minePoolFree;
 };
 
-//extern struct OverlayRDATA_231 R231;
+// extern struct OverlayRDATA_231 R231;
 extern struct OverlayDATA_231 D231;

@@ -7,17 +7,17 @@
 int DECOMP_GAMEPROG_CheckGhostsBeaten(int ghostID)
 {
 	int i;
-	
+
 	// check all tracks
-	for(i = 0; i < 18; i++)
+	for (i = 0; i < 18; i++)
 	{
 		// if a single track has not beaten this ghost
-		if((sdata->gameProgress.highScoreTracks[i].timeTrialFlags >> ghostID) == 0)
+		if ((sdata->gameProgress.highScoreTracks[i].timeTrialFlags >> ghostID) == 0)
 		{
 			return 0;
 		}
 	}
-	
+
 	// beaten on all tracks
 	return 1;
 }

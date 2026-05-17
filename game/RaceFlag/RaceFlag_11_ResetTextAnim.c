@@ -2,5 +2,5 @@
 
 void DECOMP_RaceFlag_ResetTextAnim(void)
 {
-    sdata->RaceFlag_LoadingTextAnimFrame = -1;
+	sdata->RaceFlag_LoadingTextAnimFrame = -1;
 }

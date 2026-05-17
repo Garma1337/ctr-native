@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_VehPhysProc_SpinFirst_Update(struct Thread* t, struct Driver* d)
+void DECOMP_VehPhysProc_SpinFirst_Update(struct Thread *t, struct Driver *d)
 {
 	int speedApprox;
 
@@ -9,10 +9,12 @@ void DECOMP_VehPhysProc_SpinFirst_Update(struct Thread* t, struct Driver* d)
 	{
 		// absolute value
 		speedApprox = d->speedApprox;
-		if (speedApprox < 0) speedApprox = -speedApprox;
+		if (speedApprox < 0)
+			speedApprox = -speedApprox;
 
 		// quit if moving quickly
-		if (speedApprox > 0x2ff) return;
+		if (speedApprox > 0x2ff)
+			return;
 	}
 
 	// if speed has slown to near-halt,

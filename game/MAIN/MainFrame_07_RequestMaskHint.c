@@ -21,17 +21,16 @@
 // 	0x01 - interrupting (CTR, Relic, or Crystal hints)
 void DECOMP_MainFrame_RequestMaskHint(short hintId, char interruptWarpPad)
 {
-  struct GameTracker* gGT = sdata->gGT;
-	
-  if (((gGT->gameMode1 & PAUSE_ALL) == 0) &&
-		(sdata->AkuHint_RequestedHint == -1))
-  {
-    sdata->AkuAkuHintState = 1;
+	struct GameTracker *gGT = sdata->gGT;
 
-    gGT->drivers[0]->funcPtrs[0] = DECOMP_VehPhysProc_FreezeEndEvent_Init;
+	if (((gGT->gameMode1 & PAUSE_ALL) == 0) && (sdata->AkuHint_RequestedHint == -1))
+	{
+		sdata->AkuAkuHintState = 1;
 
-	sdata->AkuHint_RequestedHint = hintId;
-	sdata->AkuHint_boolInterruptWarppad = interruptWarpPad;
-  }
-  return;
+		gGT->drivers[0]->funcPtrs[0] = DECOMP_VehPhysProc_FreezeEndEvent_Init;
+
+		sdata->AkuHint_RequestedHint = hintId;
+		sdata->AkuHint_boolInterruptWarppad = interruptWarpPad;
+	}
+	return;
 }

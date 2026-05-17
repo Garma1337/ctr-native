@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_VehPhysProc_PowerSlide_InitSetUpdate(struct Thread* t, struct Driver* d)
+void DECOMP_VehPhysProc_PowerSlide_InitSetUpdate(struct Thread *t, struct Driver *d)
 {
 	// This is so the update function
 	// is not called on the first frame,

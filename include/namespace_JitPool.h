@@ -7,7 +7,7 @@ struct JitPool
 	int maxItems;
 	unsigned int itemSize;
 	int poolSize;
-	void* ptrPoolData;
+	void *ptrPoolData;
 };
 
 _Static_assert(sizeof(struct JitPool) == 0x28);
