@@ -261,30 +261,30 @@ int DECOMP_LOAD_TenStages(struct GameTracker *gGT, int loadingStage, struct BigH
 		break;
 	}
 	case 3: {
-			// main menu + scrapbook, 230
-			if ((levelID != ADVENTURE_GARAGE) && ((gGT->gameMode1 & MAIN_MENU) != 0))
-			{
-				ovrRegion3 = 0;
-			}
+		// main menu + scrapbook, 230
+		if ((levelID != ADVENTURE_GARAGE) && ((gGT->gameMode1 & MAIN_MENU) != 0))
+		{
+			ovrRegion3 = 0;
+		}
 
-			// race threads, 231
-			else if (levelID <= LAB_BASEMENT)
-			{
-				ovrRegion3 = 1;
-			}
+		// race threads, 231
+		else if (levelID <= LAB_BASEMENT)
+		{
+			ovrRegion3 = 1;
+		}
 
-			// advHub, 232
-			else if ((levelID <= CITADEL_CITY) && (gGT->podiumRewardID == NOFUNC) // 0
-			)
-			{
-				ovrRegion3 = 2;
-			}
+		// advHub, 232
+		else if ((levelID <= CITADEL_CITY) && (gGT->podiumRewardID == NOFUNC) // 0
+		)
+		{
+			ovrRegion3 = 2;
+		}
 
-			// Cutscene, Credits, ND, Garage, Podium
-			else
-			{
-				ovrRegion3 = 3;
-			}
+		// Cutscene, Credits, ND, Garage, Podium
+		else
+		{
+			ovrRegion3 = 3;
+		}
 
 		DECOMP_LOAD_OvrThreads(ovrRegion3);
 		break;

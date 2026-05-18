@@ -436,7 +436,7 @@ void DECOMP_VehPhysProc_Driving_PhysLinear(struct Thread *thread, struct Driver 
 	    // if there is no tnt on your head
 	    (driver->instTntRecv == 0))
 	{
-	// If there is a Bomb Pointer
+		// If there is a Bomb Pointer
 		if (driver->instBombThrow != 0)
 		{
 			// Detonate the bomb

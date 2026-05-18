@@ -66,7 +66,7 @@ void DECOMP_MainFrame_GameLogic(struct GameTracker *gGT, struct GamepadSystem *g
 #endif
 				psVar9->clockFlash--;
 			}
-			LAB_80034e74:
+		LAB_80034e74:
 			pushBuffer = pushBuffer + 1;
 		}
 		gGT->timer = gGT->timer + 1;

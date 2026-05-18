@@ -8,9 +8,8 @@ void DECOMP_CAM_StartOfRace(struct CameraDC *cDC)
 	// if fly-in camera data exists and there is only one screen
 	if ((2 < level1->cnt_restart_points)
 
-// byte budget
-	    && (gGT->numPlyrCurrGame == 1)
-	)
+	    // byte budget
+	    && (gGT->numPlyrCurrGame == 1))
 	{
 		int flyInData = (int)level1->ptr_restart_points;
 		cDC->unk94 = 0;

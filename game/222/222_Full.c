@@ -555,12 +555,8 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 	// Player 2
 	lerpEndY = 0x41;
 
-// Player 1
-#ifdef USE_NEW2P
-	if (numPlyr == 1)
-#endif
-		if (driverId == 0)
-			lerpEndY = -0x3d;
+	if (driverId == 0)
+		lerpEndY = -0x3d;
 
 	// If race ended more than 10 seconds ago.
 	if (tenseconds)
@@ -571,14 +567,6 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 		lerpStartX = -0xae;
 		lerpEndX = DECOMP_UI_ConvertX_2(-100, hud[2].z);
 		lerpStartY = lerpEndY;
-
-#ifdef USE_NEW2P
-		if (driverId == 1)
-		{
-			lerpStartX = 0xae;
-			lerpEndX = 0x200 - lerpEndX;
-		}
-#endif
 	}
 
 	// If not
@@ -590,11 +578,6 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 		lerpStartX = DECOMP_UI_ConvertX_2(hud[2].x, hud[2].z);
 		lerpStartY = DECOMP_UI_ConvertY_2(hud[2].y, hud[2].z);
 		lerpEndX = -0xae;
-
-#ifdef USE_NEW2P
-		if (driverId == 1)
-			lerpEndX = 0xae;
-#endif
 	}
 
 	// interpolate fly-in positionXY
@@ -615,100 +598,43 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 	// Player 2
 	lerpEndY = 0x89;
 
-// Player 1
-#ifdef USE_NEW2P
-	if (numPlyr == 1)
-#endif
-		if (driverId == 0)
-			lerpEndY = 9;
+	if (driverId == 0)
+		lerpEndY = 9;
 
 	if (tenseconds)
 	{
 		lerpStartX = 0x78;
 		lerpStartY = lerpEndY;
 		lerpEndX = -0x3c;
-
-#ifdef USE_NEW2P
-		if (driverId == 1)
-		{
-			lerpStartX = 0x1d0;
-			lerpEndX = 0x260;
-		}
-#endif
 	}
 	else
 	{
 		lerpStartX = hud[5].x;
 		lerpStartY = hud[5].y;
 		lerpEndX = 0x78;
-
-#ifdef USE_NEW2P
-		if (driverId == 1)
-			lerpEndX = 0x1d0;
-#endif
 	}
 
 	DECOMP_UI_Lerp2D_Linear(&posXY[0], lerpStartX, lerpStartY, lerpEndX, lerpEndY, currFrame, endFrame);
 
 	DECOMP_UI_DrawPosSuffix(posXY[0], posXY[1], driver, 0);
 
-// === DrawRaceClock ===
+	// === DrawRaceClock ===
 
-// default
-#ifdef USE_NEW2P
-	if (numPlyr == 1)
+	lerpEndY = 0xc3;
+	if (driverId == 0)
+		lerpEndY = 0x3e;
+
+	if (tenseconds)
 	{
-#endif
-
-		lerpEndY = 0xc3;
-		if (driverId == 0)
-			lerpEndY = 0x3e;
-
-		if (tenseconds)
-		{
-			lerpStartX = 0x150;
-			lerpEndX = 0x27c;
-		}
-
-		else
-		{
-			lerpStartX = 0x218;
-			lerpEndX = 0x150;
-		}
-
-// new
-#ifdef USE_NEW2P
+		lerpStartX = 0x150;
+		lerpEndX = 0x27c;
 	}
 
 	else
 	{
-		lerpEndY = 0x3e;
-
-		if (tenseconds)
-		{
-			currFrame = framesElapsed + param_2 - 300;
-			endFrame = 0xf;
-
-			lerpStartX = gGT->pushBuffer[driverId].rect.x + 0x70;
-
-			lerpEndX = 0x268;
-			if (driverId == 0)
-				lerpEndX = -0x90;
-		}
-
-		else
-		{
-			currFrame = framesElapsed;
-			endFrame = 0x1e;
-
-			lerpStartX = 0x268;
-			if (driverId == 0)
-				lerpStartX = -0x90;
-
-			lerpEndX = gGT->pushBuffer[driverId].rect.x + 0x70;
-		}
+		lerpStartX = 0x218;
+		lerpEndX = 0x150;
 	}
-#endif
 
 	DECOMP_UI_Lerp2D_Linear(&posXY[0], lerpStartX, lerpEndY, lerpEndX, lerpEndY, currFrame, endFrame);
 

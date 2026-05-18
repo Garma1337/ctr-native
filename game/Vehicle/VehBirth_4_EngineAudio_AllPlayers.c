@@ -17,6 +17,5 @@ void DECOMP_VehBirth_EngineAudio_AllPlayers(void)
 #ifndef REBUILD_PS1
 		EngineAudio_InitOnce((engine * 4) + driverID, 0x8080);
 #endif
-
 	}
 }

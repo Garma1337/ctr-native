@@ -27,8 +27,8 @@ void DECOMP_UI_Map_DrawDrivers(int ptrMap, struct Thread *bucket, short *param_3
 		// default (AI)
 		iconID = 0x31;
 
-// TO-DO: Should we just spawn player threads
-// and enable the AI flag anyway? What would it do?
+		// TO-DO: Should we just spawn player threads
+		// and enable the AI flag anyway? What would it do?
 		// if this is human and not AI
 		if ((d->actionsFlagSet & 0x100000) == 0)
 

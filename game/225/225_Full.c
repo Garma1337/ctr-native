@@ -312,8 +312,6 @@ void DECOMP_VB_EndEvent_DrawMenu(void)
 
 			sStack104 = 1;
 
-// default
-#ifndef USE_NEW2P
 			if (
 			    // If there are two players
 			    (numPlyr == 2) &&
@@ -323,19 +321,6 @@ void DECOMP_VB_EndEvent_DrawMenu(void)
 				view->rect.w -= 0xc;
 				view->distanceToScreen_CURR = 0x80;
 			}
-
-// vertical 2P split
-#else
-			if (
-			    // If there are two players
-			    (numPlyr == 2) &&
-
-			    (0x6c < view->rect.h))
-			{
-				view->rect.h -= 0x6;
-				view->distanceToScreen_CURR = 0x80;
-			}
-#endif
 
 			// fly-in interpolation
 			DECOMP_UI_Lerp2D_Linear(&pos[0], view->rect.x, view->rect.y, 0x14, 0xc, sdata->framesSinceRaceEnded, 25);
@@ -366,17 +351,6 @@ void DECOMP_VB_EndEvent_DrawMenu(void)
 				view->rect.w -= 10;
 				view->rect.h -= 6;
 			}
-
-#ifdef USE_NEW2P
-			// this is required cause rendering is stopped
-			// if h<0, but not if w<0, and w reaches zero
-			// faster than h because of the mod
-			if (view->rect.w < 0)
-			{
-				view->rect.w = 0;
-				view->rect.h = 0;
-			}
-#endif
 		}
 	}
 

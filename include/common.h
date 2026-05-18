@@ -5,7 +5,6 @@
 
 // 2mb
 // #define USE_16BY9		// Widescreen
-// #define USE_NEW2P		// Requires 16BY9: Side-By-Side 2P
 // #define USE_OXIDE		// Unlock Oxide
 // #define USE_PENTA		// Penta Max Stats
 // #define USE_HARDER	// Difficulty Selector (Arcade)

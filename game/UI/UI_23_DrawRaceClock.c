@@ -221,7 +221,7 @@ void DECOMP_UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct
 		numParamY = (u_int)textPosY << 0x10;
 	}
 
-// Draw String
+	// Draw String
 	DECOMP_DecalFont_DrawLine(totalTimeString, posX, numParamY >> 0x10, FONT_BIG, (int)strFlags_but_its_also_posY);
 
 	if (

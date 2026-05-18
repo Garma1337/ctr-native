@@ -36,8 +36,8 @@ void DECOMP_UI_Lerp2D_Angular(short *ptrPos, short drawnPosition, short absolute
 		ptrPos[0] = 0x14 - (short)(angle * 0x14 >> 0xc);
 	}
 
-// absolutePositionInt - drawnPositionInt is either -1 or +1
-// 0x1b is vertical size of the icon
+	// absolutePositionInt - drawnPositionInt is either -1 or +1
+	// 0x1b is vertical size of the icon
 	ptrPos[1] =
 
 	    // Y value where all icons start

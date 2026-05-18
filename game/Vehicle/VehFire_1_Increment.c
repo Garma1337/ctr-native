@@ -270,8 +270,7 @@ void DECOMP_VehFire_Increment(struct Driver *driver, int reserves, u_int type, i
 	        // Current speed cap is greater than 0x1000
 	        // AND
 	        // You are not on a super turbo pad
-	        (int)driver->const_SacredFireSpeed < (int)driver->fireSpeedCap && ((driver->stepFlagSet & 2) == 0)
-	        ))
+	        (int)driver->const_SacredFireSpeed < (int)driver->fireSpeedCap && ((driver->stepFlagSet & 2) == 0)))
 
 	{
 		driver->fireSpeedCap = (short)newFireSpeedCap;
@@ -306,7 +305,7 @@ void DECOMP_VehFire_Increment(struct Driver *driver, int reserves, u_int type, i
 	// startline, hang time, powerslide
 	else if (!(type & 1))
 	{
-// increase reserves BY param2
+		// increase reserves BY param2
 		driver->reserves += reserves;
 	}
 

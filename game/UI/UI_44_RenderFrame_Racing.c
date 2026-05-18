@@ -187,11 +187,9 @@ void DECOMP_UI_RenderFrame_Racing()
 
 			if (
 			    // numPlyrCurrGame is less than 2 (1P mode)
-			    (numPlyr < 2)
-			    &&
+			    (numPlyr < 2) &&
 			    // if want to draw speedometer
-			    ((sdata->HudAndDebugFlags & 8) != 0)
-			)
+			    ((sdata->HudAndDebugFlags & 8) != 0))
 			{
 				DECOMP_UI_DrawSpeedNeedle(hudStructPtr[9].x + offset, hudStructPtr[9].y, playerStruct);
 				DECOMP_UI_JumpMeter_Draw(hudStructPtr[6].x, hudStructPtr[6].y, playerStruct);
@@ -761,8 +759,7 @@ void DECOMP_UI_RenderFrame_Racing()
 		if (((numPlyr == 1)
 
 		     // if want to draw map, not speedometer
-		     && (sdata->HudAndDebugFlags & 8) == 0
-		     ) ||
+		     && (sdata->HudAndDebugFlags & 8) == 0) ||
 
 		    (numPlyr == 3))
 		{

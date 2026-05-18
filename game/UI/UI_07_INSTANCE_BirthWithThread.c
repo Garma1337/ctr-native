@@ -179,13 +179,7 @@ struct Instance *DECOMP_UI_INSTANCE_BirthWithThread(int param_1, int param_2, in
 		}
 		else
 		{
-#ifdef USE_NEW2P
-			if (gGT->numPlyrCurrGame == 2)
-				lVar7 = ratan2((inst->matrix.t[1] * 4) / 3, inst->matrix.t[2]);
-			else
-#endif
-
-				lVar7 = ratan2(inst->matrix.t[1], inst->matrix.t[2]);
+			lVar7 = ratan2(inst->matrix.t[1], inst->matrix.t[2]);
 			rot[0] = -(short)lVar7;
 		}
 		rot[1] = 0;
@@ -204,7 +198,6 @@ struct Instance *DECOMP_UI_INSTANCE_BirthWithThread(int param_1, int param_2, in
 
 		// TODO: use enum for hud elements
 		hudStruct += 0x14;
-
 	}
 
 	return inst;

@@ -144,7 +144,6 @@ void DECOMP_UI_DrawRankedDrivers(void)
 
 		for (iVar14 = 0; iVar14 < 8; iVar14++)
 		{
-
 			short *curr = &data.rankIconsCurr[iVar14];
 			short *des = &data.rankIconsDesired[iVar14];
 
@@ -212,7 +211,6 @@ void DECOMP_UI_DrawRankedDrivers(void)
 				    gGT->pushBuffer_UI.ptrOT,
 
 				    1, iconScale, color);
-
 			}
 		}
 	}
@@ -309,14 +307,6 @@ void DECOMP_UI_DrawRankedDrivers(void)
 			int posX = uVar11 + 5;
 			int posY = 0x66;
 
-#ifdef USE_NEW2P
-			if (numPlyr == 2)
-			{
-				posX = 0xF4;
-				posY = ((uVar11 + 5) * 0xd8) / 0x200;
-			}
-#endif
-
 			DECOMP_DecalHUD_DrawPolyGT4(gGT->ptrIcons[data.MetaDataCharacters[data.characterIDs[iVar14]].iconID], posX, posY,
 
 			                            // pointer to PrimMem struct
@@ -408,14 +398,6 @@ void DECOMP_UI_DrawRankedDrivers(void)
 
 			int posX = (iVar12 / iVar15) + 5;
 			int posY = 0x66;
-
-#ifdef USE_NEW2P
-			if (numPlyr == 2)
-			{
-				posX = 0xF4;
-				posY = (((iVar12 / iVar15) + 5) * 0xd8) / 0x200;
-			}
-#endif
 
 			DECOMP_DecalHUD_DrawWeapon(
 			    // warpball icon

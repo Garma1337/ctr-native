@@ -39,24 +39,11 @@ void DECOMP_PushBuffer_Init(struct PushBuffer *pb, int id, int total)
 	pb->distanceToScreen_PREV = 0x100;
 	pb->distanceToScreen_CURR = 0x100;
 
-#ifdef USE_NEW2P
-
-	pb->rect.w = (total == 1) ? 0x200 : 0xfd;
-	pb->rect.h = SIZEY_1P;
-
-	pb->rect.x = (id & 1) * 0x103;
-	pb->rect.y = 0;
-
-// default 4:3
-#else
-
 	pb->rect.w = 0x200;
 	pb->rect.h = (total == 1) ? SIZEY_1P : SIZEY_TOP;
 
 	pb->rect.x = 0;
 	pb->rect.y = (id == 0) ? 0 : SIZEY_TOP + 4;
-
-#endif
 
 	return;
 }

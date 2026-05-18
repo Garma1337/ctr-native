@@ -54,8 +54,8 @@ void DECOMP_VehBirth_TeleportSelf(struct Driver *d, u_char spawnFlag, int spawnP
 		rotDeltaY = 0;
 	}
 
-// always spawn using the
-// 8-place starting line
+	// always spawn using the
+	// 8-place starting line
 
 	// If just obtained Roo boss key
 	// spawn in front of hub door, beach-to-gemstone
@@ -327,8 +327,7 @@ void DECOMP_VehBirth_TeleportSelf(struct Driver *d, u_char spawnFlag, int spawnP
 
 	if (dInst->thread->modelIndex == DYNAMIC_PLAYER)
 	{
-
-			DECOMP_CAM_StartOfRace(&gGT->cameraDC[d->driverID]);
+		DECOMP_CAM_StartOfRace(&gGT->cameraDC[d->driverID]);
 
 		dInst->thread->funcThTick = ((gGT->gameMode1 & (GAME_CUTSCENE | MAIN_MENU)) == 0) ? NULL : DECOMP_VehBirth_NullThread;
 

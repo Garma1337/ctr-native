@@ -38,7 +38,7 @@ void DECOMP_VehPhysProc_SpinFirst_Init(struct Thread *t, struct Driver *d)
 	}
 
 #ifndef REBUILD_PS1
-		Voiceline_RequestPlay(3, data.characterIDs[d->driverID], 0x10);
+	Voiceline_RequestPlay(3, data.characterIDs[d->driverID], 0x10);
 #endif
 
 	// if spinning left
