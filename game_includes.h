@@ -17,6 +17,8 @@
 
 #define SquareRoot0_stub   SquareRoot0
 
+#include "game/RenderBucket/RenderBucket_08_InitDepthGTE.c"
+
 #include "game/MAIN/MAIN_AAA_BigBlock1.c"
 
 #include "game/CAMERA/CAM_01_ClearScreen.c"
