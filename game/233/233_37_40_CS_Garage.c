@@ -32,7 +32,7 @@ void DECOMP_CS_Garage_ZoomOut(char zoomState)
 	}
 }
 
-
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b7834-0x800b854c
 void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 {
 	short garageFrames;
@@ -45,7 +45,8 @@ void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 	u_int currSelectIndex = sdata->advCharSelectIndex_curr;
 	struct GameTracker *gGT = sdata->gGT;
 	struct PrimMem *primMem = &gGT->backBuffer->primMem;
-	struct MetaDataCHAR *MDC = &data.MetaDataCharacters[currSelectIndex];
+	short currCharacterID = gGarage.unusedArr_garageChars[currSelectIndex];
+	struct MetaDataCHAR *MDC = &data.MetaDataCharacters[currCharacterID];
 	int nameIndex = MDC->name_LNG_long;
 	RECT r;
 
@@ -64,10 +65,8 @@ void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 	// At this point, there must not be a transition
 	// between drivers, so start drawing the UI
 
-#if 0
 	// count frames in garage?
-    gGarage.unusedFrameCount++;
-#endif
+	gGarage.unusedFrameCount++;
 
 	// animate growth of all three stat bars
 	for (i = 0; i < 3; i++)
@@ -132,14 +131,8 @@ void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 
 	u_short statBarShadows_Y = 34;
 
-#if 0
-	// remove array at 800b85f0,
-	// it's 0x248, 0x249, 0x24A,
-	// instead just do 0x248 + index
-#endif
-
 	// Draw class name
-	DECOMP_DecalFont_DrawLine(sdata->lngStrings[0x248 + i], classNamePosX, 15, FONT_BIG, (JUSTIFY_CENTER | ORANGE));
+	DECOMP_DecalFont_DrawLine(sdata->lngStrings[gGarage.unusedArr_lngIndex[i]], classNamePosX, 15, FONT_BIG, (JUSTIFY_CENTER | ORANGE));
 
 	// bar length (animated)
 
@@ -169,7 +162,7 @@ void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 		int segmentStart = 0;
 		int segmentEnd = segmentLen;
 
-		for (int segmentIndex = 0; segmentIndex < 7; segmentIndex++)
+		for (int segmentIndex = 0; segmentIndex < 6; segmentIndex++)
 		{
 			// color data of bars (blue green yellow red)
 			u_int *barColor = &gGarage.barColors[segmentIndex];
@@ -191,7 +184,7 @@ void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 				POLY_G4 *p = primMem->curr;
 
 				// quit if prim mem runs out
-				if (p + 2 >= primMem->end)
+				if (primMem->end < (void *)p)
 					return;
 
 				primMem->curr = p + 1;
@@ -248,16 +241,6 @@ void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 
 	// Draw 2D Menu rectangle background
 	DECOMP_RECTMENU_DrawInnerRect(&r, 4, gGT->backBuffer->otMem.startPlusFour);
-
-#if 0
-	// Original game uses array at 800b85d8,
-	// we remove the usage cause it's just 0,1,2,3,4,5,6,7,
-	// this array is used in Oxide Fix (Garage_Init+0x80),
-	// so we can adjust the mod to fit the new code
-
-	// otherwise would be
-	// lngStrings[metadata[800b85d8[charSelectIndex]].nameLNG]
-#endif
 
 	char *name = sdata->lngStrings[nameIndex];
 
@@ -366,7 +349,7 @@ void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 					// set desiredMenu to OSK (on-screen keyboard)
 					sdata->ptrDesiredMenu = &data.menuSubmitName;
 
-					data.characterIDs[0] = currSelectIndex;
+					data.characterIDs[0] = gGarage.unusedArr_garageChars[currSelectIndex];
 					sdata->advProgress.characterID = data.characterIDs[0];
 
 					DECOMP_SubmitName_RestoreName(0);
@@ -452,9 +435,14 @@ SKIP_CONTROLS:
 			// set desiredMenu to OSK (on-screen keyboard)
 			sdata->ptrDesiredMenu = &data.menuSubmitName;
 
-			data.characterIDs[0] = currSelectIndex;
+			data.characterIDs[0] = gGarage.unusedArr_garageChars[currSelectIndex];
 			sdata->advProgress.characterID = data.characterIDs[0];
 
+			DECOMP_SubmitName_RestoreName(0);
+			DECOMP_OtherFX_Play(1, 1);
+		}
+		else
+		{
 			gGarage.delayOneSecond++;
 		}
 	}
@@ -462,6 +450,7 @@ SKIP_CONTROLS:
 #ifdef CTR_NATIVE
 	if (sdata->ptrDesiredMenu == &data.menuSubmitName)
 	{
+		// NOTE(aalhendi): PC-only keyboard shim; retail gamepad flow above stays unchanged.
 		// flush async key state buffer. If not, tapping Enter "before" picking a garage character,
 		//  then picking character, will immediately warp you to the adv hub, with no time to type the name
 		NikoGetEnterKey();

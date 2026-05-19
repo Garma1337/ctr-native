@@ -46,13 +46,24 @@ void DECOMP_LOAD_NextQueuedFile()
 	if ((curr->flags & LT_SETADDR) != 0)
 		forceSetAddr = prevValue;
 
-	DECOMP_LOAD_ReadFile(0, curr->flags | LT_ASYNC, curr->subfileIndex, forceSetAddr);
+	void *rawDestination = DECOMP_LOAD_ReadFile(0, curr->flags | LT_ASYNC, curr->subfileIndex, forceSetAddr);
 
 	if (((curr->flags & LT_GETADDR) != 0) && (prevValue != NULL))
 	{
 		if (curr->callbackFuncPtr == (void (*)(struct LoadQueueSlot *))-2)
-			*prevValue = curr->ptrDestination;
+		{
+			*prevValue = rawDestination;
+		}
+		else if (curr->ptrDestination == rawDestination)
+		{
+			*prevValue = (char *)rawDestination + 4;
+		}
 		else
-			*prevValue = (char *)curr->ptrDestination + 4;
+		{
+			// NOTE(aalhendi): Native PC reads can invoke the async callback before
+			// ReadFile returns. In that case LOAD_DramFileCallback already skipped
+			// the DRAM header.
+			*prevValue = curr->ptrDestination;
+		}
 	}
 }
