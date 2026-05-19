@@ -23,7 +23,7 @@ void DECOMP_RB_TNT_ThTick_ThrowOffHead(struct Thread *t)
 		// plays tnt explosion sound 3D
 		PlaySound3D(0x3d, inst);
 
-		RB_Blowup_Init(inst);
+		DECOMP_RB_Blowup_Init(inst);
 
 		// Set scale (x, y, z) to zero
 		inst->scale[0] = 0;

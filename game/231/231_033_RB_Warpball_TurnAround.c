@@ -49,7 +49,7 @@ void DECOMP_RB_Warpball_TurnAround(struct Thread *t)
 			// play sound warpball death
 			PlaySound3D(0x4f, inst);
 
-			RB_Warpball_Death(t);
+			DECOMP_RB_Warpball_Death(t);
 		}
 
 		// if attempted to turn around 3 times

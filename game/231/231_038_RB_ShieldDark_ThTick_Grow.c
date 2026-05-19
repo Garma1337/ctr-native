@@ -224,8 +224,8 @@ void DECOMP_RB_ShieldDark_ThTick_Grow(struct Thread *th)
 		player->instBubbleHold = NULL;
 
 		// execute, then assign per-frame funcPtr to thread
-		void RB_ShieldDark_ThTick_Pop();
-		ThTick_SetAndExec(th, RB_ShieldDark_ThTick_Pop);
+		void DECOMP_RB_ShieldDark_ThTick_Pop();
+		ThTick_SetAndExec(th, DECOMP_RB_ShieldDark_ThTick_Pop);
 		return;
 	}
 

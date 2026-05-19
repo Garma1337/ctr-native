@@ -28,7 +28,7 @@ void DECOMP_RB_TNT_ThTick_SitOnHead(struct Thread *t)
 		// Play explosion sound
 		PlaySound3D(0x3d, inst);
 
-		RB_Blowup_Init(inst);
+		DECOMP_RB_Blowup_Init(inst);
 
 	LAB_800ad4ec:
 
@@ -55,7 +55,7 @@ void DECOMP_RB_TNT_ThTick_SitOnHead(struct Thread *t)
 			// Play explosion sound
 			PlaySound3D(0x3d, inst);
 
-			RB_Explosion_InitGeneric(inst);
+			DECOMP_RB_Explosion_InitGeneric(inst);
 
 			goto LAB_800ad4ec;
 		}
@@ -96,8 +96,8 @@ void DECOMP_RB_TNT_ThTick_SitOnHead(struct Thread *t)
 	mw->deltaPos[1] = 0;
 	mw->deltaPos[2] = 0;
 
-	// assign RB_TNT_ThTick_ThrowOffHead
-	ThTick_SetAndExec(t, RB_TNT_ThTick_ThrowOffHead);
+	// assign DECOMP_RB_TNT_ThTick_ThrowOffHead
+	ThTick_SetAndExec(t, DECOMP_RB_TNT_ThTick_ThrowOffHead);
 	return;
 
 LAB_800ad5f8:
@@ -140,7 +140,7 @@ LAB_800ad5f8:
 		// play 3D sound for TNT explosion
 		PlaySound3D(0x3d, inst);
 
-		RB_Blowup_Init(inst);
+		DECOMP_RB_Blowup_Init(inst);
 
 		// this thread is now dead
 		t->flags |= 0x800;

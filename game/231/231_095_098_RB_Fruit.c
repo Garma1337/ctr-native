@@ -27,7 +27,7 @@ void RB_Fruit_GetScreenCoords(struct PushBuffer *pb, struct Instance *inst, shor
 #ifndef REBUILD_PS1
 void DECOMP_RB_Fruit_LInB(struct Instance *inst)
 {
-	RB_Default_LInB(inst);
+	DECOMP_RB_Default_LInB(inst);
 	inst->animIndex = 0;
 	inst->flags |= 0x10;
 }

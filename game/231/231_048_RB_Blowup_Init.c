@@ -1,8 +1,8 @@
 #include <common.h>
 
-void RB_Blowup_ThTick();
-void RB_Burst_CollLevInst();
-void RB_Burst_CollThBucket();
+void DECOMP_RB_Blowup_ThTick();
+void DECOMP_RB_Burst_CollLevInst();
+void DECOMP_RB_Burst_CollThBucket();
 
 void DECOMP_RB_Blowup_Init(struct Instance *weaponInst)
 {
@@ -15,7 +15,7 @@ void DECOMP_RB_Blowup_Init(struct Instance *weaponInst)
 	int *blowup;
 
 	// initialize thread for blowup
-	explosionInst = INSTANCE_BirthWithThread(0x26, 0, SMALL, BLOWUP, RB_Blowup_ThTick, 0xc, 0);
+	explosionInst = DECOMP_INSTANCE_BirthWithThread(0x26, 0, SMALL, BLOWUP, DECOMP_RB_Blowup_ThTick, 0xc, 0);
 
 	explosionInst->flags |= 0x2040000;
 
@@ -59,7 +59,7 @@ void DECOMP_RB_Blowup_Init(struct Instance *weaponInst)
 
 	// ======== Next Instance ==========
 
-	shockwaveInst = INSTANCE_Birth3D(gGT->modelPtr[modelID], 0, explosionTh);
+	shockwaveInst = DECOMP_INSTANCE_Birth3D(gGT->modelPtr[modelID], 0, explosionTh);
 
 	// set shockwave instance
 	blowup[0] = shockwaveInst;
@@ -110,7 +110,7 @@ void DECOMP_RB_Blowup_Init(struct Instance *weaponInst)
 	sps->Input1.modelID = weaponInst->model->id;
 
 	sps->Union.ThBuckColl.thread = weaponInst->thread;
-	sps->Union.ThBuckColl.funcCallback = RB_Burst_CollThBucket;
+	sps->Union.ThBuckColl.funcCallback = DECOMP_RB_Burst_CollThBucket;
 
 	PROC_StartSearch_Self(sps);
 
@@ -128,6 +128,6 @@ void DECOMP_RB_Blowup_Init(struct Instance *weaponInst)
 	// check collision with player threads
 	PROC_CollideHitboxWithBucket(gGT->threadBuckets[PLAYER].thread, sps, 0);
 
-	sps->Union.ThBuckColl.funcCallback = RB_Burst_CollLevInst;
+	sps->Union.ThBuckColl.funcCallback = DECOMP_RB_Burst_CollLevInst;
 	return;
 }

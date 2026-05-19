@@ -41,7 +41,7 @@ void Seal_CheckColl(struct Instance *sealInst, struct Thread *sealTh, int damage
 			return;
 
 		// play seal sound, with echo if driver is on an echo quadblock
-		OtherFX_Play_Echo(sound, 1, hitDriver->actionsFlagSet & 0x00010000);
+		DECOMP_OtherFX_Play_Echo(sound, 1, hitDriver->actionsFlagSet & 0x00010000);
 
 		// dont check other buckets
 		return;
@@ -247,6 +247,6 @@ void DECOMP_RB_Seal_LInB(struct Instance *inst)
 	// converted to TEST in rebuildPS1
 	ConvertRotToMatrix(&inst->matrix, &sealObj->rotCurr[0]);
 
-	// dont call RB_Default_LInB(inst),
+	// dont call DECOMP_RB_Default_LInB(inst),
 	// we know seal is never over ice
 }

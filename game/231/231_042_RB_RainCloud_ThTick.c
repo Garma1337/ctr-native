@@ -23,7 +23,7 @@ void DECOMP_RB_RainCloud_ThTick(struct Thread *t)
 	dInst = driverTh->inst;
 
 	animFrame = inst->animFrame;
-	numFrames = INSTANCE_GetNumAnimFrames(inst, 0);
+	numFrames = DECOMP_INSTANCE_GetNumAnimFrames(inst, 0);
 
 	// if you have not reached the end of the animation
 	if ((int)animFrame < numFrames - 1)
@@ -111,7 +111,7 @@ void DECOMP_RB_RainCloud_ThTick(struct Thread *t)
 			d->itemRollTimer = 0;
 
 			// pick random weapon for driver
-			VehPhysGeneral_SetHeldItem(d);
+			DECOMP_VehPhysGeneral_SetHeldItem(d);
 		}
 	}
 

@@ -337,7 +337,7 @@ LAB_800adc08:;
 		sps->Input1.modelID = modelID;
 
 		int ret;
-		ret = RB_Hazard_CollLevInst(sps, t);
+		ret = DECOMP_RB_Hazard_CollLevInst(sps, t);
 
 		// if hit bsp hitbox
 		if (ret == 1)

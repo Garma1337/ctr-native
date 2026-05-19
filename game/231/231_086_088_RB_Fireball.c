@@ -199,7 +199,7 @@ void DECOMP_RB_Fireball_ThTick(struct Thread *t)
 	// if animation is not over
 	if(
 		(fireInst->animFrame+1) < 
-		INSTANCE_GetNumAnimFrames(fireInst, 0)
+		DECOMP_INSTANCE_GetNumAnimFrames(fireInst, 0)
 	)
 	{
 		// increment frame

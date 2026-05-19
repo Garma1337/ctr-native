@@ -24,7 +24,7 @@ void DECOMP_RB_Baron_ThTick(struct Thread *t)
 	// if animation is not over
 	if(
 		(baronInst->animFrame+1) < 
-		INSTANCE_GetNumAnimFrames(baronInst, 0)
+		DECOMP_INSTANCE_GetNumAnimFrames(baronInst, 0)
 	)
 	{
 		// increment frame

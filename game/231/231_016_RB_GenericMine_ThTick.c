@@ -32,13 +32,13 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 			// cooldown of 0.24s
 			mw->cooldown = 0xf0;
 
-			func = RB_Potion_ThTick_InAir;
+			func = DECOMP_RB_Potion_ThTick_InAir;
 		}
 
 		// TNT
 		else
 		{
-			func = RB_TNT_ThTick_ThrowOffHead;
+			func = DECOMP_RB_TNT_ThTick_ThrowOffHead;
 
 			// set scale (x, y, z)
 			inst->scale[0] = 0x800;
@@ -59,7 +59,7 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 	if (mw->cooldown < 0)
 		mw->cooldown = 0;
 
-	numFrames = (int)INSTANCE_GetNumAnimFrames(inst, 0);
+	numFrames = (int)DECOMP_INSTANCE_GetNumAnimFrames(inst, 0);
 
 	// if animation is not over
 	if (inst->animFrame < numFrames - 1)
@@ -142,7 +142,7 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 		// if collision, and if this was a red potion
 		if ((coll != 0) && (mw->extraFlags & 1) != 0)
 		{
-			RB_RainCloud_Init(d);
+			DECOMP_RB_RainCloud_Init(d);
 		}
 
 		// if this driver is not an AI
@@ -176,7 +176,7 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 
 	LAB_800ad174:
 
-		RB_GenericMine_ThDestroy(t, inst, mw);
+		DECOMP_RB_GenericMine_ThDestroy(t, inst, mw);
 	}
 
 	// TNT/Nitro
@@ -233,7 +233,7 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 		// if model is TNT
 		if (model == 0x27)
 		{
-			// RB_Hazard_HurtDriver (keep driving?)
+			// DECOMP_RB_Hazard_HurtDriver (keep driving?)
 			crate = (struct Crate *)DECOMP_RB_Hazard_HurtDriver(d, 0, mw->instParent->thread->object, 2);
 
 			if (crate == 0)
@@ -268,7 +268,7 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 				mw->deltaPos[2] = 0;
 				mw->stopFallAtY = 0x3fff;
 
-				ThTick_SetAndExec(t, RB_TNT_ThTick_ThrowOnHead);
+				ThTick_SetAndExec(t, DECOMP_RB_TNT_ThTick_ThrowOnHead);
 				return;
 			}
 
@@ -280,7 +280,7 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 				// "tnt1"
 
 				// create thread for TNT, get an Instance
-				instCrate = INSTANCE_BirthWithThread(0x27, 0, SMALL, MINE, RB_TNT_ThTick_ThrowOnHead, sizeof(struct MineWeapon), 0);
+				instCrate = DECOMP_INSTANCE_BirthWithThread(0x27, 0, SMALL, MINE, DECOMP_RB_TNT_ThTick_ThrowOnHead, sizeof(struct MineWeapon), 0);
 
 				// get rotation of player and assign to tnt
 				instCrate->matrix.m[0][0] = inst->matrix.m[0][0];
@@ -296,7 +296,7 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 				instCrate->matrix.t[1] = inst->matrix.t[1];
 				instCrate->matrix.t[2] = inst->matrix.t[2];
 
-				instCrate->thread->funcThDestroy = PROC_DestroyInstance;
+				instCrate->thread->funcThDestroy = DECOMP_PROC_DestroyInstance;
 
 				instCrate->thread->funcThCollide = DECOMP_RB_Hazard_ThCollide_Generic;
 
@@ -376,7 +376,7 @@ LAB_800ad17c:
 		// glass shatter sound
 		PlaySound3D(0x3f, inst);
 
-		RB_Explosion_InitPotion(inst);
+		DECOMP_RB_Explosion_InitPotion(inst);
 	}
 
 	else
@@ -395,7 +395,7 @@ LAB_800ad17c:
 		// play sound
 		PlaySound3D(param, inst);
 
-		RB_Blowup_Init(inst);
+		DECOMP_RB_Blowup_Init(inst);
 	}
 
 	// this thread is now dead

@@ -1,6 +1,6 @@
 #include <common.h>
 
-void RB_MaskWeapon_FadeAway(struct Thread *);
+void DECOMP_RB_MaskWeapon_FadeAway(struct Thread *);
 
 void DECOMP_RB_MaskWeapon_ThTick(struct Thread *maskTh)
 {
@@ -125,7 +125,7 @@ void DECOMP_RB_MaskWeapon_ThTick(struct Thread *maskTh)
 	// === Animation ===
 
 	// get animFrame
-	sVar1 = INSTANCE_GetNumAnimFrames(maskBeamInst, 0);
+	sVar1 = DECOMP_INSTANCE_GetNumAnimFrames(maskBeamInst, 0);
 
 	// if animation is not finished
 	if ((int)maskBeamInst->animFrame < sVar1 - 1)
@@ -146,7 +146,7 @@ void DECOMP_RB_MaskWeapon_ThTick(struct Thread *maskTh)
 	// If duration is over
 	if (mask->duration == 0)
 	{
-		ThTick_SetAndExec(maskTh, RB_MaskWeapon_FadeAway);
+		ThTick_SetAndExec(maskTh, DECOMP_RB_MaskWeapon_FadeAway);
 		return;
 	}
 

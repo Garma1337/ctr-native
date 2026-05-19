@@ -1,6 +1,6 @@
 #include <common.h>
 
-void RB_TNT_ThTick_SitOnHead();
+void DECOMP_RB_TNT_ThTick_SitOnHead();
 
 void DECOMP_RB_TNT_ThTick_ThrowOnHead(struct Thread *t)
 {
@@ -52,7 +52,7 @@ void DECOMP_RB_TNT_ThTick_ThrowOnHead(struct Thread *t)
 			inst->unk51 = mw->driverTarget->instSelf->unk51 + -1;
 
 			// assign
-			ThTick_SetAndExec(t, RB_TNT_ThTick_SitOnHead);
+			ThTick_SetAndExec(t, DECOMP_RB_TNT_ThTick_SitOnHead);
 			return;
 		}
 	}

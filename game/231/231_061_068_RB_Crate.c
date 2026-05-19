@@ -1,7 +1,7 @@
 #include <common.h>
 
 // add to buildList, overwrite original
-// RB_CrateAny_ThTick_Explode at 800b3d04,
+// DECOMP_RB_CrateAny_ThTick_Explode at 800b3d04,
 // and add new LinCs to zGlobalMetaModels.c
 
 void RB_CrateAny_CheckBlockage(struct Thread *crateTh, int hitModelID_cast, struct Thread *mineTh)
@@ -76,7 +76,7 @@ void DECOMP_RB_CrateAny_ThTick_Explode(struct Thread *t)
 	struct Instance *crateExplodeInst = t->inst;
 
 	// if explosion is not over
-	if ((crateExplodeInst->animFrame + 1) < INSTANCE_GetNumAnimFrames(crateExplodeInst, 0))
+	if ((crateExplodeInst->animFrame + 1) < DECOMP_INSTANCE_GetNumAnimFrames(crateExplodeInst, 0))
 	{
 		// increment frame
 		crateExplodeInst->animFrame = crateExplodeInst->animFrame + 1;
@@ -101,7 +101,7 @@ void RB_CrateAny_ExplodeInit(struct Instance *crateInst, int color)
 	crateInst->scale[2] = 0;
 
 	// birth explosion thread
-	explosionInst = INSTANCE_BirthWithThread(
+	explosionInst = DECOMP_INSTANCE_BirthWithThread(
 	    // 0x26 - box explosion model
 	    // 0x0 - debug name
 	    0x26, 0,
@@ -182,7 +182,7 @@ struct Thread *RB_CrateAny_GrowInit(struct Instance *crateInst)
 	struct Crate *crateObj;
 
 	// birth regrow thread
-	crateThread = PROC_BirthWithObject(
+	crateThread = DECOMP_PROC_BirthWithObject(
 	    // creation flags
 	    SIZE_RELATIVE_POOL_BUCKET(sizeof(struct Crate), NONE, SMALL, STATIC),
 

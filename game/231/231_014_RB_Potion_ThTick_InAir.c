@@ -60,7 +60,7 @@ void DECOMP_RB_Potion_ThTick_InAir(struct Thread *t)
 
 	if ((*(int *)&SPS->dataOutput[0] & 4) != 0)
 	{
-		RB_GenericMine_ThDestroy(t, inst, mw);
+		DECOMP_RB_GenericMine_ThDestroy(t, inst, mw);
 	}
 
 	int iVar4;
@@ -92,7 +92,7 @@ void DECOMP_RB_Potion_ThTick_InAir(struct Thread *t)
 				mw->velocity[2] = 0;
 				mw->extraFlags &= 0xfffd; // remove "thrown" flag
 
-				ThTick_SetAndExec(t, RB_GenericMine_ThTick);
+				ThTick_SetAndExec(t, DECOMP_RB_GenericMine_ThTick);
 				return;
 			}
 
@@ -151,7 +151,7 @@ void DECOMP_RB_Potion_ThTick_InAir(struct Thread *t)
 
 	// hit TEETH door,
 	// or no quadblock exists within 0x900 units of Y axis
-	RB_GenericMine_ThDestroy(t, inst, mw);
+	DECOMP_RB_GenericMine_ThDestroy(t, inst, mw);
 
 	return;
 }

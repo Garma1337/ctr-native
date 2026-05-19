@@ -517,34 +517,7 @@
 #include "game/230/230_Full.c"
 
 #include "game/231/D231.c"
-
-#include "game/231/231_002_RB_Player_ModifyWumpa.c"
-#include "game/231/231_003_RB_MinePool_Init.c"
-#include "game/231/231_004_RB_MinePool_Remove.c"
-#include "game/231/231_005_RB_MinePool_Add.c"
-#include "game/231/231_006_RB_Hazard_HurtDriver.c"
-#include "game/231/231_007_RB_Hazard_CollideWithDrivers.c"
-#include "game/231/231_008_RB_Hazard_CollideWithBucket.c"
-#include "game/231/231_009_RB_Hazard_ThCollide_Generic_Alt.c"
-#include "game/231/231_010_RB_Hazard_ThCollide_Missile.c"
-#include "game/231/231_011_RB_Hazard_ThCollide_Generic.c"
-
-#include "game/231/231_023_RB_Hazard_InterpolateValue.c"
-#include "game/231/231_024_RB_MovingExplosive_ThTick.c"
-#include "game/231/231_025_RB_MovingExplosive_Explode.c"
-
-#include "game/231/231_055_RB_GetThread_ClosestTracker.c"
-#include "game/231/231_056_072_RB_Baron_ThTick.c"
-
-#include "game/231/231_082_085_RB_Armadillo.c"
-#include "game/231/231_086_088_RB_Fireball.c"
-#include "game/231/231_095_098_RB_Fruit.c"
-#include "game/231/231_099_100_RB_Minecart.c"
-#include "game/231/231_104_109_RB_Plant.c"
-#include "game/231/231_110_113_RB_Seal.c"
-#include "game/231/231_114_115_RB_Snowball.c"
-#include "game/231/231_116_119_RB_Spider.c"
-#include "game/231/231_127_129_RB_Turtle.c"
+#include "game/231/231_Full.c"
 
 #include "game/232/R232.c"
 #include "game/232/D232.c"

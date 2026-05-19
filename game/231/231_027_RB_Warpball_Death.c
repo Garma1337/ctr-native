@@ -16,7 +16,7 @@ void DECOMP_RB_Warpball_Death(struct Thread *t)
 	// stop audio of moving
 	OtherFX_RecycleMute(&tw->audioPtr);
 
-	void RB_Warpball_FadeAway();
-	ThTick_SetAndExec(t, &RB_Warpball_FadeAway);
+	void DECOMP_RB_Warpball_FadeAway();
+	ThTick_SetAndExec(t, &DECOMP_RB_Warpball_FadeAway);
 	return;
 }

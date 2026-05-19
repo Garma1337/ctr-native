@@ -4,7 +4,7 @@ void DECOMP_RB_CtrLetter_LInB(struct Instance *inst)
 {
 	struct CtrLetter *letterObj;
 
-	struct Thread *t = PROC_BirthWithObject(
+	struct Thread *t = DECOMP_PROC_BirthWithObject(
 	    // creation flags
 	    SIZE_RELATIVE_POOL_BUCKET(sizeof(struct CtrLetter), NONE, SMALL, STATIC),
 
@@ -32,5 +32,5 @@ void DECOMP_RB_CtrLetter_LInB(struct Instance *inst)
 	// specular light, plus another
 	inst->flags |= 0x30000;
 
-	RB_Default_LInB(inst);
+	DECOMP_RB_Default_LInB(inst);
 }

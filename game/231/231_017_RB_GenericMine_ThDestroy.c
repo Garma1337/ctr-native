@@ -13,7 +13,7 @@ void DECOMP_RB_GenericMine_ThDestroy(struct Thread *t, struct Instance *inst, st
 		// play sound of glass shatter
 		PlaySound3D(0x3f, inst);
 
-		RB_Explosion_InitPotion(inst);
+		DECOMP_RB_Explosion_InitPotion(inst);
 	}
 
 	else
@@ -31,7 +31,7 @@ void DECOMP_RB_GenericMine_ThDestroy(struct Thread *t, struct Instance *inst, st
 
 		PlaySound3D(param, inst);
 
-		RB_Blowup_Init(inst);
+		DECOMP_RB_Blowup_Init(inst);
 	}
 
 	// Set scale (x, y, z) to zero

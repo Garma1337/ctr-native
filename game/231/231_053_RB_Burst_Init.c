@@ -1,8 +1,8 @@
 #include <common.h>
 
-void RB_Burst_ThTick();
-void RB_Burst_CollLevInst();
-void RB_Burst_CollThBucket();
+void DECOMP_RB_Burst_ThTick();
+void DECOMP_RB_Burst_CollLevInst();
+void DECOMP_RB_Burst_CollThBucket();
 
 void DECOMP_RB_Burst_Init(struct Instance *weaponInst)
 {
@@ -13,7 +13,7 @@ void DECOMP_RB_Burst_Init(struct Instance *weaponInst)
 	int *burst;
 
 	// initialize thread for burst
-	currInst = INSTANCE_BirthWithThread(0x2b, 0, SMALL, BURST, RB_Burst_ThTick, 0xc, 0);
+	currInst = DECOMP_INSTANCE_BirthWithThread(0x2b, 0, SMALL, BURST, DECOMP_RB_Burst_ThTick, 0xc, 0);
 
 	// get thread from instance
 	t = currInst->thread;
@@ -39,7 +39,7 @@ void DECOMP_RB_Burst_Init(struct Instance *weaponInst)
 
 	// ======== Next one ===========
 
-	currInst = INSTANCE_Birth3D(gGT->modelPtr[STATIC_WARPEDBURST], 0, t);
+	currInst = DECOMP_INSTANCE_Birth3D(gGT->modelPtr[STATIC_WARPEDBURST], 0, t);
 
 	burst[2] = (int)currInst;
 	currInst->unk50 += -2;
@@ -62,7 +62,7 @@ void DECOMP_RB_Burst_Init(struct Instance *weaponInst)
 
 	// ======= Next One ===========
 
-	currInst = INSTANCE_Birth3D(gGT->modelPtr[STATIC_SHOCKWAVE_RED], 0, t);
+	currInst = DECOMP_INSTANCE_Birth3D(gGT->modelPtr[STATIC_SHOCKWAVE_RED], 0, t);
 
 	burst[0] = (int)currInst;
 	currInst->unk50 += -2;
@@ -157,7 +157,7 @@ void DECOMP_RB_Burst_Init(struct Instance *weaponInst)
 	sps->Input1.modelID = modelID;
 
 	sps->Union.ThBuckColl.thread = weaponInst->thread;
-	sps->Union.ThBuckColl.funcCallback = RB_Burst_CollThBucket;
+	sps->Union.ThBuckColl.funcCallback = DECOMP_RB_Burst_CollThBucket;
 
 	struct Thread *driverTh = tw->instParent->thread;
 
@@ -173,7 +173,7 @@ void DECOMP_RB_Burst_Init(struct Instance *weaponInst)
 	// check collision with all Tracking thread
 	PROC_CollideHitboxWithBucket(gGT->threadBuckets[TRACKING].thread, sps, 0);
 
-	sps->Union.ThBuckColl.funcCallback = RB_Burst_CollLevInst;
+	sps->Union.ThBuckColl.funcCallback = DECOMP_RB_Burst_CollLevInst;
 
 	PROC_StartSearch_Self(sps);
 	return;

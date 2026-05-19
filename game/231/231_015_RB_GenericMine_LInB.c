@@ -14,13 +14,13 @@ void DECOMP_RB_GenericMine_LInB(struct Instance *inst)
 	if ((gGT->gameMode1 & CRYSTAL_CHALLENGE) == 0)
 		return;
 
-	t = PROC_BirthWithObject(
+	t = DECOMP_PROC_BirthWithObject(
 	    // creation flags
 	    SIZE_RELATIVE_POOL_BUCKET(sizeof(struct MineWeapon), NONE, SMALL, MINE),
 
-	    RB_GenericMine_ThTick, // behavior
-	    0,                     // debug name
-	    0                      // thread relative
+	    DECOMP_RB_GenericMine_ThTick, // behavior
+	    0,                            // debug name
+	    0                             // thread relative
 	);
 
 	if (t == 0)
@@ -50,5 +50,5 @@ void DECOMP_RB_GenericMine_LInB(struct Instance *inst)
 
 	DECOMP_RB_MinePool_Add(mw);
 
-	RB_Default_LInB(inst);
+	DECOMP_RB_Default_LInB(inst);
 }

@@ -30,7 +30,7 @@ void DECOMP_RB_Crystal_LInB(struct Instance *inst)
 {
 	struct Crystal *crystalObj;
 
-	struct Thread *t = PROC_BirthWithObject(
+	struct Thread *t = DECOMP_PROC_BirthWithObject(
 	    // creation flags
 	    SIZE_RELATIVE_POOL_BUCKET(sizeof(struct Crystal), NONE, SMALL, STATIC),
 
@@ -55,7 +55,7 @@ void DECOMP_RB_Crystal_LInB(struct Instance *inst)
 	// specular light
 	inst->flags |= 0x20000;
 
-	RB_Default_LInB(inst);
+	DECOMP_RB_Default_LInB(inst);
 }
 
 int DECOMP_RB_Crystal_LInC(struct Instance *LevInst, struct Thread *driverTh, struct ScratchpadStruct *sps)

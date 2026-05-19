@@ -235,7 +235,7 @@ int DECOMP_RB_Teeth_LInC(struct Instance *teethInst, struct Thread *t, struct Sc
 		// 0 = no relation to param4
 		// 0x300 = SmallStackPool
 		// 0x3 = "static" thread bucket
-		teethTh = PROC_BirthWithObject(0x80303, DECOMP_RB_Teeth_ThTick, 0, 0);
+		teethTh = DECOMP_PROC_BirthWithObject(0x80303, DECOMP_RB_Teeth_ThTick, 0, 0);
 
 		teethInst->thread = teethTh;
 
@@ -302,8 +302,8 @@ struct InstDef *DECOMP_RB_Teeth_OpenDoor(struct Instance *inst)
 		// 0x3 = "static" thread bucket
 		u_int creationFlags = 0x80000 | 0x300 | 0x3;
 
-		// ghidra output says third arg to PROC_BirthWithObject is s_teeth_OVR_231__800b9de8, idk the equivalent.
-		teethTh = PROC_BirthWithObject(creationFlags, DECOMP_RB_Teeth_ThTick, NULL, NULL);
+		// ghidra output says third arg to DECOMP_PROC_BirthWithObject is s_teeth_OVR_231__800b9de8, idk the equivalent.
+		teethTh = DECOMP_PROC_BirthWithObject(creationFlags, DECOMP_RB_Teeth_ThTick, NULL, NULL);
 		inst->thread = teethTh;
 		if (teethTh == NULL)
 			return NULL;

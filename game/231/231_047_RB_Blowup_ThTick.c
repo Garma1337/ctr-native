@@ -21,7 +21,7 @@ void DECOMP_RB_Blowup_ThTick(struct Thread *t)
 			continue;
 
 		animFrame = inst->animFrame;
-		numFrames = INSTANCE_GetNumAnimFrames(inst, 0);
+		numFrames = DECOMP_INSTANCE_GetNumAnimFrames(inst, 0);
 
 		if (animFrame < numFrames - 1)
 		{
@@ -31,7 +31,7 @@ void DECOMP_RB_Blowup_ThTick(struct Thread *t)
 
 		else
 		{
-			INSTANCE_Death(inst);
+			DECOMP_INSTANCE_Death(inst);
 			*blowup = (int)NULL;
 		}
 	}
