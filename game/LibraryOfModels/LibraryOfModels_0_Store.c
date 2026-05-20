@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_LibraryOfModels_Store(struct GameTracker *gGT, unsigned int numModels, struct Model **ptrModelArray)
+void DECOMP_LibraryOfModels_Store(struct GameTracker *gGT, u32 numModels, struct Model **ptrModelArray)
 {
 	while (numModels != 0)
 	{
@@ -17,7 +17,7 @@ void DECOMP_LibraryOfModels_Store(struct GameTracker *gGT, unsigned int numModel
 	// struct Model* m;
 	//
 	//// if numModels is -1, then loop until nullptr,
-	//// that works by using unsigned int
+	//// that works by using u32
 	// while(numModels-- != 0)
 	//{
 	//	m = *ptrModelArray++;

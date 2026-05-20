@@ -14,7 +14,7 @@ void OVR_Region3();
 
 void DECOMP_MEMPACK_Init(int ramSize)
 {
-	unsigned int startPtr;
+	u32 startPtr;
 	int packSize;
 
 #ifdef REBUILD_PC
@@ -41,14 +41,14 @@ void DECOMP_MEMPACK_Init(int ramSize)
 	// Defragged 231	800b8c78	28 sectors
 	// CS_EndOfFile		800b97fc	28 sectors (original game, current largest size)
 
-	u_int Aligned231 = 28 * 0x800;
-	// u_int Size231 = (u_int)RB_NewEndFile - (u_int)OVR_Region3;
-	// u_int Aligned231 = ((Size231 + 0x7ff) & ~(0x7ff));
+	u32 Aligned231 = 28 * 0x800;
+	// u32 Size231 = (u32)RB_NewEndFile - (u32)OVR_Region3;
+	// u32 Aligned231 = ((Size231 + 0x7ff) & ~(0x7ff));
 	// printf("\nMEMPACK_Init: %d sectors in 231\n\n", Aligned231/0x800);
 
 	// Original game allocated 0x800 to stack,
 	// but now Stack is relocated to kernel memory
-	startPtr = ((u_int)OVR_Region3 + Aligned231);
+	startPtr = ((u32)OVR_Region3 + Aligned231);
 	packSize = ramSize - (int)(startPtr & 0xffffff);
 #endif
 

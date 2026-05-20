@@ -27,7 +27,7 @@ void Torch_Subset3(void) // TODO: add DECOMP_ prefix
 	//	}
 	// }
 	//*(ushort*)(in_at + 0x62) =
-	//	(ushort)((in_v1 + (int)*(short*)(in_at + 0x50) & 0x3ff) >> 6) |
-	//	(ushort)((in_t0 + (int)*(short*)(in_at + 0x52) & 0x100) >> 4) | 0x100;
+	//	(ushort)((in_v1 + (int)*(s16*)(in_at + 0x50) & 0x3ff) >> 6) |
+	//	(ushort)((in_t0 + (int)*(s16*)(in_at + 0x52) & 0x100) >> 4) | 0x100;
 	// return;
 }

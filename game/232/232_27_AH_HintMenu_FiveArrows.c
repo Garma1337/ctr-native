@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_AH_HintMenu_FiveArrows(int param_1, short rotation)
+void DECOMP_AH_HintMenu_FiveArrows(int param_1, s16 rotation)
 {
 	int *ptrColor;
 	char i;

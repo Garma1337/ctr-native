@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_MainDB_OTMem(struct OTMem *otMem, u_int size)
+void DECOMP_MainDB_OTMem(struct OTMem *otMem, u32 size)
 {
 	void *pvVar1;
 

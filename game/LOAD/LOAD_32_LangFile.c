@@ -34,14 +34,14 @@ void DECOMP_LOAD_LangFile(int bigfilePtr, int lang)
 	DECOMP_LOAD_ReadFile(0, LT_SETADDR | LT_SYNC, BI_LANGUAGEFILE + lang, (void *)lngFile);
 
 	numStrings = lngFile->numStrings;
-	strArray = (char **)((unsigned int)lngFile + lngFile->offsetToPtrArr);
+	strArray = (char **)((u32)lngFile + lngFile->offsetToPtrArr);
 
 	sdata->numLngStrings = numStrings;
 	sdata->lngStrings = strArray;
 
 	for (i = 0; i < numStrings; i++)
 	{
-		strArray[i] = (char *)((unsigned int)strArray[i] + (unsigned int)lngFile);
+		strArray[i] = (char *)((u32)strArray[i] + (u32)lngFile);
 	}
 #if BUILD == EurRetail
 	// set voicelines to new lang

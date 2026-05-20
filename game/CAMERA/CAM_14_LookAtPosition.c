@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_CAM_LookAtPosition(int scratchpad, int *positions, short *desiredPos, short *desiredRot)
+void DECOMP_CAM_LookAtPosition(int scratchpad, int *positions, s16 *desiredPos, s16 *desiredRot)
 {
 	// One IF results in less instructions than,
 	// this: data.Spin360_heightOffset_driverPos[sdata->gGT->numPlyrCurrGame]);
@@ -22,8 +22,8 @@ void DECOMP_CAM_LookAtPosition(int scratchpad, int *positions, short *desiredPos
 	int distance = SquareRoot0_stub(dirX * dirX + dirZ * dirZ);
 
 	// rotations
-	desiredRot[0] = 0x800 - (short)ratan2(dirY, distance);
-	desiredRot[1] = (short)ratan2(dirX, dirZ);
+	desiredRot[0] = 0x800 - (s16)ratan2(dirY, distance);
+	desiredRot[1] = (s16)ratan2(dirX, dirZ);
 	desiredRot[2] = 0;
 
 	return;

@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_UI_DrawSlideMeter(short posX, short posY, struct Driver *driver)
+void DECOMP_UI_DrawSlideMeter(s16 posX, s16 posY, struct Driver *driver)
 {
 	const struct GameTracker *gGT = sdata->gGT;
 	const int barWidth = 49;
@@ -15,8 +15,8 @@ void DECOMP_UI_DrawSlideMeter(short posX, short posY, struct Driver *driver)
 	}
 
 	RECT box;
-	short topX = posX - barWidth;
-	short topY = posY - barHeight;
+	s16 topX = posX - barWidth;
+	s16 topY = posY - barHeight;
 	box.x = topX;
 	box.y = topY;
 	box.w = barWidth;

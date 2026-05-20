@@ -3,7 +3,7 @@
 void DECOMP_SongPool_StopCseq(struct SongSeq *seq)
 {
 	struct ChannelStats *curr, *backupNext;
-	u_int *flagPtr;
+	u32 *flagPtr;
 
 	for (curr = (struct ChannelStats *)sdata->channelTaken.first; curr != NULL; curr = backupNext)
 	{
@@ -26,7 +26,7 @@ void DECOMP_SongPool_StopCseq(struct SongSeq *seq)
 		*flagPtr |= 1;
 		*flagPtr &= ~(2);
 
-		*(u_char *)&curr->flags &= ~(1);
+		*(u8 *)&curr->flags &= ~(1);
 
 		// recycle: remove from taken, put on free
 		DECOMP_LIST_RemoveMember(&sdata->channelTaken, (struct Item *)curr);

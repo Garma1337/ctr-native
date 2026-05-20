@@ -15,7 +15,7 @@ void *DECOMP_LOAD_ReadDirectory(char *filename)
 	// Wait for read to end
 	CdSearchFile(&cdlFile, filename);
 	CdControl(CdlSetloc, &cdlFile, buf);
-	CdRead(8, (uint32_t *)bh, 0x80);
+	CdRead(8, (u32 *)bh, 0x80);
 	CdReadSync(0, 0);
 
 	// Save position

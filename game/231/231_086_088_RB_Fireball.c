@@ -181,7 +181,7 @@ void DECOMP_RB_Fireball_ThTick(struct Thread *t)
 				velY = -0x7fff;
 			if (velY > 0x7fff)
 				velY = 0x7fff;
-			velY = (short)velY;
+			velY = (s16)velY;
 
 			particle->axis[1].velocity = (int)velY;
 		}

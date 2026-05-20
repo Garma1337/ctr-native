@@ -4,9 +4,9 @@
 void DECOMP_CS_Thread_ThTick(struct Thread *t)
 {
 	// Retail uses scratchpad 0x1f800108/0x1f800118 for parent frame-data temporaries.
-	short *parentPos = CTR_SCRATCHPAD_PTR(short, 0x108);
-	short *parentRot = CTR_SCRATCHPAD_PTR(short, 0x118);
-	short bonePos[3];
+	s16 *parentPos = CTR_SCRATCHPAD_PTR(s16, 0x108);
+	s16 *parentRot = CTR_SCRATCHPAD_PTR(s16, 0x118);
+	s16 bonePos[3];
 	struct CutsceneObj *cs = t->object;
 	struct Instance *inst = t->inst;
 	struct Instance *parentInst;
@@ -38,7 +38,7 @@ void DECOMP_CS_Thread_ThTick(struct Thread *t)
 			{
 				parentInst = parentThread->inst;
 
-				DECOMP_CS_Instance_GetFrameData(parentInst, parentInst->animIndex, parentInst->animFrame, (u_short *)parentPos, (u_short *)parentRot, 0);
+				DECOMP_CS_Instance_GetFrameData(parentInst, parentInst->animIndex, parentInst->animFrame, (u16 *)parentPos, (u16 *)parentRot, 0);
 
 				inst->matrix.t[0] = parentInst->matrix.t[0] + parentPos[0];
 				inst->matrix.t[1] = parentInst->matrix.t[1] + parentPos[1];
@@ -58,7 +58,7 @@ void DECOMP_CS_Thread_ThTick(struct Thread *t)
 		// ASM: 0x800ae6b4 - flag 0x8: write bone Y to OVR_233 global
 		if ((cs->flags & 0x8) != 0)
 		{
-			DECOMP_CS_Instance_GetFrameData(inst, inst->animIndex, inst->animFrame, (u_short *)bonePos, 0, 0);
+			DECOMP_CS_Instance_GetFrameData(inst, inst->animIndex, inst->animFrame, (u16 *)bonePos, 0, 0);
 
 			OVR_233.VertSplitLine = bonePos[1];
 
@@ -85,15 +85,15 @@ thTick_subtitles:
 	{
 		struct GameTracker *gGT = sdata->gGT;
 		int textWidth;
-		u_short textRect[4];
+		u16 textRect[4];
 
 		textWidth = DECOMP_DecalFont_DrawMultiLine(sdata->lngStrings[cs->Subtitles.lngIndex], cs->Subtitles.textPos[0], cs->Subtitles.textPos[1], 460,
 		                                           cs->Subtitles.font, cs->Subtitles.colors);
 
-		textRect[0] = (u_short)((u_short)cs->Subtitles.textPos[0] - 236);
-		textRect[1] = (u_short)((u_short)cs->Subtitles.textPos[1] - 4);
+		textRect[0] = (u16)((u16)cs->Subtitles.textPos[0] - 236);
+		textRect[1] = (u16)((u16)cs->Subtitles.textPos[1] - 4);
 		textRect[2] = 472;
-		textRect[3] = (u_short)((short)textWidth + 8);
+		textRect[3] = (u16)((s16)textWidth + 8);
 
 		DECOMP_RECTMENU_DrawInnerRect((RECT *)textRect, 4, gGT->backBuffer->otMem.startPlusFour);
 	}
@@ -107,15 +107,15 @@ thTick_epilogue:
 }
 
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x800af328-0x800af7c0
-struct Thread *DECOMP_CS_Thread_Init(short modelID, char *name, short *param_3, short param_4, struct Thread *parent)
+struct Thread *DECOMP_CS_Thread_Init(s16 modelID, char *name, s16 *param_3, s16 param_4, struct Thread *parent)
 {
 	struct GameTracker *gGT = sdata->gGT;
 	struct CutsceneObj *cs;
 	struct Instance *inst;
 	struct Thread *t;
 	char *scriptPtr;
-	u_int bucket;
-	short *meta;
+	u32 bucket;
+	s16 *meta;
 
 	if (modelID == NOFUNC)
 	{
@@ -130,10 +130,10 @@ struct Thread *DECOMP_CS_Thread_Init(short modelID, char *name, short *param_3, 
 	{
 		bucket = OTHER;
 
-		if ((u_int)(modelID - NDI_KART6) < 2)
+		if ((u32)(modelID - NDI_KART6) < 2)
 			bucket = AKUAKU;
 
-		if ((u_int)(modelID - NDI_KART0) < 4)
+		if ((u32)(modelID - NDI_KART0) < 4)
 			bucket = GHOST;
 
 		inst = DECOMP_INSTANCE_BirthWithThread(modelID, name, MEDIUM, bucket, DECOMP_CS_Thread_ThTick, 0x60, parent);
@@ -181,7 +181,7 @@ struct Thread *DECOMP_CS_Thread_Init(short modelID, char *name, short *param_3, 
 	{
 		if (modelID >= NDI_BOX_BOX_01)
 		{
-			if ((u_int)(modelID - NDI_BOX_BOX_01) < 0x2b)
+			if ((u32)(modelID - NDI_BOX_BOX_01) < 0x2b)
 			{
 				scriptPtr = OVR_233.boxModelScripts[modelID - NDI_BOX_BOX_01];
 			}
@@ -192,7 +192,7 @@ struct Thread *DECOMP_CS_Thread_Init(short modelID, char *name, short *param_3, 
 
 			DECOMP_CS_ScriptCmd_OpcodeAt(cs, scriptPtr);
 
-			if ((u_int)(modelID - NDI_KART0) < 4)
+			if ((u32)(modelID - NDI_KART0) < 4)
 			{
 				cs->frameOverrideRoot = (int *)&OVR_233.cs_initMatrixTable[modelID - NDI_KART0];
 			}
@@ -200,7 +200,7 @@ struct Thread *DECOMP_CS_Thread_Init(short modelID, char *name, short *param_3, 
 			goto after_opcode;
 		}
 
-		if ((u_int)(modelID - STATIC_PINHEAD) < 5)
+		if ((u32)(modelID - STATIC_PINHEAD) < 5)
 		{
 			scriptPtr = OVR_233.script_default;
 		}
@@ -208,14 +208,14 @@ struct Thread *DECOMP_CS_Thread_Init(short modelID, char *name, short *param_3, 
 		{
 			scriptPtr = OVR_233.script_dingofire;
 		}
-		else if ((u_int)(modelID - STATIC_TAWNA1) < 4)
+		else if ((u32)(modelID - STATIC_TAWNA1) < 4)
 		{
 			if (gGT->gameMode2 & CREDITS)
 				scriptPtr = OVR_233.script_tawnaCredits;
 			else
 				scriptPtr = OVR_233.script_tawnaNormal;
 		}
-		else if ((u_int)(modelID - STATIC_CRASHDANCE) < 0x10)
+		else if ((u32)(modelID - STATIC_CRASHDANCE) < 0x10)
 		{
 			char **base;
 			int off = (modelID - STATIC_CRASHDANCE);
@@ -239,8 +239,8 @@ after_opcode:
 
 	cs->unk18 = cs->metadata[2];
 
-	meta = (short *)cs->metadata;
-	cs->unk14 = meta[2] + (short)(((DECOMP_MixRNG_Scramble() >> 2 & 0xfff) * ((meta[3] - meta[2]) + 1)) >> 0xc);
+	meta = (s16 *)cs->metadata;
+	cs->unk14 = meta[2] + (s16)(((DECOMP_MixRNG_Scramble() >> 2 & 0xfff) * ((meta[3] - meta[2]) + 1)) >> 0xc);
 
 	if (inst != NULL)
 	{
@@ -263,7 +263,7 @@ after_opcode:
 			inst->scale[2] = 0x2800;
 		}
 
-		if ((u_int)(gGT->levelID - GEM_STONE_VALLEY) < 5)
+		if ((u32)(gGT->levelID - GEM_STONE_VALLEY) < 5)
 		{
 			inst->unk50 -= 4;
 			inst->unk51 -= 4;

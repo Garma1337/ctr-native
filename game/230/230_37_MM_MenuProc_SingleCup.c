@@ -3,7 +3,7 @@
 void DECOMP_MM_MenuProc_SingleCup(struct RectMenu *menu)
 
 {
-	short row;
+	s16 row;
 	struct GameTracker *gGT;
 
 	gGT = sdata->gGT;
@@ -16,7 +16,7 @@ void DECOMP_MM_MenuProc_SingleCup(struct RectMenu *menu)
 	}
 
 
-	if ((unsigned char)row < 2)
+	if ((u8)row < 2)
 	{
 		// disable Cup mode
 		gGT->gameMode2 &= ~(CUP_ANY_KIND);

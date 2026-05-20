@@ -3,12 +3,12 @@
 void DECOMP_GAMEPAD_ProcessSticks(struct GamepadSystem *gGamepads)
 {
 	// this is missing a bunch of stuff vs ghidra
-	unsigned char bVar1;
-	u_char bVar2;
-	short uVar3;
+	u8 bVar1;
+	u8 bVar2;
+	s16 uVar3;
 	int iVar4;
 	int iVar7;
-	short sVar8;
+	s16 sVar8;
 
 	struct GamepadBuffer *pad;
 	struct ControllerPacket *packet;
@@ -103,16 +103,16 @@ void DECOMP_GAMEPAD_ProcessSticks(struct GamepadSystem *gGamepads)
 			}
 		}
 
-		if ((unsigned int)(pad->stickLX_dontUse1 - 0x80) > 0x30)
+		if ((u32)(pad->stickLX_dontUse1 - 0x80) > 0x30)
 			pad->framesSinceLastInput = 0;
 
-		if ((unsigned int)(pad->stickLY_dontUse1 - 0x80) > 0x30)
+		if ((u32)(pad->stickLY_dontUse1 - 0x80) > 0x30)
 			pad->framesSinceLastInput = 0;
 
-		if ((unsigned int)(pad->stickRX - 0x80) > 0x30)
+		if ((u32)(pad->stickRX - 0x80) > 0x30)
 			pad->framesSinceLastInput = 0;
 
-		if ((unsigned int)(pad->stickRY - 0x80) > 0x30)
+		if ((u32)(pad->stickRY - 0x80) > 0x30)
 			pad->framesSinceLastInput = 0;
 
 		pad->stickLX = pad->stickLX_dontUse1;

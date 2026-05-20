@@ -18,7 +18,7 @@ void DECOMP_RB_Teeth_LInB(struct Instance *inst)
 
 void DECOMP_RB_Teeth_BSP_Callback(struct ScratchpadStruct *sps, struct Thread *weaponThread)
 {
-	short model;
+	s16 model;
 	struct Thread *teethTh;
 	struct Instance *weaponInst;
 	struct Instance *teethInst;
@@ -79,7 +79,7 @@ void DECOMP_RB_Teeth_BSP_Callback(struct ScratchpadStruct *sps, struct Thread *w
 void DECOMP_RB_Teeth_ThTick(struct Thread *t)
 {
 	int iVar1;
-	u_int flags;
+	u32 flags;
 	struct Teeth *teeth;
 	struct Instance *inst;
 	struct GameTracker *gGT;
@@ -152,7 +152,7 @@ void DECOMP_RB_Teeth_ThTick(struct Thread *t)
 		else
 		{
 			// set animation to last frame
-			inst->animFrame = (short)iVar1 + -1;
+			inst->animFrame = (s16)iVar1 + -1;
 
 			// door is not moving (fully open)
 			teeth->direction = 0;
@@ -300,7 +300,7 @@ struct InstDef *DECOMP_RB_Teeth_OpenDoor(struct Instance *inst)
 		// 0 = no relation to param4
 		// 0x300 flag = SmallStackPool
 		// 0x3 = "static" thread bucket
-		u_int creationFlags = 0x80000 | 0x300 | 0x3;
+		u32 creationFlags = 0x80000 | 0x300 | 0x3;
 
 		// ghidra output says third arg to DECOMP_PROC_BirthWithObject is s_teeth_OVR_231__800b9de8, idk the equivalent.
 		teethTh = DECOMP_PROC_BirthWithObject(creationFlags, DECOMP_RB_Teeth_ThTick, NULL, NULL);

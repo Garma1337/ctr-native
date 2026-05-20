@@ -4,8 +4,8 @@ void DECOMP_RB_Burst_CollThBucket(struct ScratchpadStruct *sps, struct Thread *t
 {
 	struct GameTracker *gGT;
 	struct TrackerWeapon *tw;
-	short model;
-	unsigned short reason;
+	s16 model;
+	u16 reason;
 	struct Thread *weaponTh;
 
 	gGT = sdata->gGT;

@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_UI_DrawNumKey(short posX, short posY)
+void DECOMP_UI_DrawNumKey(s16 posX, s16 posY)
 {
 	int num;
 	struct GameTracker *gGT;

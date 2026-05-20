@@ -1,21 +1,21 @@
 #include <common.h>
 
-force_inline unsigned short iDiv(unsigned int rem, unsigned short base)
+force_inline u16 iDiv(u32 rem, u16 base)
 {
 	rem <<= FRACTIONAL_BITS;
-	unsigned int b = base;
-	unsigned int res, d = 1;
-	unsigned short high = rem >> 16;
+	u32 b = base;
+	u32 res, d = 1;
+	u16 high = rem >> 16;
 
 	res = 0;
 	if (high >= base)
 	{
 		high /= base;
-		res = (unsigned int)high << 16;
-		rem -= (unsigned int)(high * base) << 16;
+		res = (u32)high << 16;
+		rem -= (u32)(high * base) << 16;
 	}
 
-	while ((unsigned int)b > 0 && b < rem)
+	while ((u32)b > 0 && b < rem)
 	{
 		b *= 2;
 		d *= 2;
@@ -35,7 +35,7 @@ force_inline unsigned short iDiv(unsigned int rem, unsigned short base)
 	return res;
 }
 
-short FP_Div(short a, short b)
+s16 FP_Div(s16 a, s16 b)
 {
 	int s = 1;
 	if (a < 0)

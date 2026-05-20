@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_SubmitName_RestoreName(short param_1)
+void DECOMP_SubmitName_RestoreName(s16 param_1)
 {
 	struct GameTracker *gGT = sdata->gGT;
 
@@ -12,7 +12,7 @@ void DECOMP_SubmitName_RestoreName(short param_1)
 	memmove(gGT->currNameEntered, gGT->prevNameEntered, 0x11);
 
 	// "A" or "SAVE"
-	short cursor = 0;
+	s16 cursor = 0;
 	if (gGT->currNameEntered[0] != 0)
 		cursor = 1001;
 

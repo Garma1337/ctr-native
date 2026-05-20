@@ -28,7 +28,7 @@ void DECOMP_MainFrame_ResetDB(struct GameTracker *gGT)
 	otSwapchainDB = (int)gGT->otSwapchainDB[gGT->swapchainIndex];
 
 	db = gGT->backBuffer;
-	*(u_char *)&db->unk_primMemRelated = 0;
+	*(u8 *)&db->unk_primMemRelated = 0;
 	db->primMem.curr = db->primMem.start;
 	db->primMem.unk1 = 0;
 	db->otMem.curr = db->otMem.start;
@@ -46,11 +46,11 @@ void DECOMP_MainFrame_ResetDB(struct GameTracker *gGT)
 	memset(gGT->backBuffer->primMem.start, 0, gGT->backBuffer->primMem.size);
 #endif
 
-	ClearOTagR((uint32_t *)otSwapchainDB, gGT->numPlyrCurrGame << 10 | 6);
+	ClearOTagR((u32 *)otSwapchainDB, gGT->numPlyrCurrGame << 10 | 6);
 
 	for (iVar4 = 0; iVar4 < gGT->numPlyrCurrGame; iVar4++)
 	{
-		iVar2 = (u_int)(u_char)gGT->numPlyrCurrGame - iVar4;
+		iVar2 = (u32)(u8)gGT->numPlyrCurrGame - iVar4;
 
 		gGT->pushBuffer[iVar4].ptrOT = (u_long *)((int)otSwapchainDB + (gGT->numPlyrCurrGame - iVar4 - 1) * 0x1000 + 0x18);
 	}

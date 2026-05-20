@@ -4,11 +4,11 @@ void DECOMP_AH_Door_LInB(struct Instance *inst)
 {
 	char i;
 	char doorID;
-	short sVar2;
+	s16 sVar2;
 	int levelID;
 	int ratio;
-	short leftRot[3];
-	short rightRot[3];
+	s16 leftRot[3];
+	s16 rightRot[3];
 
 	struct GameTracker *gGT;
 	struct Thread *t;

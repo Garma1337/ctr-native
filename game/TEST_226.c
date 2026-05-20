@@ -63,10 +63,10 @@ int combinations[] = {
 
 void TEST_226(struct RenderList *RL, struct PushBuffer *pb, struct mesh_info *mi, struct PrimMem *primMem, int *visMem10, int unk)
 {
-	short posScreen1[4];
-	short posScreen2[4];
-	short posScreen3[4];
-	short posScreen4[4];
+	s16 posScreen1[4];
+	s16 posScreen2[4];
+	s16 posScreen3[4];
+	s16 posScreen4[4];
 
 	struct LevVertex *pVA = &mi->ptrVertexArray[0];
 
@@ -127,7 +127,7 @@ void TEST_226(struct RenderList *RL, struct PushBuffer *pb, struct mesh_info *mi
 #if 0
 			// === Test every BSP block against Frustum ===
 
-		short posBSP[3];
+		s16 posBSP[3];
 		int otZ_block;
 
 		// minX, minY, minZ
@@ -209,10 +209,10 @@ void TEST_226(struct RenderList *RL, struct PushBuffer *pb, struct mesh_info *mi
 
 					if (boolPassCull)
 					{
-						short midX = (p->x0 + p->x1 + p->x2 + p->x3) / 4;
-						short midY = (p->y0 + p->y1 + p->y2 + p->y3) / 4;
+						s16 midX = (p->x0 + p->x1 + p->x2 + p->x3) / 4;
+						s16 midY = (p->y0 + p->y1 + p->y2 + p->y3) / 4;
 
-						short midArr[4] = {midX, midY, 0, 0};
+						s16 midArr[4] = {midX, midY, 0, 0};
 						gte_ldv0(midArr);
 
 						int otZ;
@@ -342,7 +342,7 @@ void TEST_226(struct RenderList *RL, struct PushBuffer *pb, struct mesh_info *mi
 					p = primMem->curr;
 					pNext = p + 1;
 					pCurr = p;
-					if (pNext > ((unsigned int)primMem->end - 0x200))
+					if (pNext > ((u32)primMem->end - 0x200))
 						return;
 
 					*(int *)&p->r0 = *(int *)&pVA[block->index[id[4 * k + 0]]].color_hi[0];
@@ -382,7 +382,7 @@ void TEST_226(struct RenderList *RL, struct PushBuffer *pb, struct mesh_info *mi
 					if (num == 4)
 					{
 						// must remove flags that are stored in pointer
-						unsigned int ptr = (unsigned int)block->ptr_texture_mid[k];
+						u32 ptr = (u32)block->ptr_texture_mid[k];
 						tl = ptr;
 
 						if (ptr & 1)
@@ -398,12 +398,12 @@ void TEST_226(struct RenderList *RL, struct PushBuffer *pb, struct mesh_info *mi
 						}
 					}
 
-					unsigned int draw_order_high = block->draw_order_high;
-					unsigned int draw_order_low = block->draw_order_low;
+					u32 draw_order_high = block->draw_order_high;
+					u32 draw_order_low = block->draw_order_low;
 
 					if (tl != 1)
 					{
-						unsigned int bits5 = (draw_order_low >> (8 + k * 5)) & 0x1F;
+						u32 bits5 = (draw_order_low >> (8 + k * 5)) & 0x1F;
 						char *tlByteAddr = (char *)tl;
 
 						// u0, u1, u2, u3 {3,2,1,0}
@@ -424,9 +424,8 @@ void TEST_226(struct RenderList *RL, struct PushBuffer *pb, struct mesh_info *mi
 						int tlU2 = (tlOffsets >> ((shiftTable226[bits5] >> 0x10) & 0xFF)) & 0xFF;
 						int tlU3 = (tlOffsets >> ((shiftTable226[bits5] >> 0x18) & 0xFF)) & 0xFF;
 
-						setUV4(p, *(unsigned char *)&tlByteAddr[tlU0 + 0], *(unsigned char *)&tlByteAddr[tlU0 + 1], *(unsigned char *)&tlByteAddr[tlU1 + 0],
-						       *(unsigned char *)&tlByteAddr[tlU1 + 1], *(unsigned char *)&tlByteAddr[tlU2 + 0], *(unsigned char *)&tlByteAddr[tlU2 + 1],
-						       *(unsigned char *)&tlByteAddr[tlU3 + 0], *(unsigned char *)&tlByteAddr[tlU3 + 1]);
+						setUV4(p, *(u8 *)&tlByteAddr[tlU0 + 0], *(u8 *)&tlByteAddr[tlU0 + 1], *(u8 *)&tlByteAddr[tlU1 + 0], *(u8 *)&tlByteAddr[tlU1 + 1],
+						       *(u8 *)&tlByteAddr[tlU2 + 0], *(u8 *)&tlByteAddr[tlU2 + 1], *(u8 *)&tlByteAddr[tlU3 + 0], *(u8 *)&tlByteAddr[tlU3 + 1]);
 
 						p->clut = tl->clut;
 						p->tpage = tl->tpage;
@@ -446,10 +445,10 @@ void TEST_226(struct RenderList *RL, struct PushBuffer *pb, struct mesh_info *mi
 
 					if (boolPassCull)
 					{
-						short midX = (p->x0 + p->x1 + p->x2 + p->x3) / 4;
-						short midY = (p->y0 + p->y1 + p->y2 + p->y3) / 4;
+						s16 midX = (p->x0 + p->x1 + p->x2 + p->x3) / 4;
+						s16 midY = (p->y0 + p->y1 + p->y2 + p->y3) / 4;
 
-						short midArr[4] = {midX, midY, 0, 0};
+						s16 midArr[4] = {midX, midY, 0, 0};
 						gte_ldv0(midArr);
 
 						int otZ;
@@ -487,8 +486,8 @@ void AddPrimPGXP(void *ot, POLY_GT4 *p)
 	POLY_GT4 *b = &backup;
 	memcpy(b, p, sizeof(POLY_GT4));
 
-	short midX = (b->x0 + b->x1 + b->x2 + b->x3) / 4;
-	short midY = (b->y0 + b->y1 + b->y2 + b->y3) / 4;
+	s16 midX = (b->x0 + b->x1 + b->x2 + b->x3) / 4;
+	s16 midY = (b->y0 + b->y1 + b->y2 + b->y3) / 4;
 
 	char midU = (b->u0 + b->u1 + b->u2 + b->u3) / 4;
 	char midV = (b->v0 + b->v1 + b->v2 + b->v3) / 4;
@@ -497,7 +496,7 @@ void AddPrimPGXP(void *ot, POLY_GT4 *p)
 	char midG = (b->g0 + b->g1 + b->g2 + b->g3) / 4;
 	char midB = (b->b0 + b->b1 + b->b2 + b->b3) / 4;
 
-	short midArr[4] = {midX, midY, 0, 0};
+	s16 midArr[4] = {midX, midY, 0, 0};
 	gte_ldv0(midArr);
 
 	for (int i = 0; i < 4; i++)

@@ -3,17 +3,17 @@
 // function for moving bomb, shiledbomb, or missile
 void DECOMP_RB_MovingExplosive_ThTick(struct Thread *t)
 {
-	short sVar1;
-	short sVar3;
+	s16 sVar1;
+	s16 sVar3;
 	struct GameTracker *gGT = sdata->gGT;
-	short modelID;
+	s16 modelID;
 	int iVar6;
 	int iVar8;
-	unsigned short sound;
+	u16 sound;
 	struct TrackerWeapon *tw;
 	struct Instance *inst;
-	short posA[3];
-	short posB[3];
+	s16 posA[3];
+	s16 posB[3];
 
 	inst = t->inst;
 	modelID = inst->model->id;
@@ -61,7 +61,7 @@ LAB_800adc08:;
 
 		    (*(int *)(*piVar9 + 0x2cc) < 0) &&
 		    // instance -> model -> objectID == missile
-		    (*(short *)(*(int *)(iVar10 + 0x18) + 0x10) == 0x29)
+		    (*(s16 *)(*(int *)(iVar10 + 0x18) + 0x10) == 0x29)
 
 		    */
 
@@ -234,7 +234,7 @@ LAB_800adc08:;
 		}
 
 		// convert 3 rotation shorts into rotation matrix
-		ConvertRotToMatrix(&inst->matrix, (short *)&tw->dir);
+		ConvertRotToMatrix(&inst->matrix, (s16 *)&tw->dir);
 	}
 
 	posA[0] = inst->matrix.t[0];
@@ -259,7 +259,7 @@ LAB_800adc08:;
 
 	sps->ptr_mesh_info = gGT->level1->ptr_mesh_info;
 
-	COLL_SearchBSP_CallbackQUADBLK((u_int *)&posA, (u_int *)&posB, sps, 0);
+	COLL_SearchBSP_CallbackQUADBLK((u32 *)&posA, (u32 *)&posB, sps, 0);
 
 	RB_MakeInstanceReflective(sps, inst);
 
@@ -290,7 +290,7 @@ LAB_800adc08:;
 			posA[1] = inst->matrix.t[1] - 0x900;
 			posA[2] = inst->matrix.t[2];
 
-			COLL_SearchBSP_CallbackQUADBLK((u_int *)&posA, (u_int *)&posB, sps, 0);
+			COLL_SearchBSP_CallbackQUADBLK((u32 *)&posA, (u32 *)&posB, sps, 0);
 
 			// if still nothing, then explode
 			if (sps->boolDidTouchQuadblock == 0)

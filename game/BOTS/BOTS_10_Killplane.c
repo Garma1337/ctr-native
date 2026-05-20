@@ -6,7 +6,7 @@ void DECOMP_BOTS_Killplane(struct Thread *botThread)
 	char boolOverride;
 	char currNav;
 	char backCount;
-	short override;
+	s16 override;
 	struct NavFrame *frame;
 	struct Driver *bot;
 

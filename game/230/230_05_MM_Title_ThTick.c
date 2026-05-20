@@ -2,18 +2,18 @@
 
 void DECOMP_MM_Title_ThTick(struct Thread *title)
 {
-	short animFram;
+	s16 animFram;
 	struct GameTracker *gGT;
 	struct Instance *titleInst;
-	short in_zero;
-	short in_at;
-	short framIndex;
+	s16 in_zero;
+	s16 in_at;
+	s16 framIndex;
 	int i;
 	int timer;
 	struct Title *ptrTitle;
 	int cops[6];
-	short direction[3];
-	short rot[3];
+	s16 direction[3];
+	s16 rot[3];
 
 	// frame counters
 	timer = D230.timerInTitle;
@@ -80,7 +80,7 @@ void DECOMP_MM_Title_ThTick(struct Thread *title)
 		{
 			// if frame is anywhere in the two seconds
 			// that the trophy is in the air
-			if ((unsigned int)(timer - 138) < 62)
+			if ((u32)(timer - 138) < 62)
 			{
 				// make invisible
 				titleInst->flags |= 0x80;

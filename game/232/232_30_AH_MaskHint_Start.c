@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_AH_MaskHint_Start(short hintId, u_short bool_interruptWarppad)
+void DECOMP_AH_MaskHint_Start(s16 hintId, u16 bool_interruptWarppad)
 {
 	int iVar3;
 	int bitIndex;
@@ -45,7 +45,7 @@ void DECOMP_AH_MaskHint_Start(short hintId, u_short bool_interruptWarppad)
 
 	iVar3 = (bool_interruptWarppad & 1) * 3;
 
-	short *input = &D232.maskVars[0];
+	s16 *input = &D232.maskVars[0];
 
 	D232.maskOffsetPos[0] = input[iVar3 + 0];
 	D232.maskOffsetPos[1] = input[iVar3 + 1];

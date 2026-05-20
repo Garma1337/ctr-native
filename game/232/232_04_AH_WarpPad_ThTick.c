@@ -37,7 +37,7 @@ void DECOMP_AH_WarpPad_ThTick(struct Thread *t)
 	char randKartSpawn[8];
 
 	// for human reading purposes
-	unsigned char ADV_CUP = 100;
+	u8 ADV_CUP = 100;
 
 	boolOpen = 0;
 	gGT = sdata->gGT;
@@ -98,16 +98,16 @@ void DECOMP_AH_WarpPad_ThTick(struct Thread *t)
 	// if near a portal
 	if (
 	    // Trophy tracks (-16)
-	    ((((unsigned short)(levelID)) < SLIDE_COLISEUM) && (dist < 0x144000)) ||
+	    ((((u16)(levelID)) < SLIDE_COLISEUM) && (dist < 0x144000)) ||
 
 	    // Slide Col + Turbo Track (-16)
-	    ((((unsigned short)(levelID - SLIDE_COLISEUM)) < 2) && (dist < 0x90000)) ||
+	    ((((u16)(levelID - SLIDE_COLISEUM)) < 2) && (dist < 0x90000)) ||
 
 	    // Battle tracks (-18)
-	    ((((unsigned short)(levelID - NITRO_COURT)) < 7) && (dist < 0x144000)) ||
+	    ((((u16)(levelID - NITRO_COURT)) < 7) && (dist < 0x144000)) ||
 
 	    // Gem cups
-	    ((((unsigned short)(levelID)) >= 100) && (dist < 0x90000)))
+	    ((((u16)(levelID)) >= 100) && (dist < 0x90000)))
 	{
 		// if you are near a new warppad, or if you already were
 		// determined as near the same warppad in the last frame,
@@ -269,8 +269,7 @@ void DECOMP_AH_WarpPad_ThTick(struct Thread *t)
 		{
 			i = (gGT->timer / 0x3C) % 5;
 
-			InstArr0->colorRGBA = ((unsigned int)data.AdvCups[i].color[0] << 0x14) | ((unsigned int)data.AdvCups[i].color[1] << 0xc) |
-			                      ((unsigned int)data.AdvCups[i].color[2] << 0x4);
+			InstArr0->colorRGBA = ((u32)data.AdvCups[i].color[0] << 0x14) | ((u32)data.AdvCups[i].color[1] << 0xc) | ((u32)data.AdvCups[i].color[2] << 0x4);
 		}
 
 		// for Key or Gem
@@ -289,7 +288,7 @@ void DECOMP_AH_WarpPad_ThTick(struct Thread *t)
 		// what on earth was this RNG?
 		// how'd they come up with something so random, that looks so good?
 		i = DECOMP_MixRNG_Scramble();
-		warppadObj->spinRot_Beam[1] += ((short)(i >> 3) + (short)((i >> 3) / 6) * -6 + 1) * 0x200;
+		warppadObj->spinRot_Beam[1] += ((s16)(i >> 3) + (s16)((i >> 3) / 6) * -6 + 1) * 0x200;
 
 		// converted to TEST in rebuildPS1
 		ConvertRotToMatrix(&instArr[WPIS_OPEN_BEAM]->matrix, &warppadObj->spinRot_Beam[0]);
@@ -351,7 +350,7 @@ void DECOMP_AH_WarpPad_ThTick(struct Thread *t)
 				if (rng1 < 0)
 					rng2 = rng1 + 0xfff;
 
-				warppadObj->spinRot_Wisp[i][1] = (short)rng1 + (short)(rng2 >> 0xc) * -0x1000;
+				warppadObj->spinRot_Wisp[i][1] = (s16)rng1 + (s16)(rng2 >> 0xc) * -0x1000;
 			}
 		}
 
@@ -411,10 +410,10 @@ void DECOMP_AH_WarpPad_ThTick(struct Thread *t)
 					}
 				}
 
-				rewardScale2 = (unsigned int)(rewardScale2 * rewardScale) >> 8;
-				instArr[WPIS_OPEN_PRIZE1 + i]->scale[0] = (short)rewardScale2;
-				instArr[WPIS_OPEN_PRIZE1 + i]->scale[1] = (short)rewardScale2;
-				instArr[WPIS_OPEN_PRIZE1 + i]->scale[2] = (short)rewardScale2;
+				rewardScale2 = (u32)(rewardScale2 * rewardScale) >> 8;
+				instArr[WPIS_OPEN_PRIZE1 + i]->scale[0] = (s16)rewardScale2;
+				instArr[WPIS_OPEN_PRIZE1 + i]->scale[1] = (s16)rewardScale2;
+				instArr[WPIS_OPEN_PRIZE1 + i]->scale[2] = (s16)rewardScale2;
 			}
 		}
 
@@ -516,7 +515,7 @@ void DECOMP_AH_WarpPad_ThTick(struct Thread *t)
 					rng2 = 7 - i;
 
 					rng2 = (rng1 & 0xfff) % rng2 + 1;
-					rng2 = (short)rng2;
+					rng2 = (s16)rng2;
 
 					sdata->kartSpawnOrderArray[randKartSpawn[rng2]] = (char)i;
 

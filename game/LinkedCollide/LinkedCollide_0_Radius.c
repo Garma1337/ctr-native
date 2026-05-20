@@ -1,9 +1,9 @@
 #include <common.h>
 
-struct Instance *DECOMP_LinkedCollide_Radius(struct Instance *objInst, struct Thread *_objTh, struct Thread *thBucket, unsigned int hitRadius)
+struct Instance *DECOMP_LinkedCollide_Radius(struct Instance *objInst, struct Thread *_objTh, struct Thread *thBucket, u32 hitRadius)
 {
 	int diff_z, diff_y, diff_x;
-	unsigned int diff_dist;
+	u32 diff_dist;
 	struct Instance *thInst;
 
 	// if thread valid, loop through every thread in the linked list until there are no more threads

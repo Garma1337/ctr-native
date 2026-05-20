@@ -46,10 +46,7 @@ static Uint32 startTick;
 #define GetRCnt(x)   ((SDL_GetTicks() - startTick) * 15720) / 1000
 
 #define BUILD        926
-#define u_char       unsigned char
-#define u_short      unsigned short
-#define u_int        unsigned int
-#define u_long       unsigned int
+#define u_long       u32
 
 #ifndef __GNUC__
 #define _Static_assert(x)
@@ -264,7 +261,7 @@ void Platform_InitFilesystem(const char *disc_image)
 
 int NikoGetEnterKey(void)
 {
-	const u_char *kb = SDL_GetKeyboardState(NULL);
+	const u8 *kb = SDL_GetKeyboardState(NULL);
 	return (kb && kb[SDL_SCANCODE_RETURN]) ? 1 : 0;
 }
 

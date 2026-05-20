@@ -11,7 +11,7 @@ void DECOMP_RB_Blowup_Init(struct Instance *weaponInst)
 	struct Instance *shockwaveInst;
 	struct ModelHeader *headers;
 	struct GameTracker *gGT = sdata->gGT;
-	unsigned short color;
+	u16 color;
 	int *blowup;
 
 	// initialize thread for blowup

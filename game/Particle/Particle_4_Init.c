@@ -1,6 +1,6 @@
 #include <common.h>
 
-static int Particle_Init_Rand(short range)
+static int Particle_Init_Rand(s16 range)
 {
 	if (range == 0)
 		return 0;
@@ -8,7 +8,7 @@ static int Particle_Init_Rand(short range)
 	return DECOMP_MixRNG_Scramble() % range;
 }
 
-struct Particle *Particle_Init(u_int param_1, struct IconGroup *ig, struct ParticleEmitter *emSet)
+struct Particle *Particle_Init(u32 param_1, struct IconGroup *ig, struct ParticleEmitter *emSet)
 {
 	struct GameTracker *gGT = sdata->gGT;
 	struct Particle *p;
@@ -33,7 +33,7 @@ struct Particle *Particle_Init(u_int param_1, struct IconGroup *ig, struct Parti
 
 	while (emSet != NULL && emSet->flags != 0)
 	{
-		u_short flags = emSet->flags;
+		u16 flags = emSet->flags;
 		int axisIndex = emSet->initOffset;
 
 		if (axisIndex == 12)

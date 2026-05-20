@@ -2,9 +2,9 @@
 
 void DECOMP_MM_HighScore_MenuProc(struct RectMenu *menu_unused)
 {
-	u_char bVar1;
-	short sVar2;
-	u_int uVar3;
+	u8 bVar1;
+	s16 sVar2;
+	u32 uVar3;
 	int iVar4;
 	int iVar5;
 	int iVar6;
@@ -62,15 +62,15 @@ void DECOMP_MM_HighScore_MenuProc(struct RectMenu *menu_unused)
 			if ((sdata->buttonTapPerPlayer[0] & BTN_RIGHT) == 0)
 			{
 				iVar4 = DECOMP_RECTMENU_ProcessInput(&D230.menuHighScore);
-				if ((short)iVar4 == -1)
+				if ((s16)iVar4 == -1)
 				{
 					D230.highScore_transitionState = EXITING_MENU;
 				}
-				else if (((short)iVar4 == 1) && (D230.menuHighScore.rowSelected == 2))
+				else if (((s16)iVar4 == 1) && (D230.menuHighScore.rowSelected == 2))
 				{
 					D230.highScore_transitionState = D230.menuHighScore.rowSelected;
 				}
-				if (((u_short)D230.menuHighScore.rowSelected < 2) && (D230.highScore_rowDesired != D230.menuHighScore.rowSelected))
+				if (((u16)D230.menuHighScore.rowSelected < 2) && (D230.highScore_rowDesired != D230.menuHighScore.rowSelected))
 				{
 					D230.highScore_verticalMove[1] = -1;
 					if (D230.menuHighScore.rowSelected != 0)
@@ -102,7 +102,7 @@ void DECOMP_MM_HighScore_MenuProc(struct RectMenu *menu_unused)
 			do
 			{
 				D230.highScore_trackDesired = D230.highScore_trackDesired - 1;
-				if ((int)((u_int)(u_short)D230.highScore_trackDesired << 0x10) < 0)
+				if ((int)((u32)(u16)D230.highScore_trackDesired << 0x10) < 0)
 				{
 					D230.highScore_trackDesired = 0x11;
 				}
@@ -185,14 +185,14 @@ LAB_OVR_230__800b3c78:
 
 	if (((iVar7 != -0x200) && (iVar7 != 0x200)) && ((iVar4 != -0xd8 && (iVar4 != 0xd8))))
 	{
-		DECOMP_MM_HighScore_Draw(D230.highScore_trackCurr, (int)D230.highScore_rowCurr, (int)(short)iVar7, (int)(short)iVar4);
+		DECOMP_MM_HighScore_Draw(D230.highScore_trackCurr, (int)D230.highScore_rowCurr, (int)(s16)iVar7, (int)(s16)iVar4);
 		if (D230.highScore_transitionFrames[2] != 0)
 		{
 			// draw rectangle
 			local_20.w = 0x228;
 			local_20.h = 0x19;
 			local_20.x = D230.transitionMeta_HighScores[0].currX + -0x14;
-			local_20.y = D230.transitionMeta_HighScores[0].currY + (short)iVar4 + 9;
+			local_20.y = D230.transitionMeta_HighScores[0].currY + (s16)iVar4 + 9;
 			DECOMP_RECTMENU_DrawInnerRect(&local_20, 0, ot);
 		}
 	}
@@ -208,14 +208,14 @@ LAB_OVR_230__800b3c78:
 	}
 	if (((iVar7 != iVar5) || (iVar4 != iVar6)) && ((iVar5 != -0x200 && (((iVar5 != 0x200 && (iVar6 != -0xd8)) && (iVar6 != 0xd8))))))
 	{
-		DECOMP_MM_HighScore_Draw(D230.highScore_trackDesired, (int)D230.highScore_rowDesired, (int)(short)iVar5, (int)(short)iVar6);
+		DECOMP_MM_HighScore_Draw(D230.highScore_trackDesired, (int)D230.highScore_rowDesired, (int)(s16)iVar5, (int)(s16)iVar6);
 	}
 
 	// draw rectangle
 	local_20.w = 0x228;
 	local_20.h = 0x19;
 	local_20.x = D230.transitionMeta_HighScores[0].currX + -0x14;
-	local_20.y = D230.transitionMeta_HighScores[0].currY + (short)iVar6 + 9;
+	local_20.y = D230.transitionMeta_HighScores[0].currY + (s16)iVar6 + 9;
 	DECOMP_RECTMENU_DrawInnerRect(&local_20, 0, ot);
 
 	return;

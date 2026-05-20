@@ -4,12 +4,12 @@ void DECOMP_UI_VsWaitForPressX(void)
 {
 	char i, j;
 	char numAttacked;
-	short sVar4;
+	s16 sVar4;
 	int *puVar6;
 	int iVar8;
 	int string;
 	int local_78;
-	short shortArr3P4P[2 * 4];
+	s16 shortArr3P4P[2 * 4];
 
 	*(int *)&shortArr3P4P[0] = 0x350055;
 	*(int *)&shortArr3P4P[2] = 0x3500aa;
@@ -81,7 +81,7 @@ void DECOMP_UI_VsWaitForPressX(void)
 				for (j = 0; j < numPlyr; j++)
 				{
 					// 3P4P
-					short *shortArr = &shortArr3P4P[0];
+					s16 *shortArr = &shortArr3P4P[0];
 
 					if (numPlyr == 2)
 					{
@@ -114,7 +114,7 @@ void DECOMP_UI_VsWaitForPressX(void)
 
 
 					// Get font color based on battle team
-					sVar4 = (short)gGT->drivers[j]->BattleHUD.teamID;
+					sVar4 = (s16)gGT->drivers[j]->BattleHUD.teamID;
 					local_78 = (sVar4 + 0x18U | 0x8000);
 
 

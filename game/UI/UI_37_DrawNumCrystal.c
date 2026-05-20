@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_UI_DrawNumCrystal(short posX, short posY, struct Driver *d)
+void DECOMP_UI_DrawNumCrystal(s16 posX, s16 posY, struct Driver *d)
 {
 	int numCrystalsOwned;
 	int numCrystalsTotal;

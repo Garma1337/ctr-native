@@ -119,7 +119,7 @@ void DECOMP_AH_Pause_Draw(int pageID, int posX)
 			if (CHECK_ADV_BIT(adv->rewards, 0x62) != 0)
 				color = 1;
 
-			u_int *starColor;
+			u32 *starColor;
 			starColor = data.ptrColor[color];
 
 			struct Icon **iconPtrArray = ICONGROUP_GETICONS(gGT->iconGroup[5]);
@@ -155,7 +155,7 @@ void DECOMP_AH_Pause_Draw(int pageID, int posX)
 		// any other hub
 		else
 		{
-			short *check = &data.advHubTrackIDs[(hubID - 1) * 4];
+			s16 *check = &data.advHubTrackIDs[(hubID - 1) * 4];
 
 			// 4 tracks
 			for (int i = 0; i < 4; i++)
@@ -242,8 +242,8 @@ void DECOMP_AH_Pause_Draw(int pageID, int posX)
 
 		for (int i = 0; i < 5; i++)
 		{
-			short instPosX = posX + 0xf0 + ((i - 2) * 60);
-			short instPosY = (i & 1) * 0x28;
+			s16 instPosX = posX + 0xf0 + ((i - 2) * 60);
+			s16 instPosY = (i & 1) * 0x28;
 
 			ptrPauseObject->PauseMember[i].indexAdvPauseInst = i + 9;
 			ptrPauseObject->PauseMember[i].unlockFlag |= 1;
@@ -288,7 +288,7 @@ void DECOMP_AH_Pause_Draw(int pageID, int posX)
 
 		for (int i = 0; i < 3; i++)
 		{
-			short instPosX = posX + 0xf6 + ((i - 1) * 90);
+			s16 instPosX = posX + 0xf6 + ((i - 1) * 90);
 
 			ptrPauseObject->PauseMember[i].indexAdvPauseInst = i + 6;
 			ptrPauseObject->PauseMember[i].unlockFlag |= 1;
@@ -321,7 +321,7 @@ void DECOMP_AH_Pause_Draw(int pageID, int posX)
 	int iVar7 = len;
 
 	int iVar11 = iVar7 + 0x14;
-	if ((short)iVar7 < 0x20b)
+	if ((s16)iVar7 < 0x20b)
 	{
 		iVar11 = 0x21e;
 	}
@@ -330,7 +330,7 @@ void DECOMP_AH_Pause_Draw(int pageID, int posX)
 
 	r.x = 0x10a - half;
 	r.y = 0x20;
-	r.w = (short)iVar11 + -0x14;
+	r.w = (s16)iVar11 + -0x14;
 	r.h = 2;
 
 	Color color;
@@ -340,7 +340,7 @@ void DECOMP_AH_Pause_Draw(int pageID, int posX)
 
 	r.x = 0x100 - half;
 	r.y = 10;
-	r.w = (short)iVar11;
+	r.w = (s16)iVar11;
 	r.h = 0x82;
 
 	// Draw 2D Menu rectangle background
@@ -371,7 +371,7 @@ void DECOMP_AH_Pause_Draw(int pageID, int posX)
 
 		else
 		{
-			unsigned char *ptrColor = (unsigned char *)&D232.advPauseInst[index].color;
+			u8 *ptrColor = (u8 *)&D232.advPauseInst[index].color;
 
 			inst->alphaScale = 0;
 			inst->colorRGBA = (ptrColor[0] << 0x14) | (ptrColor[1] << 0xc) | (ptrColor[2] << 0x4);
@@ -393,14 +393,14 @@ void DECOMP_AH_Pause_Draw(int pageID, int posX)
 
 		inst->model = gGT->modelPtr[modelID];
 
-		short *rotArr = &ptrPauseObject->PauseMember[i].rot[0];
+		s16 *rotArr = &ptrPauseObject->PauseMember[i].rot[0];
 
 		ConvertRotToMatrix(&inst->matrix, rotArr);
 
 		// if using specular light
 		if ((inst->flags & 0x70000) == 0x20000)
 		{
-			short *specArr = &D232.advPauseInst[index].specLight[0];
+			s16 *specArr = &D232.advPauseInst[index].specLight[0];
 
 #ifndef REBUILD_PS1
 			Vector_SpecLightSpin2D(inst, rotArr, specArr);

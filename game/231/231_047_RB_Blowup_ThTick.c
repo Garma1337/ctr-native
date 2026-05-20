@@ -3,8 +3,8 @@
 // Identical to Burst, but except for i<x
 void DECOMP_RB_Blowup_ThTick(struct Thread *t)
 {
-	short animFrame;
-	short numFrames;
+	s16 animFrame;
+	s16 numFrames;
 	struct Instance *inst;
 	int boolAlive;
 

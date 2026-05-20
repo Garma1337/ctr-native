@@ -6,14 +6,14 @@ void DECOMP_RB_TNT_ThTick_ThrowOnHead(struct Thread *t)
 {
 	struct MineWeapon *mw;
 	struct Instance *inst;
-	short *array;
+	s16 *array;
 	struct GameTracker *gGT;
 
-	short rot[3];
-	short distHead;
+	s16 rot[3];
+	s16 distHead;
 
 	// matrix?
-	short auStack48[32];
+	s16 auStack48[32];
 
 	gGT = sdata->gGT;
 
@@ -32,7 +32,7 @@ void DECOMP_RB_TNT_ThTick_ThrowOnHead(struct Thread *t)
 		// 0x800b2ac4
 		// BSS before Baron_ThTick,
 		// determines height of TNT for each player
-		array = (short *)0x800b2ac4; // TODO: access named memory instead (D231?)
+		array = (s16 *)0x800b2ac4; // TODO: access named memory instead (D231?)
 
 		distHead = array[data.characterIDs[mw->driverTarget->driverID]];
 

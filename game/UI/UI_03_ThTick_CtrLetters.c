@@ -7,7 +7,7 @@ void DECOMP_UI_ThTick_CtrLetters(struct Thread *bucket)
 	int endOfRaceTransition;
 	struct Instance *inst;
 	struct UiElement3D *obj;
-	short rot[3];
+	s16 rot[3];
 
 	// thread->instance
 	inst = bucket->inst;
@@ -23,7 +23,7 @@ void DECOMP_UI_ThTick_CtrLetters(struct Thread *bucket)
 	obj->rot[1] += 0x40;
 
 #ifndef REBUILD_PS1
-	Vector_SpecLightSpin2D(inst, (short *)obj->rot, (short *)obj->lightDir);
+	Vector_SpecLightSpin2D(inst, (s16 *)obj->rot, (s16 *)obj->lightDir);
 #endif
 
 	if (
@@ -50,7 +50,7 @@ void DECOMP_UI_ThTick_CtrLetters(struct Thread *bucket)
 		{
 			endOfRaceTransition = (int)inst->scale[0] + -0x401;
 		}
-		rot[1] = ((short)(endOfRaceTransition >> 10) + 1) * 0x200;
+		rot[1] = ((s16)(endOfRaceTransition >> 10) + 1) * 0x200;
 	}
 	rot[0] = 0;
 	rot[2] = 0;

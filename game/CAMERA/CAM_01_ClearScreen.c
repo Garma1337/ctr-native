@@ -4,10 +4,10 @@ void DECOMP_CAM_ClearScreen(struct GameTracker *gGT)
 {
 	char numPlyr;
 	char swap;
-	short x;
-	short y;
-	short w;
-	short h;
+	s16 x;
+	s16 y;
+	s16 w;
+	s16 h;
 	struct DB *backDB;
 	int iVar5;
 	int iVar7;
@@ -78,8 +78,8 @@ void DECOMP_CAM_ClearScreen(struct GameTracker *gGT)
 			*(int *)&tile->r0 = *(int *)&level1->clearColor[0].rgb[0];
 			tile->code = 0x2;
 
-			*(int *)tile = *(unsigned int *)endOT | 0x3000000;
-			*(unsigned int *)endOT = (unsigned int)tile & 0xffffff;
+			*(int *)tile = *(u32 *)endOT | 0x3000000;
+			*(u32 *)endOT = (u32)tile & 0xffffff;
 
 			tile++;
 #endif
@@ -105,8 +105,8 @@ void DECOMP_CAM_ClearScreen(struct GameTracker *gGT)
 			*(int *)&tile->r0 = *(int *)&level1->clearColor[1].rgb[0];
 			tile->code = 0x2;
 
-			*(int *)tile = *(unsigned int *)endOT | 0x3000000;
-			*(unsigned int *)endOT = (unsigned int)tile & 0xffffff;
+			*(int *)tile = *(u32 *)endOT | 0x3000000;
+			*(u32 *)endOT = (u32)tile & 0xffffff;
 
 			tile++;
 #endif

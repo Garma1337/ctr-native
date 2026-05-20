@@ -2,8 +2,8 @@
 
 void DECOMP_RB_ShieldDark_ThTick_Grow(struct Thread *th)
 {
-	u_short shieldFlags;
-	short sVar4;
+	u16 shieldFlags;
+	s16 sVar4;
 	int i;
 	int rotY;
 	struct TrackerWeapon *tw;
@@ -93,7 +93,7 @@ void DECOMP_RB_ShieldDark_ThTick_Grow(struct Thread *th)
 		}
 	}
 
-	short pos[3];
+	s16 pos[3];
 	pos[0] = 0;
 	pos[1] = 0;
 	pos[2] = 0;
@@ -122,8 +122,8 @@ void DECOMP_RB_ShieldDark_ThTick_Grow(struct Thread *th)
 	// convert 3 rotation shorts into rotation matrix
 	ConvertRotToMatrix(&highlightInst->matrix, &shield->highlightRot[0]);
 
-	short scaleXZ;
-	short scaleY;
+	s16 scaleXZ;
+	s16 scaleY;
 
 	// if animation is not done
 	if (shield->animFrame < 8)
@@ -148,10 +148,10 @@ void DECOMP_RB_ShieldDark_ThTick_Grow(struct Thread *th)
 	// if animation is done
 	else
 	{
-		short timerIndex = ((gGT->timer >> 0) % 6);
+		s16 timerIndex = ((gGT->timer >> 0) % 6);
 
-		scaleXZ = ((short *)0x800b2d40)[timerIndex * 2 + 0];
-		scaleY = ((short *)0x800b2d40)[timerIndex * 2 + 1];
+		scaleXZ = ((s16 *)0x800b2d40)[timerIndex * 2 + 0];
+		scaleY = ((s16 *)0x800b2d40)[timerIndex * 2 + 1];
 
 		// set scale
 		shieldInst->scale[0] = scaleXZ;
@@ -174,7 +174,7 @@ void DECOMP_RB_ShieldDark_ThTick_Grow(struct Thread *th)
 	if ((shield->flags & 4) == 0)
 	{
 		// duration
-		short duration = shield->duration;
+		s16 duration = shield->duration;
 
 		// if out of time
 		if (duration == 0)
@@ -192,7 +192,7 @@ void DECOMP_RB_ShieldDark_ThTick_Grow(struct Thread *th)
 		// 2.0 seconds
 		if (duration < 1920)
 		{
-			sVar4 = (short)(((60 - (duration >> 5)) * 3072) / 60) + 0x400;
+			sVar4 = (s16)(((60 - (duration >> 5)) * 3072) / 60) + 0x400;
 
 			// transparency
 			shieldInst->alphaScale = sVar4;
@@ -239,7 +239,7 @@ void DECOMP_RB_ShieldDark_ThTick_Grow(struct Thread *th)
 	DECOMP_GAMEPAD_ShockForce1(player, 8, 0x7f);
 
 	// green shield
-	u_char model = 0x5e;
+	u8 model = 0x5e;
 
 	if ((shieldFlags & 4) != 0)
 	{

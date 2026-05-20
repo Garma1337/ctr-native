@@ -68,7 +68,7 @@ void DECOMP_VehTalkMask_ThTick(struct Thread *t)
 
 		if (iVar4 > 3)
 		{
-			mhInst->animFrame = (short)iVar6;
+			mhInst->animFrame = (s16)iVar6;
 
 			goto SkipLerp;
 		}
@@ -104,20 +104,20 @@ SkipLerp:
 	}
 	else
 	{
-		mhInst->animFrame = (short)iVar6;
+		mhInst->animFrame = (s16)iVar6;
 	}
 
 	// animation frame goes back and forth
 	// 0x00: mouth close
 	// 0x0C: mouth open
 
-	u_int lastFrame = DECOMP_VehFrameInst_GetNumAnimFrames(mhInst, 0) - 1;
+	u32 lastFrame = DECOMP_VehFrameInst_GetNumAnimFrames(mhInst, 0) - 1;
 
 	if (mhInst->animFrame < 0)
 		mhInst->animFrame = 0;
 
-	else if (lastFrame < (u_int)mhInst->animFrame)
-		mhInst->animFrame = (short)lastFrame;
+	else if (lastFrame < (u32)mhInst->animFrame)
+		mhInst->animFrame = (s16)lastFrame;
 
 	if (sdata->talkMask_boolDead != 0)
 	{

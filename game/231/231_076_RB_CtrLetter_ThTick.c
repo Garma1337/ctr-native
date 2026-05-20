@@ -1,6 +1,6 @@
 #include <common.h>
 
-short letterLightDir[4] = {0x94F, 0x94F, -0x94F, 0};
+s16 letterLightDir[4] = {0x94F, 0x94F, -0x94F, 0};
 
 void DECOMP_RB_CtrLetter_ThTick(struct Thread *t)
 {

@@ -3,7 +3,7 @@
 void DECOMP_BOTS_GotoStartingLine(struct Driver *d)
 {
 	int accelDuration;
-	short rotY;
+	s16 rotY;
 
 	sdata->unk_counter_upTo450 = 0;
 
@@ -13,15 +13,15 @@ void DECOMP_BOTS_GotoStartingLine(struct Driver *d)
 	char spawnPos = sdata->kartSpawnOrderArray[d->driverID];
 
 	// all within unk5bc
-	*(int *)((unsigned int)d + 0x5ec) = 0;
-	*(int *)((unsigned int)d + 0x5e8) = 0;
-	*(int *)((unsigned int)d + 0x5e4) = 0;
-	*(int *)((unsigned int)d + 0x5e0) = 0;
-	*(int *)((unsigned int)d + 0x5dc) = 0;
-	*(int *)((unsigned int)d + 0x5d8) = 0;
-	*(int *)((unsigned int)d + 0x5d4) = 0;
-	*(int *)((unsigned int)d + 0x5d0) = 0;
-	*(int *)((unsigned int)d + 0x5cc) = 0;
+	*(int *)((u32)d + 0x5ec) = 0;
+	*(int *)((u32)d + 0x5e8) = 0;
+	*(int *)((u32)d + 0x5e4) = 0;
+	*(int *)((u32)d + 0x5e0) = 0;
+	*(int *)((u32)d + 0x5dc) = 0;
+	*(int *)((u32)d + 0x5d8) = 0;
+	*(int *)((u32)d + 0x5d4) = 0;
+	*(int *)((u32)d + 0x5d0) = 0;
+	*(int *)((u32)d + 0x5cc) = 0;
 
 	d->botData.ai_posBackup[0] = d->posCurr.x;
 	d->botData.ai_posBackup[1] = d->posCurr.y;
@@ -52,7 +52,7 @@ void DECOMP_BOTS_GotoStartingLine(struct Driver *d)
 	d->actionsFlagSet |= 0x100000;
 
 	// calculate Y rotation
-	rotY = (short)d->botData.estimateRotNav[1] << 4;
+	rotY = (s16)d->botData.estimateRotNav[1] << 4;
 
 	// every possible Y rotation
 	d->botData.ai_rotY_608 = rotY;

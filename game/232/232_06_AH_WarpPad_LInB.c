@@ -17,7 +17,7 @@ void DECOMP_AH_WarpPad_LInB(struct Instance *inst)
 	struct Instance *newInst;
 
 	// for human reading purposes
-	unsigned char ADV_CUP = 100;
+	u8 ADV_CUP = 100;
 
 	gGT = sdata->gGT;
 
@@ -157,7 +157,7 @@ void DECOMP_AH_WarpPad_LInB(struct Instance *inst)
 			*(int *)((int)&newInst->matrix + 0x4) = *(int *)((int)&inst->matrix + 0x4);
 			*(int *)((int)&newInst->matrix + 0x8) = *(int *)((int)&inst->matrix + 0x8);
 			*(int *)((int)&newInst->matrix + 0xC) = *(int *)((int)&inst->matrix + 0xC);
-			*(short *)((int)&newInst->matrix + 0x10) = *(short *)((int)&inst->matrix + 0x10);
+			*(s16 *)((int)&newInst->matrix + 0x10) = *(s16 *)((int)&inst->matrix + 0x10);
 			newInst->matrix.t[0] = inst->matrix.t[0];
 			newInst->matrix.t[1] = inst->matrix.t[1];
 			newInst->matrix.t[2] = inst->matrix.t[2];
@@ -179,7 +179,7 @@ void DECOMP_AH_WarpPad_LInB(struct Instance *inst)
 				*(int *)((int)&newInst->matrix + 0x4) = *(int *)((int)&inst->matrix + 0x4);
 				*(int *)((int)&newInst->matrix + 0x8) = *(int *)((int)&inst->matrix + 0x8);
 				*(int *)((int)&newInst->matrix + 0xC) = *(int *)((int)&inst->matrix + 0xC);
-				*(short *)((int)&newInst->matrix + 0x10) = *(short *)((int)&inst->matrix + 0x10);
+				*(s16 *)((int)&newInst->matrix + 0x10) = *(s16 *)((int)&inst->matrix + 0x10);
 				newInst->matrix.t[0] = inst->matrix.t[0];
 				newInst->matrix.t[1] = inst->matrix.t[1] + i * 0x400;
 				newInst->matrix.t[2] = inst->matrix.t[2];
@@ -250,8 +250,7 @@ void DECOMP_AH_WarpPad_LInB(struct Instance *inst)
 				i = data.metaDataLEV[levelID].ctrTokenGroupID;
 
 				// token color
-				newInst->colorRGBA = ((unsigned int)data.AdvCups[i].color[0] << 0x14) | ((unsigned int)data.AdvCups[i].color[1] << 0xc) |
-				                     ((unsigned int)data.AdvCups[i].color[2] << 0x4);
+				newInst->colorRGBA = ((u32)data.AdvCups[i].color[0] << 0x14) | ((u32)data.AdvCups[i].color[1] << 0xc) | ((u32)data.AdvCups[i].color[2] << 0x4);
 
 // === Naughty Dog Bug ===
 // They made an array where every token color
@@ -311,7 +310,7 @@ void DECOMP_AH_WarpPad_LInB(struct Instance *inst)
 				*(int *)((int)&newInst->matrix + 0x4) = *(int *)((int)&inst->matrix + 0x4);
 				*(int *)((int)&newInst->matrix + 0x8) = *(int *)((int)&inst->matrix + 0x8);
 				*(int *)((int)&newInst->matrix + 0xC) = *(int *)((int)&inst->matrix + 0xC);
-				*(short *)((int)&newInst->matrix + 0x10) = *(short *)((int)&inst->matrix + 0x10);
+				*(s16 *)((int)&newInst->matrix + 0x10) = *(s16 *)((int)&inst->matrix + 0x10);
 				newInst->matrix.t[0] = inst->matrix.t[0];
 				newInst->matrix.t[1] = inst->matrix.t[1] + 0x100;
 				newInst->matrix.t[2] = inst->matrix.t[2];
@@ -370,8 +369,7 @@ void DECOMP_AH_WarpPad_LInB(struct Instance *inst)
 			i = levelID - ADV_CUP;
 
 			// token color
-			newInst->colorRGBA = ((unsigned int)data.AdvCups[i].color[0] << 0x14) | ((unsigned int)data.AdvCups[i].color[1] << 0xc) |
-			                     ((unsigned int)data.AdvCups[i].color[2] << 0x4);
+			newInst->colorRGBA = ((u32)data.AdvCups[i].color[0] << 0x14) | ((u32)data.AdvCups[i].color[1] << 0xc) | ((u32)data.AdvCups[i].color[2] << 0x4);
 
 			warppadObj->inst[WPIS_OPEN_PRIZE1] = newInst;
 
@@ -413,7 +411,7 @@ void DECOMP_AH_WarpPad_LInB(struct Instance *inst)
 	*(int *)((int)&newInst->matrix + 0x4) = *(int *)((int)&inst->matrix + 0x4);
 	*(int *)((int)&newInst->matrix + 0x8) = *(int *)((int)&inst->matrix + 0x8);
 	*(int *)((int)&newInst->matrix + 0xC) = *(int *)((int)&inst->matrix + 0xC);
-	*(short *)((int)&newInst->matrix + 0x10) = *(short *)((int)&inst->matrix + 0x10);
+	*(s16 *)((int)&newInst->matrix + 0x10) = *(s16 *)((int)&inst->matrix + 0x10);
 	newInst->matrix.t[0] = inst->matrix.t[0];
 	newInst->matrix.t[1] = inst->matrix.t[1] + 0x100;
 	newInst->matrix.t[2] = inst->matrix.t[2];
@@ -474,8 +472,7 @@ void DECOMP_AH_WarpPad_LInB(struct Instance *inst)
 			i = levelID - ADV_CUP;
 
 			// token color
-			newInst->colorRGBA = ((unsigned int)data.AdvCups[i].color[0] << 0x14) | ((unsigned int)data.AdvCups[i].color[1] << 0xc) |
-			                     ((unsigned int)data.AdvCups[i].color[2] << 0x4);
+			newInst->colorRGBA = ((u32)data.AdvCups[i].color[0] << 0x14) | ((u32)data.AdvCups[i].color[1] << 0xc) | ((u32)data.AdvCups[i].color[2] << 0x4);
 
 			// === Naughty Dog Bug ===
 			// They made an array where every token color
@@ -502,7 +499,7 @@ void DECOMP_AH_WarpPad_LInB(struct Instance *inst)
 	*(int *)((int)&newInst->matrix + 0x4) = 0;
 	*(int *)((int)&newInst->matrix + 0x8) = 0x1000;
 	*(int *)((int)&newInst->matrix + 0xC) = 0;
-	*(short *)((int)&newInst->matrix + 0x10) = 0x1000;
+	*(s16 *)((int)&newInst->matrix + 0x10) = 0x1000;
 	newInst->matrix.t[0] = inst->matrix.t[0];
 	newInst->matrix.t[1] = inst->matrix.t[1] + 0x100;
 	newInst->matrix.t[2] = inst->matrix.t[2];
@@ -528,7 +525,7 @@ void DECOMP_AH_WarpPad_LInB(struct Instance *inst)
 		*(int *)((int)&newInst->matrix + 0x4) = 0;
 		*(int *)((int)&newInst->matrix + 0x8) = 0x1000;
 		*(int *)((int)&newInst->matrix + 0xC) = 0;
-		*(short *)((int)&newInst->matrix + 0x10) = 0x1000;
+		*(s16 *)((int)&newInst->matrix + 0x10) = 0x1000;
 		newInst->matrix.t[0] = inst->matrix.t[0];
 		newInst->matrix.t[1] = inst->matrix.t[1] + 0x100;
 		newInst->matrix.t[2] = inst->matrix.t[2];
@@ -561,7 +558,7 @@ void DECOMP_AH_WarpPad_LInB(struct Instance *inst)
 	*(int *)((int)&newInst->matrix + 0x4) = 0;
 	*(int *)((int)&newInst->matrix + 0x8) = 0x1000;
 	*(int *)((int)&newInst->matrix + 0xC) = 0;
-	*(short *)((int)&newInst->matrix + 0x10) = 0x1000;
+	*(s16 *)((int)&newInst->matrix + 0x10) = 0x1000;
 	newInst->matrix.t[0] = inst->matrix.t[0];
 	newInst->matrix.t[1] = inst->matrix.t[1] + 0x100;
 	newInst->matrix.t[2] = inst->matrix.t[2];

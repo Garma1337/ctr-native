@@ -1,6 +1,6 @@
 #include <common.h>
 
-uint8_t MEMCARD_Save(int slotIdx, char *name, char *param_3, uint8_t *ptrMemcard, int memcardFileSize, unsigned int param6)
+u8 MEMCARD_Save(int slotIdx, char *name, char *param_3, u8 *ptrMemcard, int memcardFileSize, u32 param6)
 
 {
 	if (sdata->memcard_stage != MC_STAGE_IDLE)

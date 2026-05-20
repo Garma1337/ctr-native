@@ -5,8 +5,8 @@ int DECOMP_CAM_Path_GetNumPoints(void)
 	struct GameTracker *gGT;
 	struct Level *level1;
 	struct SpawnType1 *ptrSpawnType1;
-	short *introCam;
-	unsigned short uVar4;
+	s16 *introCam;
+	u16 uVar4;
 
 	uVar4 = 0;
 

@@ -1,12 +1,12 @@
 #include <common.h>
 
-void DECOMP_Audio_SetMaskSong(u_int tempo)
+void DECOMP_Audio_SetMaskSong(u32 tempo)
 {
 	char i;
-	u_char isMaskUsed;
-	u_int songID;
+	u8 isMaskUsed;
+	u32 songID;
 	struct GameTracker *gGT = sdata->gGT;
-	u_int gameMode = gGT->gameMode1;
+	u32 gameMode = gGT->gameMode1;
 
 	// Assume no player is using a mask
 	isMaskUsed = false;

@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_RB_Warpball_SeekDriver(struct TrackerWeapon *tw, unsigned int param_2, struct Driver *d)
+void DECOMP_RB_Warpball_SeekDriver(struct TrackerWeapon *tw, u32 param_2, struct Driver *d)
 {
 	int iVar1;
 
@@ -16,7 +16,7 @@ void DECOMP_RB_Warpball_SeekDriver(struct TrackerWeapon *tw, unsigned int param_
 	// pointer to path node
 	struct CheckpointNode *cn = &first[param_2];
 
-	while ((d->distanceToFinish_curr <= (unsigned int)(cn->distToFinish << 3)) &&
+	while ((d->distanceToFinish_curr <= (u32)(cn->distToFinish << 3)) &&
 
 	       // node is not first node
 	       (cn != first))
@@ -25,7 +25,7 @@ void DECOMP_RB_Warpball_SeekDriver(struct TrackerWeapon *tw, unsigned int param_
 	}
 
 	// path index = pathPtr2 - pathPtr1
-	tw->nodeCurrIndex = ((unsigned int)cn - (unsigned int)first) / sizeof(struct CheckpointNode);
+	tw->nodeCurrIndex = ((u32)cn - (u32)first) / sizeof(struct CheckpointNode);
 
 	return;
 }

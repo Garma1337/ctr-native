@@ -7,7 +7,7 @@ struct Instance *DECOMP_LinkedCollide_Hitbox(struct HitboxDesc *objBoxDesc)
 	MATRIX thInstMatrix;
 	SVECTOR thInstPos;
 	VECTOR outVec;
-	long flags[2];
+	s32 flags[2];
 
 	// Loop over thBucket Linked List
 	for (struct Thread *thBucket = objBoxDesc->bucket; thBucket != 0; thBucket = thBucket->siblingThread)
@@ -27,7 +27,7 @@ struct Instance *DECOMP_LinkedCollide_Hitbox(struct HitboxDesc *objBoxDesc)
 		SetRotMatrix(&thInstMatrix);
 		SetTransMatrix(&thInstMatrix);
 
-		RotTrans(&thInstPos, &outVec, flags);
+		RotTrans(&thInstPos, &outVec, (long *)flags);
 
 		if ((objBoxDesc->bbox.min[0] < outVec.vx) && (objBoxDesc->bbox.max[0] > outVec.vx) && (objBoxDesc->bbox.min[2] < outVec.vz) &&
 		    (objBoxDesc->bbox.max[2] > outVec.vz) && (objBoxDesc->bbox.min[1] < diff_y) && (objBoxDesc->bbox.max[1] > diff_y))

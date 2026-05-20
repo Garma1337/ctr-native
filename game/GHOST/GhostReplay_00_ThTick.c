@@ -5,16 +5,16 @@ void DECOMP_GhostReplay_ThTick(struct Thread *t)
 	struct GhostTape *tape;
 	struct GameTracker *gGT;
 	struct GhostHeader *gh;
-	short opcodePos;
+	s16 opcodePos;
 	int packetIdx;
-	unsigned int scaledPacketIdx;
-	unsigned short lerp4096;
-	unsigned int delta;
-	unsigned char *packetPtr;
+	u32 scaledPacketIdx;
+	u16 lerp4096;
+	u32 delta;
+	u8 *packetPtr;
 	struct Instance *inst;
 	struct Driver *d;
 	struct GhostPacket *packet;
-	short local_rot[3]; // ushort?
+	s16 local_rot[3]; // ushort?
 	int timeInRace;
 	int scaledNum;
 	int color;
@@ -79,7 +79,7 @@ void DECOMP_GhostReplay_ThTick(struct Thread *t)
 	{
 		opcodePos = 0;
 		packetPtr = tape->ptrCurr;
-		short tmpPos[3] = {0};
+		s16 tmpPos[3] = {0};
 
 		char *packetEndChain = tape->ptrCurr;
 
@@ -122,7 +122,7 @@ void DECOMP_GhostReplay_ThTick(struct Thread *t)
 			}
 
 			// if opcode is seen
-			u_int opcode = (u_int)packetPtr[0];
+			u32 opcode = (u32)packetPtr[0];
 			if ((opcode + 0x80 & 0xff) < 5)
 			{
 				switch (opcode)
@@ -131,17 +131,17 @@ void DECOMP_GhostReplay_ThTick(struct Thread *t)
 					for (int i = 0; i < 3; ++i)
 					{
 						// Little Endian to Big Endian
-						u_short rawValue = (u_short)((packetPtr[1 + i * 2] << 8) | packetPtr[2 + i * 2]);
+						u16 rawValue = (u16)((packetPtr[1 + i * 2] << 8) | packetPtr[2 + i * 2]);
 
-						tmpPos[i] = (short)(((int)((u_int)rawValue << 0x10)) >> 0xd);
+						tmpPos[i] = (s16)(((int)((u32)rawValue << 0x10)) >> 0xd);
 						packet->pos[i] = tmpPos[i];
 					}
 
 					packet->time = 0;
 
 					// yes, this is correct
-					packet->rot[1] = (u_short)packetPtr[9] << 4;
-					packet->rot[0] = (u_short)packetPtr[10] << 4;
+					packet->rot[1] = (u16)packetPtr[9] << 4;
+					packet->rot[0] = (u16)packetPtr[10] << 4;
 
 					// if 2nd position opcode
 					if (opcodePos == 1)
@@ -208,7 +208,7 @@ void DECOMP_GhostReplay_ThTick(struct Thread *t)
 			{
 				for (int i = 0; i < 3; ++i)
 				{
-					tmpPos[i] += (short)((char)packetPtr[i]) * 8;
+					tmpPos[i] += (s16)((char)packetPtr[i]) * 8;
 					packet->pos[i] = tmpPos[i];
 				}
 
@@ -226,7 +226,7 @@ void DECOMP_GhostReplay_ThTick(struct Thread *t)
 			}
 		}
 
-		tape->numPacketsInArray = ((unsigned int)packet - (unsigned int)&tape->packets[0]) >> 4;
+		tape->numPacketsInArray = ((u32)packet - (u32)&tape->packets[0]) >> 4;
 
 		tape->numPacketsInArray -= 1;
 
@@ -307,14 +307,14 @@ void DECOMP_GhostReplay_ThTick(struct Thread *t)
 	d->rotCurr.y = local_rot[1];
 	d->rotCurr.z = local_rot[2];
 
-	unsigned char *buffer = tape->packets[packetIdx].bufferPacket;
+	u8 *buffer = tape->packets[packetIdx].bufferPacket;
 
 	while (tape->packetID < packetIdx)
 	{
 		if (tape->ptrEnd <= (void *)buffer)
 			break;
 
-		uint8_t opcode = buffer[0];
+		u8 opcode = buffer[0];
 
 		if (4 < (opcode + 0x80 & 0xFF))
 		{

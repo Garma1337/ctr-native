@@ -1,25 +1,25 @@
 #include <common.h>
 
-void DECOMP_MM_HighScore_Draw(u_short trackIndex, u_int rowIndex, u_int posX, u_int posY)
+void DECOMP_MM_HighScore_Draw(u16 trackIndex, u32 rowIndex, u32 posX, u32 posY)
 {
 	char i;
-	short numColor;
-	short sVar1;
-	short lineWidth;
+	s16 numColor;
+	s16 sVar1;
+	s16 lineWidth;
 	int *colorPtr;
-	short levelID;
+	s16 levelID;
 	struct HighScoreEntry *entry;
-	u_int uVar9;
-	u_int uVar10;
+	u32 uVar9;
+	u32 uVar10;
 	RECT videoBox;
-	short offsetX;
-	short offsetY;
+	s16 offsetX;
+	s16 offsetY;
 
 	struct GameTracker *gGT = sdata->gGT;
 
-	offsetX = (short)posX;
+	offsetX = (s16)posX;
 	uVar10 = posX & 0xffff;
-	offsetY = (short)posY;
+	offsetY = (s16)posY;
 	uVar9 = posY & 0xffff;
 
 	levelID = D230.arcadeTracks[trackIndex].levID;
@@ -44,10 +44,10 @@ void DECOMP_MM_HighScore_Draw(u_short trackIndex, u_int rowIndex, u_int posX, u_
 	                        colorPtr[1], colorPtr[2], colorPtr[3], 0, 0x1000, 0);
 
 	// draw track name
-	DECOMP_DecalFont_DrawLine(sdata->lngStrings[data.metaDataLEV[levelID].name_LNG], D230.transitionMeta_HighScores[0].currX + (short)(posX + 0x100),
-	                          D230.transitionMeta_HighScores[0].currY + (short)(posY + 0xe), FONT_BIG, JUSTIFY_CENTER);
+	DECOMP_DecalFont_DrawLine(sdata->lngStrings[data.metaDataLEV[levelID].name_LNG], D230.transitionMeta_HighScores[0].currX + (s16)(posX + 0x100),
+	                          D230.transitionMeta_HighScores[0].currY + (s16)(posY + 0xe), FONT_BIG, JUSTIFY_CENTER);
 
-	u_int iconColor = D230.highscore_iconColor;
+	u32 iconColor = D230.highscore_iconColor;
 
 	// "BEST TRACK TIMES"
 	DECOMP_MM_HighScore_Text3D(sdata->lngStrings[0xb3], D230.transitionMeta_HighScores[1].currX + (uVar10 + 0x20),

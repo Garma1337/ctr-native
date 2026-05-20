@@ -15,7 +15,7 @@ void DECOMP_BOTS_Driver_Convert(struct Driver *d)
 
 	char initialNavPathIndex = sdata->driver_pathIndexIDs[d->driverID];
 	char navPathIndex;
-	short navPathPointsCount; // = sdata->NavPath_ptrHeader[navPathIndex]->numPoints;
+	s16 navPathPointsCount; // = sdata->NavPath_ptrHeader[navPathIndex]->numPoints;
 
 	navPathIndex = initialNavPathIndex;
 	while (1)
@@ -40,7 +40,7 @@ void DECOMP_BOTS_Driver_Convert(struct Driver *d)
 
 	d->botData.unk5bc.ai_speedY = d->ySpeed;
 
-	short speedApprox = d->speedApprox;
+	s16 speedApprox = d->speedApprox;
 
 	d->botData.botPath = navPathIndex;
 
@@ -74,7 +74,7 @@ void DECOMP_BOTS_Driver_Convert(struct Driver *d)
 
 	DECOMP_GAMEPAD_JogCon2(d, 0, 0);
 
-	unsigned int oldActionFlagsSet = d->actionsFlagSet;
+	u32 oldActionFlagsSet = d->actionsFlagSet;
 
 	d->actionsFlagSet = (oldActionFlagsSet & 0xfffffff3) | 0x100000;
 

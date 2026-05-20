@@ -5,8 +5,8 @@ void DECOMP_RB_Spider_DrawWebs(struct Thread *t, struct PushBuffer *pb)
 {
 	typedef struct
 	{
-		u_int tag;
-		u_int tpage;
+		u32 tag;
+		u32 tpage;
 		LINE_F2 f2;
 	} multiCmdPacket;
 
@@ -15,19 +15,19 @@ void DECOMP_RB_Spider_DrawWebs(struct Thread *t, struct PushBuffer *pb)
 	MATRIX *m;
 	multiCmdPacket *p;
 
-	short sVar1;
-	u_short uVar2;
+	s16 sVar1;
+	u16 uVar2;
 	int iVar3;
-	u_int lineColor;
-	u_int *ot;
+	u32 lineColor;
+	u32 *ot;
 	int depth;
-	u_int *puVar8;
-	short *scratchpad;
+	u32 *puVar8;
+	s16 *scratchpad;
 	int iVar11;
 	int numSpiders;
 	int iVar13;
 	int iVar16;
-	u_int uVar17;
+	u32 uVar17;
 
 	gGT = sdata->gGT;
 	primMem = &gGT->backBuffer->primMem;
@@ -36,7 +36,7 @@ void DECOMP_RB_Spider_DrawWebs(struct Thread *t, struct PushBuffer *pb)
 	if (t == NULL)
 		return;
 
-	scratchpad = (short *)0x1f800000;
+	scratchpad = (s16 *)0x1f800000;
 
 	// all threads
 	for (numSpiders = 0; t != NULL; numSpiders++)
@@ -68,7 +68,7 @@ void DECOMP_RB_Spider_DrawWebs(struct Thread *t, struct PushBuffer *pb)
 
 	p = primMem->curr;
 	p = p + (numSpiders * numPlyr);
-	if ((u_int)p >= (u_int)primMem->endMin100) // these casts may need to be (int) instead of (u_int)
+	if ((u32)p >= (u32)primMem->endMin100) // these casts may need to be (int) instead of (u32)
 		return;
 
 	// loop through all players
@@ -81,10 +81,10 @@ void DECOMP_RB_Spider_DrawWebs(struct Thread *t, struct PushBuffer *pb)
 		gte_SetRotMatrix(m);
 		gte_SetTransMatrix(m);
 
-		scratchpad = (short *)0x1f800000;
+		scratchpad = (s16 *)0x1f800000;
 
 		// 0x10 * numSpiders
-		short *output = (short *)0x1F800050;
+		s16 *output = (s16 *)0x1F800050;
 
 		// loop through spiders
 		for (j = 0; j < numSpiders; j++)
@@ -124,7 +124,7 @@ void DECOMP_RB_Spider_DrawWebs(struct Thread *t, struct PushBuffer *pb)
 
 			// if line is close enough to the screen
 			// to be seen, then generate primitives
-			if ((unsigned int)(depth - 1) < (0x1200 - 1))
+			if ((u32)(depth - 1) < (0x1200 - 1))
 			{
 				p = primMem->curr;
 				primMem->curr = p + 1;
@@ -151,18 +151,18 @@ void DECOMP_RB_Spider_DrawWebs(struct Thread *t, struct PushBuffer *pb)
 					depth = 0x3ff;
 
 				// pushBuffer 0xf4, ptrOT
-				ot = (u_int *)&pb->ptrOT[depth];
+				ot = (u32 *)&pb->ptrOT[depth];
 
 				// prim header, OT and prim len
 				*(int *)p = *ot | 0x5000000;
-				*ot = (u_int)p & 0xffffff;
+				*ot = (u32)p & 0xffffff;
 			}
 		}
 	}
 }
 #endif
 
-short spiderArr[] = {
+s16 spiderArr[] = {
     // first 13
     0x4c0, 0x439, 0x3A6, 0x306, 0x266, 0x1c8, 0x139, 0xb9, 0x59, 0x17, 0, 0, 0,
 
@@ -171,7 +171,7 @@ short spiderArr[] = {
 
 void DECOMP_RB_Spider_ThTick(struct Thread *t)
 {
-	short sVar2;
+	s16 sVar2;
 	int iVar3;
 
 	struct Driver *victim;
@@ -278,8 +278,8 @@ void DECOMP_RB_Spider_ThTick(struct Thread *t)
 		if (sVar2 < 0xb)
 		{
 			// change spider scaleX and scaleZ based on animation frame
-			spider->shadowInst->scale[0] = (short)((sVar2 << 0xc) / 10) + 0x1800;
-			spider->shadowInst->scale[2] = (short)((sVar2 << 0xc) / 10) + 0x1800;
+			spider->shadowInst->scale[0] = (s16)((sVar2 << 0xc) / 10) + 0x1800;
+			spider->shadowInst->scale[2] = (s16)((sVar2 << 0xc) / 10) + 0x1800;
 		}
 	}
 
@@ -291,7 +291,7 @@ void DECOMP_RB_Spider_ThTick(struct Thread *t)
 void DECOMP_RB_Spider_LInB(struct Instance *inst)
 {
 	struct Spider *spider;
-	short rot[3];
+	s16 rot[3];
 
 // Spider and Turtle break PC?
 // Too many polygons?

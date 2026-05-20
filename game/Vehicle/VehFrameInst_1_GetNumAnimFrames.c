@@ -1,6 +1,6 @@
 #include <common.h>
 
-u_int DECOMP_VehFrameInst_GetNumAnimFrames(struct Instance *inst, int animIndex)
+u32 DECOMP_VehFrameInst_GetNumAnimFrames(struct Instance *inst, int animIndex)
 {
 	if (inst->model == NULL)
 		return 0;
@@ -11,7 +11,7 @@ u_int DECOMP_VehFrameInst_GetNumAnimFrames(struct Instance *inst, int animIndex)
 
 	struct ModelHeader *mh = inst->model->headers;
 
-	if ((unsigned int)animIndex >= mh->numAnimations)
+	if ((u32)animIndex >= mh->numAnimations)
 		return 0;
 	if (mh->ptrAnimations == NULL)
 		return 0;

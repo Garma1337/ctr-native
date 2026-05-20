@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_CDSYS_XASeek(int boolCdControl, int categoryID, int xaID) // third param should maybe be `u_int`
+void DECOMP_CDSYS_XASeek(int boolCdControl, int categoryID, int xaID) // third param should maybe be `u32`
 {
 	CdlLOC loc;
 	int com;

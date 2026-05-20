@@ -4,7 +4,7 @@ void DECOMP_RB_Blade_ThTick(struct Thread *t)
 {
 	struct Blade *bladeObj;
 	struct Instance *bladeInst;
-	short rot[3];
+	s16 rot[3];
 
 	bladeObj = (struct Blade *)t->object;
 	bladeInst = t->inst;

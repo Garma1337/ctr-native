@@ -73,9 +73,9 @@ enum MC_SCREEN
 // 0x18 (24) bytes each
 struct HighScoreEntry
 {
-	unsigned int time;
+	u32 time;
 	char name[18];
-	unsigned short characterID;
+	u16 characterID;
 };
 
 // 0x124 bytes each
@@ -90,7 +90,7 @@ struct HighScoreTrack
 	// 1 - N Tropy Open
 	// 2 - N Tropy Beaten, Oxide Open
 	// 4 - Oxide Beaten
-	unsigned int timeTrialFlags;
+	u32 timeTrialFlags;
 };
 
 struct GameProgress
@@ -99,12 +99,12 @@ struct GameProgress
 	// which must be this structure here
 
 	// 8008e6e8
-	unsigned int unknown;
+	u32 unknown;
 
 	// 8008e6ec - UsaRetail
 	// 8008eaa0 - EurRetail
 	// characters, tracks, cups, scrapbook
-	unsigned int unlocks[2];
+	u32 unlocks[2];
 
 	// 8008e6f4 -- 0x1488 bytes large
 	struct HighScoreTrack highScoreTracks[18];
@@ -118,7 +118,7 @@ struct GameProgress
 struct AdvProgress
 {
 	// 8008fba4
-	unsigned int rewards[6];
+	u32 rewards[6];
 
 	/*
 	    // 0x00:
@@ -296,13 +296,13 @@ struct AdvProgress
 	char name[18]; // 0x12
 
 	// 8FBCE
-	short characterID;
+	s16 characterID;
 
 	// 8FBD0
-	short unk;
+	s16 unk;
 
 	// 8FBD2
-	short HubLevYouSavedOn;
+	s16 HubLevYouSavedOn;
 
 	// 8FBD4
 	// Count up to 10 times player lost
@@ -337,13 +337,13 @@ struct GhostProfile
 	char SubmitName_name[0x11];
 
 	// 0x26
-	short alwaysOne;
+	s16 alwaysOne;
 
 	// 0x28
-	short trackID;
+	s16 trackID;
 
 	// 0x2A
-	short characterID;
+	s16 characterID;
 
 	// 0x2C
 	int memcardProfileIndex;
@@ -358,13 +358,13 @@ struct GhostProfile
 struct GameOptions
 {
 	// 8008fb7c
-	short volFx;
+	s16 volFx;
 
 	// 8008fb7e
-	short volMusic;
+	s16 volMusic;
 
 	// 8008fb80
-	short volVoice;
+	s16 volVoice;
 
 	// 8008fb82  24 bytes total (0x18)
 	struct RacingWheelData rwd[4];
@@ -379,7 +379,7 @@ struct GameOptions
 
 	// 8008fb9c
 	// backup of gameMode1 flag
-	u_int gameMode1_0xf00;
+	u32 gameMode1_0xf00;
 
 #if BUILD >= UsaRetail
 	// 8008fba0
@@ -391,7 +391,7 @@ struct GameOptions
 struct MemcardProfile
 {
 	// 0x0
-	short header[2];
+	s16 header[2];
 
 	// 0x4
 	struct AdvProgress advProgress[4];

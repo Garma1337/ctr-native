@@ -4,7 +4,7 @@
 void CS_Camera_ThTick_Podium(struct Thread *th)
 {
 	struct GameTracker *gGT = sdata->gGT;
-	u_short *podium = th->object;
+	u16 *podium = th->object;
 
 	if (podium[0] == 0)
 		gGT->drivers[0]->funcPtrs[0] = DECOMP_VehStuckProc_RIP_Init;
@@ -19,7 +19,7 @@ void CS_Camera_ThTick_Podium(struct Thread *th)
 
 	if (((OVR_233.cutsceneState != 0 || OVR_233.boolStartToSkip != 0) && ((gGT->gameMode2 & CUP_NEW_WIN) != 0)) && sdata->ptrActiveMenu == NULL)
 	{
-		short stringIndex = 0x236;
+		s16 stringIndex = 0x236;
 
 		if ((gGT->gameMode2 & CUP_NEW_BATTLE) != 0)
 			stringIndex = 0x237;
@@ -35,11 +35,11 @@ void CS_Camera_ThTick_Podium(struct Thread *th)
 
 		if (maxFrame != 0)
 		{
-			u_short frameTime = podium[0] + gGT->elapsedTimeMS;
-			int frameTimeSigned = (short)frameTime;
-			short pos[3];
-			short rot[3];
-			short camPath[4];
+			u16 frameTime = podium[0] + gGT->elapsedTimeMS;
+			int frameTimeSigned = (s16)frameTime;
+			s16 pos[3];
+			s16 rot[3];
+			s16 camPath[4];
 			int frame;
 
 			if (maxFrame - 0x12c0 < frameTimeSigned)
@@ -77,8 +77,8 @@ void CS_Camera_ThTick_Podium(struct Thread *th)
 
 	if (((gGT->gameMode2 & CUP_NEW_WIN) == 0) && sdata->ptrActiveMenu == NULL)
 	{
-		u_int tapped = sdata->gGamepads->gamepad[0].buttonsTapped;
-		short rewardId;
+		u32 tapped = sdata->gGamepads->gamepad[0].buttonsTapped;
+		s16 rewardId;
 
 		if (((tapped & BTN_START) == 0) && ((OVR_233.cutsceneState == 0 || (tapped & (BTN_START | BTN_CROSS_one)) == 0)) &&
 		    ((gGT->gameMode2 & VEH_FREEZE_PODIUM) != 0))
@@ -107,7 +107,7 @@ void CS_Camera_ThTick_Podium(struct Thread *th)
 		{
 			if (DECOMP_CS_Camera_BoolGotoBoss() == 0)
 			{
-				short hintID;
+				s16 hintID;
 
 				OVR_233.isCutsceneOver = 1;
 				th->flags |= 0x800;

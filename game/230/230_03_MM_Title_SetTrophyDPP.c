@@ -2,7 +2,7 @@
 
 void DECOMP_MM_Title_SetTrophyDPP(void)
 {
-	unsigned int idpp2_b8;
+	u32 idpp2_b8;
 	struct InstDrawPerPlayer *idpp1;
 	struct InstDrawPerPlayer *idpp2;
 	struct Instance **instArr;

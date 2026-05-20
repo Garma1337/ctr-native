@@ -4,7 +4,7 @@
 struct
 {
 	int a;
-	short b1, b2, c, d, e, f;
+	s16 b1, b2, c, d, e, f;
 } commands;
 #endif
 
@@ -16,7 +16,7 @@ void DECOMP_MainInit_VRAMClear()
 	struct
 	{
 		int a;
-		short b1, b2, c, d, e, f;
+		s16 b1, b2, c, d, e, f;
 	} commands;
 #endif
 
@@ -31,9 +31,9 @@ void DECOMP_MainInit_VRAMClear()
 	commands.d = 0;
 	commands.e = 0x3ff;
 	commands.f = 0x1ff;
-	DrawOTag((uint32_t *)&commands);
+	DrawOTag((u32 *)&commands);
 
 	commands.d = 0x1ff;
 	commands.f = 1;
-	DrawOTag((uint32_t *)&commands);
+	DrawOTag((u32 *)&commands);
 }

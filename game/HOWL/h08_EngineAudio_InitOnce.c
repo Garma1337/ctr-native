@@ -3,15 +3,15 @@
 // 272/304
 
 // Initialize car engine audio system for one driver
-char DECOMP_EngineAudio_InitOnce(u_int soundID, u_int flags)
+char DECOMP_EngineAudio_InitOnce(u32 soundID, u32 flags)
 
 {
 	struct EngineFX *ptrEngineFX;
 	struct ChannelStats *channel;
-	u_int distortion = flags >> 8;
-	u_int volume = flags >> 0x10;
-	u_short echo = flags >> 0x18;
-	u_short LR = flags & 0xff;
+	u32 distortion = flags >> 8;
+	u32 volume = flags >> 0x10;
+	u16 echo = flags >> 0x18;
+	u16 LR = flags & 0xff;
 	struct ChannelAttr channelAttr;
 
 	if (sdata->boolAudioEnabled == 0)

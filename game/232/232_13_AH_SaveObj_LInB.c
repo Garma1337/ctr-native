@@ -2,7 +2,7 @@
 
 void DECOMP_AH_SaveObj_LInB(struct Instance *savInst)
 {
-	short rot[3];
+	s16 rot[3];
 
 	struct GameTracker *gGT = sdata->gGT;
 	struct Thread *t;
@@ -62,7 +62,7 @@ void DECOMP_AH_SaveObj_LInB(struct Instance *savInst)
 				rot[2] = gGT->level1->ptrSpawnType2_PosRot->posCoords[5];
 
 				// converted to TEST in rebuildPS1
-				ConvertRotToMatrix(&inst->matrix, (short *)&rot);
+				ConvertRotToMatrix(&inst->matrix, (s16 *)&rot);
 
 				inst->matrix.t[0] = (int)gGT->level1->ptrSpawnType2_PosRot->posCoords[0];
 				inst->matrix.t[1] = (int)gGT->level1->ptrSpawnType2_PosRot->posCoords[1];

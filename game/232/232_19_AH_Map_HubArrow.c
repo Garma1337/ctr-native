@@ -1,9 +1,9 @@
 #include <common.h>
 
-void DECOMP_AH_Map_HubArrow(int posX, int posY, short *vertPos, char *vertCol, int unk800, int angle)
+void DECOMP_AH_Map_HubArrow(int posX, int posY, s16 *vertPos, char *vertCol, int unk800, int angle)
 {
-	short local_30[6];
-	short local_20[6];
+	s16 local_30[6];
+	s16 local_20[6];
 
 	struct GameTracker *gGT = sdata->gGT;
 
@@ -13,19 +13,19 @@ void DECOMP_AH_Map_HubArrow(int posX, int posY, short *vertPos, char *vertCol, i
 	for (int i = 0; i < 3; i++)
 	{
 		local_30[i * 2 + 0] = posX + 6 +
-		                      (short)(((((vertPos[2 * i + 0] * cos) >> 0xc) + ((vertPos[2 * i + 1] * sin) >> 0xc)) * ((unk800 * 8) / 5)
+		                      (s16)(((((vertPos[2 * i + 0] * cos) >> 0xc) + ((vertPos[2 * i + 1] * sin) >> 0xc)) * ((unk800 * 8) / 5)
 
-		                                   ) >>
-		                              0xc);
+		                                 ) >>
+		                            0xc);
 
 		local_30[i * 2 + 1] = posY + 4 +
-		                      (short)(((((vertPos[2 * i + 1] * cos) >> 0xc) - ((vertPos[2 * i + 0] * sin) >> 0xc)) * unk800
+		                      (s16)(((((vertPos[2 * i + 1] * cos) >> 0xc) - ((vertPos[2 * i + 0] * sin) >> 0xc)) * unk800
 
-		                               ) >>
-		                              0xc);
+		                             ) >>
+		                            0xc);
 	}
 
-	short *offset = &D232.primOffsetXY_HubArrow[0];
+	s16 *offset = &D232.primOffsetXY_HubArrow[0];
 
 	for (int i = 0; i < 5; i++)
 	{

@@ -53,7 +53,7 @@ typedef int8_t s8;
 #endif
 
 #define len(arr)                   (sizeof(arr) / sizeof(arr[0]))
-#define OFFSETOF(TYPE, ELEMENT)    ((unsigned int)&(((TYPE *)0)->ELEMENT))
+#define OFFSETOF(TYPE, ELEMENT)    ((u32)offsetof(TYPE, ELEMENT))
 
 #define RGBtoBGR(color)            ((color & 0xFF0000) >> 16) | (color & 0xFF00) | ((color & 0xFF) << 16)
 

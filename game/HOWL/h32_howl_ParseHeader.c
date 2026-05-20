@@ -2,7 +2,7 @@
 
 void DECOMP_howl_ParseHeader(struct HowlHeader *hh)
 {
-	unsigned int addr = (unsigned int)hh;
+	u32 addr = (u32)hh;
 
 	sdata->ptrHowlHeader = (struct HowlHeader *)addr;
 	addr += sizeof(struct HowlHeader);
@@ -16,12 +16,12 @@ void DECOMP_howl_ParseHeader(struct HowlHeader *hh)
 	sdata->howl_metaEngineFX = (struct EngineFX *)addr;
 	addr += sizeof(struct EngineFX) * hh->numEngineFX;
 
-	sdata->howl_bankOffsets = (unsigned short *)addr;
-	addr += sizeof(short) * hh->numBanks;
+	sdata->howl_bankOffsets = (u16 *)addr;
+	addr += sizeof(s16) * hh->numBanks;
 
-	sdata->howl_songOffsets = (unsigned short *)addr;
+	sdata->howl_songOffsets = (u16 *)addr;
 
 	// unused
-	// addr += sizeof(short) * hh->numSequences;
+	// addr += sizeof(s16) * hh->numSequences;
 	// sdata->howl_endOfHowl = addr;
 }

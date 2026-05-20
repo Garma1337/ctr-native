@@ -2,7 +2,7 @@
 
 void DECOMP_MM_MenuProc_NewLoad(struct RectMenu *menu)
 {
-	short row;
+	s16 row;
 
 	// row number
 	row = menu->rowSelected;
@@ -10,7 +10,7 @@ void DECOMP_MM_MenuProc_NewLoad(struct RectMenu *menu)
 	if (row == -1)
 		menu->ptrPrevBox_InHierarchy->state &= ~(ONLY_DRAW_TITLE | DRAW_NEXT_MENU_IN_HIERARCHY);
 
-	if ((unsigned char)row > 1)
+	if ((u8)row > 1)
 		return;
 
 	// if Load was chosen

@@ -45,36 +45,36 @@ int DriverIndex_GetDamageColor(int iVar14)
 
 void DECOMP_UI_DrawRankedDrivers(void)
 {
-	u_short uVar1;
+	u16 uVar1;
 	char bVar2;
 	int iVar3;
 	int iVar4;
 	struct GameTracker *gGT;
-	short txtColor;
-	u_int uVar7;
+	s16 txtColor;
+	u32 uVar7;
 	int absPosRank;
 	int iVar8;
-	short *puVar9;
-	short numRacersFinished;
-	u_short uVar11;
+	s16 *puVar9;
+	s16 numRacersFinished;
+	u16 uVar11;
 	int iVar12;
-	short *psVar13;
+	s16 *psVar13;
 	int iVar14;
 	struct Thread *warpballThread;
 	struct Instance *warpballInst;
 	int iVar15;
-	u_short *puVar16;
-	short *psVar17;
-	u_short uVar18;
+	u16 *puVar16;
+	s16 *psVar17;
+	u16 uVar18;
 	Point pos;
-	short local_44;
-	short local_40;
-	short local_3e;
-	short local_3c;
-	short local_38;
-	short local_34;
-	u_int local_30;
-	u_int local_2c;
+	s16 local_44;
+	s16 local_40;
+	s16 local_3e;
+	s16 local_3c;
+	s16 local_38;
+	s16 local_34;
+	u32 local_30;
+	u32 local_2c;
 
 	gGT = sdata->gGT;
 
@@ -144,8 +144,8 @@ void DECOMP_UI_DrawRankedDrivers(void)
 
 		for (iVar14 = 0; iVar14 < 8; iVar14++)
 		{
-			short *curr = &data.rankIconsCurr[iVar14];
-			short *des = &data.rankIconsDesired[iVar14];
+			s16 *curr = &data.rankIconsCurr[iVar14];
+			s16 *des = &data.rankIconsDesired[iVar14];
 
 			if (
 			    // if player structure pointer is not nullptr
@@ -184,12 +184,12 @@ void DECOMP_UI_DrawRankedDrivers(void)
 					}
 				}
 
-				short iconScale = FP(1);
+				s16 iconScale = FP(1);
 
 				// === Icon Transitioning ===
 				if (pos.x == -100)
 				{
-					DECOMP_UI_Lerp2D_Angular((short *)&pos, *curr, *des, *psVar13);
+					DECOMP_UI_Lerp2D_Angular((s16 *)&pos, *curr, *des, *psVar13);
 
 					psVar13[0]++;
 
@@ -254,7 +254,7 @@ void DECOMP_UI_DrawRankedDrivers(void)
 
 				// divide distanceToFinish by screen width
 				uVar18 = iVar4 / iVar3;
-				uVar18 = (u_short)uVar18;
+				uVar18 = (u16)uVar18;
 
 #if 0
           if (iVar3 == 0) trap(0x1c00);
@@ -265,7 +265,7 @@ void DECOMP_UI_DrawRankedDrivers(void)
 
 			// posX
 			iVar4 = uVar18;
-			iVar3 = iVar4 - (short)uVar1;
+			iVar3 = iVar4 - (s16)uVar1;
 
 			if (iVar3 < 0)
 			{
@@ -277,16 +277,16 @@ void DECOMP_UI_DrawRankedDrivers(void)
 				uVar7 = 1;
 			}
 			iVar3 = uVar1 + uVar7;
-			uVar11 = (u_short)iVar3;
-			if ((short)uVar1 < iVar4)
+			uVar11 = (u16)iVar3;
+			if ((s16)uVar1 < iVar4)
 			{
-				bVar2 = iVar4 < (short)iVar3;
+				bVar2 = iVar4 < (s16)iVar3;
 			}
 			else
 			{
 				iVar3 = uVar1 - uVar7;
-				uVar11 = (u_short)iVar3;
-				bVar2 = (short)iVar3 < iVar4;
+				uVar11 = (u16)iVar3;
+				bVar2 = (s16)iVar3 < iVar4;
 			}
 			if (bVar2)
 			{
@@ -355,13 +355,13 @@ void DECOMP_UI_DrawRankedDrivers(void)
 			struct CheckpointNode *cn2 = &cn[cn1->nextIndex_forward];
 
 #ifndef REBUILD_PC
-			short vec1[4];
+			s16 vec1[4];
 			vec1[0] = cn1->pos[0] - cn2->pos[0];
 			vec1[1] = cn1->pos[1] - cn2->pos[1];
 			vec1[2] = cn1->pos[2] - cn2->pos[2];
 			MATH_VectorNormalize((VECTOR *)&vec1[0]);
 
-			short vec2[4];
+			s16 vec2[4];
 			vec2[0] = pos[0] - cn1->pos[0];
 			vec2[1] = pos[1] - cn1->pos[1];
 			vec2[2] = pos[2] - cn1->pos[2];
@@ -369,7 +369,7 @@ void DECOMP_UI_DrawRankedDrivers(void)
 			// replace R11R12 and R13R21
 			gte_ldsvrtrow0(&vec1[0]);
 
-			// required short
+			// required s16
 			gte_ldv0(&vec2[0]);
 
 			gte_mvmva(0, 0, 0, 3, 0);

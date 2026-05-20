@@ -5,8 +5,8 @@ void DECOMP_RB_TNT_ThTick_SitOnHead(struct Thread *t)
 	struct Instance *inst;
 	struct MineWeapon *mw;
 	char state;
-	short numFrames;
-	unsigned short uVar3;
+	s16 numFrames;
+	u16 uVar3;
 	int rng;
 
 	inst = t->inst;
@@ -121,10 +121,10 @@ LAB_800ad5f8:
 		mw->numFramesOnHead += 1;
 
 		// set scale of TNT, given frame of animation
-		uVar3 = ((short *)0x800b295c)[numFrames * 2 + 0];
+		uVar3 = ((s16 *)0x800b295c)[numFrames * 2 + 0];
 		inst->scale[0] = uVar3;
 		inst->scale[2] = uVar3;
-		inst->scale[1] = ((short *)0x800b295c)[numFrames * 2 + 1];
+		inst->scale[1] = ((s16 *)0x800b295c)[numFrames * 2 + 1];
 	}
 
 	// If time runs out

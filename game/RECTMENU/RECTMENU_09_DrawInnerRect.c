@@ -33,7 +33,7 @@ void DECOMP_RECTMENU_DrawInnerRect(RECT *r, int type, void *ot)
 	{
 		Color color;
 		color.self = *colorDataNormal;
-		DECOMP_RECTMENU_DrawOuterRect_HighLevel(r, color, (int)(short)(type | 0x20), ot);
+		DECOMP_RECTMENU_DrawOuterRect_HighLevel(r, color, (int)(s16)(type | 0x20), ot);
 	}
 
 	adjustedRect.x = r->x;
@@ -69,8 +69,8 @@ void DECOMP_RECTMENU_DrawInnerRect(RECT *r, int type, void *ot)
 	// Draw shadow under the menu
 	if ((type & 4) == 0)
 	{
-		short horizontalOffset = ((type & 0x80) != 0) ? 4 : 0xc;
-		short verticalOffset = ((type & 0x40) != 0) ? 2 : 6;
+		s16 horizontalOffset = ((type & 0x80) != 0) ? 4 : 0xc;
+		s16 verticalOffset = ((type & 0x40) != 0) ? 2 : 6;
 
 		adjustedRect.x = r->x + r->w;
 		adjustedRect.y = r->y + verticalOffset;

@@ -2,16 +2,16 @@
 
 void DECOMP_AH_SaveObj_ThTick(struct Thread *t)
 {
-	short sVar1;
-	unsigned short uVar2;
+	s16 sVar1;
+	u16 uVar2;
 	int dist;
 	int distX;
 	int distY;
 	int distZ;
-	unsigned int uVar6;
+	u32 uVar6;
 	int iVar7;
-	short desiredPos[3];
-	short desiredRot[3];
+	s16 desiredPos[3];
+	s16 desiredRot[3];
 
 	struct GameTracker *gGT;
 	struct Instance *driverInst;
@@ -76,9 +76,9 @@ void DECOMP_AH_SaveObj_ThTick(struct Thread *t)
 			if ((int)(uVar2 << 0x10) < 0)
 			{
 				// desired transition position (x,y,z)
-				desiredPos[0] = gGT->level1->ptrSpawnType2_PosRot->posCoords[0] + (short)((int)saveInst->matrix.m[0][0] * 0x19 >> 7);
-				desiredPos[1] = gGT->level1->ptrSpawnType2_PosRot->posCoords[1] + (short)((int)saveInst->matrix.m[1][0] * 0x19 >> 7);
-				desiredPos[2] = gGT->level1->ptrSpawnType2_PosRot->posCoords[2] + (short)((int)saveInst->matrix.m[2][0] * 0x19 >> 7);
+				desiredPos[0] = gGT->level1->ptrSpawnType2_PosRot->posCoords[0] + (s16)((int)saveInst->matrix.m[0][0] * 0x19 >> 7);
+				desiredPos[1] = gGT->level1->ptrSpawnType2_PosRot->posCoords[1] + (s16)((int)saveInst->matrix.m[1][0] * 0x19 >> 7);
+				desiredPos[2] = gGT->level1->ptrSpawnType2_PosRot->posCoords[2] + (s16)((int)saveInst->matrix.m[2][0] * 0x19 >> 7);
 
 				// desired transition rotation (x,y,z)
 				desiredRot[0] = gGT->level1->ptrSpawnType2_PosRot->posCoords[3] + D232.saveObjCameraOffset[0];
@@ -90,7 +90,7 @@ void DECOMP_AH_SaveObj_ThTick(struct Thread *t)
 
 				// Set CameraDC's desired position and rotation,
 				// then begin the transition by setting flag
-				DECOMP_CAM_SetDesiredPosRot(&gGT->cameraDC[0], (short *)&desiredPos, (short *)&desiredRot);
+				DECOMP_CAM_SetDesiredPosRot(&gGT->cameraDC[0], (s16 *)&desiredPos, (s16 *)&desiredRot);
 
 #ifndef REBUILD_PS1
 				GAMEPAD_JogCon2(driver, 0, 0);

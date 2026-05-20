@@ -25,7 +25,7 @@ void DECOMP_PROC_DestroyObject(void *object, int threadFlags)
 	// in allocation, "next" and "prev" are abstracted
 	// with obj+=8, so not all structs need "next" and "prev",
 	// now subtract 8 bytes to access those two pointers
-	object = (void *)((unsigned int)object - 8);
+	object = (void *)((u32)object - 8);
 
 	// add object back to free list
 	DECOMP_LIST_AddFront(&myPool->free, object);

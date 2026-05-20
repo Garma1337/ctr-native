@@ -199,7 +199,7 @@ int DECOMP_VehPickState_NewState(struct Driver *victimDriver, int damageType, st
 	{
 		struct PushBuffer *pb = &sdata->gGT->pushBuffer[attackDriver->driverID];
 
-		short posScreen[2];
+		s16 posScreen[2];
 		RB_Fruit_GetScreenCoords(pb, attackDriver->instSelf, &posScreen[0]);
 
 		// screenPosXY

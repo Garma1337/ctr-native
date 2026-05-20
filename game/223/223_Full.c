@@ -98,17 +98,17 @@ void DECOMP_RR_EndEvent_DrawMenu(void)
 	struct Instance *relic;
 
 	char boolEarly;
-	short pos[2];
-	u_int elapsedFrames;
-	u_int bitIndex;
-	u_int txtColor;
+	s16 pos[2];
+	u32 elapsedFrames;
+	u32 bitIndex;
+	u32 txtColor;
 	RECT box;
 
 	int iVar2;
-	short sVar3;
-	short startY;
-	short endX;
-	short sVar6;
+	s16 sVar3;
+	s16 startY;
+	s16 endX;
+	s16 sVar6;
 	int startX;
 	int endY;
 	int uVar11;
@@ -164,7 +164,7 @@ void DECOMP_RR_EndEvent_DrawMenu(void)
 	if (d->numTimeCrates != gGT->timeCratesInLEV)
 	{
 		// if race ended 59-80 frames ago
-		if ((u_int)(sdata->framesSinceRaceEnded - 21) < 59)
+		if ((u32)(sdata->framesSinceRaceEnded - 21) < 59)
 		{
 			// advance timer to 140 frames, since we can skip the amount of time
 			// that would have been taken to draw "PERFECT" text
@@ -172,7 +172,7 @@ void DECOMP_RR_EndEvent_DrawMenu(void)
 		}
 
 		// if race ended 229-250 frames ago, and if WON relic
-		if (((gGT->gameModeEnd & NEW_RELIC) == 0) && ((u_int)(sdata->framesSinceRaceEnded - 21) < 229))
+		if (((gGT->gameModeEnd & NEW_RELIC) == 0) && ((u32)(sdata->framesSinceRaceEnded - 21) < 229))
 		{
 			// advance timer to 370 frames, since we can skip the amount of time
 			// that would have been taken to draw the animation
@@ -486,7 +486,7 @@ void DECOMP_RR_EndEvent_DrawMenu(void)
 }
 
 // same in TT and RR, but not the same in Main Menu
-void DECOMP_RR_EndEvent_DrawHighScore(short startX, int startY)
+void DECOMP_RR_EndEvent_DrawHighScore(s16 startX, int startY)
 {
 	// This is different from High Score in Main Menu because Main Menu
 	// does not show the rank icons '1', '2', '3', '4', '5'
@@ -495,12 +495,12 @@ void DECOMP_RR_EndEvent_DrawHighScore(short startX, int startY)
 
 	char i;
 	char *timeString;
-	short nameColor;
-	u_int timeColor;
-	short pos[2];
-	short timebox_X;
-	short timebox_Y;
-	u_short currRowY;
+	s16 nameColor;
+	u32 timeColor;
+	s16 pos[2];
+	s16 timebox_X;
+	s16 timebox_Y;
+	u16 currRowY;
 	RECT box;
 
 	gGT = sdata->gGT;
@@ -547,7 +547,7 @@ void DECOMP_RR_EndEvent_DrawHighScore(short startX, int startY)
 		// Draw String for Rank ('1', '2', '3', '4', '5')
 		DECOMP_DecalFont_DrawLine((char *)&str_number223, startX - 0x32, timebox_Y - 1, 2, 4);
 
-		u_int iconColor = 0x808080;
+		u32 iconColor = 0x808080;
 
 		// Draw Character Icon
 		DECOMP_RECTMENU_DrawPolyGT4(gGT->ptrIcons[data.MetaDataCharacters[scoreEntry[i + 1].characterID].iconID], startX - 0x52, timebox_Y,

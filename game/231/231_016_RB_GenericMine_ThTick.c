@@ -10,7 +10,7 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 	struct Crate *crate;
 	struct Instance *instCrate;
 	struct MineWeapon *tnt;
-	unsigned int model;
+	u32 model;
 	int numFrames;
 	void (*func)(struct Thread *);
 	int param;
@@ -21,7 +21,7 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 	mw = inst->thread->object;
 	model = inst->model->id;
 
-	boolPotion = (unsigned int)(model - 0x46) < 2;
+	boolPotion = (u32)(model - 0x46) < 2;
 
 	// if weapon is "thrown" like Komodo Joe
 	if ((mw->extraFlags & 2) != 0)

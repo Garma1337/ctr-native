@@ -32,7 +32,7 @@ void DECOMP_CS_Thread_AnimateScale(struct Thread *t)
 		}
 	}
 
-	inst->scale[0] = (short)newScale;
-	inst->scale[1] = (short)newScale;
-	inst->scale[2] = (short)newScale;
+	inst->scale[0] = (s16)newScale;
+	inst->scale[1] = (s16)newScale;
+	inst->scale[2] = (s16)newScale;
 }

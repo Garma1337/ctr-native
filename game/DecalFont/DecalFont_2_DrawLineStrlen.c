@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short posY, short fontType, int flags)
+void DECOMP_DecalFont_DrawLineStrlen(u8 *str, s16 len, int posX, s16 posY, s16 fontType, int flags)
 {
 	struct GameTracker *gGT = sdata->gGT;
 
@@ -28,12 +28,12 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 
 	for (*str != 0; *str != 0 && len != 0; str++, len--)
 	{
-		u_char *strcopy = str;
-		u_short iconID = 0xff;
-		short charWidth = data.font_charPixWidth[fontType];
-		short pixWidthExtra = 0;
-		short pixHeightExtra = 0;
-		short iconScale = FP(1.0);
+		u8 *strcopy = str;
+		u16 iconID = 0xff;
+		s16 charWidth = data.font_charPixWidth[fontType];
+		s16 pixWidthExtra = 0;
+		s16 pixHeightExtra = 0;
+		s16 iconScale = FP(1.0);
 
 #if BUILD == EurRetail
 
@@ -51,8 +51,8 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 			// if the current character in the string is a tilde, delete the next two characters and color the rest of the word depending on the characters
 			// being deleted used with numbers according to the color ID, e.g. ~01 gives the blue-ish gray color seen in the race lap count
 
-			u_char *strnext = str + 1;
-			u_char *strnextnext = str + 2;
+			u8 *strnext = str + 1;
+			u8 *strnextnext = str + 2;
 			str += 2;
 			len -= 2;
 			flags = (*strnextnext + (*strnext - 0x30) * 10) - 0x30;
@@ -84,7 +84,7 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 			// japan retail adds support for the Mad Catz MC2 Racing Wheel (probably the best thing Naughty Dog added to this version to be honest)
 			// this replaces the regular face button characters with ones that match the buttons on the steering wheel and recolors them accordingly
 
-			short isRacingWheel = DECOMP_DecalFont_boolRacingWheel();
+			s16 isRacingWheel = DECOMP_DecalFont_boolRacingWheel();
 
 			if (!(isRacingWheel))
 			{
@@ -131,8 +131,8 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 
 		// ascii characters + japanese characters
 		// 0xE0 characters from 0x20 to 0x100
-		// TO DO: figure out why the cast to u_int is necessary --Super
-		if (((u_int)*strcopy - 0x21) < 0xdf)
+		// TO DO: figure out why the cast to u32 is necessary --Super
+		if (((u32)*strcopy - 0x21) < 0xdf)
 		{
 			// get iconID based on ascii character
 			iconID = data.font_characterIconID[*strcopy - 0x21];
@@ -151,7 +151,7 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 #else
 
 		// europe only has 0x60 characters
-		if (((u_int)*strcopy - 0x21) < 0x5f)
+		if (((u32)*strcopy - 0x21) < 0x5f)
 		{
 			// get iconID based on ascii character
 			iconID = data.font_characterIconID[*strcopy - 0x21];
@@ -182,7 +182,7 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 		// the following characters make use of additional width and height padding
 		if (*strcopy < 3 || *strcopy == '#' || *strcopy == '$' || *strcopy == '&')
 		{
-			short *characterExtraDimensionsArray = 0;
+			s16 *characterExtraDimensionsArray = 0;
 
 			if (*strcopy < 3)
 			{
@@ -223,7 +223,7 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 		// if iconID is valid
 		if (iconID != 0xff)
 		{
-			short iconGroupID = data.font_IconGroupID[fontType];
+			s16 iconGroupID = data.font_IconGroupID[fontType];
 
 #if BUILD <= UsaRetail
 
@@ -232,7 +232,7 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 			if (iconID > 0x7f)
 			{
 				iconID -= 0x80;
-				short kanaIconGroupID = 15;
+				s16 kanaIconGroupID = 15;
 				if (iconGroupID == 4)
 					kanaIconGroupID = 14;
 				iconGroupID = kanaIconGroupID;
@@ -241,7 +241,7 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 #elif BUILD == JpnTrial || BUILD == JpnRetail
 
 			// defined here as a fallback for if the character in question isn't kana
-			u_short kanaID = iconID;
+			u16 kanaID = iconID;
 
 			struct Icon *iconStruct = 0;
 
@@ -249,10 +249,10 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 			if (iconID > 0x7f)
 			{
 				// kana icon IDs are in a separate icon group from other font characters
-				u_short kanaID = iconID - 0x80;
+				u16 kanaID = iconID - 0x80;
 
 				// the "big" and "small" font icon groups for kana are 14 and 15 respectively
-				short kanaIconGroupID = 15;
+				s16 kanaIconGroupID = 15;
 
 				// if icon group is non-japanese big font, set to japanese
 				if (iconGroupID == 4)
@@ -272,7 +272,7 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 					sdata->font_icon.texLayout.u0 = kanaID * 8 & 0xf0;
 					sdata->font_icon.texLayout.u1 = sdata->font_icon.texLayout.u0 + 15;
 
-					short whateverThisIs_big = kanaID / 2 & 0x10;
+					s16 whateverThisIs_big = kanaID / 2 & 0x10;
 
 					sdata->font_icon.texLayout.v0 = whateverThisIs_big + 8;
 					sdata->font_icon.texLayout.v2 = whateverThisIs_big + 23;
@@ -295,7 +295,7 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 
 						sdata->font_icon.texLayout.tpage = sdata->font_jfontSmallIconData.tpage;
 
-						short whateverThisIs_small = ((kanaID & 0xfe) + kanaID / 2) * 4; // this is the one
+						s16 whateverThisIs_small = ((kanaID & 0xfe) + kanaID / 2) * 4; // this is the one
 
 						if (kanaID < 12)
 							sdata->font_icon.texLayout.u0 = whateverThisIs_small + 176;
@@ -318,7 +318,7 @@ void DECOMP_DecalFont_DrawLineStrlen(u_char *str, short len, int posX, short pos
 					}
 					else
 					{
-						kanaID = (u_char)iconID - 0x98; // if you remove the u_char cast the dakuten and handakuten diacritics break. why??? --Super
+						kanaID = (u8)iconID - 0x98; // if you remove the u8 cast the dakuten and handakuten diacritics break. why??? --Super
 						sdata->font_icon.texLayout.clut = sdata->font_jfontSmall0x18IconData.clut;
 
 						if (kanaID & 1)

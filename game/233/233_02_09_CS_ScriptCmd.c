@@ -1,6 +1,6 @@
 #include <common.h>
 
-static const unsigned char cs_opcodeMeta[256] = {
+static const u8 cs_opcodeMeta[256] = {
     0xdf, 0x20, 0x00, 0x19, 0x28, 0x10, 0x10, 0x18, 0x10, 0x10, 0x10, 0x18, 0x00, 0x10, 0x10, 0x00, 0x10, 0x00, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10,
     0x00, 0x00, 0x10, 0x10, 0x10, 0x00, 0x00, 0x10, 0x10, 0x00, 0x19, 0x00, 0x2c, 0x10, 0x00, 0x00, 0x00, 0x1e, 0x11, 0xc7, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00,
     0x2a, 0x30, 0x00, 0x00, 0x28, 0x00, 0xff, 0x00, 0x1c, 0xfc, 0xff, 0xff, 0xff, 0x0d, 0x10, 0x00, 0x00, 0x00, 0x22, 0x22, 0x02, 0x00, 0x00, 0x12, 0x02, 0x00,
@@ -14,28 +14,28 @@ static const unsigned char cs_opcodeMeta[256] = {
 };
 
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x800abf70-0x800abf9c
-static short CS_ScriptCmd_ReadOpcode_GetShort(char **Opcodes)
+static s16 CS_ScriptCmd_ReadOpcode_GetShort(char **Opcodes)
 {
 	char *bytes = *Opcodes;
-	short result = (short)((unsigned char)bytes[0] | ((unsigned char)bytes[1] << 8));
+	s16 result = (s16)((u8)bytes[0] | ((u8)bytes[1] << 8));
 	*Opcodes = bytes + 2;
 	return result;
 }
 
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x800abf9c-0x800abfd8
-static u_int CS_ScriptCmd_ReadOpcode_GetInt(char **Opcodes)
+static u32 CS_ScriptCmd_ReadOpcode_GetInt(char **Opcodes)
 {
 	char *bytes = *Opcodes;
 	*Opcodes = bytes + 4;
-	return (unsigned char)bytes[3] << 24 | (unsigned char)bytes[2] << 16 | (unsigned char)bytes[1] << 8 | (unsigned char)bytes[0];
+	return (u8)bytes[3] << 24 | (u8)bytes[2] << 16 | (u8)bytes[1] << 8 | (u8)bytes[0];
 }
 
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x800abfd8-0x800ac014
-static u_int CS_ScriptCmd_ReadOpcode_GetInt_dup(char **Opcodes)
+static u32 CS_ScriptCmd_ReadOpcode_GetInt_dup(char **Opcodes)
 {
 	char *bytes = *Opcodes;
 	*Opcodes = bytes + 4;
-	return (unsigned char)bytes[3] << 24 | (unsigned char)bytes[2] << 16 | (unsigned char)bytes[1] << 8 | (unsigned char)bytes[0];
+	return (u8)bytes[3] << 24 | (u8)bytes[2] << 16 | (u8)bytes[1] << 8 | (u8)bytes[0];
 }
 
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x800ac014-0x800ac1c0
@@ -43,7 +43,7 @@ static void CS_ScriptCmd_ReadOpcode_Main(struct CutsceneObj *cs)
 {
 	char *opcodes;
 	struct CsOpcodeMeta *decoded;
-	short *offsets;
+	s16 *offsets;
 	char meta;
 	char *local_cursor;
 
@@ -54,12 +54,12 @@ static void CS_ScriptCmd_ReadOpcode_Main(struct CutsceneObj *cs)
 
 	local_cursor = opcodes + 1;
 	decoded = &cs->decodedOpcode;
-	offsets = (short *)decoded;
+	offsets = (s16 *)decoded;
 
 	cs->prevOpcode = opcodes;
 	offsets[0] = opcodes[0];
 
-	meta = cs_opcodeMeta[(unsigned char)offsets[0]];
+	meta = cs_opcodeMeta[(u8)offsets[0]];
 
 	if (meta & 1)
 		offsets[1] = CS_ScriptCmd_ReadOpcode_GetShort(&local_cursor);

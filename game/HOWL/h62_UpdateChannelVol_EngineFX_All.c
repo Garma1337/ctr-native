@@ -3,7 +3,7 @@
 void DECOMP_UpdateChannelVol_EngineFX_All()
 {
 	struct ChannelStats *curr;
-	u_int *flagPtr;
+	u32 *flagPtr;
 
 	for (curr = (struct ChannelStats *)sdata->channelTaken.first; curr != NULL; curr = curr->next)
 	{

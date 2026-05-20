@@ -2,10 +2,10 @@
 
 // over budget 664/664
 
-// short frontTireLeftIN[4] = {-0x2200, 0xa00, 0x2800, 0};
-// short frontTireRightIN[4] = {0x2200, 0xa00, 0x2800, 0};
-// short backTireLeftIN[4] = {-0x2200, 0xa00, -0x1400, 0};
-// short backTireRightIN[4] = {0x2200, 0xa00, -0x1400, 0};
+// s16 frontTireLeftIN[4] = {-0x2200, 0xa00, 0x2800, 0};
+// s16 frontTireRightIN[4] = {0x2200, 0xa00, 0x2800, 0};
+// s16 backTireLeftIN[4] = {-0x2200, 0xa00, -0x1400, 0};
+// s16 backTireRightIN[4] = {0x2200, 0xa00, -0x1400, 0};
 
 void DECOMP_VehEmitter_Sparks_Wall(struct Driver *d, struct ParticleEmitter *emSet)
 {
@@ -36,15 +36,15 @@ void DECOMP_VehEmitter_Sparks_Wall(struct Driver *d, struct ParticleEmitter *emS
 	if (p == NULL)
 		return;
 
-	short *matrix = (short *)0x1f800000;
+	s16 *matrix = (s16 *)0x1f800000;
 	int *TireLeftOutS32 = (int *)&matrix[0];
 	int *TireRightOutS32 = (int *)&matrix[6];
-	short *TireLeftOutS16 = &matrix[0];
-	short *TireRightOutS16 = &matrix[3];
-	short *distIn4 = &matrix[6];
+	s16 *TireLeftOutS16 = &matrix[0];
+	s16 *TireRightOutS16 = &matrix[3];
+	s16 *distIn4 = &matrix[6];
 	int *distOut4 = (int *)&matrix[6];
 
-	// short[3] array
+	// s16[3] array
 	*(int *)&TireLeftOutS32[0] = 0xa00de00;
 	*(int *)&TireRightOutS32[0] = 0xa002200;
 
@@ -52,7 +52,7 @@ void DECOMP_VehEmitter_Sparks_Wall(struct Driver *d, struct ParticleEmitter *emS
 	if (d->speedApprox > 0)
 		valZ = 0x2800;
 
-	// short[3] array
+	// s16[3] array
 	*(int *)&TireLeftOutS32[1] = valZ;
 	*(int *)&TireRightOutS32[1] = valZ;
 
@@ -64,10 +64,10 @@ void DECOMP_VehEmitter_Sparks_Wall(struct Driver *d, struct ParticleEmitter *emS
 	gte_rtv0();
 	gte_stlvnl(&TireRightOutS32[0]);
 
-	// this compresses TireLeft and TireRight from int to short,
+	// this compresses TireLeft and TireRight from int to s16,
 	// which then doubles in usage as a matrix (3x2)
 	for (int i = 0; i < 6; i++)
-		TireLeftOutS16[i] = (unsigned short)TireLeftOutS32[i];
+		TireLeftOutS16[i] = (u16)TireLeftOutS32[i];
 
 #ifdef REBUILD_PC
 
@@ -120,9 +120,9 @@ void DECOMP_VehEmitter_Sparks_Wall(struct Driver *d, struct ParticleEmitter *emS
 	gte_rtv0();
 	gte_stlvnl(&distOut4[0]);
 
-	p->axis[0].velocity = (short)distOut4[0];
-	p->axis[1].velocity = (short)distOut4[1];
-	p->axis[2].velocity = (short)distOut4[2];
+	p->axis[0].velocity = (s16)distOut4[0];
+	p->axis[1].velocity = (s16)distOut4[1];
+	p->axis[2].velocity = (s16)distOut4[2];
 
 	p->driverInst = d->instSelf;
 }

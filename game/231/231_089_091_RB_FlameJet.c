@@ -7,7 +7,7 @@ struct HitboxDesc fjBoxDesc = {.inst = (struct Instance *)0,
                                .threadHit = (struct Thread *)0,
                                .funcThCollide = (void *)0};
 
-short fjLightDir[4] = {0x8B8, 0xD6A, 0, 0};
+s16 fjLightDir[4] = {0x8B8, 0xD6A, 0, 0};
 
 struct ParticleEmitter emSet_fjHeat[0xb] = {[0] =
                                                 {
@@ -240,11 +240,11 @@ void DECOMP_RB_FlameJet_Particles(struct Instance *inst, struct FlameJet *fjObj)
 		particle1->axis[1].startVal += (inst->matrix.t[1] + 0x32) * 0x100;
 		particle1->axis[2].startVal += (inst->matrix.t[2]) * 0x100;
 
-		particle1->axis[0].velocity = (short)fjObj->dirX;
+		particle1->axis[0].velocity = (s16)fjObj->dirX;
 		particle1->axis[1].velocity = 0;
-		particle1->axis[2].velocity = (short)fjObj->dirZ;
+		particle1->axis[2].velocity = (s16)fjObj->dirZ;
 
-		result = RngDeadCoed((u_int *)&gGT->deadcoed_struct);
+		result = RngDeadCoed((u32 *)&gGT->deadcoed_struct);
 		result = DECOMP_MATH_Sin(gGT->timer * 0x100 + (result >> 0x18) & 0xfff);
 		particle1->axis[1].accel = result >> 4;
 
@@ -277,9 +277,9 @@ void DECOMP_RB_FlameJet_Particles(struct Instance *inst, struct FlameJet *fjObj)
 		particle2->axis[4].startVal = result - 0x400;
 		particle2->axis[5].startVal = result - 0x600;
 
-		particle2->axis[0].velocity = (short)fjObj->dirX;
+		particle2->axis[0].velocity = (s16)fjObj->dirX;
 		particle2->axis[1].velocity = 0;
-		particle2->axis[2].velocity = (short)fjObj->dirZ;
+		particle2->axis[2].velocity = (s16)fjObj->dirZ;
 
 		int vel = (0x4a00 - particle2->axis[3].startVal) / 7;
 		particle2->axis[3].velocity = vel;
@@ -309,7 +309,7 @@ void DECOMP_RB_FlameJet_ThTick(struct Thread *t)
 	// in first 45 frames (1.5s)
 	if (fjObj->cycleTimer < 0x2d)
 	{
-		PlaySound3D_Flags((u_int *)fjObj->audioPtr, 0x68, fjInst);
+		PlaySound3D_Flags((u32 *)fjObj->audioPtr, 0x68, fjInst);
 
 		// [unused variable?]
 		fjObj->unk += 0x100;
@@ -383,7 +383,7 @@ void DECOMP_RB_FlameJet_LInB(struct Instance *inst)
 	int fjID;
 	struct Thread *t;
 	struct FlameJet *fjObj;
-	short *metaArray;
+	s16 *metaArray;
 
 	// color
 	inst->colorRGBA = 0xdca6000;
@@ -413,6 +413,6 @@ void DECOMP_RB_FlameJet_LInB(struct Instance *inst)
 
 	// put on separate cycles
 	void **pointers = ST1_GETPOINTERS(sdata->gGT->level1->ptrSpawnType1);
-	metaArray = (short *)pointers[ST1_SPAWN];
+	metaArray = (s16 *)pointers[ST1_SPAWN];
 	t->cooldownFrameCount = metaArray[inst->name[9] - '0'];
 }

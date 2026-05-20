@@ -2,7 +2,7 @@
 
 void DECOMP_cseq_opcode05_noteon(struct SongSeq *seq)
 {
-	unsigned char *currNote;
+	u8 *currNote;
 	int songIndex = seq->songPoolIndex;
 	struct ChannelStats *stats;
 	struct ChannelAttr attr;

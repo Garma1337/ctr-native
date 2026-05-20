@@ -44,7 +44,7 @@ void RB_Burst_ProcessBucket(struct Thread *thread);
 void RB_Blowup_ProcessBucket(struct Thread *thread);
 void RB_Follower_ProcessBucket(struct Thread *thread);
 void RB_StartText_ProcessBucket(struct Thread *thread);
-u_int MM_Video_CheckIfFinished(int param_1);
+u32 MM_Video_CheckIfFinished(int param_1);
 
 #ifdef CTR_INTERNAL
 volatile int gCtrDebugSkipLevelGeometry = 0;
@@ -329,7 +329,7 @@ void DrawFinalLap(struct GameTracker *gGT)
 	int endX;
 	int posY;
 
-	short resultPos[2];
+	s16 resultPos[2];
 
 	// number of players
 	for (i = 0; i < 4; i++)
@@ -379,7 +379,7 @@ void DrawFinalLap(struct GameTracker *gGT)
 
 	DrawFinalLapString:
 
-		DECOMP_UI_Lerp2D_Linear(&resultPos[0], (short)startX, (short)posY, (short)endX, (short)posY, textTimer, 10);
+		DECOMP_UI_Lerp2D_Linear(&resultPos[0], (s16)startX, (s16)posY, (s16)endX, (s16)posY, textTimer, 10);
 
 		// need to specify OT, or else "FINAL LAP" will draw on top of character icons,
 		// and by doing this, "FINAL LAP" draws under the character icons instead
@@ -710,11 +710,11 @@ void RenderBucket_QueueAllInstances(struct GameTracker *gGT)
 		lod |= 4;
 
 	RBI = RenderBucket_QueueLevInstances(&gGT->cameraDC[0], (u_long *)&gGT->backBuffer->otMem, gGT->ptrRenderBucketInstance,
-	                                     (char *)(unsigned int)(unsigned char)sdata->LOD[lod], // this weird cast is what ghidra does
+	                                     (char *)(u32)(u8)sdata->LOD[lod], // this weird cast is what ghidra does
 	                                     (char)numPlyrCurrGame, gGT->gameMode1 & PAUSE_ALL);
 
 	RBI = RenderBucket_QueueNonLevInstances(gGT->JitPools.instance.taken.first, (u_long *)&gGT->backBuffer->otMem, (void *)RBI,
-	                                        (char *)(unsigned int)(unsigned char)sdata->LOD[lod], // this weird cast is what ghidra does
+	                                        (char *)(u32)(u8)sdata->LOD[lod], // this weird cast is what ghidra does
 	                                        (char)numPlyrCurrGame, gGT->gameMode1 & PAUSE_ALL);
 
 	// Aug prototype
@@ -932,8 +932,8 @@ void RenderAllLevelGeometry(struct GameTracker *gGT)
 			// 0x1c2 in 1P mode
 			distToScreen = pushBuffer->distanceToScreen_PREV;
 
-			// int and unsigned int have specific purposes
-			*(unsigned int *)0x1f800014 = distToScreen * 0x2080;
+			// int and u32 have specific purposes
+			*(u32 *)0x1f800014 = distToScreen * 0x2080;
 			if (*(int *)0x1f800014 < 0)
 				*(int *)0x1f800014 = *(int *)0x1f800014 + 0xff;
 			*(int *)0x1f800014 = *(int *)0x1f800014 >> 8; // 0x3921
@@ -944,8 +944,8 @@ void RenderAllLevelGeometry(struct GameTracker *gGT)
 			*(int *)0x1f800024 = distToScreen * 7;           // 0xC4E
 			*(int *)0x1f80002c = *(int *)0x1f800018 + 0x140; // 0x2EF4
 
-			// int and unsigned int have specific purposes
-			*(unsigned int *)0x1f800028 = distToScreen * 0x380;
+			// int and u32 have specific purposes
+			*(u32 *)0x1f800028 = distToScreen * 0x380;
 			if (*(int *)0x1f800028 < 0)
 				*(int *)0x1f800028 = *(int *)0x1f800028 + 0xff;
 			*(int *)0x1f800028 = *(int *)0x1f800028 >> 8; // 0x627
@@ -954,7 +954,7 @@ void RenderAllLevelGeometry(struct GameTracker *gGT)
 		RenderLists_PreInit();
 		gGT->bspLeafsDrawn = 0;
 
-		gGT->bspLeafsDrawn += RenderLists_Init1P2P(ptr_mesh_info->bspRoot, level1->visMem->visLeafList[0], pushBuffer, (u_int)&gGT->LevRenderLists[0],
+		gGT->bspLeafsDrawn += RenderLists_Init1P2P(ptr_mesh_info->bspRoot, level1->visMem->visLeafList[0], pushBuffer, (u32)&gGT->LevRenderLists[0],
 		                                           level1->visMem->bspList[0], (char)numPlyrCurrGame);
 
 		// 226-229
@@ -990,7 +990,7 @@ void RenderAllLevelGeometry(struct GameTracker *gGT)
 		for (i = 0; i < numPlyrCurrGame; i++)
 		{
 			gGT->bspLeafsDrawn += RenderLists_Init1P2P(ptr_mesh_info->bspRoot, level1->visMem->visLeafList[i], &gGT->pushBuffer[i],
-			                                           (u_int)&gGT->LevRenderLists[i], level1->visMem->bspList[i], (char)numPlyrCurrGame);
+			                                           (u32)&gGT->LevRenderLists[i], level1->visMem->bspList[i], (char)numPlyrCurrGame);
 		}
 
 		// 226-229
@@ -1027,7 +1027,7 @@ void RenderAllLevelGeometry(struct GameTracker *gGT)
 
 	for (i = 0; i < numPlyrCurrGame; i++)
 	{
-		gGT->bspLeafsDrawn += RenderLists_Init3P4P(ptr_mesh_info->bspRoot, level1->visMem->visLeafList[i], &gGT->pushBuffer[i], (u_int)&gGT->LevRenderLists[i],
+		gGT->bspLeafsDrawn += RenderLists_Init3P4P(ptr_mesh_info->bspRoot, level1->visMem->visLeafList[i], &gGT->pushBuffer[i], (u32)&gGT->LevRenderLists[i],
 		                                           level1->visMem->bspList[i]);
 	}
 
@@ -1053,7 +1053,7 @@ SkyboxGlow:
 	for (i = 0; i < numPlyrCurrGame; i++)
 	{
 		pushBuffer = &gGT->pushBuffer[i];
-		CAM_SkyboxGlow((short *)&level1->glowGradient[0], pushBuffer, &gGT->backBuffer->primMem, &pushBuffer->ptrOT[0x3ff]);
+		CAM_SkyboxGlow((s16 *)&level1->glowGradient[0], pushBuffer, &gGT->backBuffer->primMem, &pushBuffer->ptrOT[0x3ff]);
 	}
 
 	return;

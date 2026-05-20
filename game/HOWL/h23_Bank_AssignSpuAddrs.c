@@ -39,7 +39,7 @@ int DECOMP_Bank_AssignSpuAddrs()
 
 		for (i = 0; i < sdata->ptrSampleBlock1->numSamples; i++)
 		{
-			short *spuIndexArr = SBHEADER_GETARR(sdata->ptrSampleBlock1);
+			s16 *spuIndexArr = SBHEADER_GETARR(sdata->ptrSampleBlock1);
 			sdata->audioAllocSize += sdata->howl_spuAddrs[spuIndexArr[i]].spuSize;
 		}
 
@@ -99,7 +99,7 @@ int DECOMP_Bank_AssignSpuAddrs()
 
 		for (i = 0; i < sdata->ptrSampleBlock1->numSamples; i++)
 		{
-			short *spuIndexArr = SBHEADER_GETARR(sdata->ptrSampleBlock1);
+			s16 *spuIndexArr = SBHEADER_GETARR(sdata->ptrSampleBlock1);
 			sae = &sdata->howl_spuAddrs[spuIndexArr[i]];
 
 			if (sae->spuAddr == 0)
@@ -124,7 +124,7 @@ int DECOMP_Bank_AssignSpuAddrs()
 		if (DECOMP_LOAD_HowlSectorChainEnd() == 0)
 			return 0;
 
-		int spuAddrStart = (unsigned int)sdata->ptrLastBank->min * 8;
+		int spuAddrStart = (u32)sdata->ptrLastBank->min * 8;
 
 		// 0x7e000 = 512kb SPU memory
 		if (spuAddrStart + sdata->audioAllocSize < 0x7e000)
@@ -132,7 +132,7 @@ int DECOMP_Bank_AssignSpuAddrs()
 			// start transfer
 			SpuSetTransferStartAddr(spuAddrStart);
 
-			SpuWrite((uint32_t *)((int)sdata->ptrSampleBlock2 + 0x800), (size_t)sdata->audioAllocSize);
+			SpuWrite((u32 *)((int)sdata->ptrSampleBlock2 + 0x800), (size_t)sdata->audioAllocSize);
 		}
 
 		sdata->bankLoadStage++;

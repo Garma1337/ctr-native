@@ -1,14 +1,14 @@
 #include <common.h>
 
-void UI_Map_DrawMap_ExtraFunc(struct Icon *icon, POLY_FT4 *p, short posX, short empty, struct PrimMem *primMem, u_long *otMem, u_int colorID);
+void UI_Map_DrawMap_ExtraFunc(struct Icon *icon, POLY_FT4 *p, s16 posX, s16 empty, struct PrimMem *primMem, u_long *otMem, u32 colorID);
 
-void DECOMP_UI_Map_DrawMap(struct Icon *mapTop, struct Icon *mapBottom, short posX, short posY, struct PrimMem *primMem, u_long *otMem, u_int colorID)
+void DECOMP_UI_Map_DrawMap(struct Icon *mapTop, struct Icon *mapBottom, s16 posX, s16 posY, struct PrimMem *primMem, u_long *otMem, u32 colorID)
 {
-	short mapBottomHeight;
-	short mapTopHeight;
+	s16 mapBottomHeight;
+	s16 mapTopHeight;
 	int iVar9;
 	POLY_FT4 *p;
-	u_int color;
+	u32 color;
 	struct GameTracker *gGT;
 
 	gGT = sdata->gGT;
@@ -45,7 +45,7 @@ void DECOMP_UI_Map_DrawMap(struct Icon *mapTop, struct Icon *mapBottom, short po
 
 	// if these conditions are met, then draw the top half of the minimap; otherwise, only draw the bottom half
 	// not sure when the game ever draws only the bottom half
-	if (((iVar9 != 0) && (*(short *)(iVar9 + 0x12) == 0)) ||
+	if (((iVar9 != 0) && (*(s16 *)(iVar9 + 0x12) == 0)) ||
 
 	    // if in main menu (character selection, track selection, any part of it)
 	    ((gGT->gameMode1 & MAIN_MENU) != 0))
@@ -54,7 +54,7 @@ void DECOMP_UI_Map_DrawMap(struct Icon *mapTop, struct Icon *mapBottom, short po
 		*(int *)&p->r0 = color;
 
 		// position of the top margin of the primitive for the top half of the minimap
-		mapTopHeight = posY - (((u_short)mapTop->texLayout.v2 - (u_short)mapTop->texLayout.v0) + mapBottomHeight);
+		mapTopHeight = posY - (((u16)mapTop->texLayout.v2 - (u16)mapTop->texLayout.v0) + mapBottomHeight);
 
 		p->y0 = mapTopHeight;
 		p->y1 = mapTopHeight;
@@ -79,10 +79,10 @@ void DECOMP_UI_Map_DrawMap(struct Icon *mapTop, struct Icon *mapBottom, short po
 	primMem->curr = p + 1;
 }
 
-void UI_Map_DrawMap_ExtraFunc(struct Icon *icon, POLY_FT4 *p, short posX, short empty, struct PrimMem *primMem, u_long *otMem, u_int colorID)
+void UI_Map_DrawMap_ExtraFunc(struct Icon *icon, POLY_FT4 *p, s16 posX, s16 empty, struct PrimMem *primMem, u_long *otMem, u32 colorID)
 {
-	short leftX;
-	short sizeX;
+	s16 leftX;
+	s16 sizeX;
 
 	sizeX = icon->texLayout.u1 - icon->texLayout.u0;
 
@@ -102,12 +102,12 @@ void UI_Map_DrawMap_ExtraFunc(struct Icon *icon, POLY_FT4 *p, short posX, short 
 	*(int *)&p->u0 = *(int *)&icon->texLayout.u0;
 	*(int *)&p->u1 = *(int *)&icon->texLayout.u1;
 	*(int *)&p->u2 = *(int *)&icon->texLayout.u2;
-	*(short *)&p->u3 = *(short *)&icon->texLayout.u3;
+	*(s16 *)&p->u3 = *(s16 *)&icon->texLayout.u3;
 
 	// check for if the minimap being drawn is white, if it's white then alter the blending mode bits of the texpage from 11 to 01
 	if (colorID == 1)
 	{
-		p->tpage = p->tpage & 0xff9f | (u_short)(1 << 5);
+		p->tpage = p->tpage & 0xff9f | (u16)(1 << 5);
 	}
 
 	p->code |= 2;

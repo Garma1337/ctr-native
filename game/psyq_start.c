@@ -17,7 +17,7 @@ void start()
 	{
 		// clear BSS region
 		for (i = (int *)0x8008d668;
-		     (unsigned int)i < 0x8009f6f8; // no, I did not mean to dereference i. the < operator with pointers is said to be "unspecified" in C (but not "UB"?)
+		     (u32)i < 0x8009f6f8; // no, I did not mean to dereference i. the < operator with pointers is said to be "unspecified" in C (but not "UB"?)
 		     i += 4)
 		{
 			i[0] = 0;
@@ -31,7 +31,7 @@ void start()
 
 		// clear $sp region
 		for (i = (int *)0x807ff800;
-		     (unsigned int)i < 0x807fff00; // no, I did not mean to dereference i. the < operator with pointers is said to be "unspecified" in C (but not "UB"?)
+		     (u32)i < 0x807fff00; // no, I did not mean to dereference i. the < operator with pointers is said to be "unspecified" in C (but not "UB"?)
 		     i += 4)
 		{
 			i[0] = 0;
@@ -47,7 +47,7 @@ void start()
 	void startSP();
 	startSP();
 
-	u_int DECOMP_main();
+	u32 DECOMP_main();
 	DECOMP_main();
 }
 

@@ -85,12 +85,12 @@ void DECOMP_Channel_UpdateChannels()
 				int local_34;
 				int RRmode;
 
-				if ((short)ad < 0)
+				if ((s16)ad < 0)
 					local_38 = 5;
 				else
 					local_38 = 1;
 
-				if ((short)sr < 0)
+				if ((s16)sr < 0)
 				{
 					if ((sr >> 0xe & 1) == 0)
 						local_34 = 5;

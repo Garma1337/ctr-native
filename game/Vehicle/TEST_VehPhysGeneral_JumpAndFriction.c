@@ -14,18 +14,18 @@ void FUN_80060630(struct Thread *t, struct Driver *d)
 {
 	char uVar1;
 	bool bVar2;
-	short sVar3;
+	s16 sVar3;
 	int iVar4;
 	int iVar5;
 	int iVar6;
-	short sVar7;
+	s16 sVar7;
 	int iVar8;
 	int iVar9;
-	unsigned int uVar10;
-	unsigned int uVar11;
-	unsigned int uVar12;
+	u32 uVar10;
+	u32 uVar11;
+	u32 uVar12;
 	int iVar13;
-	unsigned int uVar14;
+	u32 uVar14;
 	char *puVar15;
 	int param_1;
 	int param_2;
@@ -35,23 +35,23 @@ void FUN_80060630(struct Thread *t, struct Driver *d)
 	puVar15 = auStack_40;
 	uVar12 = d;
 	gte_SetRotMatrix(&d->matrixMovingDir);
-	if (((*(char *)(uVar12 + 0x376) != '\x02') && ((*(unsigned int *)(uVar12 + 0x2c8) & 0x800000) == 0)) && (param_2 = 0, *(short *)(uVar12 + 0x3e2) == 0))
+	if (((*(char *)(uVar12 + 0x376) != '\x02') && ((*(u32 *)(uVar12 + 0x2c8) & 0x800000) == 0)) && (param_2 = 0, *(s16 *)(uVar12 + 0x3e2) == 0))
 	{
 		uVar1 = *(char *)(uVar12 + 0x43b);
-		iVar9 = (int)((unsigned int)*(unsigned short *)(uVar12 + 0xc0) << 0x10) >> 0x18;
+		iVar9 = (int)((u32) * (u16 *)(uVar12 + 0xc0) << 0x10) >> 0x18;
 		if (iVar9 < 0)
 		{
 			iVar9 = -iVar9;
 		}
 
 		// Part 1
-		*(int *)(puVar15 + 0x10) = (int)*(short *)(uVar12 + 0x43c);
-		param_1 = DECOMP_VehCalc_MapToRange(iVar9, 0, uVar1, 0, (int)*(short *)(uVar12 + 0x43c));
-		param_3 = (int)*(short *)(uVar12 + 0x39c);
+		*(int *)(puVar15 + 0x10) = (int)*(s16 *)(uVar12 + 0x43c);
+		param_1 = DECOMP_VehCalc_MapToRange(iVar9, 0, uVar1, 0, (int)*(s16 *)(uVar12 + 0x43c));
+		param_3 = (int)*(s16 *)(uVar12 + 0x39c);
 
 		// commenting out THIS line breaks it, WHY?
 		// Need to make VehPhysGeneral_4_JumpAndFriction work
-		param_2 = (unsigned int)*(unsigned short *)(uVar12 + 0x39c);
+		param_2 = (u32) * (u16 *)(uVar12 + 0x39c);
 
 		// Part 2
 		iVar9 = param_3;
@@ -65,7 +65,7 @@ void FUN_80060630(struct Thread *t, struct Driver *d)
 		{
 			param_1 = iVar9;
 		}
-		sVar7 = (short)param_1;
+		sVar7 = (s16)param_1;
 
 		// Part 4
 		sVar3 = -sVar7;
@@ -76,57 +76,57 @@ void FUN_80060630(struct Thread *t, struct Driver *d)
 		}
 
 		// Part 5
-		*(unsigned short *)(uVar12 + 0x39c) = *(unsigned short *)(uVar12 + 0x39c) + sVar3;
+		*(u16 *)(uVar12 + 0x39c) = *(u16 *)(uVar12 + 0x39c) + sVar3;
 	}
-	if (*(short *)(uVar12 + 0x3fe) != 0)
+	if (*(s16 *)(uVar12 + 0x3fe) != 0)
 	{
-		if (*(short *)(uVar12 + 0x38a) < *(short *)(uVar12 + 0x39c))
+		if (*(s16 *)(uVar12 + 0x38a) < *(s16 *)(uVar12 + 0x39c))
 		{
-			*(unsigned short *)(uVar12 + 0x39c) = *(unsigned short *)(uVar12 + 0x38a);
+			*(u16 *)(uVar12 + 0x39c) = *(u16 *)(uVar12 + 0x38a);
 		}
-		if ((int)*(short *)(uVar12 + 0x39c) < -(int)*(short *)(uVar12 + 0x38a))
+		if ((int)*(s16 *)(uVar12 + 0x39c) < -(int)*(s16 *)(uVar12 + 0x38a))
 		{
-			*(short *)(uVar12 + 0x39c) = -*(short *)(uVar12 + 0x38a);
+			*(s16 *)(uVar12 + 0x39c) = -*(s16 *)(uVar12 + 0x38a);
 		}
 	}
-	*(unsigned int *)(puVar15 + 0x18) = *(unsigned int *)(uVar12 + 0x88);
-	*(unsigned int *)(puVar15 + 0x1c) = *(unsigned int *)(uVar12 + 0x8c);
+	*(u32 *)(puVar15 + 0x18) = *(u32 *)(uVar12 + 0x88);
+	*(u32 *)(puVar15 + 0x1c) = *(u32 *)(uVar12 + 0x8c);
 	uVar14 = 0;
-	*(unsigned int *)(puVar15 + 0x20) = *(unsigned int *)(uVar12 + 0x90);
+	*(u32 *)(puVar15 + 0x20) = *(u32 *)(uVar12 + 0x90);
 	iVar9 = 0;
 
-	if ((*(unsigned int *)(uVar12 + 0x2c8) & 1) == 0)
+	if ((*(u32 *)(uVar12 + 0x2c8) & 1) == 0)
 	{
 	LAB_80060ab0:
 
 // UNUSED Spring Weapon
 #if 0
-    if (((*(unsigned int *)(uVar12 + 0x2c8) & 0x8000) != 0) && (*(char *)(uVar12 + 0x36) == '\x05')) {
-      *(unsigned int *)(uVar12 + 0x2c8) = *(unsigned int *)(uVar12 + 0x2c8) & 0xffff7fff;
-      if ((*(short *)(uVar12 + 0x3f4) != 0) && (*(short *)(uVar12 + 0x3f2) == 0)) {
-        *(unsigned short *)(uVar12 + 0x3f6) = 0xa0;
-        iVar9 = *(short *)(uVar12 + 0x418) * 9;
+    if (((*(u32 *)(uVar12 + 0x2c8) & 0x8000) != 0) && (*(char *)(uVar12 + 0x36) == '\x05')) {
+      *(u32 *)(uVar12 + 0x2c8) = *(u32 *)(uVar12 + 0x2c8) & 0xffff7fff;
+      if ((*(s16 *)(uVar12 + 0x3f4) != 0) && (*(s16 *)(uVar12 + 0x3f2) == 0)) {
+        *(u16 *)(uVar12 + 0x3f6) = 0xa0;
+        iVar9 = *(s16 *)(uVar12 + 0x418) * 9;
         if (iVar9 < 0) {
           iVar9 = iVar9 + 3;
         }
-        *(short *)(uVar12 + 0x3f8) = (short)(iVar9 >> 2);
-        DECOMP_OtherFX_Play_Echo(9,1,*(unsigned short *)(uVar12 + 0x2ca) & 1);
-        *(unsigned short *)(uVar12 + 0x3fa) = 0x180;
+        *(s16 *)(uVar12 + 0x3f8) = (s16)(iVar9 >> 2);
+        DECOMP_OtherFX_Play_Echo(9,1,*(u16 *)(uVar12 + 0x2ca) & 1);
+        *(u16 *)(uVar12 + 0x3fa) = 0x180;
         goto LAB_80060c30;
       }
-      *(unsigned short *)(uVar12 + 0x3c) = 0;
+      *(u16 *)(uVar12 + 0x3c) = 0;
     }
 #endif
 
 		if (*(char *)(uVar12 + 0x366) == '\0')
 		{
-			if (((*(short *)(uVar12 + 0x3f4) == 0) || (*(short *)(uVar12 + 0x3f0) == 0)) || (*(short *)(uVar12 + 0x3f2) != 0))
+			if (((*(s16 *)(uVar12 + 0x3f4) == 0) || (*(s16 *)(uVar12 + 0x3f0) == 0)) || (*(s16 *)(uVar12 + 0x3f2) != 0))
 			{
-				if ((*(unsigned int *)(uVar12 + 0x2c8) & 1) != 0)
+				if ((*(u32 *)(uVar12 + 0x2c8) & 1) != 0)
 				{
 					if ((*(int *)(uVar12 + 0x350) != 0) && (iVar9 = (int)*(char *)(*(int *)(uVar12 + 0x350) + 0x3b), iVar9 != 0))
 					{
-						iVar13 = (int)*(short *)(uVar12 + 0x38e);
+						iVar13 = (int)*(s16 *)(uVar12 + 0x38e);
 						if (iVar13 < 0)
 						{
 							iVar13 = -iVar13;
@@ -150,62 +150,62 @@ void FUN_80060630(struct Thread *t, struct Driver *d)
 				}
 				goto LAB_80060e1c;
 			}
-			*(unsigned short *)(uVar12 + 0x3f6) = 0xa0;
-			*(short *)(uVar12 + 0x554) = *(short *)(uVar12 + 0x554) + 1;
-			*(unsigned short *)(uVar12 + 0x3f8) = *(unsigned short *)(uVar12 + 0x418);
-			DECOMP_OtherFX_Play_Echo(8, 1, *(unsigned short *)(uVar12 + 0x2ca) & 1);
+			*(u16 *)(uVar12 + 0x3f6) = 0xa0;
+			*(s16 *)(uVar12 + 0x554) = *(s16 *)(uVar12 + 0x554) + 1;
+			*(u16 *)(uVar12 + 0x3f8) = *(u16 *)(uVar12 + 0x418);
+			DECOMP_OtherFX_Play_Echo(8, 1, *(u16 *)(uVar12 + 0x2ca) & 1);
 		}
 		else
 		{
-			if ((*(short *)(uVar12 + 0x3f6) == 0) || (*(short *)(uVar12 + 0x3f8) == *(short *)(uVar12 + 0x418)))
+			if ((*(s16 *)(uVar12 + 0x3f6) == 0) || (*(s16 *)(uVar12 + 0x3f8) == *(s16 *)(uVar12 + 0x418)))
 			{
 				DECOMP_OtherFX_Play(0x7e, 1);
 			}
-			*(unsigned short *)(uVar12 + 0x3f6) = 0xa0;
+			*(u16 *)(uVar12 + 0x3f6) = 0xa0;
 			if (*(char *)(uVar12 + 0x366) == '\x02')
 			{
-				*(unsigned short *)(uVar12 + 0x3fa) = 0x180;
-				*(short *)(uVar12 + 0x3f8) = *(short *)(uVar12 + 0x418) * 3;
+				*(u16 *)(uVar12 + 0x3fa) = 0x180;
+				*(s16 *)(uVar12 + 0x3f8) = *(s16 *)(uVar12 + 0x418) * 3;
 			}
 			else
 			{
-				*(short *)(uVar12 + 0x3f8) = (short)((*(short *)(uVar12 + 0x418) * 3) / 2);
+				*(s16 *)(uVar12 + 0x3f8) = (s16)((*(s16 *)(uVar12 + 0x418) * 3) / 2);
 			}
 			*(char *)(uVar12 + 0x366) = 0;
 		}
 	}
 	else
 	{
-		if (((*(unsigned int *)(uVar12 + 0xbc) & 3) == 0) || (*(short *)(uVar12 + 0x39c) < 1))
+		if (((*(u32 *)(uVar12 + 0xbc) & 3) == 0) || (*(s16 *)(uVar12 + 0x39c) < 1))
 		{
-			if (*(short *)(uVar12 + 0x39c) != 0)
+			if (*(s16 *)(uVar12 + 0x39c) != 0)
 			{
-				if ((((*(unsigned int *)(*(int *)(uVar12 + 0x358) + 4) & 4) == 0) || (*(short *)(uVar12 + 0x39c) < 1)) || (-1 < *(short *)(uVar12 + 0x38e)))
+				if ((((*(u32 *)(*(int *)(uVar12 + 0x358) + 4) & 4) == 0) || (*(s16 *)(uVar12 + 0x39c) < 1)) || (-1 < *(s16 *)(uVar12 + 0x38e)))
 				{
-					iVar8 = (int)*(short *)(uVar12 + 0x38e);
+					iVar8 = (int)*(s16 *)(uVar12 + 0x38e);
 					iVar13 = iVar8;
 					if (iVar8 < 0)
 					{
 						iVar13 = -iVar8;
 					}
-					if (((0x2ff < iVar13) && ((*(short *)(uVar12 + 0x39c) < 1 || (iVar8 < 1)))) && ((-1 < *(short *)(uVar12 + 0x39c) || (-1 < iVar8))))
+					if (((0x2ff < iVar13) && ((*(s16 *)(uVar12 + 0x39c) < 1 || (iVar8 < 1)))) && ((-1 < *(s16 *)(uVar12 + 0x39c) || (-1 < iVar8))))
 						goto LAB_800608fc;
 				}
-				param_1 = (int)*(short *)(uVar12 + 0x428);
+				param_1 = (int)*(s16 *)(uVar12 + 0x428);
 				iVar9 = param_1 + ((int)*(char *)(uVar12 + 0x33) << 5) / 5;
-				if ((*(unsigned int *)(uVar12 + 0xbc) & 3) == 0)
+				if ((*(u32 *)(uVar12 + 0xbc) & 3) == 0)
 				{
-					if ((*(short *)(uVar12 + 0x3e2) != 0) && (0 < *(short *)(uVar12 + 0x39c)))
+					if ((*(s16 *)(uVar12 + 0x3e2) != 0) && (0 < *(s16 *)(uVar12 + 0x39c)))
 					{
-						iVar9 = (int)*(short *)(uVar12 + 0x42a);
+						iVar9 = (int)*(s16 *)(uVar12 + 0x42a);
 					}
 					param_1 = *(int *)(*(int *)(uVar12 + 0x358) + 0xc);
-					if ((param_1 != 0x100) && ((*(unsigned int *)(uVar12 + 0x2c8) & 0x800000) == 0))
+					if ((param_1 != 0x100) && ((*(u32 *)(uVar12 + 0x2c8) & 0x800000) == 0))
 					{
 						iVar9 = param_1 * iVar9 >> 8;
 					}
 				}
-				else if (0 < *(short *)(uVar12 + 0x39c))
+				else if (0 < *(s16 *)(uVar12 + 0x39c))
 					goto LAB_8006089c;
 			}
 		}
@@ -220,30 +220,30 @@ void FUN_80060630(struct Thread *t, struct Driver *d)
 		gte_ldVZ0(uVar10 & 0xffff);
 		gte_rtv0();
 		read_mt(param_1, param_2, param_3);
-		if (*(short *)(uVar12 + 0x39c) < 0)
+		if (*(s16 *)(uVar12 + 0x39c) < 0)
 		{
-			*(short *)(uVar12 + 0x3b2) = -(short)uVar10;
+			*(s16 *)(uVar12 + 0x3b2) = -(s16)uVar10;
 			*(int *)(puVar15 + 0x18) = *(int *)(puVar15 + 0x18) - param_1;
 			*(int *)(puVar15 + 0x20) = *(int *)(puVar15 + 0x20) - param_3;
-			*(unsigned int *)(puVar15 + 0x1c) = *(int *)(puVar15 + 0x1c) - param_2;
-			*(short *)(uVar12 + 0x3ac) = -(short)param_1;
-			*(short *)(uVar12 + 0x3ae) = -(short)param_2;
-			*(short *)(uVar12 + 0x3b0) = -(short)param_3;
+			*(u32 *)(puVar15 + 0x1c) = *(int *)(puVar15 + 0x1c) - param_2;
+			*(s16 *)(uVar12 + 0x3ac) = -(s16)param_1;
+			*(s16 *)(uVar12 + 0x3ae) = -(s16)param_2;
+			*(s16 *)(uVar12 + 0x3b0) = -(s16)param_3;
 		}
 		else
 		{
-			*(short *)(uVar12 + 0x3b2) = (short)uVar10;
+			*(s16 *)(uVar12 + 0x3b2) = (s16)uVar10;
 			*(int *)(puVar15 + 0x18) = *(int *)(puVar15 + 0x18) + param_1;
 			*(int *)(puVar15 + 0x20) = *(int *)(puVar15 + 0x20) + param_3;
-			*(unsigned int *)(puVar15 + 0x1c) = *(int *)(puVar15 + 0x1c) + param_2;
-			*(short *)(uVar12 + 0x3ac) = (short)param_1;
-			*(short *)(uVar12 + 0x3ae) = (short)param_2;
-			*(short *)(uVar12 + 0x3b0) = (short)param_3;
+			*(u32 *)(puVar15 + 0x1c) = *(int *)(puVar15 + 0x1c) + param_2;
+			*(s16 *)(uVar12 + 0x3ac) = (s16)param_1;
+			*(s16 *)(uVar12 + 0x3ae) = (s16)param_2;
+			*(s16 *)(uVar12 + 0x3b0) = (s16)param_3;
 		}
 		uVar14 = VehCalc_FastSqrt(*(int *)(puVar15 + 0x18) * *(int *)(puVar15 + 0x18) + *(int *)(puVar15 + 0x1c) * *(int *)(puVar15 + 0x1c) +
 		                              *(int *)(puVar15 + 0x20) * *(int *)(puVar15 + 0x20),
 		                          0x10);
-		iVar9 = (int)*(short *)(uVar12 + 0x39c);
+		iVar9 = (int)*(s16 *)(uVar12 + 0x39c);
 		if (iVar9 < 0)
 		{
 			iVar9 = -iVar9;
@@ -259,11 +259,11 @@ void FUN_80060630(struct Thread *t, struct Driver *d)
 		{
 			uVar14 = uVar10;
 		}
-		if (((*(unsigned int *)(uVar12 + 0x2c8) & 1) == 0) || (*(short *)(uVar12 + 0x3f6) == 0))
+		if (((*(u32 *)(uVar12 + 0x2c8) & 1) == 0) || (*(s16 *)(uVar12 + 0x3f6) == 0))
 			goto LAB_80060ab0;
-		if (*(short *)(uVar12 + 0x3fa) != 0)
+		if (*(s16 *)(uVar12 + 0x3fa) != 0)
 		{
-			*(unsigned short *)(uVar12 + 0x3fa) = 0x180;
+			*(u16 *)(uVar12 + 0x3fa) = 0x180;
 		}
 		if (*(char *)(uVar12 + 0x376) == '\x06')
 		{
@@ -277,9 +277,9 @@ LAB_80060c30:
 
 	iVar9 = 0;
 	iVar8 = 0x378;
-	*(unsigned short *)(uVar12 + 0x3f2) = 0x180;
-	*(unsigned short *)(uVar12 + 0x3f0) = 0;
-	*(unsigned int *)(uVar12 + 0x2c8) = *(unsigned int *)(uVar12 + 0x2c8) | 0x480;
+	*(u16 *)(uVar12 + 0x3f2) = 0x180;
+	*(u16 *)(uVar12 + 0x3f0) = 0;
+	*(u32 *)(uVar12 + 0x2c8) = *(u32 *)(uVar12 + 0x2c8) | 0x480;
 	iVar13 = iVar9;
 	do
 	{
@@ -302,7 +302,7 @@ LAB_80060c30:
 		iVar8 = iVar8 + 8;
 	} while (iVar13 < 1);
 	iVar13 = uVar12 + 0x360;
-	if ((*(unsigned int *)(uVar12 + 0x2c8) & 1) == 0)
+	if ((*(u32 *)(uVar12 + 0x2c8) & 1) == 0)
 	{
 		iVar13 = uVar12 + 0x368;
 	}
@@ -323,7 +323,7 @@ LAB_80060c30:
 		iVar4 = iVar8 * iVar8;
 		iVar9 = iVar8;
 	}
-	iVar13 = VehCalc_FastSqrt(iVar4 + (int)*(short *)(uVar12 + 0x3f8) * (int)*(short *)(uVar12 + 0x3f8) >> 8, 8);
+	iVar13 = VehCalc_FastSqrt(iVar4 + (int)*(s16 *)(uVar12 + 0x3f8) * (int)*(s16 *)(uVar12 + 0x3f8) >> 8, 8);
 	uVar10 = sdata->gGT->level1->unk_18C << 8;
 	if (sdata->gGT->level1->unk_18C == 0)
 	{
@@ -340,7 +340,7 @@ LAB_80060c30:
 	}
 	if (*(int *)(puVar15 + 0x1c) < (int)uVar11)
 	{
-		*(unsigned int *)(puVar15 + 0x1c) = uVar11;
+		*(u32 *)(puVar15 + 0x1c) = uVar11;
 	}
 
 	// [end of the first frame of jump]
@@ -349,13 +349,13 @@ LAB_80060c30:
 
 LAB_80060e1c:
 	VehPhysCrash_ConvertVecToSpeed(uVar12, puVar15 + 0x18 /*,0*/);
-	iVar9 = *(unsigned short *)(uVar12 + 0x38c) - uVar14;
-	*(short *)(uVar12 + 0x38c) = (short)iVar9;
+	iVar9 = *(u16 *)(uVar12 + 0x38c) - uVar14;
+	*(s16 *)(uVar12 + 0x38c) = (s16)iVar9;
 	if (iVar9 * 0x10000 < 0)
 	{
-		*(unsigned short *)(uVar12 + 0x38c) = 0;
+		*(u16 *)(uVar12 + 0x38c) = 0;
 	}
-	iVar9 = (int)*(short *)(uVar12 + 0x38e);
+	iVar9 = (int)*(s16 *)(uVar12 + 0x38e);
 	if (iVar9 < 0)
 	{
 		if (iVar9 < 0)
@@ -364,17 +364,17 @@ LAB_80060e1c:
 		}
 		if (iVar9 < 0x100)
 		{
-			sVar7 = *(short *)(uVar12 + 0x36e) - (*(short *)(uVar12 + 0x36e) >> 3);
+			sVar7 = *(s16 *)(uVar12 + 0x36e) - (*(s16 *)(uVar12 + 0x36e) >> 3);
 		}
 		else
 		{
-			sVar7 = (short)(*(short *)(uVar12 + 0x36e) * 0xd + (sdata->gGT->timer & 7) * 0x300 >> 4);
+			sVar7 = (s16)(*(s16 *)(uVar12 + 0x36e) * 0xd + (sdata->gGT->timer & 7) * 0x300 >> 4);
 		}
 	}
 	else
 	{
-		sVar7 = (short)(*(short *)(uVar12 + 0x36e) * 0xd + iVar9 * 3 >> 4);
+		sVar7 = (s16)(*(s16 *)(uVar12 + 0x36e) * 0xd + iVar9 * 3 >> 4);
 	}
-	*(short *)(uVar12 + 0x36e) = sVar7;
+	*(s16 *)(uVar12 + 0x36e) = sVar7;
 	return;
 }

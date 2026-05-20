@@ -1,14 +1,14 @@
 #include <common.h>
 
-unsigned char DECOMP_MM_TransitionInOut(struct TransitionMeta *meta, int framesPassed, int numFrames)
+u8 DECOMP_MM_TransitionInOut(struct TransitionMeta *meta, int framesPassed, int numFrames)
 {
-	unsigned char bool_Transitioning;
-	short start;
-	short framesLeft;
+	u8 bool_Transitioning;
+	s16 start;
+	s16 framesLeft;
 
 	bool_Transitioning = 1;
 	start = meta->headStart;
-	framesLeft = ((short)framesPassed - start);
+	framesLeft = ((s16)framesPassed - start);
 
 	if (framesLeft == 4)
 	{
@@ -20,7 +20,7 @@ unsigned char DECOMP_MM_TransitionInOut(struct TransitionMeta *meta, int framesP
 	for (/**/; start > -1; meta++)
 	{
 		start = meta->headStart;
-		framesLeft = ((short)framesPassed - start);
+		framesLeft = ((s16)framesPassed - start);
 
 		if (framesLeft < 1)
 		{
@@ -31,11 +31,11 @@ unsigned char DECOMP_MM_TransitionInOut(struct TransitionMeta *meta, int framesP
 		}
 
 		// else if
-		if (framesLeft < (short)numFrames)
+		if (framesLeft < (s16)numFrames)
 		{
 			bool_Transitioning = 0;
-			meta->currX = framesLeft * meta->distX / (short)numFrames;
-			meta->currY = framesLeft * meta->distY / (short)numFrames;
+			meta->currX = framesLeft * meta->distX / (s16)numFrames;
+			meta->currY = framesLeft * meta->distY / (s16)numFrames;
 			continue;
 		}
 

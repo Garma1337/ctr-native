@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_RECTMENU_DrawOuterRect_LowLevel(RECT *p, short xOffset, u_short yOffset, Color color, short param_5, u_long *otMem)
+void DECOMP_RECTMENU_DrawOuterRect_LowLevel(RECT *p, s16 xOffset, u16 yOffset, Color color, s16 param_5, u_long *otMem)
 {
 	int iVar1;
 	RECT r;
@@ -16,7 +16,7 @@ void DECOMP_RECTMENU_DrawOuterRect_LowLevel(RECT *p, short xOffset, u_short yOff
 	DECOMP_RECTMENU_DrawOuterRect_Edge(&r, color, iVar1, otMem);
 
 	r.y = p->y + yOffset;
-	r.h = p->h - (short)((int)((u_int)yOffset << 0x10) >> 0xf);
+	r.h = p->h - (s16)((int)((u32)yOffset << 0x10) >> 0xf);
 	r.w = xOffset;
 	DECOMP_RECTMENU_DrawOuterRect_Edge(&r, color, iVar1, otMem);
 

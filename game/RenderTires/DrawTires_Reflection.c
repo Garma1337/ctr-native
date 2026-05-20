@@ -3,19 +3,19 @@
 
 struct DrawTiresReflectionScratch
 {
-	unsigned int savedRegs[12];
+	u32 savedRegs[12];
 	int numPlyr;
 	int playerCounter;
 	struct Icon **wheelSprites;
-	unsigned int tireColor;
+	u32 tireColor;
 	int otRangeNormal;
 	int otRangeSecondary;
-	unsigned short wheelSize;
-	unsigned short pad4a;
-	short vertSplit;
-	unsigned short pad4e;
-	short splitCameraY;
-	unsigned short pad52;
+	u16 wheelSize;
+	u16 pad4a;
+	s16 vertSplit;
+	u16 pad4e;
+	s16 splitCameraY;
+	u16 pad52;
 	int lodThreshold;
 	int wheelLocalPairA[4];
 	int wheelLocalPairB[4];
@@ -27,12 +27,12 @@ struct DrawTiresReflectionScratch
 	int tireAxisB[8];
 	int projectedSxy[4];
 	int cornerDepthBias[2];
-	unsigned int jumpTable[8];
-	unsigned int pad150[4];
+	u32 jumpTable[8];
+	u32 pad150[4];
 	int instFlags;
 	int pad164[2];
-	short depthOffsetStartBytes;
-	short depthOffsetEndBytes;
+	s16 depthOffsetStartBytes;
+	s16 depthOffsetEndBytes;
 	int otRangeStart;
 	int otRangeEnd;
 };
@@ -69,7 +69,7 @@ _Static_assert(offsetof(POLY_FT4, x0) == 0x8);
 _Static_assert(offsetof(POLY_FT4, u0) == 0xc);
 _Static_assert(offsetof(POLY_FT4, x3) == 0x20);
 
-static const unsigned int sDrawTiresReflectionJumpTable[8] = {
+static const u32 sDrawTiresReflectionJumpTable[8] = {
     0x8006f7f8, 0x8006f814, 0x8006f830, 0x8006f848, 0x8006f860, 0x8006f87c, 0x8006f898, 0x8006f8b8,
 };
 
@@ -91,9 +91,9 @@ static struct InstDrawPerPlayer *DrawTiresReflection_GetIdpp(struct Instance *in
 	return (struct InstDrawPerPlayer *)((char *)INST_GETIDPP(inst) + (playerIndex * sizeof(struct InstDrawPerPlayer)));
 }
 
-static short DrawTiresReflection_ReadS16(struct DrawTiresReflectionScratch *scratch, int offset)
+static s16 DrawTiresReflection_ReadS16(struct DrawTiresReflectionScratch *scratch, int offset)
 {
-	return *(short *)((char *)scratch + offset);
+	return *(s16 *)((char *)scratch + offset);
 }
 
 static int DrawTiresReflection_ReadS32(struct DrawTiresReflectionScratch *scratch, int offset)
@@ -103,7 +103,7 @@ static int DrawTiresReflection_ReadS32(struct DrawTiresReflectionScratch *scratc
 
 static void DrawTiresReflection_WriteS16(struct DrawTiresReflectionScratch *scratch, int offset, int value)
 {
-	*(short *)((char *)scratch + offset) = value;
+	*(s16 *)((char *)scratch + offset) = value;
 }
 
 static void DrawTiresReflection_WriteS32(struct DrawTiresReflectionScratch *scratch, int offset, int value)
@@ -116,9 +116,9 @@ static int DrawTiresReflection_ReadMatrixWord(MATRIX *matrix, int offset)
 	return *(int *)((char *)matrix + offset);
 }
 
-static unsigned int DrawTiresReflection_PackXY(int x, int y)
+static u32 DrawTiresReflection_PackXY(int x, int y)
 {
-	return ((unsigned int)(unsigned short)x) | ((unsigned int)(unsigned short)y << 16);
+	return ((u32)(u16)x) | ((u32)(u16)y << 16);
 }
 
 static void DrawTiresReflection_InitScratch(struct DrawTiresReflectionScratch *scratch, char numPlyr)
@@ -195,7 +195,7 @@ static void DrawTiresReflection_BuildWheelLocalPairs(struct DrawTiresReflectionS
 
 	DrawTiresReflection_WriteS32(scratch, 0x40, idpp->unkE4);
 	DrawTiresReflection_WriteS32(scratch, 0x44, idpp->unkE8);
-	DrawTiresReflection_WriteS32(scratch, 0x48, (short)driver->wheelSize);
+	DrawTiresReflection_WriteS32(scratch, 0x48, (s16)driver->wheelSize);
 
 	steering = DrawTiresSolid_TrigAngleSinCos(driver->wheelRotation << 2);
 	DrawTiresReflection_WriteS16(scratch, 0x60, DrawTiresReflection_ReadS16(scratch, 0x58) - steering.cos);
@@ -391,7 +391,7 @@ static struct DrawTiresReflectionProjectedWheel DrawTiresReflection_SelectProjec
 {
 	struct DrawTiresReflectionProjectedWheel selected;
 	int selectedOT = DrawTiresReflection_ReadS32(scratch, 0x44);
-	unsigned int depthValue;
+	u32 depthValue;
 	int angleValue;
 	int spriteIndex;
 
@@ -425,12 +425,12 @@ static struct DrawTiresReflectionProjectedWheel DrawTiresReflection_SelectProjec
 
 static void DrawTiresReflection_CopyIconUV(POLY_FT4 *p, struct Icon *icon)
 {
-	unsigned int uv23 = *(unsigned int *)&icon->texLayout.u2;
+	u32 uv23 = *(u32 *)&icon->texLayout.u2;
 
-	*(unsigned int *)&p->u0 = *(unsigned int *)&icon->texLayout.u0;
-	*(unsigned int *)&p->u1 = *(unsigned int *)&icon->texLayout.u1;
-	*(unsigned int *)&p->u2 = uv23;
-	*(unsigned int *)&p->u3 = uv23 >> 16;
+	*(u32 *)&p->u0 = *(u32 *)&icon->texLayout.u0;
+	*(u32 *)&p->u1 = *(u32 *)&icon->texLayout.u1;
+	*(u32 *)&p->u2 = uv23;
+	*(u32 *)&p->u3 = uv23 >> 16;
 }
 
 static int DrawTiresReflection_ApplyCornerOrder(struct DrawTiresReflectionScratch *scratch, int jumpIndex, int *selectedOTSlot, int sxy[4])
@@ -504,10 +504,10 @@ static int DrawTiresReflection_ApplyCornerOrder(struct DrawTiresReflectionScratc
 
 static void DrawTiresReflection_WritePrimitiveCorners(POLY_FT4 *p, int sxy[4])
 {
-	*(unsigned int *)&p->x0 = sxy[0];
-	*(unsigned int *)&p->x1 = sxy[1];
-	*(unsigned int *)&p->x2 = sxy[2];
-	*(unsigned int *)&p->x3 = sxy[3];
+	*(u32 *)&p->x0 = sxy[0];
+	*(u32 *)&p->x1 = sxy[1];
+	*(u32 *)&p->x2 = sxy[2];
+	*(u32 *)&p->x3 = sxy[3];
 }
 
 static void DrawTiresReflection_LinkPrimitive(struct DrawTiresReflectionScratch *scratch, POLY_FT4 *p, int selectedOTSlot)
@@ -542,7 +542,7 @@ static void DrawTiresReflection_EmitProjectedWheel(struct DrawTiresReflectionScr
 	int sxy[4];
 	int splitDelta;
 
-	*(unsigned int *)&p->r0 = scratch->tireColor;
+	*(u32 *)&p->r0 = scratch->tireColor;
 
 	if (selected->wheelSprite == 0)
 		return;
@@ -678,7 +678,7 @@ void DrawTires_Reflection(struct Thread *thread, struct PrimMem *primMem, char n
 		if (driver == 0 || inst == 0)
 			continue;
 
-		for (int playerIndex = 0; playerIndex < (int)(unsigned char)numPlyr; playerIndex++)
+		for (int playerIndex = 0; playerIndex < (int)(u8)numPlyr; playerIndex++)
 		{
 			if (DrawTiresReflection_StagePlayer(&scratch, driver, inst, playerIndex, primMem, &primCount) == 0)
 				continue;

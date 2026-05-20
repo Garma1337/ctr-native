@@ -2,7 +2,7 @@
 
 void DECOMP_VehPickupItem_ShootOnCirclePress(struct Driver *d)
 {
-	u_char weapon;
+	u8 weapon;
 
 	if (d->ChangeState_param2 != 0)
 	{

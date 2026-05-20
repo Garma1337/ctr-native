@@ -93,7 +93,7 @@ struct TrigTable
 #define ANG_MODULO_PI(x)                   ((x) & (ANG_PI - 1))      // ang % 180
 #define ANG_MODULO_HALF_PI(x)              ((x) & (ANG_HALF_PI - 1)) // ang % 90
 
-#define ANG(x)                             ANG_MODULO_TWO_PI(((short)((((float)x) * ANG_TWO_PI) / 360))) // works for any float, pos or neg
+#define ANG(x)                             ANG_MODULO_TWO_PI(((s16)((((float)x) * ANG_TWO_PI) / 360))) // works for any float, pos or neg
 
 #define IS_ANG_FIRST_OR_THIRD_QUADRANT(x)  (((x) & ANG_HALF_PI) == 0) // [0, 90[ \/ [180, 270[
 #define IS_ANG_THIRD_OR_FOURTH_QUADRANT(x) ((x) & ANG_PI)             // [180, 360[
@@ -112,7 +112,7 @@ struct TrigTable
 #define FP_MULT(x, y)                      (((x) * (y)) >> FRACTIONAL_BITS)
 #define FP(x)                              ((int)(((float)x) * FP_ONE))
 
-short FP_Div(short a, short b); // see fp.c
+s16 FP_Div(s16 a, s16 b); // see fp.c
 
 // at least one of the operands needs to be a fixed point value converted to integer form
 // e.g. FP_Mult(0x1000, 0x2000) or FP_Mult(FP(1.0), FP(2.0)) or FP_Mult(3, FP(0.75))

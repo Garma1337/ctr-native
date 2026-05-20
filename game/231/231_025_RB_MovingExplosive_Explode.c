@@ -2,7 +2,7 @@
 
 void DECOMP_RB_MovingExplosive_Explode(struct Thread *t, struct Instance *inst, struct TrackerWeapon *tw)
 {
-	short soundId;
+	s16 soundId;
 	struct Driver *d;
 
 	// bomb

@@ -1,6 +1,6 @@
 #include <common.h>
 
-const short hub[8] = {
+const s16 hub[8] = {
     3,  // 1st battle map, Nitro Court, 	is for Hub 4 (3+1), Citadel City
     1,  // 2nd battle map, Rampage Ruins, 	is for Hub 2 (1+1), Lost Ruins
     -1, // 3rd battle map, Parking Lot, 	is not used in any hub
@@ -19,7 +19,7 @@ void DECOMP_CC_EndEvent_DrawMenu()
 {
 	struct GameTracker *gGT;
 	struct Driver *driver;
-	short posXY[2];
+	s16 posXY[2];
 	int lngIndex;
 	int boolLose;
 	struct AdvProgress *adv;

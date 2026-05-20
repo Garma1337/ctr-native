@@ -3,20 +3,20 @@
 #ifdef CTR_NATIVE
 static void MainFrame_CopyPackedVisList(int *dst, int *src, int bytesIfRaw)
 {
-	signed char *rle;
-	unsigned char *out;
+	s8 *rle;
+	u8 *out;
 
 	if ((dst == NULL) || (src == NULL))
 		return;
 
-	if (((unsigned int)src & 1) == 0)
+	if (((u32)src & 1) == 0)
 	{
 		memcpy(dst, src, bytesIfRaw);
 		return;
 	}
 
-	rle = (signed char *)((unsigned int)src & ~(unsigned int)3);
-	out = (unsigned char *)dst;
+	rle = (s8 *)((u32)src & ~(u32)3);
+	out = (u8 *)dst;
 
 	for (;;)
 	{
@@ -28,11 +28,11 @@ static void MainFrame_CopyPackedVisList(int *dst, int *src, int bytesIfRaw)
 		if (count > 0)
 		{
 			while (count-- > 0)
-				*out++ = (unsigned char)*rle++;
+				*out++ = (u8)*rle++;
 		}
 		else
 		{
-			unsigned char value = (unsigned char)*rle++;
+			u8 value = (u8)*rle++;
 			count = 1 - count;
 			while (count-- > 0)
 				*out++ = value;

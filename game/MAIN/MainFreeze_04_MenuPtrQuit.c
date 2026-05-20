@@ -2,7 +2,7 @@
 
 void DECOMP_MainFreeze_MenuPtrQuit(struct RectMenu *menu)
 {
-	short row;
+	s16 row;
 	struct GameTracker *gGT = sdata->gGT;
 
 	if (menu->unk1e == 0)

@@ -29,7 +29,7 @@ void DECOMP_Channel_DestroyAll_LowLevel(int opt1, int boolKeepMusic, char type)
 
 			        // if otherFX and not menu sounds,
 			        // cause those should ring out
-			        ((short)curr->soundID > 5)))
+			        ((s16)curr->soundID > 5)))
 			{
 				Channel_DestroySelf(curr);
 			}

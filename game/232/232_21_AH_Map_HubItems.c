@@ -1,22 +1,22 @@
 #include <common.h>
 
-void DECOMP_AH_Map_HubItems(void *hubPtrs, short *param_2)
+void DECOMP_AH_Map_HubItems(void *hubPtrs, s16 *param_2)
 {
 	struct GameTracker *gGT;
 	struct AdvProgress *adv;
-	short levelID;
-	short hubID;
-	short sVar1;
-	short *trophies;
+	s16 levelID;
+	s16 hubID;
+	s16 sVar1;
+	s16 *trophies;
 	bool open;
 	int iVar3;
-	u_int bit;
+	u32 bit;
 	int iVar5;
 	int uVar6;
-	short sVar7;
-	short sVar8;
-	short *psVar9;
-	short *psVar10;
+	s16 sVar7;
+	s16 sVar8;
+	s16 *psVar9;
+	s16 *psVar10;
 	int pos3D[3];
 	int local_40;
 	int local_3c;
@@ -37,7 +37,7 @@ void DECOMP_AH_Map_HubItems(void *hubPtrs, short *param_2)
 		{
 			sVar8 = -1;
 			sVar8 = -1;
-			sVar7 = (short)0xffffffff; //???
+			sVar7 = (s16)0xffffffff; //???
 			sVar7 = -1;
 			sVar7 = -1;
 
@@ -60,7 +60,7 @@ void DECOMP_AH_Map_HubItems(void *hubPtrs, short *param_2)
 			LAB_800b17e8:
 				iVar5 = sVar7 << 0x10;
 				sVar8 = sVar8;
-				sVar7 = (short)sVar7;
+				sVar7 = (s16)sVar7;
 			LAB_800b17ec:
 				iVar5 = iVar5 >> 0x10;
 			}
@@ -197,7 +197,7 @@ void DECOMP_AH_Map_HubItems(void *hubPtrs, short *param_2)
 				DECOMP_UI_Map_GetIconPos(hubPtrs, &local_38, &local_34);
 				if ((iVar5 == 0) && (D232.unkModeHubItems == 0))
 				{
-					DECOMP_AH_Map_HubArrowOutter(hubPtrs, (int)*param_2, local_38, local_34, (0x1000 - (u_short)psVar9[1]), 1);
+					DECOMP_AH_Map_HubArrowOutter(hubPtrs, (int)*param_2, local_38, local_34, (0x1000 - (u16)psVar9[1]), 1);
 					*param_2 = *param_2 + 1;
 				}
 

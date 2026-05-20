@@ -23,11 +23,11 @@ void DECOMP_CS_Instance_InitMatrix(void)
 		{
 			char *entry = data + j * 0x20;
 
-			ConvertRotToMatrix(&mat, (short *)(entry + 8));
+			ConvertRotToMatrix(&mat, (s16 *)(entry + 8));
 
-			scale.m[0][0] = *(short *)(entry + 0x10);
-			scale.m[1][1] = *(short *)(entry + 0x12);
-			scale.m[2][2] = *(short *)(entry + 0x14);
+			scale.m[0][0] = *(s16 *)(entry + 0x10);
+			scale.m[1][1] = *(s16 *)(entry + 0x12);
+			scale.m[2][2] = *(s16 *)(entry + 0x14);
 
 			MatrixRotate((MATRIX *)(entry + 8), &scale, &mat);
 		}

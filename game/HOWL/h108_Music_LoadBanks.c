@@ -2,7 +2,7 @@
 
 void DECOMP_Music_LoadBanks(void)
 {
-	u_int bankID;
+	u32 bankID;
 	struct Bank thisBank;
 	struct GameTracker *gGT = sdata->gGT;
 	int level = gGT->levelID;

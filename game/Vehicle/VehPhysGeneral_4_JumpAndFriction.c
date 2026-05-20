@@ -13,18 +13,18 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 {
 	char uVar1;
 	bool bVar2;
-	short sVar3;
+	s16 sVar3;
 	int iVar4;
 	int iVar5;
 	int iVar6;
-	short sVar7;
+	s16 sVar7;
 	int iVar8;
 	int iVar9;
-	unsigned int uVar10;
-	unsigned int uVar11;
-	unsigned int uVar12;
+	u32 uVar10;
+	u32 uVar11;
+	u32 uVar12;
 	int iVar13;
-	unsigned int uVar14;
+	u32 uVar14;
 	int param_1;
 	int param_2;
 	int param_3;
@@ -36,7 +36,7 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 
 	if ((d->kartState != KS_DRIFTING) && ((d->actionsFlagSet & 0x800000) == 0) && (d->reserves == 0))
 	{
-		short ampTurnState = (short)d->ampTurnState >> 8;
+		s16 ampTurnState = (s16)d->ampTurnState >> 8;
 		if (ampTurnState < 0)
 		{
 			ampTurnState = -ampTurnState;
@@ -58,7 +58,7 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 		{
 			param_1 = iVar9;
 		}
-		sVar7 = (short)param_1;
+		sVar7 = (s16)param_1;
 
 		// Part 4
 		sVar3 = -sVar7;
@@ -111,7 +111,7 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 		
 		// const 2.25x
         jumpForce = d->const_JumpForce * 9;
-        d->jump_InitialVelY = (short)(jumpForce >> 2);
+        d->jump_InitialVelY = (s16)(jumpForce >> 2);
 		
 		// spring weapon sound
         OtherFX_Play_Echo(9, 1, d->actionsFlagSet & 0x10000);
@@ -263,7 +263,7 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 
 		if (d->baseSpeed < 0)
 		{
-			d->unk_offset3B2 = -(short)uVar10;
+			d->unk_offset3B2 = -(s16)uVar10;
 
 			movement.vx -= param_1;
 			movement.vy -= param_2;
@@ -271,14 +271,14 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 
 // unused?
 #if 0
-      d->unkVectorX = -(short)param_1;
-      d->unkVectorY = -(short)param_2;
-      d->unkVectorZ = -(short)param_3;
+      d->unkVectorX = -(s16)param_1;
+      d->unkVectorY = -(s16)param_2;
+      d->unkVectorZ = -(s16)param_3;
 #endif
 		}
 		else
 		{
-			d->unk_offset3B2 = (short)uVar10;
+			d->unk_offset3B2 = (s16)uVar10;
 
 			movement.vx += param_1;
 			movement.vy += param_2;
@@ -286,9 +286,9 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 
 // unused?
 #if 0
-      d->unkVectorX = (short)param_1;
-      d->unkVectorY = (short)param_2;
-      d->unkVectorZ = (short)param_3;
+      d->unkVectorX = (s16)param_1;
+      d->unkVectorY = (s16)param_2;
+      d->unkVectorZ = (s16)param_3;
 #endif
 		}
 
@@ -371,7 +371,7 @@ PROCESS_JUMP:
 
 
 	// AxisAngle
-	short *axisAngle = &d->AxisAngle1_normalVec;
+	s16 *axisAngle = &d->AxisAngle1_normalVec;
 	if ((d->actionsFlagSet & 1) == 0)
 	{
 		axisAngle = &d->AxisAngle2_normalVec;
@@ -432,7 +432,7 @@ NOT_JUMPING:
 
 	VehPhysCrash_ConvertVecToSpeed(d, &movement);
 	iVar9 = d->speed - uVar14;
-	d->speed = (short)iVar9;
+	d->speed = (s16)iVar9;
 	if (iVar9 * 0x10000 < 0)
 	{
 		d->speed = 0;
@@ -455,12 +455,12 @@ NOT_JUMPING:
 		}
 		else
 		{
-			sVar7 = (short)(d->unk36E * 0xd + (sdata->gGT->timer & 7) * 0x300 >> 4);
+			sVar7 = (s16)(d->unk36E * 0xd + (sdata->gGT->timer & 7) * 0x300 >> 4);
 		}
 	}
 	else
 	{
-		sVar7 = (short)(d->unk36E * 0xd + iVar9 * 3 >> 4);
+		sVar7 = (s16)(d->unk36E * 0xd + iVar9 * 3 >> 4);
 	}
 	d->unk36E = sVar7;
 

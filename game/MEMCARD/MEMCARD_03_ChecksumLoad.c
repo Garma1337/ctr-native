@@ -1,8 +1,8 @@
 #include <common.h>
 
-int MEMCARD_NewFunc_AsyncCRC(unsigned char *saveBytes, int len);
+int MEMCARD_NewFunc_AsyncCRC(u8 *saveBytes, int len);
 
-int DECOMP_MEMCARD_ChecksumLoad(unsigned char *saveBytes, int len)
+int DECOMP_MEMCARD_ChecksumLoad(u8 *saveBytes, int len)
 {
 	int ret = MEMCARD_NewFunc_AsyncCRC(saveBytes, len);
 	if (ret == MC_RETURN_PENDING)
@@ -17,5 +17,5 @@ int DECOMP_MEMCARD_ChecksumLoad(unsigned char *saveBytes, int len)
 	// Will return one of these:
 	// 0: MC_RETURN_IOE
 	// 1: MC_RETURN_TIMEOUT
-	return (unsigned int)(crc != 0);
+	return (u32)(crc != 0);
 }

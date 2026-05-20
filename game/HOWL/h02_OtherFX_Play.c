@@ -5,7 +5,7 @@
 // 0 - play with no duplicates (dont recycle old)
 // 1 - play with no duplicates (recycle old)
 // 2 - play with duplicates
-int DECOMP_OtherFX_Play(unsigned int soundID, int flags)
+int DECOMP_OtherFX_Play(u32 soundID, int flags)
 {
 	// ff8080:
 	// 0x00 - no echo

@@ -9,12 +9,12 @@ void CS_Podium_Prize_ThTick2(struct Thread *th)
 
 	// get object from thread
 	// should replace with struct Prize in 233
-	short *prize = th->object;
+	s16 *prize = th->object;
 
 	// get instance from thread
 	struct Instance *inst = th->inst;
 
-	short frameIndex = prize[0x15];
+	s16 frameIndex = prize[0x15];
 
 	// bouncing scale animation
 	if (frameIndex < 5)

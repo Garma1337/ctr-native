@@ -19,7 +19,7 @@
 // param2:
 //	0x00 - not interrupting a warppad load screen
 // 	0x01 - interrupting (CTR, Relic, or Crystal hints)
-void DECOMP_MainFrame_RequestMaskHint(short hintId, char interruptWarpPad)
+void DECOMP_MainFrame_RequestMaskHint(s16 hintId, char interruptWarpPad)
 {
 	struct GameTracker *gGT = sdata->gGT;
 

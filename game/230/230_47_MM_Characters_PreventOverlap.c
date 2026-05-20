@@ -50,7 +50,7 @@ void DECOMP_MM_Characters_PreventOverlap(void)
 					if (-1 < cVar1)
 					{
 						// assign free character
-						data.characterIDs[iVar7] = (short)cVar1;
+						data.characterIDs[iVar7] = (s16)cVar1;
 
 						// character is now taken
 						*pcVar3 = -1;

@@ -3,8 +3,8 @@
 void DECOMP_MM_Title_MenuUpdate(void)
 {
 	struct GameTracker *gGT = sdata->gGT;
-	u_short seenDemo;
-	short cutsceneLev;
+	u16 seenDemo;
+	s16 cutsceneLev;
 
 	// 0 - watching Crash + C-T-R letters animation
 	// 1 - in the main menu

@@ -17,12 +17,12 @@ int pcCdIntToPos(int val, const CdlLOC *p);
 CdlFILE *pcCdSearchFile(CdlFILE *loc, const char *filename);
 
 #define CdControl pcCdControl
-int pcCdControl(u_char com, u_long *buf, u_char *result);
+int pcCdControl(u8 com, u_long *buf, u8 *result);
 
 #define CdRead pcCdRead
 int pcCdRead(int sectors, u_long *buf, int mode);
 
 #define CdReadSync pcCdReadSync
-int pcCdReadSync(int mode, uint8_t *result);
+int pcCdReadSync(int mode, u8 *result);
 
 #endif

@@ -2,7 +2,7 @@
 
 void DECOMP_VehPhysProc_PowerSlide_Update(struct Thread *t, struct Driver *d)
 {
-	short noInputTime;
+	s16 noInputTime;
 	int incrementReserves;
 	int meterLeft;
 	int highMeter;

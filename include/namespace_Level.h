@@ -126,16 +126,16 @@ struct AnimTex
 	int *ptrActiveTex;
 
 	// 0x4
-	short numFrames;
+	s16 numFrames;
 
 	// 0x6
-	short frameOffset;
+	s16 frameOffset;
 
 	// 0x8
-	short frameSkip;
+	s16 frameSkip;
 
 	// 0xA
-	short frameCurr;
+	s16 frameCurr;
 
 	// 0xC
 	// size = numFrames
@@ -143,7 +143,7 @@ struct AnimTex
 	// struct IconGroup4* ptrarray[0];
 };
 
-#define ANIMTEX_GETARRAY(x) (struct IconGroup4 **)((unsigned int)x + sizeof(struct AnimTex))
+#define ANIMTEX_GETARRAY(x) (struct IconGroup4 **)((u32)x + sizeof(struct AnimTex))
 
 struct PVS
 {
@@ -158,10 +158,10 @@ struct PVS
 struct QuadBlock
 {
 	// 0x0
-	short index[9];
+	s16 index[9];
 
 	// 0x12
-	u_short quadFlags;
+	u16 quadFlags;
 
 	// 0x14
 	// todo: this is a packed bit value
@@ -179,12 +179,12 @@ struct QuadBlock
 	    3 bits Rotation = x & 7;
 	    2 bits faceMode = (x >> 3) & 3;
 	*/
-	unsigned int draw_order_low;
+	u32 draw_order_low;
 
 
 	// 0x18
 	// 4 bytes, byte per mid quad
-	unsigned int draw_order_high;
+	u32 draw_order_high;
 
 	// 0x1c
 	// used for the textures of all 4 quads in a medium-level quadblock
@@ -202,7 +202,7 @@ struct QuadBlock
 	char mulNormVecY; // -127 for AntiGrav Sewer
 
 	// 0x3C
-	short blockID;
+	s16 blockID;
 
 	// 0x3E
 	// used for checkpoint progression
@@ -221,7 +221,7 @@ struct QuadBlock
 
 	// 0x48
 	// explained in FUN_8001f2dc
-	short triNormalVecDividend[10];
+	s16 triNormalVecDividend[10];
 
 	// full struct is 0x5c bytes large
 };
@@ -230,10 +230,10 @@ struct QuadBlock
 struct BSP
 {
 	// 0x0
-	u_short flag;
+	u16 flag;
 
 	// 0x2
-	short id;
+	s16 id;
 
 	// 0x4
 	struct BoundingBox box;
@@ -250,11 +250,11 @@ struct BSP
 		{
 			// 0x10
 			// x, y, z, [?]
-			short axis[4];
+			s16 axis[4];
 
 			// 0x18
 			// leftChildID, rightChildID, [?], [?]
-			short childID[4];
+			s16 childID[4];
 
 		} branch;
 
@@ -281,7 +281,7 @@ struct BSP
 		struct
 		{
 			// 0x10
-			short unkShort[6];
+			s16 unkShort[6];
 			// see FUN_8001d0c4
 
 			// 0x1C
@@ -297,17 +297,17 @@ struct BSP
 struct LevVertex
 {
 	// 0x0
-	short pos[3];
+	s16 pos[3];
 
 	// 0x6
 	// FUN_8001ef50
-	u_short flags;
+	u16 flags;
 
 	// 0x8
-	unsigned char color_hi[4];
+	u8 color_hi[4];
 
 	// 0xC
-	unsigned char color_lo[4];
+	u8 color_lo[4];
 
 	// 0x10 bytes large
 };
@@ -330,7 +330,7 @@ struct OVert
 
 	// 2 bytes large,
 	// always in pairs of two
-	short data[2];
+	s16 data[2];
 };
 
 struct WaterVert
@@ -347,25 +347,25 @@ struct RainBuffer
 
 	// 0x4 (0x1a44)
 	// if zero, then there is no max
-	short numParticles_max;
-	short vanishRate;
+	s16 numParticles_max;
+	s16 vanishRate;
 
 	// 0x8
 	char unk_4[0x10];
 
 	// 0x18 (0x1a58)
-	short cameraPos[3];
+	s16 cameraPos[3];
 
 	// 0x1E
-	short unk_22;
+	s16 unk_22;
 
 	// 0x20
 	// controls top color of particles
-	unsigned int colorRGBA_top;
+	u32 colorRGBA_top;
 
 	// 0x24
 	// controls bottom color of particles
-	unsigned int colorRGBA_bottom;
+	u32 colorRGBA_bottom;
 
 	// 0x28
 	// controls how particles are drawn
@@ -471,12 +471,12 @@ struct SpawnType1
 
 	// void* pointers[0];
 };
-#define ST1_GETPOINTERS(x) (void **)((unsigned int)x + sizeof(struct SpawnType1))
+#define ST1_GETPOINTERS(x) (void **)((u32)x + sizeof(struct SpawnType1))
 
 struct SpawnType2
 {
 	int numCoords;
-	short *posCoords; // maybe should be `struct PosRot*` instead of `short*`
+	s16 *posCoords; // maybe should be `struct PosRot*` instead of `s16*`
 };
 
 // per-quadblock checkpoint node
@@ -486,34 +486,34 @@ struct SpawnType2
 struct CheckpointNode
 {
 	// 0x0
-	short pos[3];
+	s16 pos[3];
 
 	// 0x6
-	unsigned short distToFinish;
+	u16 distToFinish;
 
 	// 0x8
-	unsigned char nextIndex_forward;
-	unsigned char nextIndex_left;
-	unsigned char nextIndex_backward;
-	unsigned char nextIndex_right;
+	u8 nextIndex_forward;
+	u8 nextIndex_left;
+	u8 nextIndex_backward;
+	u8 nextIndex_right;
 
 	// 0xC -- size
 };
 
 struct Stars
 {
-	short numStars;
-	short spread;
-	short seed;
-	short distance;
+	s16 numStars;
+	s16 spread;
+	s16 seed;
+	s16 distance;
 };
 
 struct SkyboxFace
 {
-	u_short A; // ABC stores offsets to add to ptrVerts. divide by 12 if you need an index
-	u_short B;
-	u_short C;
-	u_short D; // this is uh, ot ptr increment? always 0 in the files
+	u16 A; // ABC stores offsets to add to ptrVerts. divide by 12 if you need an index
+	u16 B;
+	u16 C;
+	u16 D; // this is uh, ot ptr increment? always 0 in the files
 };
 
 struct ShortVertex
@@ -528,12 +528,12 @@ struct Skybox
 	int numVertex;
 	struct ShortVertex *ptrVertex;
 
-	short numFaces[NUM_SKYBOX_SEGMENTS];
+	s16 numFaces[NUM_SKYBOX_SEGMENTS];
 	struct SkyboxFace *ptrFaces[NUM_SKYBOX_SEGMENTS];
 
 	// struct SkyboxFace allFaces[0];
 };
-#define SKY_GETFACES(x) ((unsigned int)x + sizeof(struct Skybox))
+#define SKY_GETFACES(x) ((u32)x + sizeof(struct Skybox))
 
 struct LevTexLookup
 {
@@ -560,7 +560,7 @@ struct Level
 	// 0xc
 	// number of model instances in the level
 	// (i.e. every single box, fruit, etc.)
-	unsigned int numInstances;
+	u32 numInstances;
 
 	// 0x10
 	// points to the 1st entry of the array of InstDefs
@@ -569,7 +569,7 @@ struct Level
 
 	// 0x14
 	// number of actual models
-	unsigned int numModels;
+	u32 numModels;
 
 	// 0x18
 	// pointer to the array of pointers to models
@@ -625,12 +625,12 @@ struct Level
 	// used for additional skybox gradients (e.g. papu's pyramid)
 	struct
 	{
-		short pointFrom;
-		short pointTo;
+		s16 pointFrom;
+		s16 pointTo;
 
 		// RGBA
-		u_int colorFrom;
-		u_int colorTo;
+		u32 colorFrom;
+		u32 colorTo;
 
 	} glowGradient[3];
 
@@ -638,8 +638,8 @@ struct Level
 	// array of 8 starting locations
 	struct
 	{
-		short pos[3];
-		short rot[3];
+		s16 pos[3];
+		s16 rot[3];
 	} DriverSpawn[8];
 
 	// 0xCC -- next
@@ -653,14 +653,14 @@ struct Level
 
 	// 0xD8
 	// Used in Coco Park, encoded as Blue
-	u_int clearColorRGBA;
+	u32 clearColorRGBA;
 
 	// 0xDC
 	// toggles some level stuff
 	// & 1 = enables glowGradient skybox gradients
 	// & 2 = mask grab when underwater
 	// & 4 = toggles between water and animated vertices?
-	u_int configFlags;
+	u32 configFlags;
 
 	// 0xE0
 	// pointer to string, date, assumed bsp compilation start
@@ -748,7 +748,7 @@ struct Level
 	// 0x184
 	// 0x186
 	// char splitLines[4]; //probably 2 shorts, not char[4]
-	short splitLines[2];
+	s16 splitLines[2];
 
 	// 0x188
 	struct NavHeader **LevNavTable;

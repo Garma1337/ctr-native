@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_PROC_CollidePointWithBucket(struct Thread *th, short *vec3_pos)
+void DECOMP_PROC_CollidePointWithBucket(struct Thread *th, s16 *vec3_pos)
 {
 	// only used with drivers colliding
 	// with other drivers, disabled online

@@ -7,14 +7,14 @@ static char buf[0x400];
 // PushBuffer_SetMatrixVP -- CameraMatrix, and ViewProj
 void DECOMP_PushBuffer_SetMatrixVP(struct PushBuffer *pb)
 {
-#define uint unsigned int
+#define uint u32
 
 	// CameraMatrix
 	uint uVar3;
 	uint uVar4;
 	uint uVar5;
 	uint uVar6;
-	short sVar7;
+	s16 sVar7;
 
 	uint view0;
 	uint view4;
@@ -36,18 +36,18 @@ void DECOMP_PushBuffer_SetMatrixVP(struct PushBuffer *pb)
 #endif
 
 #ifndef REBUILD_PC
-	*(short *)0x1f8003f4 = pb->rot[0];
-	*(short *)0x1f8003f6 = pb->rot[1];
-	*(short *)0x1f8003f8 = pb->rot[2];
-	ConvertRotToMatrix(matrixDST, (short *)0x1f8003f4);
+	*(s16 *)0x1f8003f4 = pb->rot[0];
+	*(s16 *)0x1f8003f6 = pb->rot[1];
+	*(s16 *)0x1f8003f8 = pb->rot[2];
+	ConvertRotToMatrix(matrixDST, (s16 *)0x1f8003f4);
 #else
-	*(short *)&scratchpad[0x3f4] = pb->rot[0];
-	*(short *)&scratchpad[0x3f6] = pb->rot[1];
-	*(short *)&scratchpad[0x3f8] = pb->rot[2];
-	ConvertRotToMatrix(matrixDST, (short *)&scratchpad[0x3f4]);
+	*(s16 *)&scratchpad[0x3f4] = pb->rot[0];
+	*(s16 *)&scratchpad[0x3f6] = pb->rot[1];
+	*(s16 *)&scratchpad[0x3f8] = pb->rot[2];
+	ConvertRotToMatrix(matrixDST, (s16 *)&scratchpad[0x3f4]);
 #endif
 
-	short t[3];
+	s16 t[3];
 
 	// bit-hack, store two u16s as one u32
 	*(int *)&t[0] = *(int *)&pb->pos[0];
@@ -87,14 +87,14 @@ void DECOMP_PushBuffer_SetMatrixVP(struct PushBuffer *pb)
 	uVar4 = *(int *)&matrixDST->m[0][2];
 	uVar5 = *(int *)&matrixDST->m[1][1];
 	uVar6 = *(int *)&matrixDST->m[2][0];
-	sVar7 = *(short *)&matrixDST->m[2][2];
+	sVar7 = *(s16 *)&matrixDST->m[2][2];
 
 	// CameraMatrix, for shadows, particles, and audio
 	*(int *)((int)&pb->matrix_Camera + 0x0) = uVar3;
 	*(int *)((int)&pb->matrix_Camera + 0x4) = uVar4;
 	*(int *)((int)&pb->matrix_Camera + 0x8) = uVar5;
 	*(int *)((int)&pb->matrix_Camera + 0xC) = uVar6;
-	*(short *)((int)&pb->matrix_Camera + 0x10) = sVar7;
+	*(s16 *)((int)&pb->matrix_Camera + 0x10) = sVar7;
 
 	// transpose the camera matrix
 	view0 = uVar3 & 0xffff | uVar4 & 0xffff0000;
@@ -107,7 +107,7 @@ void DECOMP_PushBuffer_SetMatrixVP(struct PushBuffer *pb)
 	*(int *)((int)&pb->matrix_CameraTranspose + 0x4) = view4;
 	*(int *)((int)&pb->matrix_CameraTranspose + 0x8) = view8;
 	*(int *)((int)&pb->matrix_CameraTranspose + 0xC) = viewC;
-	*(short *)((int)&pb->matrix_CameraTranspose + 0x10) = sVar7;
+	*(s16 *)((int)&pb->matrix_CameraTranspose + 0x10) = sVar7;
 
 	// load transpose camera matrix
 	// similar to gte_SetLightMatrix
@@ -133,7 +133,7 @@ void DECOMP_PushBuffer_SetMatrixVP(struct PushBuffer *pb)
 	*(int *)((int)&pb->matrix_ViewProj + 0x4) = view4;
 	*(int *)((int)&pb->matrix_ViewProj + 0x8) = view8;
 	*(int *)((int)&pb->matrix_ViewProj + 0xC) = viewC;
-	*(short *)((int)&pb->matrix_ViewProj + 0x10) = sVar7;
+	*(s16 *)((int)&pb->matrix_ViewProj + 0x10) = sVar7;
 
 	// NTSC:
 	// 0x360/0x600 = 9/16 aspect,

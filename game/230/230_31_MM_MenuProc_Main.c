@@ -5,7 +5,7 @@
 
 void DECOMP_MM_MenuProc_Main(struct RectMenu *mainMenu)
 {
-	short choose;
+	s16 choose;
 	struct GameTracker *gGT = sdata->gGT;
 
 	// if scrapbook is unlocked, change "rows" to extended array

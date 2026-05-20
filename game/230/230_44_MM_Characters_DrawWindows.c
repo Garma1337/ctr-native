@@ -3,21 +3,21 @@
 void DECOMP_MM_Characters_DrawWindows(int boolShowDrivers)
 {
 	struct GameTracker *gGT;
-	short uVar2;
-	short uVar3;
+	s16 uVar2;
+	s16 uVar3;
 	struct Model *uVar4;
 	int iVar5;
-	unsigned int iVar6;
-	u_int uVar7;
+	u32 iVar6;
+	u32 uVar7;
 	int iVar8;
-	short sVar9;
+	s16 sVar9;
 	struct Instance *iVar10;
-	short *psVar11;
+	s16 *psVar11;
 	struct PushBuffer *pb;
-	short *ptrCurr;
+	s16 *ptrCurr;
 	int iVar14;
 	struct TransitionMeta *tMeta;
-	short rot[3];
+	s16 rot[3];
 
 	gGT = sdata->gGT;
 
@@ -39,22 +39,22 @@ void DECOMP_MM_Characters_DrawWindows(int boolShowDrivers)
 		pb->rect.h = D230.characterSelect_sizeY;
 
 		// negative StartX
-		if ((short)pb->rect.x < 0)
+		if ((s16)pb->rect.x < 0)
 		{
 			pb->rect.w -= pb->rect.x;
 			pb->rect.x = 0;
-			if ((short)pb->rect.w < 0)
+			if ((s16)pb->rect.w < 0)
 			{
 				pb->rect.w = 0;
 			}
 		}
 
 		// negative StartY
-		if ((short)pb->rect.y < 0)
+		if ((s16)pb->rect.y < 0)
 		{
 			pb->rect.h -= pb->rect.y;
 			pb->rect.y = 0;
-			if ((short)pb->rect.h < 0)
+			if ((s16)pb->rect.h < 0)
 			{
 				pb->rect.h = 0;
 			}

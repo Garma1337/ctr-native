@@ -50,13 +50,13 @@ struct XNF
 	// size = numXAs_total
 	// int XaCdPos[0];
 };
-#define XNF_GETXACDPOS(x) (int *)((unsigned int)x + sizeof(struct XNF))
+#define XNF_GETXACDPOS(x) (int *)((u32)x + sizeof(struct XNF))
 
 struct XaSize
 {
 	char XaIndex;
 	char XaPrefix;
-	short XaBytes;
+	s16 XaBytes;
 };
 
 struct AudioMeta

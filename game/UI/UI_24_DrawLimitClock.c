@@ -1,12 +1,12 @@
 #include <common.h>
 
 // countdown clock, used for Battle Mode and Crystal Challenge
-void DECOMP_UI_DrawLimitClock(short posX, short posY, short fontType)
+void DECOMP_UI_DrawLimitClock(s16 posX, s16 posY, s16 fontType)
 {
 	struct GameTracker *gGT;
 	char *str;
 	struct Driver *d;
-	u_int flags;
+	u32 flags;
 	int i;
 	int timeRemaining;
 	gGT = sdata->gGT;

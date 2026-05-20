@@ -1,6 +1,6 @@
 #include <common.h>
 
-extern short terrainEmitterPos[4][4];
+extern s16 terrainEmitterPos[4][4];
 
 void DECOMP_VehEmitter_Terrain_Ground(struct Driver *d, struct ParticleEmitter *emSet)
 {
@@ -8,7 +8,7 @@ void DECOMP_VehEmitter_Terrain_Ground(struct Driver *d, struct ParticleEmitter *
 	char numTires;
 	int pos[3];
 	int vel[3];
-	short velInput[3];
+	s16 velInput[3];
 
 	int flags = d->actionsFlagSet;
 
@@ -48,7 +48,7 @@ void DECOMP_VehEmitter_Terrain_Ground(struct Driver *d, struct ParticleEmitter *
 		if (p == NULL)
 			continue;
 
-		short velInput[3] = {p->axis[0].velocity, p->axis[1].velocity, p->axis[2].velocity};
+		s16 velInput[3] = {p->axis[0].velocity, p->axis[1].velocity, p->axis[2].velocity};
 
 		gte_ldv0(&terrainEmitterPos[numTires - 1][0]);
 		gte_rtv0();
@@ -61,7 +61,7 @@ void DECOMP_VehEmitter_Terrain_Ground(struct Driver *d, struct ParticleEmitter *
 		for (int i = 0; i < 3; i++)
 		{
 			p->axis[i].startVal += pos[i] * 0x100;
-			p->axis[i].velocity = (short)vel[i];
+			p->axis[i].velocity = (s16)vel[i];
 		}
 
 		p->driverInst = dInst;
@@ -69,4 +69,4 @@ void DECOMP_VehEmitter_Terrain_Ground(struct Driver *d, struct ParticleEmitter *
 	}
 }
 
-short terrainEmitterPos[4][4] = {{0x1E, 0xA, -0x14, 0}, {-0x1E, 0xA, -0x14, 0}, {0x1E, 0xA, 0x28, 0}, {-0x1E, 0xA, 0x28, 0}};
+s16 terrainEmitterPos[4][4] = {{0x1E, 0xA, -0x14, 0}, {-0x1E, 0xA, -0x14, 0}, {0x1E, 0xA, 0x28, 0}, {-0x1E, 0xA, 0x28, 0}};

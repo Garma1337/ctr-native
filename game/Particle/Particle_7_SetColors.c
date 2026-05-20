@@ -10,9 +10,9 @@
 /// @param flagAlpha - alpha flags
 /// @param p - particle to work with
 /// @return color
-u_int DECOMP_Particle_SetColors(u_int flagColors, u_int flagAlpha, struct Particle *p)
+u32 DECOMP_Particle_SetColors(u32 flagColors, u32 flagAlpha, struct Particle *p)
 {
-	u_int color = 0;
+	u32 color = 0;
 
 	if (flagColors & COLOR_FLAG_R)
 	{
@@ -20,17 +20,17 @@ u_int DECOMP_Particle_SetColors(u_int flagColors, u_int flagAlpha, struct Partic
 		// todo: explain the reason for this
 
 		// process red
-		color = (u_int)DECOMP_Particle_BitwiseClampByte(&p->axis[7].startVal);
+		color = (u32)DECOMP_Particle_BitwiseClampByte(&p->axis[7].startVal);
 
 		// process green
 		if (flagColors & COLOR_FLAG_G)
-			color |= (u_int)DECOMP_Particle_BitwiseClampByte(&p->axis[8].startVal) << 8;
+			color |= (u32)DECOMP_Particle_BitwiseClampByte(&p->axis[8].startVal) << 8;
 		else
 			color |= color << 8;
 
 		// process blue
 		if (flagColors & COLOR_FLAG_B)
-			color |= (u_int)DECOMP_Particle_BitwiseClampByte(&p->axis[9].startVal) << 16;
+			color |= (u32)DECOMP_Particle_BitwiseClampByte(&p->axis[9].startVal) << 16;
 		else
 			color |= (color & 0xff) << 16;
 	}

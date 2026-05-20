@@ -9,30 +9,30 @@ void SubmitName_UseKeyboard(int key)
 }
 #endif
 
-short DECOMP_SubmitName_DrawMenu(u_short string)
+s16 DECOMP_SubmitName_DrawMenu(u16 string)
 {
-	short currNameLength;
-	u_short uVar3;
+	s16 currNameLength;
+	u16 uVar3;
 	int currNameWidth;
-	u_int uVar2;
-	u_int cursorCharacter;
+	u32 uVar2;
+	u32 cursorCharacter;
 	int cursorPosition;
-	u_int keyboardCharacter;
+	u32 keyboardCharacter;
 	char *currNameEntered;
-	u_short strColorBlink;
-	u_short blinkWhite;
+	u16 strColorBlink;
+	u16 blinkWhite;
 	int j;
 	int i;
-	u_int soundID;
-	short currNameLengthIncrement;
+	u32 soundID;
+	s16 currNameLengthIncrement;
 	RECT r;
-	u_short stringCopy;
-	short nameLength;
-	short local_38;
+	u16 stringCopy;
+	s16 nameLength;
+	s16 local_38;
 	int letterID;
 	int strlenCurrNameEnteredInt;
-	u_int keyboardCharacterTopByte;
-	u_char character;
+	u32 keyboardCharacterTopByte;
+	u8 character;
 
 	struct GameTracker *gGT = sdata->gGT;
 
@@ -84,14 +84,14 @@ short DECOMP_SubmitName_DrawMenu(u_short string)
 				keyboardCharacterTopByte = 0;
 			}
 
-			// if American letters (char in array of short)
+			// if American letters (char in array of s16)
 			if (keyboardCharacterTopByte == 0)
 			{
 				keyboardString[1] = 0;
 				keyboardString[0] = keyboardCharacter;
 			}
 
-			// if Japan letters (short in array of short)
+			// if Japan letters (s16 in array of s16)
 			else
 			{
 				keyboardString[2] = 0;

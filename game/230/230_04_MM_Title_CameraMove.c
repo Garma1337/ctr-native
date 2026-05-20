@@ -3,7 +3,7 @@
 void DECOMP_MM_Title_CameraMove(struct Title *title, int frameIndex)
 {
 	int result;
-	short *posRot;
+	s16 *posRot;
 	struct GameTracker *gGT;
 
 	// after frame 0xe6, make the intro models transition from the center
@@ -17,9 +17,9 @@ void DECOMP_MM_Title_CameraMove(struct Title *title, int frameIndex)
 	for (int i = 0; i < 3; i++)
 	{
 		// position XYZ
-		gGT->pushBuffer[0].pos[i] = title->cameraPosOffset[i] + posRot[i] + (short)((D230.titleCameraPos[i] * result) >> 0xc);
+		gGT->pushBuffer[0].pos[i] = title->cameraPosOffset[i] + posRot[i] + (s16)((D230.titleCameraPos[i] * result) >> 0xc);
 
 		// rotation XYZ
-		gGT->pushBuffer[0].rot[i] = posRot[3 + i] + (short)((D230.titleCameraRot[i] * result) >> 0xc);
+		gGT->pushBuffer[0].rot[i] = posRot[3 + i] + (s16)((D230.titleCameraRot[i] * result) >> 0xc);
 	}
 }

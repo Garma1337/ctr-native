@@ -7,7 +7,7 @@ static int bi = 0;
 inline
 #endif
 #endif
-    int GetSignedBits(unsigned int *vertData, int bits)
+    int GetSignedBits(u32 *vertData, int bits)
 {
 	int const b = bi >> 5;
 	int const e = 32 - bits;
@@ -102,17 +102,17 @@ VECTOR *ApplyMatrixLV(MATRIX *m, VECTOR *v0, VECTOR *v1)
 
 typedef struct CompVertex
 {
-	u_char X;
-	u_char Y;
-	u_char Z;
+	u8 X;
+	u8 Y;
+	u8 Z;
 } CompVertex;
 
 typedef struct V4
 {
-	u_char X;
-	u_char Y;
-	u_char Z;
-	u_char W;
+	u8 X;
+	u8 Y;
+	u8 Z;
+	u8 W;
 } V4;
 
 int Debug_GetPreciseTime2()
@@ -124,12 +124,12 @@ int Debug_GetPreciseTime2()
 
 void DrawOneInst(struct Instance *curr)
 {
-	short posScreen1[4];
-	short posWorld1[4];
-	short posScreen2[4];
-	short posWorld2[4];
-	short posScreen3[4];
-	short posWorld3[4];
+	s16 posScreen1[4];
+	s16 posWorld1[4];
+	s16 posScreen2[4];
+	s16 posWorld2[4];
+	s16 posScreen3[4];
+	s16 posWorld3[4];
 
 	struct GameTracker *gGT = sdata->gGT;
 
@@ -255,7 +255,7 @@ void DrawOneInst(struct Instance *curr)
 		int vertexIndex = 0;
 		// current strip length
 		int stripLength = 0;
-		u_int *pCmd = mh->ptrCommandList;
+		u32 *pCmd = mh->ptrCommandList;
 
 		// a "shifting window", here we update the vertices and read triangle once it's ready
 		// you need same cache for both colors and texture layouts
@@ -289,10 +289,10 @@ void DrawOneInst(struct Instance *curr)
 		{
 			// extract individual values from the command
 			// refactor to a set of inline macros?
-			u_short flags = (*pCmd >> (8 * 3)) & 0xFF; // 8 bits
-			u_short stackIndex = (*pCmd >> 16) & 0xFF; // 8 bits
-			u_short colorIndex = (*pCmd >> 9) & 0x7F;  // 7 bits
-			u_short texIndex = *pCmd & 0x1FF;          // 9 bits
+			u16 flags = (*pCmd >> (8 * 3)) & 0xFF; // 8 bits
+			u16 stackIndex = (*pCmd >> 16) & 0xFF; // 8 bits
+			u16 colorIndex = (*pCmd >> 9) & 0x7F;  // 7 bits
+			u16 texIndex = *pCmd & 0x1FF;          // 9 bits
 
 			// if got a new vertex, load it
 			// TODO: Adjust naming of NEW_VERTEX
@@ -306,20 +306,20 @@ void DrawOneInst(struct Instance *curr)
 				if (ma != NULL && ma->ptrDeltaArray != NULL)
 				{
 					// store temporal vertex packed uint
-					u_int temporal = ma->ptrDeltaArray[vertexIndex];
+					u32 temporal = ma->ptrDeltaArray[vertexIndex];
 
 					// printf("temporal: %08x\n", temporal);
 
 					// extract data from packed uint
 					// deltaArray bits: 0bXXXXXXXZZZZZZZZYYYYYYYYAAABBBCCC
 
-					u_char XBits = (temporal >> 6) & 7;
-					u_char YBits = (temporal >> 3) & 7;
-					u_char ZBits = (temporal) & 7;
+					u8 XBits = (temporal >> 6) & 7;
+					u8 YBits = (temporal >> 3) & 7;
+					u8 ZBits = (temporal) & 7;
 
-					u_char bx = (temporal >> 0x19) << 1;
-					u_char by = (temporal << 7) >> 0x18;
-					u_char bz = (temporal << 0xf) >> 0x18;
+					u8 bx = (temporal >> 0x19) << 1;
+					u8 by = (temporal << 7) >> 0x18;
+					u8 bz = (temporal << 0xf) >> 0x18;
 
 					// If reading a full 8 bits (7+1)
 					// reset accumulator, this is an
@@ -494,7 +494,7 @@ void DrawOneInst(struct Instance *curr)
 				tempTex = mh->ptrTexLayout[texIndex - 1];
 				*(int *)&p->u0 = *(int *)&tempTex->u0;
 				*(int *)&p->u1 = *(int *)&tempTex->u1;
-				*(short *)&p->u2 = *(short *)&tempTex->u2;
+				*(s16 *)&p->u2 = *(s16 *)&tempTex->u2;
 
 				setPolyGT3(p);
 

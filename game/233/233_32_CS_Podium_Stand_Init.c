@@ -1,7 +1,7 @@
 #include <common.h>
 
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b0248-0x800b0300
-void DECOMP_CS_Podium_Stand_Init(short *podiumData)
+void DECOMP_CS_Podium_Stand_Init(s16 *podiumData)
 {
 	struct Instance *inst = DECOMP_INSTANCE_BirthWithThread(STATIC_PODIUM, OVR_233.s_podium, SMALL, OTHER, DECOMP_CS_Podium_Stand_ThTick, 0, 0);
 

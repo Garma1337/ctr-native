@@ -2,13 +2,13 @@
 
 void DECOMP_RB_GenericMine_ThDestroy(struct Thread *t, struct Instance *inst, struct MineWeapon *mw)
 {
-	unsigned int model;
-	unsigned short param;
+	u32 model;
+	u16 param;
 
 	model = inst->model->id;
 
 	// if model is green or red beaker
-	if ((unsigned int)(model - 0x46) < 2)
+	if ((u32)(model - 0x46) < 2)
 	{
 		// play sound of glass shatter
 		PlaySound3D(0x3f, inst);

@@ -17,7 +17,7 @@ void DECOMP_VehStuckProc_Tumble_PhysAngular(struct Thread *thread, struct Driver
 	driver->turnAngleCurr &= 0xfff;
 	driver->turnAngleCurr -= 0x800;
 
-	driver->angle += (short)(((int)driver->rotationSpinRate * elapsedTimeMS) >> 0xd);
+	driver->angle += (s16)(((int)driver->rotationSpinRate * elapsedTimeMS) >> 0xd);
 	driver->angle &= 0xfff;
 
 	(driver->rotCurr).y = driver->unk3D4[0] + driver->angle + driver->turnAngleCurr;
@@ -25,7 +25,7 @@ void DECOMP_VehStuckProc_Tumble_PhysAngular(struct Thread *thread, struct Driver
 	(driver->rotCurr).w = DECOMP_VehCalc_InterpBySpeed((int)(driver->rotCurr).w, (elapsedTimeMS << 5) >> 5, 0);
 
 #ifndef REBUILD_PS1
-	VehPhysForce_RotAxisAngle(&driver->matrixMovingDir, (short *)&driver->AxisAngle1_normalVec, driver->angle);
+	VehPhysForce_RotAxisAngle(&driver->matrixMovingDir, (s16 *)&driver->AxisAngle1_normalVec, driver->angle);
 #endif
 
 	return;

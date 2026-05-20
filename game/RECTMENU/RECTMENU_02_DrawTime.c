@@ -1,6 +1,6 @@
 #include <common.h>
 
-u_char *DECOMP_RECTMENU_DrawTime(int milliseconds)
+u8 *DECOMP_RECTMENU_DrawTime(int milliseconds)
 {
 	// 32 is added to milliseconds every frame,
 	// 960 per second, the rest is basic math

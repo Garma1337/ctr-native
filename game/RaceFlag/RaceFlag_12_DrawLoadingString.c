@@ -12,7 +12,7 @@ void DECOMP_RaceFlag_DrawLoadingString(void)
 	char *pbVar8;
 	int iVar9;
 	int iVar10;
-	u_int *uVar11;
+	u32 *uVar11;
 	char local_30;
 	char local_2f;
 
@@ -20,7 +20,7 @@ void DECOMP_RaceFlag_DrawLoadingString(void)
 	pbVar7 = sdata->lngStrings[0x231];
 
 	// pointer to OT mem
-	uVar11 = (u_int *)gGT->pushBuffer_UI.ptrOT;
+	uVar11 = (u32 *)gGT->pushBuffer_UI.ptrOT;
 
 	// pointer to OT mem
 	gGT->pushBuffer_UI.ptrOT = gGT->otSwapchainDB[gGT->swapchainIndex];
@@ -100,7 +100,7 @@ void DECOMP_RaceFlag_DrawLoadingString(void)
 
 				uVar5 = 2;
 			}
-			if ((short)iVar4 != 0x23c)
+			if ((s16)iVar4 != 0x23c)
 			{
 				DECOMP_DecalFont_DrawLineStrlen(&local_30, uVar5, (iVar10 + iVar4), 0x6c, 1, 0);
 			}
@@ -138,7 +138,7 @@ void DECOMP_RaceFlag_DrawLoadingString(void)
 	else
 	{
 		sdata->RaceFlag_LoadingTextAnimFrame = -1;
-		if ((u_int)(sdata->Loading.stage - 6U) < 2)
+		if ((u32)(sdata->Loading.stage - 6U) < 2)
 		{
 			sdata->RaceFlag_LoadingTextAnimFrame = 0;
 		}

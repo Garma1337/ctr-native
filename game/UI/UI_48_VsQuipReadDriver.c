@@ -1,6 +1,6 @@
 #include <common.h>
 
-u_int DECOMP_UI_VsQuipReadDriver(struct Driver *d, int offset, int size)
+u32 DECOMP_UI_VsQuipReadDriver(struct Driver *d, int offset, int size)
 {
 	char *byteArr = (char *)d;
 	byteArr += offset;
@@ -8,6 +8,6 @@ u_int DECOMP_UI_VsQuipReadDriver(struct Driver *d, int offset, int size)
 	if (size == 1)
 		return *(char *)byteArr;
 	if (size == 2)
-		return *(short *)byteArr;
+		return *(s16 *)byteArr;
 	/*if (size == 4)*/ return *(int *)byteArr;
 }

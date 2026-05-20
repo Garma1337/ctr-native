@@ -1,15 +1,15 @@
 #include <common.h>
 
-u_int DECOMP_OtherFX_Modify(u_int soundId, u_int flags)
+u32 DECOMP_OtherFX_Modify(u32 soundId, u32 flags)
 {
 	struct ChannelStats *channel;
 	struct ChannelAttr channelAttr;
 	int modify;
 	struct OtherFX *ptrOtherFX;
-	u_int distort;
-	u_int volume;
-	u_short echo;
-	u_short LR;
+	u32 distort;
+	u32 volume;
+	u16 echo;
+	u16 LR;
 
 	if (sdata->boolAudioEnabled == 0)
 		return 0;

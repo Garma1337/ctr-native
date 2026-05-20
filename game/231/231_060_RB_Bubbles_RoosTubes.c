@@ -8,12 +8,12 @@ void DECOMP_RB_Bubbles_RoosTubes()
 	struct Level *level1;
 	struct SpawnType2 *spawnType2;
 	int numSpawnPosCoords;
-	short *ptrSpawnPosCoords;
+	s16 *ptrSpawnPosCoords;
 	int numFreeParticles;
 	struct Particle *p;
 	struct Driver *d;
-	short posCurr[3];
-	short posPrev[3];
+	s16 posCurr[3];
+	s16 posPrev[3];
 	int velX;
 	int velZ;
 	int i;

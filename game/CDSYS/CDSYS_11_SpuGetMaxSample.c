@@ -3,11 +3,11 @@
 void DECOMP_CDSYS_SpuGetMaxSample(void)
 {
 	int index2;
-	short sample;
-	short max;
+	s16 sample;
+	s16 max;
 	max = 0;
 
-	short *ptrSpuBuf = &sdata->SpuDecodedBuf[sdata->irqAddr << 9];
+	s16 *ptrSpuBuf = &sdata->SpuDecodedBuf[sdata->irqAddr << 9];
 
 	// absolute value, find max in block
 	for (int i = 0; i < 0x100; i++)

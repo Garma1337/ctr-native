@@ -1,10 +1,10 @@
 #include <common.h>
 
-void DECOMP_RECTMENU_DrawQuip(char *comment, short startX, int startY, u_int sizeX, short fontType, int textFlag, short boxFlag)
+void DECOMP_RECTMENU_DrawQuip(char *comment, s16 startX, int startY, u32 sizeX, s16 fontType, int textFlag, s16 boxFlag)
 {
 	int posX = startX;
 	int width;
-	u_int sizeY;
+	u32 sizeY;
 
 	if ((sizeX & 0xffff) == 0)
 	{
@@ -19,7 +19,7 @@ void DECOMP_RECTMENU_DrawQuip(char *comment, short startX, int startY, u_int siz
 		posX = startX - (sizeX >> 1);
 	}
 
-	sizeY = (u_int)data.PlayerCommentBoxParams[fontType];
+	sizeY = (u32)data.PlayerCommentBoxParams[fontType];
 
 	// Draw string
 	DECOMP_DecalFont_DrawLine(comment, startX, (data.PlayerCommentBoxParams[4 + fontType] + startY), fontType, textFlag);

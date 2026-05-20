@@ -2,8 +2,8 @@
 
 #define EDUCATIONAL_BUG_IF 0
 
-void DECOMP_DecalHUD_DrawPolyGT4(struct Icon *icon, short posX, short posY, struct PrimMem *primMem, u_long *ot, u_int color0, u_int color1, u_int color2,
-                                 u_int color3, char transparency, short scale)
+void DECOMP_DecalHUD_DrawPolyGT4(struct Icon *icon, s16 posX, s16 posY, struct PrimMem *primMem, u_long *ot, u32 color0, u32 color1, u32 color2, u32 color3,
+                                 char transparency, s16 scale)
 {
 #if BUILD > SepReview
 	if (!icon)
@@ -16,9 +16,9 @@ void DECOMP_DecalHUD_DrawPolyGT4(struct Icon *icon, short posX, short posY, stru
 	setInt32RGB4(p, color0, color1, color2, color3);
 	addPolyGT4(ot, p);
 
-	unsigned int width = icon->texLayout.u1 - icon->texLayout.u0;
-	unsigned int height = icon->texLayout.v2 - icon->texLayout.v0;
-	unsigned int bottomY = posY + FP_Mult(height, scale);
+	u32 width = icon->texLayout.u1 - icon->texLayout.u0;
+	u32 height = icon->texLayout.v2 - icon->texLayout.v0;
+	u32 bottomY = posY + FP_Mult(height, scale);
 
 #if EDUCATIONAL_BUG_IF
 	// The original compiled version of DecalHUD_DrawPolyGT4 has a bug where the Y coordinate of the top
@@ -32,10 +32,10 @@ void DECOMP_DecalHUD_DrawPolyGT4(struct Icon *icon, short posX, short posY, stru
 	// x1 are added onto y1's bits, resulting in y1's value being altered by x1's overflow.
 	// This also affects the bottom right vertex.
 
-	unsigned int rightX = (u_short)posX + FP_Mult(width, scale);
-	setXY4CompilerHack(p, (u_short)posX, posY, rightX, posY, (u_short)posX, bottomY, rightX, bottomY);
+	u32 rightX = (u16)posX + FP_Mult(width, scale);
+	setXY4CompilerHack(p, (u16)posX, posY, rightX, posY, (u16)posX, bottomY, rightX, bottomY);
 #else
-	unsigned int rightX = posX + FP_Mult(width, scale);
+	u32 rightX = posX + FP_Mult(width, scale);
 	setXY4(p, posX, posY, rightX, posY, posX, bottomY, rightX, bottomY);
 #endif
 	setIconUV(p, icon);

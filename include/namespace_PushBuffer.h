@@ -1,6 +1,6 @@
 struct FrustumCornerOUT
 {
-	short pos[3];
+	s16 pos[3];
 };
 
 struct ScratchpadFrustum
@@ -12,7 +12,7 @@ struct ScratchpadFrustum
 	struct FrustumCornerOUT fc[4];
 
 	// 1f800024
-	short camPos[3];
+	s16 camPos[3];
 
 	// 1f80002A
 	// -- end --
@@ -24,8 +24,8 @@ union FrustumCornerIN
 {
 	struct
 	{
-		short x;
-		short y;
+		s16 x;
+		s16 y;
 	};
 
 	struct
@@ -37,10 +37,10 @@ union FrustumCornerIN
 struct PushBuffer
 {
 	// 0x0
-	short pos[3];
+	s16 pos[3];
 
 	// 0x6
-	short rot[3];
+	s16 rot[3];
 
 	// 0xc
 	// set at bottom of Camera_UpdateFrustum,
@@ -51,15 +51,15 @@ struct PushBuffer
 	// 0 for black,
 	// 0x1000 for normal light
 	// 0x2000 for white
-	short fadeFromBlack_currentValue;
+	s16 fadeFromBlack_currentValue;
 
 	// 0x14
-	short fadeFromBlack_desiredResult;
+	s16 fadeFromBlack_desiredResult;
 
 	// 0x16 controls speed of fade in effect
 	// if negative then it's fading to black.
 	// in this case 0x12 should be positive and 0x14 should be 0
-	short fade_step;
+	s16 fade_step;
 
 	// 0x18
 	// this value is passed to SetGeomScreen,
@@ -72,10 +72,10 @@ struct PushBuffer
 	RECT rect;
 
 	// 0x24
-	short aspectX;
+	s16 aspectX;
 
 	// 0x26
-	short aspectY;
+	s16 aspectY;
 
 	// 0x28
 	MATRIX matrix_ViewProj;

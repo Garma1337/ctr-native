@@ -4,7 +4,7 @@ void DECOMP_AH_MaskHint_LerpVol(int param_1)
 {
 	int diff;
 	int volume;
-	u_char backup;
+	u8 backup;
 
 	for (char i = 0; i < 3; i++)
 	{

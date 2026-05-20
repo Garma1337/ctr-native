@@ -1,10 +1,10 @@
 #include <common.h>
 
-u_int DECOMP_Music_AsyncParseBanks(void)
+u32 DECOMP_Music_AsyncParseBanks(void)
 {
-	unsigned char bVar1;
-	u_short index;
-	u_int uVar4;
+	u8 bVar1;
+	u16 index;
+	u32 uVar4;
 	struct GameTracker *gGT = sdata->gGT;
 	struct Bank thisBank;
 	int level = gGT->levelID;
@@ -188,7 +188,7 @@ u_int DECOMP_Music_AsyncParseBanks(void)
 			if (sdata->bankPodiumStage >= 3)
 				break;
 
-			unsigned char *podiumIndex = &gGT->podium_modelIndex_First;
+			u8 *podiumIndex = &gGT->podium_modelIndex_First;
 
 			bVar1 = podiumIndex[sdata->bankPodiumStage];
 			if (bVar1 != 0)

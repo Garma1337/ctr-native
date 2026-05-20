@@ -1,14 +1,14 @@
 #include <common.h>
 
 // Draw weapon and wumpa fruit in HUD
-void DECOMP_UI_Weapon_DrawSelf(short posX, short posY, short scale, struct Driver *d)
+void DECOMP_UI_Weapon_DrawSelf(s16 posX, s16 posY, s16 scale, struct Driver *d)
 
 {
-	u_int currChar;
+	u32 currChar;
 	int itemID;
 	int iconID;
 	struct GameTracker *gGT;
-	short posXY[2];
+	s16 posXY[2];
 
 	// beat 7360
 
@@ -31,7 +31,7 @@ void DECOMP_UI_Weapon_DrawSelf(short posX, short posY, short scale, struct Drive
 		if (itemID == 7)
 		{
 			// Crash, Coco, Pura, Polar, NO Penta
-			unsigned int maskBits = 0xc9;
+			u32 maskBits = 0xc9;
 
 			// This is a bad guy, change icon to Uka
 			if (((maskBits >> currChar) & 1) == 0)
@@ -41,7 +41,7 @@ void DECOMP_UI_Weapon_DrawSelf(short posX, short posY, short scale, struct Drive
 		if ((d->numWumpas >= 10) &&
 
 		    // TNT, Potion, Shield
-		    (((unsigned int)(itemID - 3) < 2) || (itemID == 6)))
+		    (((u32)(itemID - 3) < 2) || (itemID == 6)))
 		{
 			iconID = itemID + 0x11;
 		}

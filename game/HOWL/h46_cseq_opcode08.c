@@ -3,7 +3,7 @@
 void DECOMP_cseq_opcode08(struct SongSeq *seq)
 {
 	struct ChannelStats *curr, *backupNext;
-	unsigned char *currNote = seq->currNote;
+	u8 *currNote = seq->currNote;
 	int soundID = seq->soundID;
 
 	for (curr = (struct ChannelStats *)sdata->channelTaken.first; curr != NULL; curr = backupNext)

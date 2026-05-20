@@ -5,8 +5,8 @@ void DECOMP_MainInit_VRAMDisplay()
 	RECT r;
 	DR_MOVE move;
 
-	short x[2];
-	short y[2];
+	s16 x[2];
+	s16 y[2];
 
 #ifdef REBUILD_PC
 	Platform_BeginFrame();
@@ -31,7 +31,7 @@ void DECOMP_MainInit_VRAMDisplay()
 
 			move.tag |= 0xffffff;
 
-			DrawOTag((uint32_t *)&move);
+			DrawOTag((u32 *)&move);
 			DrawSync(0);
 		}
 	}

@@ -3,13 +3,13 @@
 // same hack as AppendQueue, see notes there
 #define DECOMP_LOAD_ReadFile(a, b, c, d) DECOMP_LOAD_ReadFile_ex(b, c, d)
 
-void *DECOMP_LOAD_ReadFile_ex(/*struct BigHeader* bigfile,*/ u_int loadType, int subfileIndex, void *ptrDst)
+void *DECOMP_LOAD_ReadFile_ex(/*struct BigHeader* bigfile,*/ u32 loadType, int subfileIndex, void *ptrDst)
 {
 	// param1 is the Pointer to CD position of BIGFILE
 
 	int uVar5;
 	CdlLOC cdLoc;
-	u_char paramOutput[8];
+	u8 paramOutput[8];
 
 	DECOMP_CDSYS_SetMode_StreamData();
 
@@ -70,7 +70,7 @@ void *DECOMP_LOAD_ReadFile_ex(/*struct BigHeader* bigfile,*/ u_int loadType, int
 			break;
 
 		// Wait for all sectors to finish
-		uVar5 = CdReadSync(0, (u_char *)0x0);
+		uVar5 = CdReadSync(0, (u8 *)0x0);
 
 		// if ZERO sectors remain,
 		// then Sync commands passed, end loop

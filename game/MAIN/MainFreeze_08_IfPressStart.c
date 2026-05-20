@@ -11,7 +11,7 @@ void DECOMP_MainFreeze_IfPressStart(void)
 	    ((gGT->renderFlags & 0x1000) == 0) &&
 
 	    (sdata->AkuAkuHintState == 0) && (sdata->ptrActiveMenu == 0) && ((gGT->gameMode1 & (END_OF_RACE | PAUSE_ALL | GAME_CUTSCENE)) == 0) &&
-	    (gGT->levelID != MAIN_MENU_LEVEL) && (gGT->boolDemoMode == 0) && ((u_int)(gGT->levelID - OXIDE_ENDING) > 1) && (sdata->load_inProgress == 0) &&
+	    (gGT->levelID != MAIN_MENU_LEVEL) && (gGT->boolDemoMode == 0) && ((u32)(gGT->levelID - OXIDE_ENDING) > 1) && (sdata->load_inProgress == 0) &&
 	    ((gGT->gameMode2 & 4) == 0))
 	{
 		// pause the game

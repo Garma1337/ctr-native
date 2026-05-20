@@ -25,7 +25,7 @@ void *PlayerBlastedFuncTable[0xD] = {(void *)0x0,
 void DECOMP_VehStuckProc_Tumble_Init(struct Thread *thread, struct Driver *driver)
 {
 	int i;
-	u_int IsOpen_RacingOrBattle;
+	u32 IsOpen_RacingOrBattle;
 	int iVar2;
 	char bVar3;
 	char simpTurnState;
@@ -53,7 +53,7 @@ void DECOMP_VehStuckProc_Tumble_Init(struct Thread *thread, struct Driver *drive
 		);
 #endif
 
-	driver->instSelf->animFrame = (short)iVar2;
+	driver->instSelf->animFrame = (s16)iVar2;
 
 	iVar2 = DECOMP_MixRNG_Scramble();
 	driver->KartStates.Blasted.boolPlayBackwards = iVar2 & 4;

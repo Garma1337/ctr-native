@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_BOTS_SetRotation(struct Driver *bot, short param_2) // UNTESTED
+void DECOMP_BOTS_SetRotation(struct Driver *bot, s16 param_2) // UNTESTED
 {
 	struct NavFrame *nf = bot->botNavFrame;
 
@@ -10,9 +10,9 @@ void DECOMP_BOTS_SetRotation(struct Driver *bot, short param_2) // UNTESTED
 
 	// ======== Get Driver Position =============
 
-	bot->estimatePos[0] = (short)(((u_int)bot->posCurr.x) >> 8);
-	bot->estimatePos[1] = (short)(((u_int)bot->posCurr.y) >> 8);
-	bot->estimatePos[2] = (short)(((u_int)bot->posCurr.z) >> 8);
+	bot->estimatePos[0] = (s16)(((u32)bot->posCurr.x) >> 8);
+	bot->estimatePos[1] = (s16)(((u32)bot->posCurr.y) >> 8);
+	bot->estimatePos[2] = (s16)(((u32)bot->posCurr.z) >> 8);
 
 	// ======== Compare to Nav Position =============
 
@@ -48,7 +48,7 @@ void DECOMP_BOTS_SetRotation(struct Driver *bot, short param_2) // UNTESTED
 		bot->estimateRotNav[1] = (char)((sdata->gGT->level1->DriverSpawn[0].rot[1] + 0x400) >> 4);
 	}
 
-	short v = bot->estimateRotNav[1] << 4;
+	s16 v = bot->estimateRotNav[1] << 4;
 
 	// why does the Driver class have so many ways to store y rotation >:(
 	bot->ai_rotY_608 = v;

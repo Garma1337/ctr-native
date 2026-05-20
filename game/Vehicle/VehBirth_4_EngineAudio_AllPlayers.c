@@ -10,7 +10,7 @@ void DECOMP_VehBirth_EngineAudio_AllPlayers(void)
 	{
 		struct Driver *d = th->object;
 
-		u_char driverID = d->driverID;
+		u8 driverID = d->driverID;
 
 		int engine = data.MetaDataCharacters[data.characterIDs[driverID]].engineID;
 

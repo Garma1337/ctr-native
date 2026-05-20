@@ -2,7 +2,7 @@
 
 #define EDUCATIONAL_BUG_IF 0
 
-void DECOMP_DecalHUD_DrawWeapon(struct Icon *icon, short posX, short posY, struct PrimMem *primMem, u_long *ot, char transparency, short scale, char rot)
+void DECOMP_DecalHUD_DrawWeapon(struct Icon *icon, s16 posX, s16 posY, struct PrimMem *primMem, u_long *ot, char transparency, s16 scale, char rot)
 {
 #if BUILD > SepReview
 	if (!icon)
@@ -12,12 +12,12 @@ void DECOMP_DecalHUD_DrawWeapon(struct Icon *icon, short posX, short posY, struc
 	POLY_FT4 *p = (POLY_FT4 *)primMem->curr;
 	addPolyFT4(ot, p);
 
-	unsigned int width = icon->texLayout.u1 - icon->texLayout.u0;
-	unsigned int height = icon->texLayout.v2 - icon->texLayout.v0;
-	unsigned int rightX = posX + FP_Mult(width, scale);
-	unsigned int bottomY = posY + FP_Mult(height, scale);
-	unsigned int sidewaysX = posX + FP_Mult(height, scale);
-	unsigned int sidewaysY = posY + FP_Mult(width, scale);
+	u32 width = icon->texLayout.u1 - icon->texLayout.u0;
+	u32 height = icon->texLayout.v2 - icon->texLayout.v0;
+	u32 rightX = posX + FP_Mult(width, scale);
+	u32 bottomY = posY + FP_Mult(height, scale);
+	u32 sidewaysX = posX + FP_Mult(height, scale);
+	u32 sidewaysY = posY + FP_Mult(width, scale);
 
 // instead of psn00bsdk's setXY4, this function uses a custom-made macro that resembles the compiler optimization used in the original code
 // the X and Y fields of the primitive will be dereferenced as combined 32-bit integers for each vertex
@@ -30,22 +30,22 @@ void DECOMP_DecalHUD_DrawWeapon(struct Icon *icon, short posX, short posY, struc
 	{
 		if (rot == 0)
 		{
-			setXY4CompilerHack(p, (u_short)posX, posY, (u_short)rightX, posY, (u_short)posX, bottomY, (u_short)rightX, bottomY);
+			setXY4CompilerHack(p, (u16)posX, posY, (u16)rightX, posY, (u16)posX, bottomY, (u16)rightX, bottomY);
 		}
 		else
 		{
-			setXY4CompilerHack(p, (u_short)rightX, bottomY, (u_short)posX, bottomY, (u_short)rightX, posY, (u_short)posX, posY);
+			setXY4CompilerHack(p, (u16)rightX, bottomY, (u16)posX, bottomY, (u16)rightX, posY, (u16)posX, posY);
 		}
 	}
 	else
 	{
 		if (rot == 1)
 		{
-			setXY4CompilerHack(p, (u_short)posX, sidewaysY, (u_short)posX, posY, (u_short)sidewaysX, sidewaysY, (u_short)sidewaysX, posY);
+			setXY4CompilerHack(p, (u16)posX, sidewaysY, (u16)posX, posY, (u16)sidewaysX, sidewaysY, (u16)sidewaysX, posY);
 		}
 		else
 		{
-			setXY4CompilerHack(p, (u_short)sidewaysX, posY, (u_short)sidewaysX, sidewaysY, (u_short)posX, posY, (u_short)posX, sidewaysY);
+			setXY4CompilerHack(p, (u16)sidewaysX, posY, (u16)sidewaysX, sidewaysY, (u16)posX, posY, (u16)posX, sidewaysY);
 		}
 	}
 #else

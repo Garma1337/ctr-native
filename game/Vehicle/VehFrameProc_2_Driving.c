@@ -4,13 +4,13 @@ void DECOMP_VehFrameProc_Driving(struct Thread *t, struct Driver *d)
 {
 	int iVar7;
 	int iVar9;
-	u_short interp;
+	u16 interp;
 	int numFrames;
 	int startFrame;
 	char currAnimIndex;
 	char currFrame;
 
-	u_char animType = 0;
+	u8 animType = 0;
 	struct GameTracker *gGT = sdata->gGT;
 	struct Instance *inst = t->inst;
 
@@ -56,7 +56,7 @@ void DECOMP_VehFrameProc_Driving(struct Thread *t, struct Driver *d)
 		// frame not aligned
 		if (inst->animFrame != startFrame)
 		{
-			u_int animSpeed = 2;
+			u32 animSpeed = 2;
 			// if steering
 			if (currAnimIndex == 0)
 			{
@@ -72,9 +72,9 @@ void DECOMP_VehFrameProc_Driving(struct Thread *t, struct Driver *d)
 
 			// curr frame, animation moving speed per frame, starting frame
 			interp = VehCalc_InterpBySpeed(inst->animFrame, animSpeed, startFrame);
-			inst->animFrame = (short)interp;
+			inst->animFrame = (s16)interp;
 
-			if ((unsigned int)(currAnimIndex - 2) > 1)
+			if ((u32)(currAnimIndex - 2) > 1)
 				return;
 
 			// kart animation frame
@@ -110,7 +110,7 @@ void DECOMP_VehFrameProc_Driving(struct Thread *t, struct Driver *d)
 		// if you don't have a TNT over you
 		if (d->instTntRecv == 0)
 		{
-			short burnTimer = d->burnTimer;
+			s16 burnTimer = d->burnTimer;
 			// not currently burned or just start burning
 			if ((burnTimer == 0) || (479 < burnTimer))
 			{
@@ -138,7 +138,7 @@ void DECOMP_VehFrameProc_Driving(struct Thread *t, struct Driver *d)
 			{
 				iVar9 = (((burnTimer >> 5) % 5) >> 2) - 8 + iVar9;
 
-				inst->animFrame = (short)iVar9;
+				inst->animFrame = (s16)iVar9;
 				struct Particle *p = Particle_Init(0, gGT->iconGroup[1], &data.emSet_BurnSmoke[0]);
 				if (p != NULL)
 				{
@@ -163,7 +163,7 @@ void DECOMP_VehFrameProc_Driving(struct Thread *t, struct Driver *d)
 			char charID = data.characterIDs[d->driverID];
 
 			// for human reading purposes
-			unsigned char animType;
+			u8 animType;
 
 			switch (charID)
 			{

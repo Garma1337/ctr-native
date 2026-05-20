@@ -7,15 +7,15 @@ void ThTick_FastRET(struct Thread *);
 void DECOMP_VehTurbo_ThTick(struct Thread *turboThread)
 {
 	char kartState;
-	u_int fireAudioDistort;
+	u32 fireAudioDistort;
 	int iVar7;
-	u_int uVar8;
+	u32 uVar8;
 	struct Turbo *turbo;
 	struct Instance *instanceDriver;
 	struct Instance *instance;
 	struct Driver *driver;
 	int fireSize;
-	short elapsedTime;
+	s16 elapsedTime;
 	struct GameTracker *gGT = sdata->gGT;
 
 	turbo = (struct Turbo *)turboThread->object;
@@ -89,15 +89,15 @@ void DECOMP_VehTurbo_ThTick(struct Thread *turboThread)
 	}
 
 	// matrix of first turbo instance
-	instance->matrix.m[0][0] = (short)(instanceDriver->matrix.m[0][0] * fireSize >> 3);
-	instance->matrix.m[0][1] = (short)(instanceDriver->matrix.m[0][1] * fireSize >> 3);
-	instance->matrix.m[0][2] = (short)(instanceDriver->matrix.m[0][2] * fireSize >> 3);
-	instance->matrix.m[1][0] = (short)(instanceDriver->matrix.m[1][0] * fireSize >> 3);
-	instance->matrix.m[1][1] = (short)(instanceDriver->matrix.m[1][1] * fireSize >> 3);
-	instance->matrix.m[1][2] = (short)(instanceDriver->matrix.m[1][2] * fireSize >> 3);
-	instance->matrix.m[2][0] = (short)(instanceDriver->matrix.m[2][0] * fireSize >> 3);
-	instance->matrix.m[2][1] = (short)(instanceDriver->matrix.m[2][1] * fireSize >> 3);
-	instance->matrix.m[2][2] = (short)(instanceDriver->matrix.m[2][2] * fireSize >> 3);
+	instance->matrix.m[0][0] = (s16)(instanceDriver->matrix.m[0][0] * fireSize >> 3);
+	instance->matrix.m[0][1] = (s16)(instanceDriver->matrix.m[0][1] * fireSize >> 3);
+	instance->matrix.m[0][2] = (s16)(instanceDriver->matrix.m[0][2] * fireSize >> 3);
+	instance->matrix.m[1][0] = (s16)(instanceDriver->matrix.m[1][0] * fireSize >> 3);
+	instance->matrix.m[1][1] = (s16)(instanceDriver->matrix.m[1][1] * fireSize >> 3);
+	instance->matrix.m[1][2] = (s16)(instanceDriver->matrix.m[1][2] * fireSize >> 3);
+	instance->matrix.m[2][0] = (s16)(instanceDriver->matrix.m[2][0] * fireSize >> 3);
+	instance->matrix.m[2][1] = (s16)(instanceDriver->matrix.m[2][1] * fireSize >> 3);
+	instance->matrix.m[2][2] = (s16)(instanceDriver->matrix.m[2][2] * fireSize >> 3);
 
 #define gte_ldVXY0(r0) __asm__ volatile("mtc2   %0, $0" : : "r"(r0))
 #define gte_ldVZ0(r0)  __asm__ volatile("mtc2   %0, $1" : : "r"(r0))
@@ -109,15 +109,15 @@ void DECOMP_VehTurbo_ThTick(struct Thread *turboThread)
 	gte_stlvl((VECTOR *)&instance->matrix.t[0]);
 
 	// matrix of second turbo instance, negate X axis
-	turbo->inst->matrix.m[0][0] = (short)(-(int)instanceDriver->matrix.m[0][0] * fireSize >> 3);
-	turbo->inst->matrix.m[0][1] = (short)(instanceDriver->matrix.m[0][1] * fireSize >> 3);
-	turbo->inst->matrix.m[0][2] = (short)(instanceDriver->matrix.m[0][2] * fireSize >> 3);
-	turbo->inst->matrix.m[1][0] = (short)(-(int)instanceDriver->matrix.m[1][0] * fireSize >> 3);
-	turbo->inst->matrix.m[1][1] = (short)(instanceDriver->matrix.m[1][1] * fireSize >> 3);
-	turbo->inst->matrix.m[1][2] = (short)(instanceDriver->matrix.m[1][2] * fireSize >> 3);
-	turbo->inst->matrix.m[2][0] = (short)(-(int)instanceDriver->matrix.m[2][0] * fireSize >> 3);
-	turbo->inst->matrix.m[2][1] = (short)(instanceDriver->matrix.m[2][1] * fireSize >> 3);
-	turbo->inst->matrix.m[2][2] = (short)(instanceDriver->matrix.m[2][2] * fireSize >> 3);
+	turbo->inst->matrix.m[0][0] = (s16)(-(int)instanceDriver->matrix.m[0][0] * fireSize >> 3);
+	turbo->inst->matrix.m[0][1] = (s16)(instanceDriver->matrix.m[0][1] * fireSize >> 3);
+	turbo->inst->matrix.m[0][2] = (s16)(instanceDriver->matrix.m[0][2] * fireSize >> 3);
+	turbo->inst->matrix.m[1][0] = (s16)(-(int)instanceDriver->matrix.m[1][0] * fireSize >> 3);
+	turbo->inst->matrix.m[1][1] = (s16)(instanceDriver->matrix.m[1][1] * fireSize >> 3);
+	turbo->inst->matrix.m[1][2] = (s16)(instanceDriver->matrix.m[1][2] * fireSize >> 3);
+	turbo->inst->matrix.m[2][0] = (s16)(-(int)instanceDriver->matrix.m[2][0] * fireSize >> 3);
+	turbo->inst->matrix.m[2][1] = (s16)(instanceDriver->matrix.m[2][1] * fireSize >> 3);
+	turbo->inst->matrix.m[2][2] = (s16)(instanceDriver->matrix.m[2][2] * fireSize >> 3);
 
 	gte_ldVXY0(instanceDriver->scale[0] * -0x12 >> 0xc & 0xffffU | (instanceDriver->scale[1] * 3 >> 8) << 0x10);
 	gte_ldVZ0(instanceDriver->scale[2] * -0x34 >> 0xc);
@@ -177,7 +177,7 @@ void DECOMP_VehTurbo_ThTick(struct Thread *turboThread)
 	// player of any kind
 	if (instanceDriver->thread->modelIndex == DYNAMIC_PLAYER)
 	{
-		iVar7 = 0x100 - (u_int)(instance->alphaScale >> 4);
+		iVar7 = 0x100 - (u32)(instance->alphaScale >> 4);
 
 		if (iVar7 < 0)
 		{
@@ -191,7 +191,7 @@ void DECOMP_VehTurbo_ThTick(struct Thread *turboThread)
 			}
 		}
 
-		fireAudioDistort = (u_int)turbo->fireAudioDistort + 0x10;
+		fireAudioDistort = (u32)turbo->fireAudioDistort + 0x10;
 
 		if ((int)fireAudioDistort < 0)
 		{

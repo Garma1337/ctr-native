@@ -1,6 +1,6 @@
 #include <common.h>
 
-u_int DECOMP_BOTS_ChangeState(struct Driver *driverVictim, int damageType, struct Driver *driverAttacker, int reason)
+u32 DECOMP_BOTS_ChangeState(struct Driver *driverVictim, int damageType, struct Driver *driverAttacker, int reason)
 {
 	driverVictim->ChangeState_param2 = 0;
 

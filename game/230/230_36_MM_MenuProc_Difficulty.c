@@ -2,7 +2,7 @@
 
 void DECOMP_MM_MenuProc_Difficulty(struct RectMenu *menu)
 {
-	short row;
+	s16 row;
 
 	row = menu->rowSelected;
 
@@ -15,7 +15,7 @@ void DECOMP_MM_MenuProc_Difficulty(struct RectMenu *menu)
 	else
 	{
 		// if you are on a valid row
-		if ((unsigned char)row < 3)
+		if ((u8)row < 3)
 		{
 			// set difficulty to value, from array of fixed difficulty values
 			sdata->gGT->arcadeDifficulty = D230.cupDifficultySpeed[row];

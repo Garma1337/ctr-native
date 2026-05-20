@@ -4,16 +4,16 @@
 // param2 - reserves to add
 // param3 - add type
 // param4 - fire level
-void DECOMP_VehFire_Increment(struct Driver *driver, int reserves, u_int type, int fireLevel)
+void DECOMP_VehFire_Increment(struct Driver *driver, int reserves, u32 type, int fireLevel)
 {
 	char kartState;
-	u_char count;
+	u8 count;
 
 	int newFireSpeedCap;
 	int newFireSize;
 	int oldOTT;
 
-	u_int addFlags;
+	u32 addFlags;
 	struct Turbo *turboObj;
 	struct Thread *turboThread;
 	struct Instance *turboInst1;
@@ -41,7 +41,7 @@ void DECOMP_VehFire_Increment(struct Driver *driver, int reserves, u_int type, i
 	    (driver->instSelf->thread->modelIndex == DYNAMIC_PLAYER))
 	{
 		// Add Reserves to ghost buffer
-		DECOMP_GhostTape_WriteBoosts(reserves, (u_char)type, fireLevel);
+		DECOMP_GhostTape_WriteBoosts(reserves, (u8)type, fireLevel);
 	}
 
 	kartState = driver->kartState;
@@ -219,7 +219,7 @@ void DECOMP_VehFire_Increment(struct Driver *driver, int reserves, u_int type, i
 		turboInst2->alphaScale = 0;
 
 		// player of any kind
-		if (*(short *)&driver->instSelf->thread->modelIndex == DYNAMIC_PLAYER)
+		if (*(s16 *)&driver->instSelf->thread->modelIndex == DYNAMIC_PLAYER)
 		{
 			if (
 			    // if racer is not getting an Outside turbo (turbo pad or powerup),
@@ -260,7 +260,7 @@ void DECOMP_VehFire_Increment(struct Driver *driver, int reserves, u_int type, i
 	        // Reserves are equal to zero
 	        // OR
 	        // speed cap has been raised
-	        (driver->reserves == 0) || (driver->fireSpeedCap < (short)newFireSpeedCap)) ||
+	        (driver->reserves == 0) || (driver->fireSpeedCap < (s16)newFireSpeedCap)) ||
 
 	    // OR
 
@@ -273,7 +273,7 @@ void DECOMP_VehFire_Increment(struct Driver *driver, int reserves, u_int type, i
 	        (int)driver->const_SacredFireSpeed < (int)driver->fireSpeedCap && ((driver->stepFlagSet & 2) == 0)))
 
 	{
-		driver->fireSpeedCap = (short)newFireSpeedCap;
+		driver->fireSpeedCap = (s16)newFireSpeedCap;
 
 		if (turboObj != 0)
 		{
@@ -281,7 +281,7 @@ void DECOMP_VehFire_Increment(struct Driver *driver, int reserves, u_int type, i
 			newFireSize = (fireLevel >> 6) + 5;
 			if (newFireSize > 8)
 				newFireSize = 8;
-			turboObj->fireSize = (short)newFireSize;
+			turboObj->fireSize = (s16)newFireSize;
 		}
 	}
 

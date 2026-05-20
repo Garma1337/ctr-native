@@ -22,23 +22,23 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 	char numPlyr;
 	char totalPlyr;
 
-	short letterPos[2];
-	short txtPos[2];
+	s16 letterPos[2];
+	s16 txtPos[2];
 
-	short t;
-	short elapsedFrames;
-	short levSpawn;
+	s16 t;
+	s16 elapsedFrames;
+	s16 levSpawn;
 
-	short lerpStartX;
-	short txtStartX;
-	short lerpStartY;
-	short lerpEndX;
-	short txtEndX;
-	short lerpEndY;
-	short lerpFrames;
-	short currFrame;
-	u_int scaleDown;
-	u_int txtColor;
+	s16 lerpStartX;
+	s16 txtStartX;
+	s16 lerpStartY;
+	s16 lerpEndX;
+	s16 txtEndX;
+	s16 lerpEndY;
+	s16 lerpFrames;
+	s16 currFrame;
+	u32 scaleDown;
+	u32 txtColor;
 	int bitIndex;
 
 
@@ -327,7 +327,7 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 	    ((gGT->gameMode2 & CUP_ANY_KIND) != 0))
 	{
 		// but text near middle of screen
-		short posX = (numPlyr < 2) ? 0xbe : 100;
+		s16 posX = (numPlyr < 2) ? 0xbe : 100;
 
 		// PRESS * TO CONTINUE
 		DECOMP_DecalFont_DrawLine(sdata->lngStrings[0xC9], 0x100, posX, 1, 0xffff8000);
@@ -476,7 +476,7 @@ void DECOMP_AA_EndEvent_DrawMenu(void)
 	DECOMP_MainRaceTrack_RequestLoad(levSpawn);
 }
 
-void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
+void DECOMP_AA_EndEvent_DisplayTime(s16 driverId, s16 param_2)
 {
 	struct GameTracker *gGT;
 	struct Driver *driver;
@@ -484,15 +484,15 @@ void DECOMP_AA_EndEvent_DisplayTime(short driverId, short param_2)
 	struct UiElement2D *hud;
 	struct Instance *bigNum;
 	char numPlyr, tenseconds;
-	short framesElapsed;
-	short lerpStartY;
-	short lerpEndY;
-	short lerpStartX;
-	short lerpEndX;
-	short currFrame;
-	short width;
-	short endFrame;
-	short posXY[2];
+	s16 framesElapsed;
+	s16 lerpStartY;
+	s16 lerpEndY;
+	s16 lerpStartX;
+	s16 lerpEndX;
+	s16 currFrame;
+	s16 width;
+	s16 endFrame;
+	s16 posXY[2];
 	RECT r;
 
 	gGT = sdata->gGT;

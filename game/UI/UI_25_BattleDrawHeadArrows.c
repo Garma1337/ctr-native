@@ -5,37 +5,37 @@ void DECOMP_UI_BattleDrawHeadArrows(struct Driver *player)
 {
 	typedef struct
 	{
-		u_int tag;
-		u_int tpage;
+		u32 tag;
+		u32 tpage;
 		POLY_G3 g3;
 	} G3_SEMITRANS;
 
 	int playerDistance;
-	u_short currTeam;
-	short sVar1;
-	short sVar3;
-	short sVar4;
-	short sVar5;
+	u16 currTeam;
+	s16 sVar1;
+	s16 sVar3;
+	s16 sVar4;
+	s16 sVar5;
 	int iVar6;
-	short outXY[2];
-	u_int flag;
-	u_int color;
+	s16 outXY[2];
+	u32 flag;
+	u32 color;
 	MATRIX *m;
 	G3_SEMITRANS *p;
 	SVECTOR pos;
 
 	struct GameTracker *gGT = sdata->gGT;
 
-	u_char playerID = player->driverID;
+	u8 playerID = player->driverID;
 
 	// pushBuffer ViewProj
 	m = &gGT->pushBuffer[playerID].matrix_ViewProj;
 	gte_SetRotMatrix(m);
 	gte_SetTransMatrix(m);
 
-	u_char numPlyr = gGT->numPlyrCurrGame;
+	u8 numPlyr = gGT->numPlyrCurrGame;
 
-	for (u_char i = 0; i < numPlyr; i++)
+	for (u8 i = 0; i < numPlyr; i++)
 	{
 		// something related to player structure address
 		struct Driver *currDriver = gGT->drivers[i];
@@ -104,8 +104,8 @@ void DECOMP_UI_BattleDrawHeadArrows(struct Driver *player)
 		sVar4 = outXY[0];
 		sVar5 = outXY[1] + sVar1;
 		iVar6 = (0x1000 - ((playerDistance / 6 + (playerDistance >> 0x1f) >> 0xd) - (playerDistance >> 0x1f)));
-		sVar1 = (short)(iVar6 * 3 >> 10);
-		sVar3 = (short)(iVar6 * 7 >> 12) + 12;
+		sVar1 = (s16)(iVar6 * 3 >> 10);
+		sVar3 = (s16)(iVar6 * 7 >> 12) + 12;
 
 		p->g3.x0 = sVar4 - sVar1;
 		p->g3.y0 = sVar5 - sVar3;
@@ -118,7 +118,7 @@ void DECOMP_UI_BattleDrawHeadArrows(struct Driver *player)
 		currTeam = currDriver->BattleHUD.teamID;
 
 		// color data
-		color = *(u_int *)data.ptrColor[PLAYER_BLUE + currTeam];
+		color = *(u32 *)data.ptrColor[PLAYER_BLUE + currTeam];
 
 		// it's all the same color
 		*(int *)&p->g3.r0 = (color & 0xffffff) | 0x30000000;
@@ -128,6 +128,6 @@ void DECOMP_UI_BattleDrawHeadArrows(struct Driver *player)
 		u_long *ot = gGT->pushBuffer[playerID].ptrOT;
 
 		*(int *)p = *ot | 0x8000000;
-		*ot = (u_int)p & 0xffffff;
+		*ot = (u32)p & 0xffffff;
 	}
 }

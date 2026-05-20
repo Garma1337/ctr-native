@@ -2,6 +2,6 @@
 
 void DECOMP_cseq_opcode09(struct SongSeq *seq)
 {
-	unsigned char *currNote = seq->currNote;
+	u8 *currNote = seq->currNote;
 	seq->instrumentID = currNote[1];
 }

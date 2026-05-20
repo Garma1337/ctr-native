@@ -17,7 +17,7 @@ static char warppadColor[8] = {
     [4] = 0,
 };
 
-void DECOMP_AH_Map_Warppads(short *ptrMap, struct Thread *warppadThread, short *param_3)
+void DECOMP_AH_Map_Warppads(s16 *ptrMap, struct Thread *warppadThread, s16 *param_3)
 {
 	struct GameTracker *gGT = sdata->gGT;
 	struct Instance *warppadInst;

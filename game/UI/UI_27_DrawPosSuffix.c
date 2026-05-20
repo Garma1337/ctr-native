@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_UI_DrawPosSuffix(short posX, short posY, struct Driver *d, short flags)
+void DECOMP_UI_DrawPosSuffix(s16 posX, s16 posY, struct Driver *d, s16 flags)
 {
 	int currRank;
 	struct GameTracker *gGT = sdata->gGT;

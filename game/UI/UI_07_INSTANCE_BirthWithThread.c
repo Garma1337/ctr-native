@@ -3,12 +3,12 @@
 struct Instance *DECOMP_UI_INSTANCE_BirthWithThread(int param_1, int param_2, int param_3, int param_4, int param_5, int param_6)
 
 {
-	short modelID;
-	short sVar2;
-	short sVar3;
-	short uVar5;
+	s16 modelID;
+	s16 sVar2;
+	s16 sVar3;
+	s16 uVar5;
 	struct Thread *hudThread;
-	long lVar7;
+	s32 lVar7;
 	struct UiElement2D *hudStruct;
 	int color;
 	struct UiElement3D *ui3D;
@@ -16,7 +16,7 @@ struct Instance *DECOMP_UI_INSTANCE_BirthWithThread(int param_1, int param_2, in
 	struct Driver *driver;
 	struct Thread *driverThread;
 	struct Model *model;
-	short rot[3];
+	s16 rot[3];
 
 	struct GameTracker *gGT;
 	gGT = sdata->gGT;
@@ -106,7 +106,7 @@ struct Instance *DECOMP_UI_INSTANCE_BirthWithThread(int param_1, int param_2, in
 		}
 
 		// if C-T-R letters
-		if ((unsigned int)(modelID - 0x93U) < 3)
+		if ((u32)(modelID - 0x93U) < 3)
 		{
 			// -4 for C
 			// +0 for T
@@ -126,7 +126,7 @@ struct Instance *DECOMP_UI_INSTANCE_BirthWithThread(int param_1, int param_2, in
 			// get AdvCup ID from level metadata
 			int advCupID = data.metaDataLEV[gGT->levelID].ctrTokenGroupID;
 
-			short *cupColor = &data.AdvCups[advCupID].color[0];
+			s16 *cupColor = &data.AdvCups[advCupID].color[0];
 
 			inst->colorRGBA = (cupColor[0] << 0x14) | (cupColor[1] << 0xc) | (cupColor[2] << 4);
 
@@ -180,7 +180,7 @@ struct Instance *DECOMP_UI_INSTANCE_BirthWithThread(int param_1, int param_2, in
 		else
 		{
 			lVar7 = ratan2(inst->matrix.t[1], inst->matrix.t[2]);
-			rot[0] = -(short)lVar7;
+			rot[0] = -(s16)lVar7;
 		}
 		rot[1] = 0;
 		rot[2] = 0;

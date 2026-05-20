@@ -2,13 +2,13 @@
 
 void DECOMP_MM_Video_VLC_Decode(void)
 {
-	short sVar1;
+	s16 sVar1;
 	int iVar2;
 	int iVar3;
 	u_long size;
 	int WAIT_TIME;
-	short local_30;
-	short sStack_2e;
+	s16 local_30;
+	s16 sStack_2e;
 	u_long *local_2c;
 	u_long *local_28[2];
 

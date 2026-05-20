@@ -123,7 +123,7 @@ void DECOMP_VehPickupItem_ShootNow(struct Driver *d, int weaponID, int flags)
 		weaponInst->matrix.t[2] = dInst->matrix.t[2];
 
 #ifndef REBUILD_PS1
-		VehPhysForce_RotAxisAngle(&weaponInst->matrix, (short *)&d->AxisAngle1_normalVec, d->rotCurr.y);
+		VehPhysForce_RotAxisAngle(&weaponInst->matrix, (s16 *)&d->AxisAngle1_normalVec, d->rotCurr.y);
 #endif
 
 		weaponTh = weaponInst->thread;
@@ -150,7 +150,7 @@ void DECOMP_VehPickupItem_ShootNow(struct Driver *d, int weaponID, int flags)
 #ifndef REBUILD_PS1
 
 			// Original Code
-			short rot[3];
+			s16 rot[3];
 			CTR_MatrixToRot((SVECTOR *)&rot[0], &weaponInst->matrix, 0x11);
 
 			// not a typo, required like this
@@ -296,8 +296,8 @@ void DECOMP_VehPickupItem_ShootNow(struct Driver *d, int weaponID, int flags)
 
 	RunMineCOLL:
 
-		short pos1[3];
-		short pos2[3];
+		s16 pos1[3];
+		s16 pos2[3];
 
 		pos1[0] = weaponInst->matrix.t[0];
 		pos1[1] = weaponInst->matrix.t[1] - 400;
@@ -318,7 +318,7 @@ void DECOMP_VehPickupItem_ShootNow(struct Driver *d, int weaponID, int flags)
 
 		sps->ptr_mesh_info = gGT->level1->ptr_mesh_info;
 
-		COLL_SearchBSP_CallbackQUADBLK((u_int *)pos1, (u_int *)pos2, sps, 0x40);
+		COLL_SearchBSP_CallbackQUADBLK((u32 *)pos1, (u32 *)pos2, sps, 0x40);
 
 		if (sps->boolDidTouchHitbox != 0)
 		{
@@ -342,12 +342,12 @@ void DECOMP_VehPickupItem_ShootNow(struct Driver *d, int weaponID, int flags)
 			}
 
 			sps->Union.QuadBlockColl.searchFlags = 0;
-			COLL_SearchBSP_CallbackQUADBLK((u_int *)pos1, (u_int *)pos2, sps, 0);
+			COLL_SearchBSP_CallbackQUADBLK((u32 *)pos1, (u32 *)pos2, sps, 0);
 		}
 
 		RB_MakeInstanceReflective(sps, weaponInst);
 
-		short *rotPtr = (short *)0x1f800178;
+		s16 *rotPtr = (s16 *)0x1f800178;
 
 		if (sps->boolDidTouchQuadblock == 0)
 		{

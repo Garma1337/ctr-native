@@ -5,7 +5,7 @@
 int last = -1;
 #endif
 
-void DECOMP_LOAD_ReadFileASyncCallback(CdlIntrResult result, uint8_t *unk)
+void DECOMP_LOAD_ReadFileASyncCallback(CdlIntrResult result, u8 *unk)
 {
 	CdReadCallback(0);
 

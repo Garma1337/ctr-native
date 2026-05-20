@@ -4,7 +4,7 @@
 void CS_Podium_Prize_ThTick1(struct Thread *th)
 {
 	struct Instance *inst = th->inst;
-	short *prize = th->object;
+	s16 *prize = th->object;
 	int trig;
 
 	if (OVR_233.PodiumInitUnk3 != 0)

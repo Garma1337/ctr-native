@@ -3,9 +3,9 @@
 #ifdef CTR_NATIVE
 struct CtrNativeCollVec
 {
-	long long x;
-	long long y;
-	long long z;
+	s64 x;
+	s64 y;
+	s64 z;
 };
 
 static struct CtrNativeCollVec CtrNativeColl_Sub(struct CtrNativeCollVec a, struct CtrNativeCollVec b)
@@ -17,7 +17,7 @@ static struct CtrNativeCollVec CtrNativeColl_Sub(struct CtrNativeCollVec a, stru
 	return out;
 }
 
-static long long CtrNativeColl_Dot(struct CtrNativeCollVec a, struct CtrNativeCollVec b)
+static s64 CtrNativeColl_Dot(struct CtrNativeCollVec a, struct CtrNativeCollVec b)
 {
 	return a.x * b.x + a.y * b.y + a.z * b.z;
 }
@@ -31,10 +31,10 @@ static struct CtrNativeCollVec CtrNativeColl_Cross(struct CtrNativeCollVec a, st
 	return out;
 }
 
-static unsigned long long CtrNativeColl_ISqrt64(unsigned long long value)
+static u64 CtrNativeColl_ISqrt64(u64 value)
 {
-	unsigned long long bit = 1ULL << 62;
-	unsigned long long result = 0;
+	u64 bit = 1ULL << 62;
+	u64 result = 0;
 
 	while (bit > value)
 		bit >>= 2;
@@ -66,10 +66,10 @@ static struct CtrNativeCollVec CtrNativeColl_FromLevVertex(const struct LevVerte
 	return out;
 }
 
-static void CtrNativeColl_WriteNormal(short *normalVec, struct CtrNativeCollVec normal)
+static void CtrNativeColl_WriteNormal(s16 *normalVec, struct CtrNativeCollVec normal)
 {
-	unsigned long long length;
-	unsigned long long normalLenSquared;
+	u64 length;
+	u64 normalLenSquared;
 
 	if (normal.y < 0)
 	{
@@ -78,7 +78,7 @@ static void CtrNativeColl_WriteNormal(short *normalVec, struct CtrNativeCollVec 
 		normal.z = -normal.z;
 	}
 
-	normalLenSquared = (unsigned long long)(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
+	normalLenSquared = (u64)(normal.x * normal.x + normal.y * normal.y + normal.z * normal.z);
 	length = CtrNativeColl_ISqrt64(normalLenSquared);
 
 	if (length == 0)
@@ -90,13 +90,13 @@ static void CtrNativeColl_WriteNormal(short *normalVec, struct CtrNativeCollVec 
 		return;
 	}
 
-	normalVec[0] = (short)((normal.x * 0x1000) / (long long)length);
-	normalVec[1] = (short)((normal.y * 0x1000) / (long long)length);
-	normalVec[2] = (short)((normal.z * 0x1000) / (long long)length);
+	normalVec[0] = (s16)((normal.x * 0x1000) / (s64)length);
+	normalVec[1] = (s16)((normal.y * 0x1000) / (s64)length);
+	normalVec[2] = (s16)((normal.z * 0x1000) / (s64)length);
 	normalVec[3] = 0;
 }
 
-static short CtrNativeColl_NormalDominantAxis(const short *normalVec)
+static s16 CtrNativeColl_NormalDominantAxis(const s16 *normalVec)
 {
 	int absX = normalVec[0] < 0 ? -normalVec[0] : normalVec[0];
 	int absY = normalVec[1] < 0 ? -normalVec[1] : normalVec[1];
@@ -112,7 +112,7 @@ static short CtrNativeColl_NormalDominantAxis(const short *normalVec)
 }
 
 static int CtrNativeColl_IntersectSegmentTriangle(struct CtrNativeCollVec top, struct CtrNativeCollVec bottom, struct CtrNativeCollVec a,
-                                                  struct CtrNativeCollVec b, struct CtrNativeCollVec c, double *outT, short *outHit, short *outNormal)
+                                                  struct CtrNativeCollVec b, struct CtrNativeCollVec c, double *outT, s16 *outHit, s16 *outNormal)
 {
 	struct CtrNativeCollVec ab = CtrNativeColl_Sub(b, a);
 	struct CtrNativeCollVec ac = CtrNativeColl_Sub(c, a);
@@ -160,18 +160,18 @@ static int CtrNativeColl_IntersectSegmentTriangle(struct CtrNativeCollVec top, s
 		return 0;
 
 	*outT = t;
-	outHit[0] = (short)(hitX >= 0 ? hitX + 0.5 : hitX - 0.5);
-	outHit[1] = (short)(hitY >= 0 ? hitY + 0.5 : hitY - 0.5);
-	outHit[2] = (short)(hitZ >= 0 ? hitZ + 0.5 : hitZ - 0.5);
+	outHit[0] = (s16)(hitX >= 0 ? hitX + 0.5 : hitX - 0.5);
+	outHit[1] = (s16)(hitY >= 0 ? hitY + 0.5 : hitY - 0.5);
+	outHit[2] = (s16)(hitZ >= 0 ? hitZ + 0.5 : hitZ - 0.5);
 	CtrNativeColl_WriteNormal(outNormal, normal);
 	return 1;
 }
 
 static int CtrNativeColl_TryQuadTriangle(struct mesh_info *meshInfo, struct QuadBlock *quad, int indexA, int indexB, int indexC, struct CtrNativeCollVec top,
-                                         struct CtrNativeCollVec bottom, double *bestT, short *bestHit, short *bestNormal, struct QuadBlock **bestQuad)
+                                         struct CtrNativeCollVec bottom, double *bestT, s16 *bestHit, s16 *bestNormal, struct QuadBlock **bestQuad)
 {
-	short hit[3];
-	short normal[4];
+	s16 hit[3];
+	s16 normal[4];
 	double t;
 	struct LevVertex *verts = meshInfo->ptrVertexArray;
 
@@ -201,34 +201,34 @@ static int CtrNativeColl_TryQuadTriangle(struct mesh_info *meshInfo, struct Quad
 // NOTE(aalhendi): CTR_NATIVE bridge, not ASM-verified. Retail traverses BSP and
 // tests quadblock triangles through scratchpad code; native mirrors the outputs
 // used by spawn/camera until the full COLL path is ported.
-void COLL_SearchBSP_CallbackQUADBLK(u_int *posTop, u_int *posBottom, struct ScratchpadStruct *sps, int hitRadius)
+void COLL_SearchBSP_CallbackQUADBLK(u32 *posTop, u32 *posBottom, struct ScratchpadStruct *sps, int hitRadius)
 {
-	short *topShorts = (short *)posTop;
-	short *bottomShorts = (short *)posBottom;
+	s16 *topShorts = (s16 *)posTop;
+	s16 *bottomShorts = (s16 *)posBottom;
 	struct mesh_info *meshInfo = sps->ptr_mesh_info;
 	struct CtrNativeCollVec top;
 	struct CtrNativeCollVec bottom;
 	struct QuadBlock *bestQuad = NULL;
-	short bestHit[3];
-	short bestNormal[4] = {0, 0x1000, 0, 0};
+	s16 bestHit[3];
+	s16 bestNormal[4] = {0, 0x1000, 0, 0};
 	double bestT = 2.0;
-	short minX;
-	short minY;
-	short minZ;
-	short maxX;
-	short maxY;
-	short maxZ;
+	s16 minX;
+	s16 minY;
+	s16 minZ;
+	s16 maxX;
+	s16 maxY;
+	s16 maxZ;
 
 	sps->Input1.pos[0] = topShorts[0];
 	sps->Input1.pos[1] = topShorts[1];
 	sps->Input1.pos[2] = topShorts[2];
-	sps->Input1.hitRadius = (short)hitRadius;
+	sps->Input1.hitRadius = (s16)hitRadius;
 	sps->Input1.hitRadiusSquared = hitRadius * hitRadius;
 
 	sps->Union.QuadBlockColl.pos[0] = bottomShorts[0];
 	sps->Union.QuadBlockColl.pos[1] = bottomShorts[1];
 	sps->Union.QuadBlockColl.pos[2] = bottomShorts[2];
-	sps->Union.QuadBlockColl.hitRadius = (short)hitRadius;
+	sps->Union.QuadBlockColl.hitRadius = (s16)hitRadius;
 	sps->Union.QuadBlockColl.hitRadiusSquared = hitRadius * hitRadius;
 	sps->Union.QuadBlockColl.hitPos[0] = topShorts[0];
 	sps->Union.QuadBlockColl.hitPos[1] = topShorts[1];
@@ -239,7 +239,7 @@ void COLL_SearchBSP_CallbackQUADBLK(u_int *posTop, u_int *posBottom, struct Scra
 	sps->boolDidTouchHitbox = 0;
 	sps->Set1.ptrQuadblock = NULL;
 	sps->Set2.ptrQuadblock = NULL;
-	*(u_int *)&sps->dataOutput[0] = 0;
+	*(u32 *)&sps->dataOutput[0] = 0;
 
 	if ((meshInfo == NULL) || (meshInfo->ptrQuadBlockArray == NULL) || (meshInfo->ptrVertexArray == NULL))
 		return;

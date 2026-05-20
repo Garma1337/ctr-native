@@ -1,16 +1,16 @@
 #include <common.h>
 
-int DECOMP_OtherFX_Play_LowLevel(u_int soundID, char boolAntiSpam, u_int flags)
+int DECOMP_OtherFX_Play_LowLevel(u32 soundID, char boolAntiSpam, u32 flags)
 {
 	struct GameTracker *gGT = sdata->gGT;
 	struct ChannelStats *channel;
 	int count;
-	short id;
+	s16 id;
 	struct OtherFX *ptrOtherFX;
-	u_int LR = (flags) & 0xff;
-	u_int distortion = (flags >> 8) & 0xff;
-	u_int volume = (flags >> 0x10) & 0xff;
-	u_short echo = (flags >> 0x18) & 0xff;
+	u32 LR = (flags) & 0xff;
+	u32 distortion = (flags >> 8) & 0xff;
+	u32 volume = (flags >> 0x10) & 0xff;
+	u16 echo = (flags >> 0x18) & 0xff;
 	struct ChannelAttr channelAttr;
 
 	if (sdata->boolAudioEnabled == 0)

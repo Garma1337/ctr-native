@@ -93,7 +93,7 @@ struct BigHeader
 	// "numEntry" number of entries
 	// struct BigEntry entry[0];
 };
-#define BIG_GETENTRY(x) (struct BigEntry *)((unsigned int)x + sizeof(struct BigHeader))
+#define BIG_GETENTRY(x) (struct BigEntry *)((u32)x + sizeof(struct BigHeader))
 
 struct DramPointerMap
 {
@@ -102,13 +102,13 @@ struct DramPointerMap
 	// int offsets[0];
 };
 
-#define DRAM_GETOFFSETS(x)    ((unsigned int)x + sizeof(struct DramPointerMap))
+#define DRAM_GETOFFSETS(x)    ((u32)x + sizeof(struct DramPointerMap))
 
 #define DRAM_SET_UNPATCHED(x) *(int *)x = 0
 
 #define DRAM_SET_PATCHED(x)   *(int *)x = *(int *)x | 0x10000000;
 
-#define DRAM_IS_PATCHED(x)    ((*(int *)((unsigned int)x - 4) & 0x10000000) != 0)
+#define DRAM_IS_PATCHED(x)    ((*(int *)((u32)x - 4) & 0x10000000) != 0)
 
 struct VramHeader
 {
@@ -118,10 +118,10 @@ struct VramHeader
 	RECT rect;
 
 	// 0x14
-	// u_char pixels[0];
+	// u8 pixels[0];
 };
 
-#define VRAMHEADER_GETPIXLES(x) (uint32_t *)((unsigned int)x + sizeof(struct VramHeader))
+#define VRAMHEADER_GETPIXLES(x) (u32 *)((u32)x + sizeof(struct VramHeader))
 
 enum LevVramIndex
 {
@@ -174,19 +174,19 @@ struct LoadQueueSlot
 	struct BigHeader *ptrBigfileCdPos_UNUSED;
 
 	// 0x4
-	unsigned short flags;
+	u16 flags;
 
 	// 0x6
-	unsigned short type_UNUSED;
+	u16 type_UNUSED;
 
 	// 0x8
-	unsigned int subfileIndex;
+	u32 subfileIndex;
 
 	// 0xC
 	void *ptrDestination;
 
 	// 0x10
-	unsigned int size_UNUSED;
+	u32 size_UNUSED;
 
 	// 0x14
 	void (*callbackFuncPtr)(struct LoadQueueSlot *);

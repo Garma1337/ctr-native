@@ -3,49 +3,49 @@ struct CsThreadInitData
 {
 	// podium position
 	// X Y Z and ?
-	short podiumPos[4];
+	s16 podiumPos[4];
 
 	// character position
 	// X Y Z and ?
-	short characterPos[4];
+	s16 characterPos[4];
 
 	// rotation (for both)
 	// X Y Z and ?
-	short rot[4];
+	s16 rot[4];
 
 	// matrix
-	u_int local_30;
-	u_int local_2c;
-	u_int local_28;
-	u_int local_24;
-	u_int local_20;
+	u32 local_30;
+	u32 local_2c;
+	u32 local_28;
+	u32 local_24;
+	u32 local_20;
 };
 
 struct Prize
 {
 	// 0x0
-	short posStart[4];
+	s16 posStart[4];
 
 	// 0x8
-	short rot[4];
+	s16 rot[4];
 
 	// 0x10
-	short posEnd[4];
+	s16 posEnd[4];
 
 	// 0x18
-	short unk[4];
+	s16 unk[4];
 
 	// 0x20
-	short vel[3];
+	s16 vel[3];
 
 	// 0x26
-	short frameMax; // set in ThTick1
+	s16 frameMax; // set in ThTick1
 
 	// 0x28
-	short frameMax2;
+	s16 frameMax2;
 
 	// 0x2a
-	short frameCurr;
+	s16 frameCurr;
 
 	// 0x2c -- size of struct
 };
@@ -60,20 +60,20 @@ struct unknown233
 union CsOpcodeArg
 {
 	int i;
-	u_int u;
+	u32 u;
 	char *ptr;
 };
 
 struct CsOpcodeMeta
 {
-	short opcode;
-	short animIndex;
-	short frameStart;
-	short frameEnd;
+	s16 opcode;
+	s16 animIndex;
+	s16 frameStart;
+	s16 frameEnd;
 	union CsOpcodeArg arg0; // shorts 4/5
 	union CsOpcodeArg arg1; // shorts 6/7
-	short rotStart;
-	short rotEnd;
+	s16 rotStart;
+	s16 rotEnd;
 };
 
 struct CutsceneObj
@@ -81,9 +81,9 @@ struct CutsceneObj
 	// 0x0
 	struct IconGroup *ptrIcons;
 	// 0x4
-	short unk4;
+	s16 unk4;
 	// 0x6
-	short unk6;
+	s16 unk6;
 
 	/* 0x8
 	jittery number? color?
@@ -91,50 +91,50 @@ struct CutsceneObj
 	int unk8;
 
 	// 0xC
-	short unk_C;
+	s16 unk_C;
 	// 0xE
-	short unk_E;
+	s16 unk_E;
 
 	// 0x10
 	int *metadata;
 
 	// 0x14
-	short unk14;
+	s16 unk14;
 
 	// 0x16
 	// determines time or frame animation
-	unsigned short flags;
+	u16 flags;
 
 	int unk18;
 
-	short unk1c;
-	short unk1e;
-	short unk20;
-	short unk22;
-	short unk24;
-	short unk26;
-	u_short unk28;
+	s16 unk1c;
+	s16 unk1e;
+	s16 unk20;
+	s16 unk22;
+	s16 unk24;
+	s16 unk26;
+	u16 unk28;
 
 	// 0x2a
-	short scaleSpeed;
+	s16 scaleSpeed;
 	// 0x2c
-	short desiredScale;
+	s16 desiredScale;
 
 	struct
 	{
 		// 0x2e
-		short textPos[2];
+		s16 textPos[2];
 
 		// 0x32
 		// index to subtitle text in LNG
 		// -1 to disable
-		short lngIndex;
+		s16 lngIndex;
 
 		// 0x34
-		short font;
+		s16 font;
 
 		// 0x36
-		short colors;
+		s16 colors;
 
 	} Subtitles;
 
@@ -151,7 +151,7 @@ struct CutsceneObj
 	// 0x46
 	char unk46;
 	// 0x47
-	u_char animIndex;
+	u8 animIndex;
 
 	// 0x48
 	int *frameOverrideRoot;
@@ -214,12 +214,12 @@ struct BossCutsceneData
 	int opcode;
 
 	// 0x14
-	short camPos[4];
-	short camRot[4];
+	s16 camPos[4];
+	s16 camRot[4];
 
 	// 0x24
-	short bossPos[4];
-	short bossRot[4];
+	s16 bossPos[4];
+	s16 bossRot[4];
 
 	// 0x34
 };
@@ -394,7 +394,7 @@ extern struct
 	RECT introClearBoxRect;
 
 	// 800b7480
-	short creditsDancerRotOffset[4];
+	s16 creditsDancerRotOffset[4];
 
 
 	// 800B7488
@@ -405,13 +405,13 @@ extern struct
 	// 800b7764
 	int PodiumInitUnk2;
 	// 800b7768
-	short FXVolumeBackup;
+	s16 FXVolumeBackup;
 	// 800b776a
-	short MusicVolumeBackup;
+	s16 MusicVolumeBackup;
 	// 800b776c
-	short VoiceVolumeBackup;
+	s16 VoiceVolumeBackup;
 
-	short volumeunknown;
+	s16 volumeunknown;
 
 	// 800b7770
 	int PodiumInitUnk3;
@@ -504,19 +504,19 @@ struct OVR233_Garage
 	int fovMax;
 
 	// 800b85d8
-	short unusedArr_garageChars[8];
+	s16 unusedArr_garageChars[8];
 
 	// 800b85e8
-	short barLen[3];
+	s16 barLen[3];
 
 	// 800b85ee
-	short unusedFrameCount;
+	s16 unusedFrameCount;
 
 	// 800b85f0
-	short unusedArr_lngIndex[4];
+	s16 unusedArr_lngIndex[4];
 
 	// 800b85f8
-	short barStat[3 * 4];
+	s16 barStat[3 * 4];
 
 	// 800b8610
 	int unusedArr_Colors[3];
@@ -525,20 +525,20 @@ struct OVR233_Garage
 	int barColors[7];
 
 	// 800b8638
-	short numFramesCurr_GarageMove;
+	s16 numFramesCurr_GarageMove;
 
 	// 800b863a
-	short numFramesCurr_ZoomIn;
+	s16 numFramesCurr_ZoomIn;
 
 	// 800b863c
-	short numFramesCurr_ZoomOut;
+	s16 numFramesCurr_ZoomOut;
 
 	// 800b863e
-	short delayOneSecond;
+	s16 delayOneSecond;
 
 	// 800b8640
-	short boolSelected;
-	short padding2;
+	s16 boolSelected;
+	s16 padding2;
 
 	// === End of Garage Data ===
 	// Credits RDATA starts next byte
@@ -586,13 +586,13 @@ extern struct OVR233_Garage gGarage;
 struct CreditsLevHeader
 {
 	int size;
-	short numStrings;
-	short unused_06;
+	s16 numStrings;
+	s16 unused_06;
 
 	// char* ptrStrings[0];
 };
 
-#define CREDITSHEADER_GETSTRINGS(x) ((unsigned int)x + sizeof(struct CreditsLevHeader))
+#define CREDITSHEADER_GETSTRINGS(x) ((u32)x + sizeof(struct CreditsLevHeader))
 
 #ifndef REBUILD_PC
 _Static_assert(OFFSETOF(struct CreditsLevHeader, numStrings) == 0x4);
@@ -620,10 +620,10 @@ struct CreditsObj
 	} data_0x18_0x5[5];
 
 	// 800b97dc (320)
-	short countdown;
+	s16 countdown;
 
 	// 800b97de (322)
-	short unused_322;
+	s16 unused_322;
 
 	// 800b97e0 (324)
 	int unk;
@@ -632,10 +632,10 @@ struct CreditsObj
 	struct Instance *creditDanceInst; // base for copies
 
 	// 800b97e8 (32c)
-	short credits_posY;
+	s16 credits_posY;
 
 	// 800b97ea (32e)
-	short unused_32e;
+	s16 unused_32e;
 
 	// 800b97ec (330)
 	char *credits_topString;
@@ -647,10 +647,10 @@ struct CreditsObj
 	char *epilogue_nextString;
 
 	// 800b97f8 (33c)
-	short epilogueCount200;
+	s16 epilogueCount200;
 
 	// 800b97fa (33e)
-	short epiloguePosX; // unused
+	s16 epiloguePosX; // unused
 };
 
 #ifndef REBUILD_PC
@@ -663,10 +663,10 @@ _Static_assert(sizeof(struct CreditsObj) == 0x340);
 struct Ovr233_Credits_BSS
 {
 	// 800b9488
-	short creditGhost_Pos[4];
+	s16 creditGhost_Pos[4];
 
 	// 800b9490
-	short unused_Pos[4];
+	s16 unused_Pos[4];
 
 	// 800b9498
 	int creditText_PosX;
@@ -681,19 +681,19 @@ struct Ovr233_Credits_BSS
 	struct Instance *dancerInst_invisible;
 
 	// 800b94a8
-	short numStrings;
+	s16 numStrings;
 
 	// 800b94aa
-	short unused_94aa;
+	s16 unused_94aa;
 
 	// 800b94ac
 	char **ptrStrings;
 
 	// 800b94b0
-	short boolAllBlue;
+	s16 boolAllBlue;
 
 	// 800b94b2
-	short unused_94b2;
+	s16 unused_94b2;
 
 	// 800b94b4
 	int unused[2];

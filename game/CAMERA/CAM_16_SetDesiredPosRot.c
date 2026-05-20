@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_CAM_SetDesiredPosRot(struct CameraDC *cDC, short *pos, short *rot)
+void DECOMP_CAM_SetDesiredPosRot(struct CameraDC *cDC, s16 *pos, s16 *rot)
 {
 	int i;
 

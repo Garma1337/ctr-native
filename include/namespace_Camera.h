@@ -4,30 +4,30 @@ struct ZoomData
 	// [speedMin, speedMax] to [distMin, distMax]
 
 	// 0x0
-	short distMin;
-	short distMax;
+	s16 distMin;
+	s16 distMax;
 
 	// 0x4
-	short speedMin;
-	short speedMax;
+	s16 speedMin;
+	s16 speedMax;
 
 	// 0x8
-	unsigned char percentage1;
-	unsigned char percentage2;
+	u8 percentage1;
+	u8 percentage2;
 
 	// 0xA
-	short angle[3];
+	s16 angle[3];
 
 	// 0x10
-	short vertDistance;
+	s16 vertDistance;
 };
 
 struct FlyInData
 {
 	int ptrEnd;
 	int ptrStart;
-	short frameCount1;
-	short frameCount2;
+	s16 frameCount1;
+	s16 frameCount2;
 };
 
 struct CameraDC
@@ -38,26 +38,26 @@ struct CameraDC
 	// 0x4
 	// action,
 	// 0x20000 constantly swaps L2 zoom
-	unsigned int action;
+	u32 action;
 
 	// 0x08
 	// camera mode, zoom out and such
-	unsigned short mode;
+	u16 mode;
 
 	// 0x0A
-	unsigned short nearOrFar;
+	u16 nearOrFar;
 
 	// 0xC
-	unsigned int unk0xC;
+	u32 unk0xC;
 
 	// 0x10
 	// desired rotation
-	short desiredRot[4];
+	s16 desiredRot[4];
 
 	// 0x18
-	short unk18;
+	s16 unk18;
 	// 0x1a
-	short unk1A;
+	s16 unk1A;
 
 	// 0x1c - ptrQuadBlock
 	// similar to driver +a0,
@@ -124,18 +124,18 @@ struct CameraDC
 	// & 0x1000 - arcade end-of-race (active)
 	// & 0x8000 - frozen camera (disables thread, for character select)
 	// & 0x10000 - reverse camera
-	unsigned int flags;
+	u32 flags;
 
 	// 0x74 (cam->0x9a is 8 or 0xe)
-	short driverOffset_CamEyePos[3];
-	short unk7A;
+	s16 driverOffset_CamEyePos[3];
+	s16 unk7A;
 
 	// 0x7c (cam->0x9a is 8 or 0xe)
-	short driverOffset_CamLookAtPos[3];
-	short unk82;
+	s16 driverOffset_CamLookAtPos[3];
+	s16 unk82;
 
 	// 0x84
-	unsigned int driver5B0_prevFrame;
+	u32 driver5B0_prevFrame;
 
 	// 0x88 - used in CAM_FollowDriver_TrackPath
 	void *unk88;
@@ -143,33 +143,33 @@ struct CameraDC
 	// 0x8C - Interpolate from fly-in
 	// camera to driver, 0x0000 is fly-in,
 	// 0x1000 is driver, and between is interpolation
-	short unk8C;
+	s16 unk8C;
 
 	// 0x8E - timer for fly-in camera
 	// animation at beginning of 1P Arcade,
 	// search "+ 0x1526" for more details
-	short unk8E;
+	s16 unk8E;
 
 	// 0x90 - used in Spin360
-	short unk90;
+	s16 unk90;
 
 	// zoom variable
-	short unk92;
+	s16 unk92;
 
 	// 0x94
 	int unk94;
 
 	// 0x98
-	short unk98;
+	s16 unk98;
 
 	// 0x9a - semi-unused camera mode swap
-	short cameraMode; // Curr
+	s16 cameraMode; // Curr
 
 	// 0x9C
-	short cameraModePrev; // previous frame
+	s16 cameraModePrev; // previous frame
 
 	// 0x9e - frame counter for transition
-	short frameCounterTransition;
+	s16 frameCounterTransition;
 
 	// 0xa0
 	void *currEOR;
@@ -181,8 +181,8 @@ struct CameraDC
 	// Spin360 uses 0xa4 for spin speed
 	struct
 	{
-		short pos[3];
-		short rot[3];
+		s16 pos[3];
+		s16 rot[3];
 	} transitionTo;
 
 	// 0xb0 - next byte
@@ -204,13 +204,13 @@ struct CameraDC
 	// 0xc2 - frameCountdown
 
 	// 0xc4
-	short framesZoomingOut;
+	s16 framesZoomingOut;
 
 // Sep3
 #if BUILD < UsaRetail
 
 	// 0xc6
-	short paddingC6;
+	s16 paddingC6;
 
 #else // >= UsaRetail
 
@@ -220,19 +220,19 @@ struct CameraDC
 	struct
 	{
 		// 0xC6
-		short boolLerpPending;
+		s16 boolLerpPending;
 
 		// 0xc8
-		short unkOffset[2];
+		s16 unkOffset[2];
 
 		// 0xcc
-		short desiredRot[4];
+		s16 desiredRot[4];
 
 		// 0xd4
-		short desiredPos[3];
+		s16 desiredPos[3];
 
 		// 0xda
-		short framesRemaining;
+		s16 framesRemaining;
 
 	} BlastedLerp;
 

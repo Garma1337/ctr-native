@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_MM_HighScore_Text3D(char *string, int posX, int posY, short font, u_int flags)
+void DECOMP_MM_HighScore_Text3D(char *string, int posX, int posY, s16 font, u32 flags)
 {
 	// draw a string
 	DECOMP_DecalFont_DrawLine(string, posX, posY, font, flags);

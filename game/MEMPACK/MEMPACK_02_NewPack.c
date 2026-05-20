@@ -8,7 +8,7 @@ void DECOMP_MEMPACK_NewPack(void *start, int size)
 	ptrMempack->start = start;
 	ptrMempack->firstFreeByte = start;
 
-	void *end = (void *)((u_int)start + size);
+	void *end = (void *)((u32)start + size);
 	ptrMempack->lastFreeByte = end;
 	ptrMempack->endOfAllocator = end;
 

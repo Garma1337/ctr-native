@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_SetReverbMode(u_short newReverbMode)
+void DECOMP_SetReverbMode(u16 newReverbMode)
 {
 	if (newReverbMode < 5)
 	{

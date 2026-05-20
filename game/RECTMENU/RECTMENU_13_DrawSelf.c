@@ -1,32 +1,32 @@
 #include <common.h>
 
-void DECOMP_RECTMENU_DrawSelf(struct RectMenu *menu, int posX, short posY, short menuWidth)
+void DECOMP_RECTMENU_DrawSelf(struct RectMenu *menu, int posX, s16 posY, s16 menuWidth)
 {
-	u_short textFlags;
-	u_int state;
+	u16 textFlags;
+	u32 state;
 	int index;
 	char *titleString;
-	short offsetX;
-	short sVar4;
+	s16 offsetX;
+	s16 sVar4;
 	Color *rgb;
-	u_short uVar5;
+	u16 uVar5;
 	struct MenuRow *row;
-	short sVar6;
-	short sVar7;
-	u_short uVar8;
+	s16 sVar6;
+	s16 sVar7;
+	u16 uVar8;
 	RECT background;
 	RECT borders;
-	short local_60;
-	short menuHeight;
-	short offsetY;
-	short local_50;
-	short local_48;
-	short local_40;
-	short local_38;
+	s16 local_60;
+	s16 menuHeight;
+	s16 offsetY;
+	s16 local_50;
+	s16 local_48;
+	s16 local_40;
+	s16 local_38;
 	int local_30;
 	int local_2c;
-	short posX_prev;
-	short posY_prev;
+	s16 posX_prev;
+	s16 posY_prev;
 	struct GameTracker *gGT = sdata->gGT;
 
 	uVar8 = 0;
@@ -80,11 +80,11 @@ LAB_80045e94:
 	{
 		menuHeight = 0;
 		DECOMP_RECTMENU_GetHeight(menu, &menuHeight, 1);
-		local_38 = (short)(-menuHeight / 2);
+		local_38 = (s16)(-menuHeight / 2);
 	}
 	if ((state & 1) != 0)
 	{
-		local_40 = (short)(-menuWidth / 2);
+		local_40 = (s16)(-menuWidth / 2);
 	}
 	sVar6 = 0;
 	row = &menu->rows[0];
@@ -99,7 +99,7 @@ LAB_80045e94:
 		}
 		if ((state & 0x200) == 0)
 		{
-			offsetX = (short)(posX + menu->posX_prev);
+			offsetX = (s16)(posX + menu->posX_prev);
 			uVar5 = uVar8;
 			if ((state & 1) != 0)
 			{
@@ -111,7 +111,7 @@ LAB_80045e94:
 		{
 			uVar5 = uVar8 | 0x8000;
 			titleString = sdata->lngStrings[index];
-			offsetX = (short)(posX + menu->posX_prev + (menuWidth / 2));
+			offsetX = (s16)(posX + menu->posX_prev + (menuWidth / 2));
 		}
 		DECOMP_DecalFont_DrawLine(titleString, offsetX, posY_prev, sVar4, uVar5);
 		posY_prev = local_48 + posY_prev + 6;
@@ -136,7 +136,7 @@ LAB_80045e94:
 				{
 					if ((state & 0x200) == 0)
 					{
-						sVar4 = (short)(posX + menu->posX_prev + 1);
+						sVar4 = (s16)(posX + menu->posX_prev + 1);
 						if ((state & 1) != 0)
 						{
 							textFlags |= 0x8000;
@@ -148,7 +148,7 @@ LAB_80045e94:
 					{
 						textFlags |= 0x8000;
 						titleString = sdata->lngStrings[uVar5 & 0x7fff];
-						sVar4 = (short)(posX + menu->posX_prev + local_30);
+						sVar4 = (s16)(posX + menu->posX_prev + local_30);
 						index = posX_prev;
 					}
 					DECOMP_DecalFont_DrawLine(titleString, sVar4, posY_prev, index, textFlags);
@@ -201,7 +201,7 @@ LAB_80045e94:
 	posY_prev = menu->posY_prev;
 	if ((menu->state & 4) == 0)
 	{
-		borders.h = (local_60 + 8) - (*(unsigned char *)&menu->state >> 7);
+		borders.h = (local_60 + 8) - (*(u8 *)&menu->state >> 7);
 	}
 	else
 	{

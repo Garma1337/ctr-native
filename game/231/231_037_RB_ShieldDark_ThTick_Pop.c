@@ -6,7 +6,7 @@ void DECOMP_RB_ShieldDark_ThTick_Pop(struct Thread *t)
 	struct Instance *instDark;
 	struct Instance *instColor;
 	struct Driver *driverOwner;
-	short rot[3];
+	s16 rot[3];
 
 	sh = t->object;
 	instDark = t->inst;
@@ -37,7 +37,7 @@ void DECOMP_RB_ShieldDark_ThTick_Pop(struct Thread *t)
 
 	if (animFrame < 0xb)
 	{
-		short *animSeq = (short *)0x800b2d14;
+		s16 *animSeq = (s16 *)0x800b2d14;
 
 		// set scale
 		instDark->scale[0] = animSeq[animFrame * 2 + 0];

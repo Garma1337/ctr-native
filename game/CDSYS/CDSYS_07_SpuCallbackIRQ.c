@@ -36,7 +36,7 @@ half.
 			sdata->XA_boolFinished = 1;
 		}
 
-		SpuSetCommonCDVolume((short)sdata->XA_VolumeBitshift, (short)sdata->XA_VolumeBitshift);
+		SpuSetCommonCDVolume((s16)sdata->XA_VolumeBitshift, (s16)sdata->XA_VolumeBitshift);
 	}
 
 	// really? ND bug? or variable reuse?

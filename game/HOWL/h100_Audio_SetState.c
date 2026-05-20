@@ -1,14 +1,14 @@
 #include <common.h>
 
-void DECOMP_Audio_SetState(u_int state)
+void DECOMP_Audio_SetState(u32 state)
 {
-	u_char XA_type;
-	u_char XA_index;
+	u8 XA_type;
+	u8 XA_index;
 
 	int iVar1;
 
 	struct GameTracker *gGT = sdata->gGT;
-	u_short level;
+	u16 level;
 
 	XA_type = CDSYS_XA_TYPE_MUSIC;
 

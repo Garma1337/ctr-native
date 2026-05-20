@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_Bank_ClearInRange(unsigned short min, unsigned short max)
+void DECOMP_Bank_ClearInRange(u16 min, u16 max)
 {
 	int i;
 	struct SpuAddrEntry *sae;

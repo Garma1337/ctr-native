@@ -20,7 +20,7 @@ void CS_Credits_DrawNames(struct CreditsObj *co)
 
 	while (posY < 0x114)
 	{
-		unsigned short textFlags = 0;
+		u16 textFlags = 0;
 
 		if (*str == '~')
 		{
@@ -28,8 +28,8 @@ void CS_Credits_DrawNames(struct CreditsObj *co)
 
 			do
 			{
-				int digit1 = (unsigned char)p[-1] - 0x30;
-				int digit2 = (unsigned char)p[0];
+				int digit1 = (u8)p[-1] - 0x30;
+				int digit2 = (u8)p[0];
 				p += 3;
 				int value = digit2 + digit1 * 10 - 0x30;
 				str += 3;
@@ -50,12 +50,12 @@ void CS_Credits_DrawNames(struct CreditsObj *co)
 		}
 
 		char *nextStr = CS_Credits_GetNextString(str);
-		short strLen;
+		s16 strLen;
 
 		if (nextStr == 0)
 			strLen = strlen(str);
 		else
-			strLen = (short)(nextStr - str) - 1;
+			strLen = (s16)(nextStr - str) - 1;
 
 		int clampedY = posY;
 		int fadeAmount = 20;
@@ -87,16 +87,16 @@ void CS_Credits_DrawNames(struct CreditsObj *co)
 				for (int i = 0; i < 4; i++)
 				{
 					int stride = i * 4;
-					dst[stride + 0] = (char)((unsigned char)src[stride + 0] * fade8 >> 8);
-					dst[stride + 1] = (char)((unsigned char)src[stride + 1] * fade8 >> 8);
-					dst[stride + 2] = (char)((unsigned char)src[stride + 2] * fade8 >> 8);
+					dst[stride + 0] = (char)((u8)src[stride + 0] * fade8 >> 8);
+					dst[stride + 1] = (char)((u8)src[stride + 1] * fade8 >> 8);
+					dst[stride + 2] = (char)((u8)src[stride + 2] * fade8 >> 8);
 				}
 			}
 		}
 
 		if (colorSlot >= 0)
 		{
-			DECOMP_DecalFont_DrawLineStrlen((unsigned char *)str, strLen, creditsBSS.creditText_PosX, posY, 3, colorSlot | textFlags);
+			DECOMP_DecalFont_DrawLineStrlen((u8 *)str, strLen, creditsBSS.creditText_PosX, posY, 3, colorSlot | textFlags);
 		}
 
 		posY += 20;

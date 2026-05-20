@@ -4,16 +4,16 @@ void StateZero();
 
 // #define FastBoot
 
-u_int DECOMP_main()
+u32 DECOMP_main()
 {
-	u_int AddBitsConfig0;
-	u_int RemBitsConfig0;
-	u_int AddBitsConfig8;
-	u_int RemBitsConfig8;
+	u32 AddBitsConfig0;
+	u32 RemBitsConfig0;
+	u32 AddBitsConfig8;
+	u32 RemBitsConfig8;
 	int iVar8;
-	u_int gameMode1;
-	u_int gameMode2;
-	u_int uVar12;
+	u32 gameMode1;
+	u32 gameMode2;
+	u32 uVar12;
 
 	struct GameTracker *gGT;
 	gGT = sdata->gGT;
@@ -466,7 +466,7 @@ __attribute__((optimize("O0"))) int GetSongTime()
 // overwritten dynamically (oxide fix)
 void StateZero()
 {
-	u_short *clockEffect;
+	u16 *clockEffect;
 	int vramSize;
 
 	struct GameTracker *gGT;
@@ -537,7 +537,7 @@ void StateZero()
 	gGT->battleSetup.enabledWeapons |= 0x34de;
 	gGT->numPlyrCurrGame = 1;
 	gGT->numPlyrNextGame = 1;
-	*(u_int *)&gGT->battleSetup.teamOfEachPlayer = 0x3020100;
+	*(u32 *)&gGT->battleSetup.teamOfEachPlayer = 0x3020100;
 
 	// traffic light countdown timer, set to negative one second
 	gGT->trafficLightsTimer = 0xfffffc40;
@@ -569,7 +569,7 @@ void StateZero()
 	// Dont load full overlay file, cut off the end
 	struct BigEntry *firstEntry = BIG_GETENTRY(sdata->ptrBigfile1);
 	firstEntry[231].size = 28 * 0x800;
-	// firstEntry[231].size = (u_int)RB_NewEndFile - (u_int)OVR_Region3;
+	// firstEntry[231].size = (u32)RB_NewEndFile - (u32)OVR_Region3;
 	// printf("Size: %08x\n", firstEntry[231].size);
 
 	// Cut off Region1 overlays at 2 sectors (not 3),

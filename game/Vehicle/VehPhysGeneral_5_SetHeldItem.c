@@ -23,7 +23,7 @@ extern char numWeapons[7];
 // https://discord.com/channels/330945093416779787/550106151887568906/734368526294450267
 void DECOMP_VehPhysGeneral_SetHeldItem(struct Driver *driver)
 {
-	u_int rng;
+	u32 rng;
 	int itemSet;
 	char item;
 	char bossFails;
@@ -192,14 +192,14 @@ void DECOMP_VehPhysGeneral_SetHeldItem(struct Driver *driver)
 		if (bossFails < 0x3)
 		{
 			// Replace Clock, Mask,  with 3 Missiles
-			if ((u_int)driver->heldItemID - 0x7 < 0x3)
+			if ((u32)driver->heldItemID - 0x7 < 0x3)
 				driver->heldItemID = 0xb;
 		}
 
 		else if (bossFails < 0x4)
 		{
 			// Replace Clock, Mask with 3 Missiles
-			if ((u_int)driver->heldItemID - 0x7 < 0x2)
+			if ((u32)driver->heldItemID - 0x7 < 0x2)
 				driver->heldItemID = 0xb;
 		}
 
@@ -255,7 +255,7 @@ void DECOMP_VehPhysGeneral_SetHeldItem(struct Driver *driver)
 	}
 
 	// Set number of held items
-	if ((u_int)driver->heldItemID - 0xA < 0x2)
+	if ((u32)driver->heldItemID - 0xA < 0x2)
 		driver->numHeldItems = 0x3;
 
 	return;

@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_CAM_FindClosestQuadblock(short *scratchpad, struct CameraDC *cDC, struct Driver *d, short *pos)
+void DECOMP_CAM_FindClosestQuadblock(s16 *scratchpad, struct CameraDC *cDC, struct Driver *d, s16 *pos)
 {
 	struct QuadBlock *quad = d->underDriver;
 	if (quad == NULL)

@@ -1,45 +1,45 @@
 #include <common.h>
 
 // To do: add a header
-void DECOMP_AA_EndEvent_DisplayTimeAA_EndEvent_DisplayTime(u_short, short);
+void DECOMP_AA_EndEvent_DisplayTimeAA_EndEvent_DisplayTime(u16, s16);
 
 void DECOMP_UI_RenderFrame_Racing()
 {
-	short sVar1;
-	short sVar2;
-	u_char bVar3;
+	s16 sVar1;
+	s16 sVar2;
+	u8 bVar3;
 	int partTimeVariable1;
 	int *ptrColor;
-	u_char *pbVar6;
+	u8 *pbVar6;
 	int i;
 	struct PushBuffer *pb;
-	u_int partTimeVariable5;
+	u32 partTimeVariable5;
 	struct Icon *iconPtr;
 	u_long *primMemCurr;
 	char *fmt;
 	int partTimeVariable3;
 	POLY_G4 *TurboCounterBar;
-	short sVar17;
-	u_int local_7c;
-	u_int local_78;
-	u_int local_70;
+	s16 sVar17;
+	u32 local_7c;
+	u32 local_78;
+	u32 local_70;
 	struct Driver *playerStruct;
 	struct UiElement2D *hudStructPtr;
 	void *levPtrMap;
 	char cVar22;
-	short wumpaModel_Pos[2];
-	short LetterCTR_Pos[2];
+	s16 wumpaModel_Pos[2];
+	s16 LetterCTR_Pos[2];
 	char string[8];
-	short turboCount_Pos[2];
-	u_short local_30[2];
+	s16 turboCount_Pos[2];
+	u16 local_30[2];
 	struct Thread *playerThread;
 	u_long *ptrOT;
 	struct DB *backBuffer;
 	struct Thread *turboThread;
 	struct Turbo *turboThreadObject;
 	int offset;
-	u_int mapPosX;
-	u_int mapPosY;
+	u32 mapPosX;
+	u32 mapPosY;
 
 	offset = 0;
 
@@ -71,8 +71,8 @@ void DECOMP_UI_RenderFrame_Racing()
 
 			pbVar6 = &sdata->kartSpawnOrderArray[i];
 
-			data.rankIconsCurr[i] = (u_short)*pbVar6;
-			data.rankIconsDesired[i] = (u_short)*pbVar6;
+			data.rankIconsCurr[i] = (u16)*pbVar6;
+			data.rankIconsDesired[i] = (u16)*pbVar6;
 		}
 	}
 
@@ -161,7 +161,7 @@ void DECOMP_UI_RenderFrame_Racing()
 				{
 					pb = &gGT->pushBuffer[playerStruct->driverID];
 
-					// if "Time on clock" last 0xXX u_char is greater than 0x80 and less than 0xFF
+					// if "Time on clock" last 0xXX u8 is greater than 0x80 and less than 0xFF
 					if ((gGT->elapsedEventTime & 0x80) != 0)
 					{
 						DECOMP_DecalFont_DrawLine(
@@ -177,7 +177,7 @@ void DECOMP_UI_RenderFrame_Racing()
 						    FONT_BIG, (JUSTIFY_CENTER | ORANGE));
 					}
 
-					// The text will not show if the last u_char is more than 0x00 and less than 0x7F.
+					// The text will not show if the last u8 is more than 0x00 and less than 0x7F.
 					// This is what makes the text flicker, rather than drawing solid
 
 					cVar22 = '\x01';
@@ -309,7 +309,7 @@ void DECOMP_UI_RenderFrame_Racing()
 					}
 
 					// make visible
-					*(u_int *)&curr->flags &= 0xffffff7f;
+					*(u32 *)&curr->flags &= 0xffffff7f;
 
 					// reduce frame counter
 					playerStruct->PickupLetterHUD.cooldown--;
@@ -411,7 +411,7 @@ void DECOMP_UI_RenderFrame_Racing()
 				// if racer hasn't finished the race
 				if ((playerStruct->actionsFlagSet & 0x2000000) == 0)
 				{
-					DECOMP_UI_DrawLapCount(hudStructPtr[1].x, hudStructPtr[1].y, (u_int)hudStructPtr[1].scale, playerStruct);
+					DECOMP_UI_DrawLapCount(hudStructPtr[1].x, hudStructPtr[1].y, (u32)hudStructPtr[1].scale, playerStruct);
 				}
 			}
 
@@ -431,7 +431,7 @@ void DECOMP_UI_RenderFrame_Racing()
 			    // racer finished the race
 			    ((playerStruct->actionsFlagSet & 0x2000000) != 0))
 			{
-				DECOMP_AA_EndEvent_DisplayTime((u_int)playerStruct->driverID, 0);
+				DECOMP_AA_EndEvent_DisplayTime((u32)playerStruct->driverID, 0);
 			}
 #endif
 
@@ -462,13 +462,13 @@ void DECOMP_UI_RenderFrame_Racing()
 						goto LAB_80053af4;
 
 					bVar3 = (gGT->timer & 1) == 0;
-					sVar17 = (u_short)bVar3 << 2;
-					partTimeVariable5 = ((u_int)bVar3 << 0x12) >> 0x10;
+					sVar17 = (u16)bVar3 << 2;
+					partTimeVariable5 = ((u32)bVar3 << 0x12) >> 0x10;
 				}
 
 				sVar1 = hudStructPtr[5].x;
 				sVar2 = hudStructPtr[5].y;
-				DECOMP_UI_DrawPosSuffix(sVar1, sVar2, playerStruct, (short)partTimeVariable5);
+				DECOMP_UI_DrawPosSuffix(sVar1, sVar2, playerStruct, (s16)partTimeVariable5);
 
 				if (numPlyr > 2)
 				{
@@ -499,10 +499,10 @@ void DECOMP_UI_RenderFrame_Racing()
 			// If you're in end-of-race and Battle
 			else if ((partTimeVariable5 & 0x200020) == 0x200020)
 			{
-				partTimeVariable5 = (u_int)((gGT->timer & 1) == 0);
+				partTimeVariable5 = (u32)((gGT->timer & 1) == 0);
 
 				// Draw the "st", "nd", "rd" suffix after "1st, 2nd, 3rd, etc"
-				DECOMP_UI_DrawPosSuffix(hudStructPtr[5].x, hudStructPtr[5].y, playerStruct, (short)(partTimeVariable5 << 2));
+				DECOMP_UI_DrawPosSuffix(hudStructPtr[5].x, hudStructPtr[5].y, playerStruct, (s16)(partTimeVariable5 << 2));
 
 				// Get Color Data
 				ptrColor = data.ptrColor[partTimeVariable5];
@@ -682,7 +682,7 @@ void DECOMP_UI_RenderFrame_Racing()
 				else
 				{
 					// 8d544
-					// "999" <-- ascii string, not 2-u_char value
+					// "999" <-- ascii string, not 2-u8 value
 
 					// Cap the on-screen counter at 999
 					sprintf((char *)&string[0], &sdata->s_999[0]);
@@ -692,12 +692,12 @@ void DECOMP_UI_RenderFrame_Racing()
 				i = DECOMP_DecalFont_GetLineWidth(sdata->lngStrings[0x24B], 1);
 
 				// Draw the string
-				DECOMP_DecalFont_DrawLine((char *)&string[0], (int)(((u_int)turboCount_Pos[0] - i) * 0x10000) >> 0x10, (int)turboCount_Pos[1], FONT_BIG,
+				DECOMP_DecalFont_DrawLine((char *)&string[0], (int)(((u32)turboCount_Pos[0] - i) * 0x10000) >> 0x10, (int)turboCount_Pos[1], FONT_BIG,
 				                          (JUSTIFY_RIGHT | ORANGE_RED));
 
 
 				// Draw the string
-				DECOMP_DecalFont_DrawLine(sdata->lngStrings[0x24B], (int)(short)turboCount_Pos[0], (int)turboCount_Pos[1], FONT_BIG, (JUSTIFY_RIGHT | ORANGE));
+				DECOMP_DecalFont_DrawLine(sdata->lngStrings[0x24B], (int)(s16)turboCount_Pos[0], (int)turboCount_Pos[1], FONT_BIG, (JUSTIFY_RIGHT | ORANGE));
 
 				backBuffer = gGT->backBuffer;
 				primMemCurr = backBuffer->primMem.curr;
@@ -714,10 +714,10 @@ void DECOMP_UI_RenderFrame_Racing()
 					return;
 				}
 
-				*(u_int *)&TurboCounterBar->r0 = 0x3800c8ff;
-				*(u_int *)&TurboCounterBar->r1 = 0x3800c8ff;
-				*(u_int *)&TurboCounterBar->r2 = 0x380000ff;
-				*(u_int *)&TurboCounterBar->r3 = 0x380000ff;
+				*(u32 *)&TurboCounterBar->r0 = 0x3800c8ff;
+				*(u32 *)&TurboCounterBar->r1 = 0x3800c8ff;
+				*(u32 *)&TurboCounterBar->r2 = 0x380000ff;
+				*(u32 *)&TurboCounterBar->r3 = 0x380000ff;
 				TurboCounterBar->x0 = turboCount_Pos[0] - 0xaa;
 				TurboCounterBar->y0 = turboCount_Pos[1] + 9;
 				TurboCounterBar->x1 = turboCount_Pos[0] + 0x32;
@@ -731,7 +731,7 @@ void DECOMP_UI_RenderFrame_Racing()
 				primMemCurr = gGT->pushBuffer_UI.ptrOT;
 
 				*(int *)TurboCounterBar = *primMemCurr | 0x8000000;
-				*primMemCurr = (u_int)TurboCounterBar & 0xffffff;
+				*primMemCurr = (u32)TurboCounterBar & 0xffffff;
 			}
 		}
 	}

@@ -3,7 +3,7 @@
 void DECOMP_DropRain_MakeSound(struct GameTracker *gGT)
 {
 	int i, lev;
-	unsigned int rained;
+	u32 rained;
 
 	rained = 0;
 	lev = gGT->levelID;

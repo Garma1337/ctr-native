@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_RECTMENU_DrawRwdTriangle(short *position, char *color, u_long *otMem, struct PrimMem *primMem)
+void DECOMP_RECTMENU_DrawRwdTriangle(s16 *position, char *color, u_long *otMem, struct PrimMem *primMem)
 {
 	POLY_G4 *p;
 	void *primmemCurr;
@@ -23,10 +23,10 @@ void DECOMP_RECTMENU_DrawRwdTriangle(short *position, char *color, u_long *otMem
 		*(int *)&p->r3 = *(int *)&color[0x8];
 
 		// rest of the primitive (four xy)
-		short x0 = position[0];
-		short y0 = position[1] - 1;
+		s16 x0 = position[0];
+		s16 y0 = position[1] - 1;
 
-		short y2 = position[1];
+		s16 y2 = position[1];
 
 		p->x0 = position[0];
 		p->y0 = position[1] - 1;

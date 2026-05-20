@@ -5,8 +5,8 @@ void CS_Podium_Prize_ThTick3(struct Thread *th)
 {
 	struct GameTracker *gGT;
 	struct Instance *inst = th->inst;
-	short *prize = th->object;
-	short framesLeft;
+	s16 *prize = th->object;
+	s16 framesLeft;
 
 	framesLeft = prize[0x13] - 1;
 	prize[0x13] = framesLeft;
@@ -18,7 +18,7 @@ void CS_Podium_Prize_ThTick3(struct Thread *th)
 		int yInterp = framesLeft * (0x6c - prize[9]);
 		int x;
 		int y;
-		short scale;
+		s16 scale;
 
 		x = (prize[8] + xInterp / frameMax - 0x100) * -inst->matrix.t[2];
 		if (x < 0)
@@ -46,8 +46,8 @@ void CS_Podium_Prize_ThTick3(struct Thread *th)
 
 	if (DECOMP_CS_Camera_BoolGotoBoss() == 0)
 	{
-		u_int rewards = sdata->advProgress.rewards[4];
-		short hintID = 0;
+		u32 rewards = sdata->advProgress.rewards[4];
+		s16 hintID = 0;
 
 		if ((rewards & 0x4000) == 0)
 			hintID = 0x18;

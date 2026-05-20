@@ -2,10 +2,10 @@
 
 void DECOMP_AH_WarpPad_SpinRewards(struct Instance *prizeInst, struct WarpPad *warppadObj, int index, int x, int y, int z)
 {
-	short *specLight;
-	unsigned int modelID;
-	unsigned int trig;
-	unsigned int thirds;
+	s16 *specLight;
+	u32 modelID;
+	u32 trig;
+	u32 thirds;
 
 	// converted to TEST in rebuildPS1
 	ConvertRotToMatrix(&prizeInst->matrix, &warppadObj->spinRot_Prize[0]);

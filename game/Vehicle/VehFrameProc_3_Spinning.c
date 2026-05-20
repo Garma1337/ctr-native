@@ -2,7 +2,7 @@
 
 void DECOMP_VehFrameProc_Spinning(struct Thread *t, struct Driver *d)
 {
-	u_short interp;
+	u16 interp;
 	char animIndex;
 	int numFrames;
 	int startFrame;
@@ -26,7 +26,7 @@ void DECOMP_VehFrameProc_Spinning(struct Thread *t, struct Driver *d)
 		startFrame = VehFrameInst_GetStartFrame(animIndex, numFrames);
 
 		// If animType is anything but Steering/Driving
-		if ((unsigned int)(animIndex - 2) < 2)
+		if ((u32)(animIndex - 2) < 2)
 		{
 			// reset animation id and frame
 			d->matrixArray = 0;

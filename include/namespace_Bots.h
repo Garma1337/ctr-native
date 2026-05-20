@@ -1,13 +1,13 @@
 struct NavFrame
 {
 	// 0
-	short pos[3];
+	s16 pos[3];
 
 	// 6
-	unsigned char rot[4];
+	u8 rot[4];
 
 	// 0xA
-	short unk[2];
+	s16 unk[2];
 
 	// 0xA
 	// 0xC
@@ -27,14 +27,14 @@ struct NavFrame
 	// 0x2000: echo sound
 	// 0x4000: ???
 	// 0x8000: instance split-line
-	short flags;
+	s16 flags;
 
 	// 0x10
-	short pathChangeOpcode;
+	s16 pathChangeOpcode;
 
 	// 0x12
 	// how many nodes to go back, if AI hits killplane
-	unsigned char goBackCount;
+	u8 goBackCount;
 
 	// 0x13 - flags
 	// & 0x10 - need rampPhys
@@ -45,7 +45,7 @@ struct NavFrame
 	// & 0x80 - tagged as "moon gravity"
 	// 15 levels of alpha,
 	// for darkening model in coco park tunnel)
-	unsigned char specialBits;
+	u8 specialBits;
 
 	// 0x14 - size of struct
 };
@@ -53,26 +53,26 @@ struct NavFrame
 struct NavHeader
 {
 	// 0
-	short magicNumber;
+	s16 magicNumber;
 
 	// 2
-	short numPoints;
+	s16 numPoints;
 
 	// 4
-	// either int at 0x4, or short at 0x6
+	// either int at 0x4, or s16 at 0x6
 	int posY_firstNode;
 
 	// 8
 	struct NavFrame *last;
 
 	// 0xC
-	short rampPhys1[0x10]; // speedXZ? driver->0x5d4
-	short rampPhys2[0x10]; // speedY? driver->0x5d0
+	s16 rampPhys1[0x10]; // speedXZ? driver->0x5d4
+	s16 rampPhys2[0x10]; // speedY? driver->0x5d0
 
 	// 0x4C
 	// struct NavFrame frame[0];
 };
-#define NAVHEADER_GETFRAME(x)    ((struct NavFrame *)((unsigned int)x + sizeof(struct NavHeader)))
+#define NAVHEADER_GETFRAME(x)    ((struct NavFrame *)((u32)x + sizeof(struct NavHeader)))
 
 #define NAVFRAME_GETNEXTFRAME(x) (((struct NavFrame *)x) + 1)
 

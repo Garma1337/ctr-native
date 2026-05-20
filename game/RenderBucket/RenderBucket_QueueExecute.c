@@ -46,17 +46,17 @@ struct RenderBucketEntry
 
 typedef struct
 {
-	u_char x;
-	u_char y;
-	u_char z;
+	u8 x;
+	u8 y;
+	u8 z;
 } RenderBucketCompVertex;
 
 typedef struct
 {
-	u_char x;
-	u_char y;
-	u_char z;
-	u_char w;
+	u8 x;
+	u8 y;
+	u8 z;
+	u8 w;
 } RenderBucketVertex;
 
 struct RenderBucketBounds
@@ -90,7 +90,7 @@ struct RenderBucketDrawContext
 	int vertexIndex;
 };
 
-static int RenderBucket_GetSignedBits(unsigned int *vertData, int *bitIndex, int bits)
+static int RenderBucket_GetSignedBits(u32 *vertData, int *bitIndex, int bits)
 {
 	int const b = *bitIndex >> 5;
 	int const e = 32 - bits;
@@ -115,19 +115,19 @@ static struct ModelAnim *RenderBucket_GetAnim(struct Instance *inst, struct Mode
 	return mh->ptrAnimations[inst->animIndex];
 }
 
-static unsigned int RenderBucket_PackXY(int x, int y)
+static u32 RenderBucket_PackXY(int x, int y)
 {
-	return ((unsigned int)(unsigned short)x) | ((unsigned int)(unsigned short)y << 16);
+	return ((u32)(u16)x) | ((u32)(u16)y << 16);
 }
 
-static int RenderBucket_SignExtendByte(u_char value)
+static int RenderBucket_SignExtendByte(u8 value)
 {
 	return ((value & 0x80) != 0) ? (int)value - 0x100 : value;
 }
 
-static unsigned int RenderBucket_OTAddress(void *ptr)
+static u32 RenderBucket_OTAddress(void *ptr)
 {
-	return (unsigned int)ptr & 0xffffff;
+	return (u32)ptr & 0xffffff;
 }
 
 static int RenderBucket_ClampOTByteOffset(int depthBin)
@@ -145,8 +145,8 @@ static int RenderBucket_ClampOTByteOffset(int depthBin)
 
 static void RenderBucket_BoundsInit(struct RenderBucketBounds *bounds, int sxy, int depth)
 {
-	int x = (short)sxy;
-	int y = (short)(sxy >> 16);
+	int x = (s16)sxy;
+	int y = (s16)(sxy >> 16);
 
 	bounds->minX = x;
 	bounds->maxX = x;
@@ -158,8 +158,8 @@ static void RenderBucket_BoundsInit(struct RenderBucketBounds *bounds, int sxy, 
 
 static void RenderBucket_BoundsUpdate(struct RenderBucketBounds *bounds, int sxy, int depth)
 {
-	int x = (short)sxy;
-	int y = (short)(sxy >> 16);
+	int x = (s16)sxy;
+	int y = (s16)(sxy >> 16);
 
 	// NOTE(aalhendi): PSX-backfeed blocker: retail helper 0x80071524 consumes
 	// packed SXY in t1 and depth in t2, then updates t3/t4/t5/t6/t7/s0.
@@ -285,7 +285,7 @@ static struct ModelHeader *RenderBucket_SelectModelHeader(struct Instance *inst,
 	viewDepth = RenderBucket_GetViewDepth(inst, pb);
 	*viewDepthOut = viewDepth;
 	// NOTE(aalhendi): Retail keeps the low 32 bits of this product before dividing by GTE H.
-	projectedDistance = (int)(unsigned int)((long long)(pb->rect.w >> 1) * viewDepth) / pb->distanceToScreen_PREV;
+	projectedDistance = (int)(u32)((s64)(pb->rect.w >> 1) * viewDepth) / pb->distanceToScreen_PREV;
 	mh = inst->model->headers;
 
 	// NOTE(aalhendi): PSX-backfeed blocker: retail LOD selection at
@@ -295,7 +295,7 @@ static struct ModelHeader *RenderBucket_SelectModelHeader(struct Instance *inst,
 	// walk is restored.
 	for (int lodIndex = 0; lodIndex < inst->model->numHeaders; lodIndex++, mh++)
 	{
-		if ((projectedDistance - (unsigned short)mh->maxDistanceLOD) < 0)
+		if ((projectedDistance - (u16)mh->maxDistanceLOD) < 0)
 		{
 			*lodIndexOut = lodIndex;
 			return mh;
@@ -305,7 +305,7 @@ static struct ModelHeader *RenderBucket_SelectModelHeader(struct Instance *inst,
 	return 0;
 }
 
-static void RenderBucket_GteLoadRotMatrixWords(unsigned int m0, unsigned int m1, unsigned int m2, unsigned int m3, unsigned int m4)
+static void RenderBucket_GteLoadRotMatrixWords(u32 m0, u32 m1, u32 m2, u32 m3, u32 m4)
 {
 	CTC2(m0, 0);
 	CTC2(m1, 1);
@@ -314,16 +314,16 @@ static void RenderBucket_GteLoadRotMatrixWords(unsigned int m0, unsigned int m1,
 	CTC2(m4, 4);
 }
 
-static void RenderBucket_GteScaleMatrixColumns(unsigned int *m0, unsigned int *m1, unsigned int *m2, unsigned int *m3, unsigned int *m4)
+static void RenderBucket_GteScaleMatrixColumns(u32 *m0, u32 *m1, u32 *m2, u32 *m3, u32 *m4)
 {
-	unsigned int v0;
-	unsigned int v1;
-	unsigned int v2;
-	unsigned int t0;
-	unsigned int t1;
-	unsigned int t2;
-	unsigned int t3;
-	unsigned int t4;
+	u32 v0;
+	u32 v1;
+	u32 v2;
+	u32 t0;
+	u32 t1;
+	u32 t2;
+	u32 t3;
+	u32 t4;
 
 	// NOTE(aalhendi): PSX-backfeed blocker: retail helper 0x8006c49c consumes
 	// matrix words through t3/t4/t5/t6/t7 and live GTE color/rotation state.
@@ -376,12 +376,12 @@ static int RenderBucket_GetScaledMatrixElem(struct Instance *inst, int scale[3],
 
 static void RenderBucket_BuildM3x3(struct Instance *inst, struct ModelHeader *mh, int viewDepth, struct InstDrawPerPlayer *idpp)
 {
-	unsigned int m0;
-	unsigned int m1;
-	unsigned int m2;
-	unsigned int m3;
-	unsigned int m4;
-	unsigned int packedScaleXY;
+	u32 m0;
+	u32 m1;
+	u32 m2;
+	u32 m3;
+	u32 m4;
+	u32 packedScaleXY;
 	int depthShift;
 	int scaleXYShift;
 	int scaleZShift;
@@ -396,23 +396,23 @@ static void RenderBucket_BuildM3x3(struct Instance *inst, struct ModelHeader *mh
 	// sequence through explicit C parameters until the exact register/scratchpad
 	// boundary is restored.
 	// NOTE(aalhendi): Retail treats MATRIX halfwords as packed GTE register words here.
-	m0 = *(unsigned int *)&inst->matrix.m[0][0];
-	m1 = *(unsigned int *)&inst->matrix.m[0][2];
-	m2 = *(unsigned int *)&inst->matrix.m[1][1];
-	m3 = *(unsigned int *)&inst->matrix.m[2][0];
-	m4 = *(unsigned int *)&inst->matrix.m[2][2];
+	m0 = *(u32 *)&inst->matrix.m[0][0];
+	m1 = *(u32 *)&inst->matrix.m[0][2];
+	m2 = *(u32 *)&inst->matrix.m[1][1];
+	m3 = *(u32 *)&inst->matrix.m[2][0];
+	m4 = *(u32 *)&inst->matrix.m[2][2];
 	RenderBucket_GteLoadRotMatrixWords(m0, m1, m2, m3, m4);
 
 	depthShift = (viewDepth < 0x1000) ? 2 : 0;
 	scaleXYShift = 0x12 - depthShift;
 	scaleZShift = 2 - depthShift;
-	packedScaleXY = *(unsigned int *)&mh->scale[0];
+	packedScaleXY = *(u32 *)&mh->scale[0];
 
 	CTC2((packedScaleXY << 16) >> scaleXYShift, 16);
 	CTC2(0, 17);
 	CTC2(packedScaleXY >> scaleXYShift, 18);
 	CTC2(0, 19);
-	CTC2((unsigned short)mh->scale[2] >> scaleZShift, 20);
+	CTC2((u16)mh->scale[2] >> scaleZShift, 20);
 
 	scaleX = inst->scale[0];
 	scaleY = inst->scale[1];
@@ -431,11 +431,11 @@ static void RenderBucket_BuildM3x3(struct Instance *inst, struct ModelHeader *mh
 	doCOP2(0x04c6012);
 
 	RenderBucket_GteScaleMatrixColumns(&m0, &m1, &m2, &m3, &m4);
-	*(unsigned int *)&idpp->m3x3.m[0][0] = m0;
-	*(unsigned int *)&idpp->m3x3.m[0][2] = m1;
-	*(unsigned int *)&idpp->m3x3.m[1][1] = m2;
-	*(unsigned int *)&idpp->m3x3.m[2][0] = m3;
-	*(unsigned int *)&idpp->m3x3.m[2][2] = m4;
+	*(u32 *)&idpp->m3x3.m[0][0] = m0;
+	*(u32 *)&idpp->m3x3.m[0][2] = m1;
+	*(u32 *)&idpp->m3x3.m[1][1] = m2;
+	*(u32 *)&idpp->m3x3.m[2][0] = m3;
+	*(u32 *)&idpp->m3x3.m[2][2] = m4;
 }
 
 static void RenderBucket_BuildMvp(struct Instance *inst, struct ModelHeader *mh, struct PushBuffer *pb, MATRIX *mvp)
@@ -533,12 +533,12 @@ static u_long *RenderBucket_AllocateOTRange(struct OTMem *otMem, struct PushBuff
 	return rangeStart - minDepth;
 }
 
-static void RenderBucket_UpdatePushBufferMetadata(struct PushBuffer *pb, const struct RenderBucketBounds *bounds, unsigned int *instFlags)
+static void RenderBucket_UpdatePushBufferMetadata(struct PushBuffer *pb, const struct RenderBucketBounds *bounds, u32 *instFlags)
 {
 	int width;
 	int height;
 #ifdef CTR_INTERNAL
-	unsigned int beforeFlags;
+	u32 beforeFlags;
 #endif
 
 	if ((*instFlags & PUSHBUFFER_EXISTS) == 0)
@@ -572,7 +572,7 @@ static void RenderBucket_UpdatePushBufferMetadata(struct PushBuffer *pb, const s
 #endif
 }
 
-static int RenderBucket_ShouldAllocateSecondaryRange(unsigned int instFlags)
+static int RenderBucket_ShouldAllocateSecondaryRange(u32 instFlags)
 {
 	if ((instFlags & PUSHBUFFER_EXISTS) != 0)
 		return 0;
@@ -589,7 +589,7 @@ static int RenderBucket_ShouldAllocateSecondaryRange(unsigned int instFlags)
 }
 
 static int RenderBucket_BuildDepthRange(struct Instance *inst, struct ModelFrame *frame, struct PushBuffer *pb, struct InstDrawPerPlayer *idpp,
-                                        struct OTMem *otMem, int viewDepth, unsigned int *instFlags)
+                                        struct OTMem *otMem, int viewDepth, u32 *instFlags)
 {
 	struct RenderBucketBounds bounds;
 	u_long *secondaryRange;
@@ -659,11 +659,11 @@ static struct ModelFrame *RenderBucket_GetFrame(struct Instance *inst, struct Mo
 	// frame-selection rules as explicit return values until the register ABI is
 	// restored.
 	*deltaArrayOut = (int)anim->ptrDeltaArray;
-	frameIndex = (unsigned short)inst->animFrame;
+	frameIndex = (u16)inst->animFrame;
 	lastFrame = (anim->numFrames & 0x7fff) - 1;
 	hasNextFrame = 0;
 
-	if ((short)anim->numFrames < 0)
+	if ((s16)anim->numFrames < 0)
 	{
 		lastFrame >>= 1;
 		hasNextFrame = frameIndex & 1;
@@ -681,8 +681,8 @@ static struct ModelFrame *RenderBucket_GetFrame(struct Instance *inst, struct Mo
 	return (struct ModelFrame *)(firstFrame + (anim->frameSize * frameIndex));
 }
 
-static struct RenderBucketEntry *RenderBucket_QueueDraw(struct Instance *inst, struct RenderBucketEntry *rbi, int playerIndex, unsigned int lodMask,
-                                                        int gameMode1, struct OTMem *otMem)
+static struct RenderBucketEntry *RenderBucket_QueueDraw(struct Instance *inst, struct RenderBucketEntry *rbi, int playerIndex, u32 lodMask, int gameMode1,
+                                                        struct OTMem *otMem)
 {
 	struct ModelHeader *mh;
 	struct ModelFrame *frame;
@@ -690,7 +690,7 @@ static struct RenderBucketEntry *RenderBucket_QueueDraw(struct Instance *inst, s
 	struct InstDrawPerPlayer *idpp;
 	struct Instance *instPlayerBase;
 	struct PushBuffer *pb;
-	unsigned int queuedFlags;
+	u32 queuedFlags;
 	int deltaArray;
 	int lodIndex;
 	int viewDepth;
@@ -734,7 +734,7 @@ static struct RenderBucketEntry *RenderBucket_QueueDraw(struct Instance *inst, s
 	idpp->ptrNextFrame = nextFrame;
 	idpp->ptrCommandList = mh->ptrCommandList;
 	idpp->ptrTexLayout = mh->ptrTexLayout;
-	idpp->ptrColorLayout = (unsigned int)mh->ptrColors;
+	idpp->ptrColorLayout = (u32)mh->ptrColors;
 	idpp->ptrDeltaArray = deltaArray;
 	idpp->lodIndex = lodIndex;
 	idpp->mh = mh;
@@ -757,8 +757,8 @@ static struct RenderBucketEntry *RenderBucket_QueueDraw(struct Instance *inst, s
 void *RenderBucket_QueueLevInstances(struct CameraDC *cDC, u_long *otMem, void *rbi, char *lod, char numPlyr, int gameMode1)
 {
 	struct RenderBucketEntry *entry = (struct RenderBucketEntry *)rbi;
-	unsigned int lodMask = (unsigned int)(unsigned char)(unsigned int)lod;
-	int count = (int)(unsigned char)numPlyr;
+	u32 lodMask = (u32)(u8)(u32)lod;
+	int count = (int)(u8)numPlyr;
 
 	// NOTE(aalhendi): PSX-backfeed blocker: native C context replaces the retail
 	// scratchpad register-save frame at 0x1f800000.
@@ -785,8 +785,8 @@ void *RenderBucket_QueueLevInstances(struct CameraDC *cDC, u_long *otMem, void *
 void *RenderBucket_QueueNonLevInstances(struct Item *item, u_long *otMem, void *rbi, char *lod, char numPlyr, int gameMode1)
 {
 	struct RenderBucketEntry *entry = (struct RenderBucketEntry *)rbi;
-	unsigned int lodMask = (unsigned int)(unsigned char)(unsigned int)lod;
-	int count = (int)(unsigned char)numPlyr;
+	u32 lodMask = (u32)(u8)(u32)lod;
+	int count = (int)(u8)numPlyr;
 
 	// NOTE(aalhendi): PSX-backfeed blocker: native C context replaces the retail
 	// scratchpad register-save frame at 0x1f800000.
@@ -805,17 +805,17 @@ void *RenderBucket_QueueNonLevInstances(struct Item *item, u_long *otMem, void *
 	return entry;
 }
 
-void RenderBucket_UncompressAnimationFrame(struct RenderBucketDrawContext *ctx, u_short stackIndex)
+void RenderBucket_UncompressAnimationFrame(struct RenderBucketDrawContext *ctx, u16 stackIndex)
 {
 	if ((ctx->anim != 0) && (ctx->anim->ptrDeltaArray != 0))
 	{
-		u_int temporal = ctx->anim->ptrDeltaArray[ctx->vertexIndex];
-		u_char xBits = (temporal >> 6) & 7;
-		u_char yBits = (temporal >> 3) & 7;
-		u_char zBits = temporal & 7;
-		u_char bx = (temporal >> 0x19) << 1;
-		u_char by = (temporal << 7) >> 0x18;
-		u_char bz = (temporal << 0xf) >> 0x18;
+		u32 temporal = ctx->anim->ptrDeltaArray[ctx->vertexIndex];
+		u8 xBits = (temporal >> 6) & 7;
+		u8 yBits = (temporal >> 3) & 7;
+		u8 zBits = temporal & 7;
+		u8 bx = (temporal >> 0x19) << 1;
+		u8 by = (temporal << 7) >> 0x18;
+		u8 bz = (temporal << 0xf) >> 0x18;
 
 		// NOTE(aalhendi): PSX-backfeed blocker: retail consumes command state
 		// from registers and scratchpad. This native form keeps the same delta
@@ -827,9 +827,9 @@ void RenderBucket_UncompressAnimationFrame(struct RenderBucketDrawContext *ctx, 
 		if (zBits == 7)
 			ctx->z_alu = 0;
 
-		ctx->x_alu += RenderBucket_GetSignedBits((unsigned int *)ctx->vertData, &ctx->bitIndex, xBits + 1) + bx;
-		ctx->y_alu += RenderBucket_GetSignedBits((unsigned int *)ctx->vertData, &ctx->bitIndex, yBits + 1) + by;
-		ctx->z_alu += RenderBucket_GetSignedBits((unsigned int *)ctx->vertData, &ctx->bitIndex, zBits + 1) + bz;
+		ctx->x_alu += RenderBucket_GetSignedBits((u32 *)ctx->vertData, &ctx->bitIndex, xBits + 1) + bx;
+		ctx->y_alu += RenderBucket_GetSignedBits((u32 *)ctx->vertData, &ctx->bitIndex, yBits + 1) + by;
+		ctx->z_alu += RenderBucket_GetSignedBits((u32 *)ctx->vertData, &ctx->bitIndex, zBits + 1) + bz;
 
 		ctx->stack[stackIndex].x = ctx->x_alu;
 		ctx->stack[stackIndex].y = ctx->z_alu;
@@ -866,13 +866,13 @@ static u_long *RenderBucket_GetNormalOTEntry(struct RenderBucketDrawContext *ctx
 	return (u_long *)ctx->idpp->unkE4 + depthBin;
 }
 
-int RenderBucket_DrawInstPrim_Normal(struct RenderBucketDrawContext *ctx, u_int command)
+int RenderBucket_DrawInstPrim_Normal(struct RenderBucketDrawContext *ctx, u32 command)
 {
-	short posWorld1[4];
-	short posWorld2[4];
-	short posWorld3[4];
-	u_short flags = (command >> 24) & 0xff;
-	u_short texIndex = command & 0x1ff;
+	s16 posWorld1[4];
+	s16 posWorld2[4];
+	s16 posWorld3[4];
+	u16 flags = (command >> 24) & 0xff;
+	u16 texIndex = command & 0x1ff;
 	u_long *otEntry;
 	int boolPassCull;
 	int otZ;
@@ -967,7 +967,7 @@ int RenderBucket_DrawInstPrim_Normal(struct RenderBucketDrawContext *ctx, u_int 
 		*(int *)&p->r2 = ctx->tempColor[3];
 		*(int *)&p->u0 = *(int *)&tex->u0;
 		*(int *)&p->u1 = *(int *)&tex->u1;
-		*(short *)&p->u2 = *(short *)&tex->u2;
+		*(s16 *)&p->u2 = *(s16 *)&tex->u2;
 		setPolyGT3(p);
 		gte_stsxy3(&p->x0, &p->x1, &p->x2);
 #ifdef CTR_INTERNAL
@@ -990,20 +990,20 @@ int RenderBucket_DrawInstPrim_Normal(struct RenderBucketDrawContext *ctx, u_int 
 
 void RenderBucket_DrawFunc_Normal(struct RenderBucketDrawContext *ctx)
 {
-	u_int *pCmd;
+	u32 *pCmd;
 
 	// NOTE(aalhendi): Native C command-list traversal for the normal
 	// RenderBucket draw function. It has the named retail boundary, but the
 	// exact branch/register choreography remains a pending ASM audit.
-	pCmd = (u_int *)ctx->mh->ptrCommandList;
+	pCmd = (u32 *)ctx->mh->ptrCommandList;
 	pCmd++;
 
 	for (; *pCmd != 0xffffffff; pCmd++, ctx->stripLength++)
 	{
-		u_int command = *pCmd;
-		u_short flags = (command >> 24) & 0xff;
-		u_short stackIndex = (command >> 16) & 0xff;
-		u_short colorIndex = (command >> 9) & 0x7f;
+		u32 command = *pCmd;
+		u16 flags = (command >> 24) & 0xff;
+		u16 stackIndex = (command >> 16) & 0xff;
+		u16 colorIndex = (command >> 9) & 0x7f;
 
 		if ((flags & 4) == 0)
 		{

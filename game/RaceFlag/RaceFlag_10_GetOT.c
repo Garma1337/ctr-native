@@ -1,15 +1,15 @@
 #include <common.h>
 
-u_int *DECOMP_RaceFlag_GetOT(void)
+u32 *DECOMP_RaceFlag_GetOT(void)
 {
-	short sVar1;
+	s16 sVar1;
 	int iVar2;
 	struct GameTracker *gGT = sdata->gGT;
 
-	u_int *otDrawFirst_FarthestDepth;
-	u_int *otDrawLast_ClosestDepth;
+	u32 *otDrawFirst_FarthestDepth;
+	u32 *otDrawLast_ClosestDepth;
 
-	otDrawFirst_FarthestDepth = (u_int *)&gGT->pushBuffer[0].ptrOT[0x3FF];
+	otDrawFirst_FarthestDepth = (u32 *)&gGT->pushBuffer[0].ptrOT[0x3FF];
 	otDrawLast_ClosestDepth = gGT->otSwapchainDB[gGT->swapchainIndex];
 
 	if (sdata->unk_CheckFlag2 == 0)
@@ -40,10 +40,10 @@ u_int *DECOMP_RaceFlag_GetOT(void)
 			{
 				// rate of transition
 
-				iVar2 = ((u_short)sdata->RaceFlag_Position >> 3) * gGT->elapsedTimeMS;
+				iVar2 = ((u16)sdata->RaceFlag_Position >> 3) * gGT->elapsedTimeMS;
 				iVar2 = iVar2 >> 5;
 
-				sVar1 = -(short)iVar2;
+				sVar1 = -(s16)iVar2;
 				if (iVar2 < 1)
 				{
 					sVar1 = -1;
@@ -69,15 +69,15 @@ u_int *DECOMP_RaceFlag_GetOT(void)
 	// transition off-screen
 	if (sdata->RaceFlag_AnimationType == 2)
 	{
-		if ((short)sdata->unk_CheckFlag1 < 1000)
+		if ((s16)sdata->unk_CheckFlag1 < 1000)
 		{
-			sdata->unk_CheckFlag1 += (short)((gGT->elapsedTimeMS * 10) >> 5);
+			sdata->unk_CheckFlag1 += (s16)((gGT->elapsedTimeMS * 10) >> 5);
 		}
 
 		// If transitioning "off"
 		if (sdata->RaceFlag_Position > -5000)
 		{
-			sdata->RaceFlag_Position -= (((u_int)sdata->unk_CheckFlag1 >> 2) * gGT->elapsedTimeMS) >> 5;
+			sdata->RaceFlag_Position -= (((u32)sdata->unk_CheckFlag1 >> 2) * gGT->elapsedTimeMS) >> 5;
 		}
 
 		// finished transitioning off

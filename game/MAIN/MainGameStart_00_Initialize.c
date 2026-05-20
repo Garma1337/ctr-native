@@ -2,7 +2,7 @@
 
 void DECOMP_MainGameStart_Initialize(struct GameTracker *gGT, char boolStopAudio)
 {
-	u_int gameModeFlag = gGT->gameMode1 & ~(END_OF_RACE); // Remove end-of-race flag
+	u32 gameModeFlag = gGT->gameMode1 & ~(END_OF_RACE); // Remove end-of-race flag
 
 	// DotLights_AudioAndVideo wont execute
 	// if (gGT & 0x20102000 == 0), but if it did execute,

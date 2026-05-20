@@ -8,13 +8,13 @@
 // even in OG game
 
 // 800b295c (OG addr)
-short tntSitArr[] =
+s16 tntSitArr[] =
 {
 	
 }
 
 // 800b2ac4 (OG addr)
-short tntThrowArr[] =
+s16 tntThrowArr[] =
 {
 	
 }
@@ -26,37 +26,37 @@ struct ParticleEmitter emSet_Missile[] =
 }
 
 // 800b2c88 (OG addr)
-short warpballScaleArr[] =
+s16 warpballScaleArr[] =
 {
 	
 }
 
 // 800b2cac (OG addr)
-short warpballPosArr[] =
+s16 warpballPosArr[] =
 {
 	
 }
 
 // 800b2cc4 (OG addr)
-short maskPosArr[] =
+s16 maskPosArr[] =
 {
 	
 }
 
 // 800b2d14 (OG addr)
-short bubbleScaleArr1[] =
+s16 bubbleScaleArr1[] =
 {
 	
 }
 
 // 800b2cf4 (OG addr)
-short bubbleScaleArr2[] =
+s16 bubbleScaleArr2[] =
 {
 	
 }
 
 // 800b2d40 (OG addr)
-short bubbleScaleArr3[] =
+s16 bubbleScaleArr3[] =
 {
 	
 }

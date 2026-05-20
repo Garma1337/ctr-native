@@ -1,15 +1,15 @@
 #include <common.h>
 
-void DECOMP_VehBirth_TeleportSelf(struct Driver *d, u_char spawnFlag, int spawnPosY)
+void DECOMP_VehBirth_TeleportSelf(struct Driver *d, u8 spawnFlag, int spawnPosY)
 {
-	short posTop[3];
-	short posBottom[3];
-	short warppadPos[3];
+	s16 posTop[3];
+	s16 posBottom[3];
+	s16 warppadPos[3];
 
 	struct PosRot
 	{
-		short pos[3];
-		short rot[3];
+		s16 pos[3];
+		s16 rot[3];
 	};
 
 	struct GameTracker *gGT = sdata->gGT;
@@ -39,8 +39,8 @@ void DECOMP_VehBirth_TeleportSelf(struct Driver *d, u_char spawnFlag, int spawnP
 	gGT->gameMode2 &= ~(VEH_FREEZE_DOOR);
 
 	struct PosRot *posRot;
-	short *rotArr;
-	short rotDeltaY;
+	s16 *rotArr;
+	s16 rotDeltaY;
 
 	// if you are mask grabbed
 	if ((spawnFlag & 1) == 0)
@@ -139,7 +139,7 @@ void DECOMP_VehBirth_TeleportSelf(struct Driver *d, u_char spawnFlag, int spawnP
 	{
 		// get position where driver should spawn on map,
 		// outside warppad they previously entered
-		short *warppadRot = DECOMP_AH_WarpPad_GetSpawnPosRot(&warppadPos);
+		s16 *warppadRot = DECOMP_AH_WarpPad_GetSpawnPosRot(&warppadPos);
 
 		posRot = warppadPos;
 		rotArr = warppadRot;
@@ -371,7 +371,7 @@ void DECOMP_VehBirth_TeleportSelf(struct Driver *d, u_char spawnFlag, int spawnP
 
 	// no item
 	char weaponId = 0xf;
-	u_int gameMode2 = gGT->gameMode2;
+	u32 gameMode2 = gGT->gameMode2;
 	if ((gameMode2 & CHEAT_MASK) != 0)
 		weaponId = 7;
 	if ((gameMode2 & CHEAT_TURBO) != 0)

@@ -5,7 +5,7 @@
 void DECOMP_UI_ThTick_Reward(struct Thread *bucket)
 
 {
-	u_int flags;
+	u32 flags;
 	MATRIX *mat;
 	struct GameTracker *gGT;
 	struct UiElement3D *obj;
@@ -23,14 +23,14 @@ void DECOMP_UI_ThTick_Reward(struct Thread *bucket)
 	obj->rot[1] += 0x40;
 
 #ifndef REBUILD_PS1
-	Vector_SpecLightSpin2D(inst, (short *)obj->rot, (short *)obj->lightDir);
+	Vector_SpecLightSpin2D(inst, (s16 *)obj->rot, (s16 *)obj->lightDir);
 #endif
 
 	// pointer to matrix
 	mat = &inst->matrix;
 
 	// converted to TEST in rebuildPS1
-	ConvertRotToMatrix(mat, (short *)obj->rot);
+	ConvertRotToMatrix(mat, (s16 *)obj->rot);
 
 #ifndef REBUILD_PS1
 	MatrixRotate(mat, &obj->m, mat);

@@ -1,18 +1,18 @@
 #include <common.h>
 
 #if BUILD == JpnRetail
-u_int DecalFont_boolRacingWheel();
+u32 DecalFont_boolRacingWheel();
 #endif
 
 int DECOMP_DecalFont_GetLineWidthStrlen(char *character, int len, int fontType)
 {
-	short font_charPixWidth;
-	short font_buttonPixWidth;
-	short font_puncPixWidth;
+	s16 font_charPixWidth;
+	s16 font_buttonPixWidth;
+	s16 font_puncPixWidth;
 	int pixLength;
 	char c;
 #if BUILD == JpnRetail
-	u_int isRacingWheel;
+	u32 isRacingWheel;
 #endif
 
 	font_charPixWidth = data.font_charPixWidth[fontType];

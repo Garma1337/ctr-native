@@ -4,7 +4,7 @@
 // curr: 4380
 
 // see the bottom of this file
-extern short PhysLinear_DriverOffsets[14];
+extern s16 PhysLinear_DriverOffsets[14];
 
 void DECOMP_VehPhysProc_Driving_PhysLinear(struct Thread *thread, struct Driver *driver)
 {
@@ -13,43 +13,43 @@ void DECOMP_VehPhysProc_Driving_PhysLinear(struct Thread *thread, struct Driver 
 
 	char kartState;
 	char heldItemID;
-	short noItemTimer;
+	s16 noItemTimer;
 	char isNumWumpas10;
-	u_short driverTimerNegativeFinal;
-	u_short driverBaseSpeedUshort;
+	u16 driverTimerNegativeFinal;
+	u16 driverBaseSpeedUshort;
 	int approxTrig;
 	int driverBaseSpeed;
-	short approximateSpeed;
-	short sVar13;
+	s16 approximateSpeed;
+	s16 sVar13;
 	int iVar14;
-	u_int buttonsTapped;
-	u_short driverTimerNegativePrelim;
-	short driverTimer;
-	short timerHazard;
-	short approximateSpeed2;
-	u_int actionsFlagSetCopy;
-	short driverSpeedSmth2;
+	u32 buttonsTapped;
+	u16 driverTimerNegativePrelim;
+	s16 driverTimer;
+	s16 timerHazard;
+	s16 approximateSpeed2;
+	u32 actionsFlagSetCopy;
+	s16 driverSpeedSmth2;
 	struct GamepadBuffer *ptrgamepad;
-	u_int cross;
-	u_int square;
+	u32 cross;
+	u32 square;
 
-	short *normSrc;
-	short *normDst;
-	short *val;
+	s16 *normSrc;
+	s16 *normDst;
+	s16 *val;
 	int i;
 	int msPerFrame;
-	short driverRankItemValue;
-	u_int itemSound;
-	u_int uVar20;
+	s16 driverRankItemValue;
+	u32 itemSound;
+	u32 uVar20;
 	int stickLY;
 	int stickRY;
 	int driverSpeedOrSmth = 0;
 	struct Thread *driverItemThread;
 	struct Shield *shield;
 	struct TrackerWeapon *bomb;
-	u_int superEngineFireLevel;
+	u32 superEngineFireLevel;
 	int unk0x80;
-	short driverSpeedCopy;
+	s16 driverSpeedCopy;
 
 	gGT = sdata->gGT;
 	gameMode2 = gGT->gameMode2;
@@ -81,7 +81,7 @@ void DECOMP_VehPhysProc_Driving_PhysLinear(struct Thread *thread, struct Driver 
 
 	for (i = 0; i < 14; i++)
 	{
-		short *val = (short *)((int)driver + (int)PhysLinear_DriverOffsets[i]);
+		s16 *val = (s16 *)((int)driver + (int)PhysLinear_DriverOffsets[i]);
 		if (*val > 0)
 		{
 			*val -= msPerFrame;
@@ -226,9 +226,9 @@ void DECOMP_VehPhysProc_Driving_PhysLinear(struct Thread *thread, struct Driver 
 			if (approximateSpeed < 0x101)
 			{
 			speedIsLow:
-				driverTimerNegativePrelim = *(u_short *)&driver->hazardTimer;
+				driverTimerNegativePrelim = *(u16 *)&driver->hazardTimer;
 				driverTimerNegativeFinal = driverTimerNegativePrelim | 1;
-				if ((short)driverTimerNegativePrelim > 0)
+				if ((s16)driverTimerNegativePrelim > 0)
 					goto turndriverTimerNegative;
 			}
 
@@ -326,14 +326,14 @@ void DECOMP_VehPhysProc_Driving_PhysLinear(struct Thread *thread, struct Driver 
 	{
 		if (
 		    // multiplayer game, not battle, weapon was 3 missiles
-		    (2 < (u_char)gGT->numPlyrCurrGame) && ((gGT->gameMode1 & BATTLE_MODE) == 0) && (driver->heldItemID == 0xB) && (gGT->numPlayersWith3Missiles > 0))
+		    (2 < (u8)gGT->numPlyrCurrGame) && ((gGT->gameMode1 & BATTLE_MODE) == 0) && (driver->heldItemID == 0xB) && (gGT->numPlayersWith3Missiles > 0))
 		{
 			// keep count
 			gGT->numPlayersWith3Missiles--;
 		}
 
 		// take away weapon
-		*(u_char *)&driver->heldItemID = 0xf;
+		*(u8 *)&driver->heldItemID = 0xf;
 	}
 
 
@@ -344,7 +344,7 @@ void DECOMP_VehPhysProc_Driving_PhysLinear(struct Thread *thread, struct Driver 
 	driver->actionsFlagSetPrevFrame = actionsFlagSetCopy;
 
 	// backup rotation
-	*(u_int *)&driver->rotPrev.x = *(u_int *)&driver->rotCurr.x;
+	*(u32 *)&driver->rotPrev.x = *(u32 *)&driver->rotCurr.x;
 	driver->rotPrev.z = driver->rotCurr.z;
 
 	// backup position
@@ -378,7 +378,7 @@ void DECOMP_VehPhysProc_Driving_PhysLinear(struct Thread *thread, struct Driver 
 		normSrc = &driver->AxisAngle1_normalVec.x;
 
 	// copy
-	*(u_int *)&normDst[0] = *(u_int *)&normSrc[0];
+	*(u32 *)&normDst[0] = *(u32 *)&normSrc[0];
 	normDst[2] = normSrc[2];
 
 
@@ -390,7 +390,7 @@ void DECOMP_VehPhysProc_Driving_PhysLinear(struct Thread *thread, struct Driver 
 	while (driverItemThread != 0)
 	{
 		// If thread->modelIndex is Aku or Uka
-		if ((*(short *)&driverItemThread->modelIndex == STATIC_UKAUKA) || (*(short *)&driverItemThread->modelIndex == STATIC_AKUAKU))
+		if ((*(s16 *)&driverItemThread->modelIndex == STATIC_UKAUKA) || (*(s16 *)&driverItemThread->modelIndex == STATIC_AKUAKU))
 		{
 			// driver is using mask weapon
 			actionsFlagSetCopy = uVar20 | 0x800000;
@@ -406,7 +406,7 @@ void DECOMP_VehPhysProc_Driving_PhysLinear(struct Thread *thread, struct Driver 
 
 
 	// pointer to gamepad input of current player (driver)
-	ptrgamepad = &sdata->gGamepads->gamepad[(u_int)driver->driverID];
+	ptrgamepad = &sdata->gGamepads->gamepad[(u32)driver->driverID];
 
 	// no hold, no tap
 	uVar20 = 0;
@@ -584,7 +584,7 @@ CheckJumpButtons:
 	}
 #else
 	// Assume you're holding cross (X)
-	u_char assumeCross = 0x10;
+	u8 assumeCross = 0x10;
 	// if you are holding square
 	if (square != 0)
 	{
@@ -895,7 +895,7 @@ SKIP_RESERVE_RESET:
 			goto LAB_800626d4;
 	LAB_800626fc:
 		// Racer struct + 0x39E = Racer's Base Speed
-		*(u_short *)&driver->fireSpeed = approximateSpeed2;
+		*(u16 *)&driver->fireSpeed = approximateSpeed2;
 	}
 	else
 	{
@@ -909,7 +909,7 @@ SKIP_RESERVE_RESET:
 			goto LAB_800626fc;
 		}
 		// Racer struct + 0x39E = Racer's Base Speed
-		*(u_short *)&driver->fireSpeed = approximateSpeed2;
+		*(u16 *)&driver->fireSpeed = approximateSpeed2;
 	}
 
 	// brakes
@@ -931,8 +931,8 @@ SKIP_RESERVE_RESET:
 			driverBaseSpeedUshort = (driverSpeedOrSmth * driverBaseSpeed) >> 8;
 		}
 	}
-	*(u_short *)&driver->unknowndriverBaseSpeed = driverBaseSpeedUshort;
-	*(u_short *)&driver->baseSpeed = approximateSpeed2;
+	*(u16 *)&driver->unknowndriverBaseSpeed = driverBaseSpeedUshort;
+	*(u16 *)&driver->baseSpeed = approximateSpeed2;
 
 
 	// === Steering Section ===
@@ -1033,12 +1033,12 @@ UseTurnRate:
 
 SkipSetSteer:
 
-	*(u_char *)&driver->simpTurnState = (char)-iVar14;
+	*(u8 *)&driver->simpTurnState = (char)-iVar14;
 
 	// Change wheel rotation based on StickLX
 	driverSpeedOrSmth = DECOMP_VehPhysJoystick_GetStrengthAbsolute(driverSpeedOrSmth, 0x40, ptrgamepad->rwd);
 	driverBaseSpeedUshort = DECOMP_VehCalc_InterpBySpeed((int)driver->wheelRotation, 0x18, -driverSpeedOrSmth);
-	*(u_short *)&driver->wheelRotation = driverBaseSpeedUshort;
+	*(u16 *)&driver->wheelRotation = driverBaseSpeedUshort;
 
 	driverSpeedOrSmth = (int)driver->fireSpeed;
 	if (driverSpeedOrSmth < 0)
@@ -1090,18 +1090,18 @@ SkipSetSteer:
 	return;
 }
 
-#define DriverPhysLinear_OFFSETOF(TYPE, ELEMENT) (short)((unsigned int)&(((TYPE *)0)->ELEMENT))
-short PhysLinear_DriverOffsets[14] = {DriverPhysLinear_OFFSETOF(struct Driver, reserves),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, set_0xF0_OnWallRub),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, burnTimer),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, squishTimer),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, turbo_outsideTimer),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, VehFire_AudioCooldown),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, jump_ForcedMS),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, jump_CooldownMS),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, jump_unknown),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, StartDriving_0x60),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, StartRollback_0x280),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, clockReceive),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, mashingXMakesItBig),
-                                      DriverPhysLinear_OFFSETOF(struct Driver, invincibleTimer)};
+#define DriverPhysLinear_OFFSETOF(TYPE, ELEMENT) (s16)((u32) & (((TYPE *)0)->ELEMENT))
+s16 PhysLinear_DriverOffsets[14] = {DriverPhysLinear_OFFSETOF(struct Driver, reserves),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, set_0xF0_OnWallRub),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, burnTimer),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, squishTimer),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, turbo_outsideTimer),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, VehFire_AudioCooldown),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, jump_ForcedMS),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, jump_CooldownMS),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, jump_unknown),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, StartDriving_0x60),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, StartRollback_0x280),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, clockReceive),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, mashingXMakesItBig),
+                                    DriverPhysLinear_OFFSETOF(struct Driver, invincibleTimer)};

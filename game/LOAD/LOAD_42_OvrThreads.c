@@ -3,12 +3,12 @@
 void OVR_Region3();
 
 // DLL loaded = param_1 + 230
-void DECOMP_LOAD_OvrThreads(unsigned int param_1)
+void DECOMP_LOAD_OvrThreads(u32 param_1)
 {
 	struct GameTracker *gGT = sdata->gGT;
 
 	// if new Threads overlay needs to load
-	if ((unsigned int)gGT->overlayIndex_Threads != param_1)
+	if ((u32)gGT->overlayIndex_Threads != param_1)
 	{
 #ifndef REBUILD_PC
 		// gets overwritten in overlay callback,

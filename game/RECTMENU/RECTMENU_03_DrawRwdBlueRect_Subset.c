@@ -1,10 +1,10 @@
 #include <common.h>
 
-void DECOMP_RECTMENU_DrawRwdBlueRect_Subset(short *pos, int *color, u_long *ot, struct PrimMem *primMem)
+void DECOMP_RECTMENU_DrawRwdBlueRect_Subset(s16 *pos, int *color, u_long *ot, struct PrimMem *primMem)
 {
 	POLY_G4 *p = (POLY_G4 *)primMem->curr;
 
-	if ((u_int)p <= (u_int)primMem->endMin100)
+	if ((u32)p <= (u32)primMem->endMin100)
 	{
 		primMem->curr = p + 1;
 

@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_CseqMusic_AdvHubSwap(u_short songId, struct SongSet *songSet, int songSetActiveBits)
+void DECOMP_CseqMusic_AdvHubSwap(u16 songId, struct SongSet *songSet, int songSetActiveBits)
 {
 	struct Song *song;
 	int i;

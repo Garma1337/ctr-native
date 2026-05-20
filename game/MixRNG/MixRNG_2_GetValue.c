@@ -1,6 +1,6 @@
 #include <common.h>
 
-u_int MixRNG_GetValue(int param_1)
+u32 MixRNG_GetValue(int param_1)
 {
 	// this decomp and/or MixRNG_1_Particles.c is buggy
 	// I'm pretty sure this one is fine.

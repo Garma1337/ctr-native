@@ -2,7 +2,7 @@
 
 void DECOMP_RB_Warpball_FadeAway(struct Thread *t)
 {
-	short frameId;
+	s16 frameId;
 	int iVar2;
 	struct TrackerWeapon *tw;
 	struct Instance *inst;
@@ -34,9 +34,9 @@ void DECOMP_RB_Warpball_FadeAway(struct Thread *t)
 	}
 
 	// set scale (x, y, z)
-	inst->scale[0] = ((short *)0x800b2c88)[(frameId * 3) + 0];
-	inst->scale[1] = ((short *)0x800b2c88)[(frameId * 3) + 1];
-	inst->scale[2] = ((short *)0x800b2c88)[(frameId * 3) + 2];
+	inst->scale[0] = ((s16 *)0x800b2c88)[(frameId * 3) + 0];
+	inst->scale[1] = ((s16 *)0x800b2c88)[(frameId * 3) + 1];
+	inst->scale[2] = ((s16 *)0x800b2c88)[(frameId * 3) + 2];
 
 	inst->matrix.t[1] = tw->distFromGround + ((int *)0x800b2cac)[frameId];
 

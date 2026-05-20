@@ -10,13 +10,13 @@ force_inline void pcsx_debugbreak()
 {
 	*((volatile char *const)0x1f802081) = 0;
 }
-force_inline void pcsx_execSlot(uint8_t slot)
+force_inline void pcsx_execSlot(u8 slot)
 {
-	*((volatile uint8_t *const)0x1f802081) = slot;
+	*((volatile u8 *const)0x1f802081) = slot;
 }
 force_inline void pcsx_exit(int code)
 {
-	*((volatile int16_t *const)0x1f802082) = code;
+	*((volatile s16 *const)0x1f802082) = code;
 }
 force_inline void pcsx_message(const char *msg)
 {
@@ -32,5 +32,5 @@ force_inline int pcsx_isCheckingKernel()
 }
 force_inline int pcsx_present()
 {
-	return *((volatile uint32_t *const)0x1f802080) == 0x58534350;
+	return *((volatile u32 *const)0x1f802080) == 0x58534350;
 }

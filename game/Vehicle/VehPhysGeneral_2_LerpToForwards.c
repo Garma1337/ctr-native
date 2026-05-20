@@ -3,7 +3,7 @@
 int DECOMP_VehPhysGeneral_LerpToForwards(struct Driver *d, int param_2, int param_3, int param_4)
 {
 	bool bVar1;
-	u_int uVar2;
+	u32 uVar2;
 	int iVar3;
 
 	bVar1 = false;
@@ -43,7 +43,7 @@ int DECOMP_VehPhysGeneral_LerpToForwards(struct Driver *d, int param_2, int para
 				else
 				{
 					iVar3 = DECOMP_VehPhysGeneral_LerpQuarterStrength(d->angleMaxCounterSteer, param_4 - param_2);
-					d->unk3CA = (short)param_4;
+					d->unk3CA = (s16)param_4;
 				}
 			}
 		}

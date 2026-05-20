@@ -17,7 +17,7 @@ char *DECOMP_howl_GetNextNote(char *currNote, int *noteLen)
 		// 1 bit "has next byte flag".
 		// 7 bits is number data
 		// so that code skips proper amount of bytes it uses.
-		// it allows to send only 1 byte for short events.
+		// it allows to send only 1 byte for s16 events.
 		var1 = (var1 * 0x80) + (currNote[0] & 0x7f);
 	}
 

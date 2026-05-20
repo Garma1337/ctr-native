@@ -5,23 +5,23 @@
 // move to headers later
 struct Map
 {
-	short worldEndX;
-	short worldEndY;
-	short worldStartX;
-	short worldStartY;
+	s16 worldEndX;
+	s16 worldEndY;
+	s16 worldStartX;
+	s16 worldStartY;
 
-	short iconSizeX;
-	short iconSizeY;
-	short iconStartX;
-	short iconStartY;
+	s16 iconSizeX;
+	s16 iconSizeY;
+	s16 iconStartX;
+	s16 iconStartY;
 
-	short mode;
+	s16 mode;
 };
 
-void DECOMP_UI_Map_GetIconPos(short *m, int *posX, int *posY)
+void DECOMP_UI_Map_GetIconPos(s16 *m, int *posX, int *posY)
 
 {
-	short mode;
+	s16 mode;
 	int addX;
 	int addY;
 	int worldRangeX;

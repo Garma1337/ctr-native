@@ -3,8 +3,8 @@
 void DECOMP_UI_ThTick_big1(struct Thread *bucket)
 
 {
-	short uVar1;
-	u_int flags;
+	s16 uVar1;
+	u32 flags;
 	struct UiElement3D *obj;
 	struct Instance *inst;
 

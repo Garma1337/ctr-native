@@ -23,24 +23,24 @@ static void CS_RestoreDecodedOpcode(struct CutsceneObj *cs, const int in[5])
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x800ac840-0x800ade8c
 int DECOMP_CS_Thread_UseOpcode(struct Instance *instance, struct CutsceneObj *cs)
 {
-	unsigned char numPlayers;
+	u8 numPlayers;
 	int frameBoundaryHit;
-	short numCamPathPoints;
-	short gameModeTarget;
-	unsigned short clockEffectFlags;
-	unsigned short cutsceneFlags;
-	unsigned int conditionMet;
+	s16 numCamPathPoints;
+	s16 gameModeTarget;
+	u16 clockEffectFlags;
+	u16 cutsceneFlags;
+	u32 conditionMet;
 	int iVar8;
 	char **cutsceneOpcodes;
 	int iVar10;
-	short levelToLoad;
+	s16 levelToLoad;
 	int distanceToScreen;
 	struct Thread *dancerThread;
 	char *opcodeAt;
 	int iVar12;
 	struct CsOpcodeMeta *opcodeMeta;
-	short *opcodeMetaShorts;
-	short *frameData;
+	s16 *opcodeMetaShorts;
+	s16 *frameData;
 	int rotInterpNumerator;
 	int rotInterpStartFrame;
 	int rotInterpFrameRange;
@@ -48,9 +48,9 @@ int DECOMP_CS_Thread_UseOpcode(struct Instance *instance, struct CutsceneObj *cs
 	int lodIndex;
 	struct ModelHeader *modelHeader;
 	int metadataBackup[5];
-	short camRot[3];
-	short camPos[3];
-	unsigned short camPathFlags[2];
+	s16 camRot[3];
+	s16 camPos[3];
+	u16 camPathFlags[2];
 	int animIndex;
 	int opcodeDuration;
 	int opcodeChanged;
@@ -64,7 +64,7 @@ int DECOMP_CS_Thread_UseOpcode(struct Instance *instance, struct CutsceneObj *cs
 		if ((instance->flags & SPLIT_LINE) != 0)
 			instance->vertSplit = OVR_233.VertSplitLine;
 
-		if ((int)instance->model->id == (unsigned int)(u_char)gGT->podium_modelIndex_Second)
+		if ((int)instance->model->id == (u32)(u8)gGT->podium_modelIndex_Second)
 		{
 			if (OVR_233.PodiumInitUnk2 - 0x65U < 0x87)
 			{
@@ -81,7 +81,7 @@ int DECOMP_CS_Thread_UseOpcode(struct Instance *instance, struct CutsceneObj *cs
 		}
 	afterPodiumSecondModelCheck:
 
-		if ((int)instance->model->id == (unsigned int)(u_char)gGT->podium_modelIndex_First)
+		if ((int)instance->model->id == (u32)(u8)gGT->podium_modelIndex_First)
 		{
 			if (OVR_233.PodiumInitUnk2 - 0x83U < 0x69)
 			{
@@ -114,9 +114,9 @@ int DECOMP_CS_Thread_UseOpcode(struct Instance *instance, struct CutsceneObj *cs
 					cs->unk18 = ((int *)&cs->decodedOpcode)[2];
 					iVar8 = DECOMP_MixRNG_Scramble();
 					opcodeMeta = (struct CsOpcodeMeta *)cs->metadata;
-					opcodeMetaShorts = (short *)opcodeMeta;
+					opcodeMetaShorts = (s16 *)opcodeMeta;
 					cs->unk14 =
-					    opcodeMeta->frameStart + (short)((int)((iVar8 >> 2 & 0xfff) * (((int)opcodeMeta->frameEnd - (int)opcodeMeta->frameStart) + 1)) >> 0xc);
+					    opcodeMeta->frameStart + (s16)((int)((iVar8 >> 2 & 0xfff) * (((int)opcodeMeta->frameEnd - (int)opcodeMeta->frameStart) + 1)) >> 0xc);
 				}
 			}
 			else
@@ -137,7 +137,7 @@ int DECOMP_CS_Thread_UseOpcode(struct Instance *instance, struct CutsceneObj *cs
 	iVar8 = (int)cs->unk1e;
 	elapsedTimeRemaining = gGT->elapsedTimeMS;
 	opcodeMeta = (struct CsOpcodeMeta *)cs->metadata;
-	opcodeMetaShorts = (short *)opcodeMeta;
+	opcodeMetaShorts = (s16 *)opcodeMeta;
 	animIndex = (int)opcodeMeta->animIndex;
 
 	if (instance == 0)
@@ -160,7 +160,7 @@ int DECOMP_CS_Thread_UseOpcode(struct Instance *instance, struct CutsceneObj *cs
 			{
 				if (opcodeMeta->opcode == 0x14)
 					DECOMP_CS_ScriptCmd_OpcodeNext(cs);
-				DECOMP_CAM_Path_Move((int)(short)(numCamPathPoints + -1), gGT->pushBuffer[0].pos, gGT->pushBuffer[0].rot, camPathFlags);
+				DECOMP_CAM_Path_Move((int)(s16)(numCamPathPoints + -1), gGT->pushBuffer[0].pos, gGT->pushBuffer[0].rot, camPathFlags);
 			}
 
 			clockEffectFlags = gGT->clockEffectEnabled;
@@ -199,7 +199,7 @@ int DECOMP_CS_Thread_UseOpcode(struct Instance *instance, struct CutsceneObj *cs
 			{
 				if (gGT->levelID == 0x29)
 				{
-					if ((unsigned int)gGT->msInThisLEV >> 5 < 0xb5)
+					if ((u32)gGT->msInThisLEV >> 5 < 0xb5)
 						goto afterCameraAndSkipChecks;
 					DECOMP_RaceFlag_SetCanDraw(1);
 					iVar8 = DECOMP_RaceFlag_IsTransitioning();
@@ -238,8 +238,8 @@ afterCameraAndSkipChecks:
 	updateInstanceAndReturn:
 		cs->unk18 = iVar12;
 		cs->animIndex = (char)animIndex;
-		cs->unk1e = (short)iVar8;
-		cs->unk14 = (short)opcodeDuration;
+		cs->unk1e = (s16)iVar8;
+		cs->unk14 = (s16)opcodeDuration;
 		iVar10 = (int)opcodeMeta->rotStart;
 		iVar12 = iVar12 >> 5;
 		if (iVar10 != (int)opcodeMeta->rotEnd)
@@ -255,7 +255,7 @@ afterCameraAndSkipChecks:
 			}
 		}
 		iVar10 = iVar10 + cs->unk1c;
-		if ((iVar10 != (int)cs->unk22) && (cs->unk22 = (short)iVar10, instance != 0))
+		if ((iVar10 != (int)cs->unk22) && (cs->unk22 = (s16)iVar10, instance != 0))
 		{
 			ConvertRotToMatrix(&instance->matrix, &cs->unk20);
 		}
@@ -267,17 +267,17 @@ afterCameraAndSkipChecks:
 		}
 		if (instance != 0)
 		{
-			instance->animFrame = (short)iVar12;
+			instance->animFrame = (s16)iVar12;
 			instance->animIndex = (char)animIndex;
 		}
 		if (cs->frameOverrideRoot != 0)
 		{
-			frameData = (short *)((uintptr_t)(*cs->frameOverrideRoot) + iVar12 * 0x20);
-			*(int *)((u_char *)&instance->matrix + 0x00) = *(int *)(frameData + 4);
-			*(int *)((u_char *)&instance->matrix + 0x04) = *(int *)(frameData + 6);
-			*(int *)((u_char *)&instance->matrix + 0x08) = *(int *)(frameData + 8);
-			*(int *)((u_char *)&instance->matrix + 0x0c) = *(int *)(frameData + 10);
-			*(int *)((u_char *)&instance->matrix + 0x10) = *(int *)(frameData + 0xc);
+			frameData = (s16 *)((uintptr_t)(*cs->frameOverrideRoot) + iVar12 * 0x20);
+			*(int *)((u8 *)&instance->matrix + 0x00) = *(int *)(frameData + 4);
+			*(int *)((u8 *)&instance->matrix + 0x04) = *(int *)(frameData + 6);
+			*(int *)((u8 *)&instance->matrix + 0x08) = *(int *)(frameData + 8);
+			*(int *)((u8 *)&instance->matrix + 0x0c) = *(int *)(frameData + 10);
+			*(int *)((u8 *)&instance->matrix + 0x10) = *(int *)(frameData + 0xc);
 			instance->matrix.t[0] = (int)*frameData;
 			instance->matrix.t[1] = (int)frameData[1];
 			instance->matrix.t[2] = (int)frameData[2];
@@ -390,12 +390,11 @@ processOpcode:
 			struct CsThreadInitData *initData = CTR_SCRATCHPAD_PTR(struct CsThreadInitData, 0x108);
 			int spawnModelID = opcodeMeta->arg1.i;
 
-			DECOMP_CS_Instance_GetFrameData(instance, (int)opcodeMeta->animIndex, opcodeMeta->arg0.i, (u_short *)initData->podiumPos, (u_short *)initData->rot,
-			                                0);
+			DECOMP_CS_Instance_GetFrameData(instance, (int)opcodeMeta->animIndex, opcodeMeta->arg0.i, (u16 *)initData->podiumPos, (u16 *)initData->rot, 0);
 
-			initData->podiumPos[0] += (short)instance->matrix.t[0];
-			initData->podiumPos[1] += (short)instance->matrix.t[1];
-			initData->podiumPos[2] += (short)instance->matrix.t[2];
+			initData->podiumPos[0] += (s16)instance->matrix.t[0];
+			initData->podiumPos[1] += (s16)instance->matrix.t[1];
+			initData->podiumPos[2] += (s16)instance->matrix.t[2];
 			initData->characterPos[0] = 0;
 			initData->characterPos[1] = 0;
 			initData->characterPos[2] = 0;
@@ -407,7 +406,7 @@ processOpcode:
 				initData->rot[2] = 0;
 			}
 
-			DECOMP_CS_Thread_Init(spawnModelID, OVR_233.s_spawn, (short *)initData, 0, instance->thread);
+			DECOMP_CS_Thread_Init(spawnModelID, OVR_233.s_spawn, (s16 *)initData, 0, instance->thread);
 		}
 		break;
 
@@ -430,20 +429,20 @@ processOpcode:
 		{
 			iVar10 = DECOMP_CS_Instance_BoolPlaySound(cs, instance);
 			if (iVar10 != 0)
-				DECOMP_OtherFX_Play((unsigned int)(unsigned short)opcodeMetaShorts[6], 1);
+				DECOMP_OtherFX_Play((u32)(u16)opcodeMetaShorts[6], 1);
 		}
 		break;
 
 	case 6:
-		DECOMP_OtherFX_Stop2((unsigned int)(unsigned short)opcodeMetaShorts[6]);
+		DECOMP_OtherFX_Stop2((u32)(u16)opcodeMetaShorts[6]);
 		break;
 
 	case 7:
-		DECOMP_CseqMusic_Start((unsigned int)(unsigned short)opcodeMetaShorts[6], 0, 0, 0, opcodeMeta->arg0.i);
+		DECOMP_CseqMusic_Start((u32)(u16)opcodeMetaShorts[6], 0, 0, 0, opcodeMeta->arg0.i);
 		break;
 
 	case 8:
-		DECOMP_CseqMusic_Restart((unsigned int)(unsigned short)opcodeMetaShorts[6], 1);
+		DECOMP_CseqMusic_Restart((u32)(u16)opcodeMetaShorts[6], 1);
 		break;
 
 	case 9:
@@ -526,7 +525,7 @@ processOpcode:
 			DECOMP_RaceFlag_SetCanDraw(0);
 		requestDirectLevelLoad:
 			gGT->gameMode2 &= ~VEH_FREEZE_PODIUM;
-			DECOMP_MainRaceTrack_RequestLoad((int)(short)iVar10);
+			DECOMP_MainRaceTrack_RequestLoad((int)(s16)iVar10);
 		}
 		else
 		{
@@ -580,7 +579,7 @@ processOpcode:
 
 	case 0x15:
 		numPlayers = gGT->numPlyrCurrGame;
-		gGT->stars.numStars = (short)((int)gGT->level1->stars.numStars / (int)(unsigned int)numPlayers);
+		gGT->stars.numStars = (s16)((int)gGT->level1->stars.numStars / (int)(u32)numPlayers);
 		gGT->stars.spread = gGT->level1->stars.spread;
 		gGT->stars.seed = gGT->level1->stars.seed;
 		gGT->stars.distance = gGT->level1->stars.distance;
@@ -690,7 +689,7 @@ processOpcode:
 		initData->characterPos[1] = 0;
 		initData->characterPos[2] = 0;
 
-		gGT->podium_modelIndex_First = (u_char)dancerModelID;
+		gGT->podium_modelIndex_First = (u8)dancerModelID;
 		gGT->podium_modelIndex_Second = 0;
 		gGT->podium_modelIndex_Third = 0;
 
@@ -706,7 +705,7 @@ processOpcode:
 		initData->rot[1] += OVR_233.creditsDancerRotOffset[1];
 		initData->rot[2] += OVR_233.creditsDancerRotOffset[2];
 
-		dancerThread = (struct Thread *)DECOMP_CS_Thread_Init(dancerModelID, OVR_233.s_g_dancer, (short *)initData, 0, 0);
+		dancerThread = (struct Thread *)DECOMP_CS_Thread_Init(dancerModelID, OVR_233.s_g_dancer, (s16 *)initData, 0, 0);
 		CS_Credits_NewDancer(dancerThread, (int)opcodeMetaShorts[6]);
 	}
 	break;
@@ -741,7 +740,7 @@ processOpcode:
 		break;
 
 	case 0x27:
-		if ((unsigned int)gGT->msInThisLEV >> 5 < opcodeMeta->arg1.u)
+		if ((u32)gGT->msInThisLEV >> 5 < opcodeMeta->arg1.u)
 			goto updateInstanceAndReturn;
 		break;
 
@@ -801,9 +800,9 @@ processOpcode:
 
 	case 0x30:
 		OVR_233.CutsceneManipulatesAudio = 1;
-		DECOMP_howl_VolumeSet(0, (unsigned int)*((unsigned char *)opcodeMeta + 2));
-		DECOMP_howl_VolumeSet(1, (unsigned int)*((unsigned char *)opcodeMeta + 4));
-		DECOMP_howl_VolumeSet(2, (unsigned int)*((unsigned char *)opcodeMeta + 6));
+		DECOMP_howl_VolumeSet(0, (u32) * ((u8 *)opcodeMeta + 2));
+		DECOMP_howl_VolumeSet(1, (u32) * ((u8 *)opcodeMeta + 4));
+		DECOMP_howl_VolumeSet(2, (u32) * ((u8 *)opcodeMeta + 6));
 		break;
 
 	default:

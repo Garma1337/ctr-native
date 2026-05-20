@@ -22,7 +22,7 @@ void DECOMP_GhostTape_End(void)
 	gh->ySpeed = d->ySpeed;
 	gh->speedApprox = d->speedApprox;
 	gh->timeElapsedInRace = d->timeElapsedInRace;
-	gh->size = (u_int)sdata->GhostRecording.ptrCurrOffset - (u_int)sdata->GhostRecording.ptrStartOffset;
+	gh->size = (u32)sdata->GhostRecording.ptrCurrOffset - (u32)sdata->GhostRecording.ptrStartOffset;
 
 	return;
 }

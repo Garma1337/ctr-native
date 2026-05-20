@@ -5,13 +5,13 @@ void DECOMP_CS_Podium_FullScene_Init(void)
 {
 	struct Instance *driverInstSelf;
 	struct Thread *victoryCamThread;
-	u_int podiumMusic;
+	u32 podiumMusic;
 	struct CsThreadInitData InitData;
 
 	struct PosRot
 	{
-		short pos[3];
-		short rot[3];
+		s16 pos[3];
+		s16 rot[3];
 	};
 
 	struct PosRot *posRot;
@@ -133,8 +133,8 @@ void DECOMP_CS_Podium_FullScene_Init(void)
 	// if it allocated correctly
 	if (victoryCamThread != 0)
 	{
-		// initialize first "short" of the object to zero
-		*(short *)victoryCamThread->object = 0;
+		// initialize first "s16" of the object to zero
+		*(s16 *)victoryCamThread->object = 0;
 	}
 
 	// change victory music based on who is first in the podium

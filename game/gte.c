@@ -7,9 +7,9 @@ void RotateVector(SVec3 *out, const SVec3 *in)
 	gte_rtv0();
 	gte_stlvnl(0x1f800000);
 
-	out->x = *(short *)0x1f800000;
-	out->y = *(short *)0x1f800004;
-	out->z = *(short *)0x1f800008;
+	out->x = *(s16 *)0x1f800000;
+	out->y = *(s16 *)0x1f800004;
+	out->z = *(s16 *)0x1f800008;
 #endif
 }
 

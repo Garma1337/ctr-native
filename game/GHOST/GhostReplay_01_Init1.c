@@ -5,7 +5,7 @@ void DECOMP_GhostReplay_ThTick(struct Thread *);
 void DECOMP_GhostReplay_Init1(void)
 {
 	char i;
-	u_short uVar1;
+	u16 uVar1;
 	int iVar2;
 	struct Thread *t;
 	struct Instance *inst;
@@ -20,7 +20,7 @@ void DECOMP_GhostReplay_Init1(void)
 	char *recordBuffer;
 
 	// for human reading purposes
-	unsigned char playerID;
+	u8 playerID;
 
 	struct GameTracker *gGT = sdata->gGT;
 

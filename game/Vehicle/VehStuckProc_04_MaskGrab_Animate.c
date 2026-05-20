@@ -3,7 +3,7 @@
 void DECOMP_VehStuckProc_MaskGrab_Animate(struct Thread *t, struct Driver *d)
 {
 	char frame;
-	short sVar2;
+	s16 sVar2;
 	int numFrames;
 	struct GameTracker *gGT = sdata->gGT;
 	struct Instance *inst = t->inst;
@@ -161,16 +161,16 @@ void DECOMP_VehStuckProc_MaskGrab_Animate(struct Thread *t, struct Driver *d)
 	}
 
 	// maskPosX = driverPosX
-	mask->pos[0] = (short)(d->posCurr.x >> 8);
+	mask->pos[0] = (s16)(d->posCurr.x >> 8);
 
 	// set mask posZ
-	mask->pos[2] = (short)(d->posCurr.z >> 8);
+	mask->pos[2] = (s16)(d->posCurr.z >> 8);
 
 	// if mask posY < driver posY
-	if (mask->pos[1] < (short)(d->posCurr.y >> 8))
+	if (mask->pos[1] < (s16)(d->posCurr.y >> 8))
 	{
 		// mask posY = driver posY
-		mask->pos[1] = (short)(d->posCurr.y >> 8);
+		mask->pos[1] = (s16)(d->posCurr.y >> 8);
 
 		d->KartStates.MaskGrab.boolLiftingPlayer = true;
 	}
@@ -186,6 +186,6 @@ void DECOMP_VehStuckProc_MaskGrab_Animate(struct Thread *t, struct Driver *d)
 	else
 	{
 		// interpolate scale
-		mask->scale = (short)(((960 - d->NoInputTimer) * 0x1000) / 0xf0);
+		mask->scale = (s16)(((960 - d->NoInputTimer) * 0x1000) / 0xf0);
 	}
 }

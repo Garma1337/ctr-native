@@ -1,8 +1,8 @@
 #include <common.h>
 
-extern short sparkGround_inX[4];
-extern short sparkGround_inZ[4];
-extern short sparkGround_inZ2[4];
+extern s16 sparkGround_inX[4];
+extern s16 sparkGround_inZ[4];
+extern s16 sparkGround_inZ2[4];
 
 void DECOMP_VehEmitter_Sparks_Ground(struct Driver *d, struct ParticleEmitter *emSet)
 {
@@ -32,7 +32,7 @@ void DECOMP_VehEmitter_Sparks_Ground(struct Driver *d, struct ParticleEmitter *e
 		if (p == NULL)
 			continue;
 
-		u_int rng = (u_int)(RngDeadCoed(&gGT->deadcoed_struct.unk1) & 0x7ff);
+		u32 rng = (u32)(RngDeadCoed(&gGT->deadcoed_struct.unk1) & 0x7ff);
 
 		if ((rng & 1) != 0)
 		{
@@ -41,7 +41,7 @@ void DECOMP_VehEmitter_Sparks_Ground(struct Driver *d, struct ParticleEmitter *e
 
 		for (int j = 0; j < 3; j++)
 		{
-			p->axis[j].velocity += (short)outZ2[j] + (short)((rng * outX[j]) >> 12);
+			p->axis[j].velocity += (s16)outZ2[j] + (s16)((rng * outX[j]) >> 12);
 			p->axis[j].startVal += (int)outZ[j] + p->axis[j].velocity;
 		}
 
@@ -50,6 +50,6 @@ void DECOMP_VehEmitter_Sparks_Ground(struct Driver *d, struct ParticleEmitter *e
 	}
 }
 
-short sparkGround_inX[4] = {0x1800, 0, 0, 0};
-short sparkGround_inZ[4] = {0, 0, -0x1800, 0};
-short sparkGround_inZ2[4] = {0, 0, -0x200, 0};
+s16 sparkGround_inX[4] = {0x1800, 0, 0, 0};
+s16 sparkGround_inZ[4] = {0, 0, -0x1800, 0};
+s16 sparkGround_inZ2[4] = {0, 0, -0x200, 0};

@@ -1,12 +1,12 @@
 #include <common.h>
 
-u_char DECOMP_CAM_Path_Move(int frameIndex, short *position, short *rotation, short *getPath)
+u8 DECOMP_CAM_Path_Move(int frameIndex, s16 *position, s16 *rotation, s16 *getPath)
 {
-	short numPos;
-	u_int pathNumNode;
-	short pathID;
-	short *ptrCam;
-	short *move;
+	s16 numPos;
+	u32 pathNumNode;
+	s16 pathID;
+	s16 *ptrCam;
+	s16 *move;
 
 	// get number of position on track
 	numPos = DECOMP_CAM_Path_GetNumPoints();
@@ -22,18 +22,18 @@ u_char DECOMP_CAM_Path_Move(int frameIndex, short *position, short *rotation, sh
 	pathNumNode = 0;
 	move = &ptrCam[0];
 
-	pathNumNode = (u_int)ptrCam[0];
+	pathNumNode = (u32)ptrCam[0];
 	pathID = ptrCam[1];
 	move = ptrCam + 2;
 
-	while (pathNumNode <= (u_int)frameIndex) // return 0 if lt 0 above
+	while (pathNumNode <= (u32)frameIndex) // return 0 if lt 0 above
 	{
 		do
 		{
 			frameIndex = frameIndex - pathNumNode;
 			move = move + (int)pathNumNode * 6;
 
-			pathNumNode = (u_int)move[0];
+			pathNumNode = (u32)move[0];
 			pathID = move[1];
 			move = move + 2;
 
@@ -51,7 +51,7 @@ u_char DECOMP_CAM_Path_Move(int frameIndex, short *position, short *rotation, sh
 	position[2] = move[2];
 
 	// rotation of frame
-	rotation[0] = ((short)move[3] >> 4) + 0x800U & 0xfff;
+	rotation[0] = ((s16)move[3] >> 4) + 0x800U & 0xfff;
 	rotation[1] = move[4] >> 4;
 	rotation[2] = move[5] >> 4;
 	return 1;

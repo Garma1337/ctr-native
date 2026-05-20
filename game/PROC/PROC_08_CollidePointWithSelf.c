@@ -41,7 +41,7 @@ void DECOMP_PROC_CollidePointWithSelf(struct Thread *th, struct BucketSearchPara
 	// save the thread collided with
 	buf->th = th;
 
-	buf->distX = (short)distX;
-	buf->distY = (short)distY;
-	buf->distZ = (short)distZ;
+	buf->distX = (s16)distX;
+	buf->distY = (s16)distY;
+	buf->distZ = (s16)distZ;
 }

@@ -2,7 +2,7 @@
 
 void DECOMP_Bank_Destroy(struct Bank *ptrLastBank)
 {
-	short flags;
+	s16 flags;
 
 	if (sdata->boolAudioEnabled == 0)
 		return;

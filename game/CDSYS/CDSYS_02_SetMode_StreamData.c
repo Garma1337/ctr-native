@@ -19,7 +19,7 @@ void DECOMP_CDSYS_SetMode_StreamData()
 	}
 
 	// https://www.cybdyn-systems.com.au/forum/viewtopic.php?t=1956
-	// CdControl('\x0e',local_10,(u_char *)0x0);
+	// CdControl('\x0e',local_10,(u8 *)0x0);
 	// param_1: 0xe = CdlSetmode
 	// param_2: 0x80 = Speed mode (separate modes exist)
 	// param_3: 0 = normal speed, 1 = double speed

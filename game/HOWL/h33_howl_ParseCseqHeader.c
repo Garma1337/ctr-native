@@ -2,7 +2,7 @@
 
 void DECOMP_howl_ParseCseqHeader(struct CseqHeader *ch)
 {
-	unsigned int addr = (unsigned int)ch;
+	u32 addr = (u32)ch;
 
 	sdata->ptrCseqHeader = (struct CseqHeader *)addr;
 	addr += sizeof(struct CseqHeader);
@@ -13,8 +13,8 @@ void DECOMP_howl_ParseCseqHeader(struct CseqHeader *ch)
 	sdata->ptrCseqShortSamples = (struct SampleDrums *)addr;
 	addr += sizeof(struct SampleDrums) * ch->numShortSamples;
 
-	sdata->ptrCseqSongStartOffset = (short *)addr;
-	addr += sizeof(short) * ch->numSongs;
+	sdata->ptrCseqSongStartOffset = (s16 *)addr;
+	addr += sizeof(s16) * ch->numSongs;
 
 	// align up by 4
 	addr += 2;

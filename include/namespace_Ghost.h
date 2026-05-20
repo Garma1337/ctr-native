@@ -6,9 +6,9 @@ struct GhostPacket
 	// just position,
 	// or union for several packets?
 
-	short pos[3];
-	short time;
-	short rot[2];
+	s16 pos[3];
+	s16 time;
+	s16 rot[2];
 
 	void *bufferPacket;
 
@@ -38,10 +38,10 @@ struct GhostTape
 
 	// 0x24
 	// all in GhostReplay_Init2, unused?
-	short unk1[3];
-	short unk2[3];
-	short unk3[3];
-	short unk4[3];
+	s16 unk1[3];
+	s16 unk2[3];
+	s16 unk3[3];
+	s16 unk4[3];
 
 	// 0x3C
 	int timeInPacket01;
@@ -74,14 +74,14 @@ struct GhostTape
 struct GhostHeader
 {
 	// 0x0
-	short version;
-	short size;
+	s16 version;
+	s16 size;
 
 	// 0x4
-	short levelID;
+	s16 levelID;
 
 	// 0x6
-	short characterID;
+	s16 characterID;
 
 	// 0x8
 	int speedApprox; // useless decoy
@@ -101,4 +101,4 @@ struct GhostHeader
 	// char recordBuffer[0]; // yes, zero bytes
 };
 
-#define GHOSTHEADER_GETRECORDBUFFER(x) (char *)((unsigned int)x + sizeof(struct GhostHeader))
+#define GHOSTHEADER_GETRECORDBUFFER(x) (char *)((u32)x + sizeof(struct GhostHeader))

@@ -44,7 +44,7 @@ void DECOMP_AH_Map_HubArrowOutter(void *hubPtrs, int arrowIndex, int posX, int p
 
 	for (int iVar10 = 0; iVar10 < 3; iVar10++)
 	{
-		unsigned int var5 = (~(timer + (int)arrowIndex * 0xc) & 0x3f) + (2 - (int)(short)iVar10) * -6;
+		u32 var5 = (~(timer + (int)arrowIndex * 0xc) & 0x3f) + (2 - (int)(s16)iVar10) * -6;
 
 		if (var5 >= 0xc)
 			continue;

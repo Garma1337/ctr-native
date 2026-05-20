@@ -183,7 +183,7 @@ enum PhysType
 	// Driver offset 0x454
 
 	// MetaPhys[22]
-	// Driver offset 0x457	(457 char == 456 short)
+	// Driver offset 0x457	(457 char == 456 s16)
 
 	// MetaPhys[23]
 	// Driver offset 0x458
@@ -348,7 +348,7 @@ struct Turbo
 	// 0x8
 	// Index for the animation frame of the exhaust fire
 	// Value 0 means it uses turbo0, 1 means it uses turbo1, so on until 7 is reached and it loops back to 0
-	short fireAnimIndex;
+	s16 fireAnimIndex;
 
 	// 0xA
 	// Stores the visual size of the exhaust fire
@@ -359,7 +359,7 @@ struct Turbo
 	// Turbo pad and USF is 8
 	// 4 appears to be unused
 	// Fire doesn't get any smaller at values lower than 4 nor bigger at values higher than 8
-	short fireSize;
+	s16 fireSize;
 
 	// 0xC
 	// Value that decreases every time VehTurbo_ThTick gets called
@@ -368,13 +368,13 @@ struct Turbo
 
 	// 0xD
 	// Used for the distortion of the sound that indicates active fire/reserves
-	u_char fireAudioDistort;
+	u8 fireAudioDistort;
 
 	// 0xE
 	// Cooldown for when fire is visible
 	// Set to 96 (which makes fire invisible for 0.1 seconds, 96 / 1000 = 96ms = 0.1s) when obtaining turbo from certain sources, namely those from
 	// power-sliding (used to make fire pop with each power-slide)
-	short fireVisibilityCooldown;
+	s16 fireVisibilityCooldown;
 };
 
 struct BotData
@@ -397,7 +397,7 @@ struct BotData
 	int unk5ac;
 
 	// 0x5b0
-	// unsigned int flags
+	// u32 flags
 	// & 0x010 - is blasted? Something to do with damage, might also be "am currently on a s/tp"
 	// & 0x100 - camera spectates this AI
 	// & 0x200 - race started for AI
@@ -410,17 +410,17 @@ struct BotData
 	int botAccel;
 
 	// 0x5b8
-	// short path index
-	short botPath;
+	// s16 path index
+	s16 botPath;
 
 	// 0x5ba
-	short unk5ba;
+	s16 unk5ba;
 
 
 	/*
 	 * regarding unk5bc:
 	 *
-	 * 0x5bc - 0x5bd: likely a short, a timer of some sort, similar to squishTimer.
+	 * 0x5bc - 0x5bd: likely a s16, a timer of some sort, similar to squishTimer.
 	 */
 
 	// 0x5bc
@@ -435,25 +435,25 @@ struct BotData
 		struct
 		{
 			// 0x5bc
-			short rotXZ;
+			s16 rotXZ;
 
 			// 0x5be
-			short drift_unk1;
+			s16 drift_unk1;
 
 			// 0x5c0
-			short ai_mulDrift;
+			s16 ai_mulDrift;
 
 			// 0x5c2
-			short ai_simpTurnState;
+			s16 ai_simpTurnState;
 
 			// 0x5c4
-			short ai_turboMeter;
+			s16 ai_turboMeter;
 
 			// 0x5c6
-			short ai_fireLevel;
+			s16 ai_fireLevel;
 
 			// 0x5c8
-			int ai_squishCooldown; // why does this get interpreted as a short sometimes and an int other times
+			int ai_squishCooldown; // why does this get interpreted as a s16 sometimes and an int other times
 
 			// 0x5cc
 			int unk5cc;
@@ -479,21 +479,21 @@ struct BotData
 	int ai_posBackup[3];
 
 	// 0x5fc
-	short ai_rot4[4];
+	s16 ai_rot4[4];
 
 	// 0x604
 	int ai_progress_cooldown;
 
 	// 0x608
-	short ai_rotY_608;
+	s16 ai_rotY_608;
 
 	// 0x60a
-	short ai_quadblock_checkpointIndex; // 0x60a almost certainly is a char and not a short.
+	s16 ai_quadblock_checkpointIndex; // 0x60a almost certainly is a char and not a s16.
 
 	// within the regions POTENTALNAVFRAMESTART/END, is this a navframe?
 	// POTENTAL NAV FRAME START
 	// 0x60c
-	short estimatePos[3];
+	s16 estimatePos[3];
 
 	// 0x612
 	char estimateRotNav[3];
@@ -502,13 +502,13 @@ struct BotData
 	char estimateRotCurrY;
 
 	// 0x616
-	short distToNextNavXYZ;
+	s16 distToNextNavXYZ;
 
 	// 0x618
-	short distToNextNavXZ;
+	s16 distToNextNavXZ;
 
 	// 0x61A
-	short unk61a;
+	s16 unk61a;
 
 	// 0x61c
 	int unk61c;
@@ -518,11 +518,11 @@ struct BotData
 	struct MaskHeadWeapon *maskObj;
 
 	// 0x624
-	short weaponCooldown;
+	s16 weaponCooldown;
 
 	// 0x626
-	unsigned char unk626;
-	unsigned char desiredPath_BossOnly;
+	u8 unk626;
+	u8 desiredPath_BossOnly;
 
 	// 0x628
 	int unk628;
@@ -534,7 +534,7 @@ struct Driver
 	// 0x0
 	struct Icon **wheelSprites;
 	// 0x4
-	unsigned short wheelSize;
+	u16 wheelSize;
 
 	// 0x6
 	// Front wheel rotation sprite frame offset
@@ -542,13 +542,13 @@ struct Driver
 	// Default: 0
 	// Steering left ranges between 0 to 64
 	// Steering right ranges between 0 to -64 (if we display it as a signed number)
-	short wheelRotation;
+	s16 wheelRotation;
 	// 0x8
-	unsigned int tireColor;
+	u32 tireColor;
 	// 0xC
-	short clockReceive;
+	s16 clockReceive;
 	// 0xE
-	short hazardTimer;
+	s16 hazardTimer;
 	// 0x10
 	struct Instance *instBombThrow;
 	// 0x14
@@ -569,7 +569,7 @@ struct Driver
 	// 0x28
 	int invisibleTimer;
 	// 0x2C
-	unsigned int instFlagsBackup;
+	u32 instFlagsBackup;
 	// 0x30
 	char numWumpas;
 	// 0x31
@@ -591,34 +591,34 @@ struct Driver
 	// 0x37
 	char numHeldItems;
 	// 0x38
-	short superEngineTimer;
+	s16 superEngineTimer;
 	// 0x3A
-	short itemRollTimer;
+	s16 itemRollTimer;
 	// 0x3C
-	short noItemTimer;
+	s16 noItemTimer;
 	// 0x3E
-	short unknown_noitemtimer_laptime;
+	s16 unknown_noitemtimer_laptime;
 	// 0x40
 	int lapTime;
 	// 0x44
-	unsigned char lapIndex;
+	u8 lapIndex;
 	// 0x45
-	unsigned char clockSend;
+	u8 clockSend;
 	// 0x46
-	short jumpMeter;
+	s16 jumpMeter;
 	// 0x48
-	short jumpMeterTimer;
+	s16 jumpMeterTimer;
 	// 0x4A
-	unsigned char driverID;
+	u8 driverID;
 	// 0x4B
 	char simpTurnState;
 	// 0x4C
-	unsigned char matrixArray;
+	u8 matrixArray;
 	// 0x4D
-	unsigned char matrixIndex;
+	u8 matrixIndex;
 
 #if BUILD >= EurRetail
-	short compilerPadding_0x4E;
+	s16 compilerPadding_0x4E;
 
 	// 0x50
 	// highest amount of consecutive turbos in a race
@@ -629,16 +629,16 @@ struct Driver
 #if BUILD >= SepReview
 	// 0x4E -- UsaRetail
 	// 0x54 -- EurRetail, JpnRetail
-	short numTurbos;
+	s16 numTurbos;
 	// 0x50
-	unsigned short frameAgainstWall; // allocated in Sep3, does not function
+	u16 frameAgainstWall; // allocated in Sep3, does not function
 #endif
 
 #if BUILD < EurRetail
-	// There is no "short" on 0x52,
+	// There is no "s16" on 0x52,
 	// there is padding for the next
 	// 4-byte void* that is unused
-	short funcPtrs_compilerpadding;
+	s16 funcPtrs_compilerpadding;
 #endif
 
 	// 0x54 (UsaRetail) / 0x58 (EurRetail, JpnRetail) - OnInit, First function for spawn, drifting, damage, etc
@@ -668,20 +668,20 @@ struct Driver
 
 	// 0xA4
 	SVec3 normalVecUP;
-	short unkAA;
+	s16 unkAA;
 
 	// 0xac
-	short spsHitPos[4];
+	s16 spsHitPos[4];
 
 	// 0xb4
-	short spsNormalVec[4];
+	s16 spsNormalVec[4];
 
 	// 0xBC
 	// 0xBD is waterFlag
-	unsigned int stepFlagSet;
+	u32 stepFlagSet;
 
 	// 0xC0
-	short ampTurnState;
+	s16 ampTurnState;
 
 	// 0xC2
 	char currentTerrain;
@@ -697,7 +697,7 @@ struct Driver
 	char skidmarks[0x200];
 
 	// 0x2C4
-	u_int skidmarkEnableFlags;
+	u32 skidmarkEnableFlags;
 
 	// actions:
 	// 0x00000001 - touching quadblock
@@ -735,10 +735,10 @@ struct Driver
 
 
 	// 0x2C8
-	unsigned int actionsFlagSet;
+	u32 actionsFlagSet;
 
 	// 0x2CC
-	unsigned int actionsFlagSetPrevFrame;
+	u32 actionsFlagSetPrevFrame;
 
 	// 0x2D0
 	int quadBlockHeight;
@@ -756,20 +756,20 @@ struct Driver
 	// instance matrix
 	struct
 	{
-		short x;
-		short y;
-		short z;
-		short w;
+		s16 x;
+		s16 y;
+		s16 z;
+		s16 w;
 	} rotCurr;
 
 	// 0x2F4
 	// used for velocity in 231
 	struct
 	{
-		short x;
-		short y;
-		short z;
-		short w;
+		s16 x;
+		s16 y;
+		s16 z;
+		s16 w;
 	} rotPrev;
 
 	// 0x2FC
@@ -824,15 +824,15 @@ struct Driver
 	char clockFlash;
 
 	// 0x368
-	short AxisAngle2_normalVec[3];
+	s16 AxisAngle2_normalVec[3];
 
 	// 0x36e
 	// Seems to control the speedometer needle to show base current speed
 	// Altought the needle is also controlled a little bit by other variables that are not constants
-	short unk36E;
+	s16 unk36E;
 
 	// 0x370
-	short AxisAngle3_normalVec[3];
+	s16 AxisAngle3_normalVec[3];
 
 	// 0x376
 	char kartState;
@@ -841,53 +841,53 @@ struct Driver
 	char Screen_OffsetY;
 
 	// 0x378
-	short AxisAngle4_normalVec[3];
+	s16 AxisAngle4_normalVec[3];
 
 	// 0x37e
-	short unk37e;
+	s16 unk37e;
 
 	// 0x380
 	char normalVecID;
 	char unk381;
 
 	// 0x382
-	short buttonUsedToStartDrift;
+	s16 buttonUsedToStartDrift;
 
 	// 0x384
-	short posWallColl[3];
+	s16 posWallColl[3];
 
 	// 0x38A
-	short scrubMeta8;
+	s16 scrubMeta8;
 
 	// 0x38C
-	short speed;
+	s16 speed;
 
 	// 0x38E
-	short speedApprox;
+	s16 speedApprox;
 
 	// 0x390
-	short jumpHeightCurr;
+	s16 jumpHeightCurr;
 
 	// 0x392
-	short jumpHeightPrev;
+	s16 jumpHeightPrev;
 
 	// 0x394
-	short axisRotationY;
+	s16 axisRotationY;
 
 	// 0x396
-	short axisRotationX;
+	s16 axisRotationX;
 
 	// 0x398
-	short oh_no_anotherFiller;
+	s16 oh_no_anotherFiller;
 
 	// 0x39A
-	short angle;
+	s16 angle;
 
 	// 0x39C
-	short baseSpeed;
+	s16 baseSpeed;
 
 	// 0x39E
-	short fireSpeed;
+	s16 fireSpeed;
 
 	// 0x3A0
 	int xSpeed;
@@ -899,16 +899,16 @@ struct Driver
 	int zSpeed;
 
 	// 0x3AC
-	short unkVectorX;
+	s16 unkVectorX;
 	// 0x3AE
-	short unkVectorY;
+	s16 unkVectorY;
 	// 0x3B0
-	short unkVectorZ;
+	s16 unkVectorZ;
 	// 0x3B2
-	short unk_offset3B2;
+	s16 unk_offset3B2;
 
 	// 0x3B4
-	short rotationSpinRate; // again?
+	s16 rotationSpinRate; // again?
 
 	// 0x3B6
 	// both related to EngineSound
@@ -916,208 +916,208 @@ struct Driver
 	// 0x3b8 controls the base pitch of the Engine Sound
 	// The final pitch calculation where these vars are used
 	// is also affected by something else I couldn't find
-	short fill_3B6[2];
+	s16 fill_3B6[2];
 
 	// 0x3BA
 	// in japanese VehFire_Increment
-	short japanTurboUnknown;
+	s16 japanTurboUnknown;
 
 	// 0x3BC
 	// in VehPhysProc_Driving_PhysLinear
-	short unkSpeedValue1;
+	s16 unkSpeedValue1;
 
 	// 0x3BE
 	// in VehPhysProc_Driving_PhysLinear
-	short unkSpeedValue2;
+	s16 unkSpeedValue2;
 
 	// 0x3C0
 	// in VehPhysProc_Driving_PhysLinear
-	short mashingXMakesItBig;
+	s16 mashingXMakesItBig;
 
 	// 0x3C2
 	// in VehPhysProc_Driving_PhysLinear
-	short mashXUnknown;
+	s16 mashXUnknown;
 
 	// 0x3C4
 	// in VehPhysProc_Driving_PhysLinear
-	short unknowndriverBaseSpeed;
+	s16 unknowndriverBaseSpeed;
 
 	// 0x3C6 0x3C8
 	// in VehPhysProc_Driving_PhysLinear,
 	// and VehPhysForce_AccelTerrainSlope,
 	// and VehPhysProc_SpinLast_Update
-	short turnAngleCurr;
-	short turnAnglePrev;
+	s16 turnAngleCurr;
+	s16 turnAnglePrev;
 
 	// 0x3CA
-	short unk3CA;
+	s16 unk3CA;
 
 	// 0x3CC
 	// from VehPhysForce_CollideDrivers
 	SVec3 accel;
 
 	// 0x3D2
-	short unk_LerpToForwards;
+	s16 unk_LerpToForwards;
 
 	// 0x3d4
 	// This is a UNION between kart states
-	short unk3D4[3];
+	s16 unk3D4[3];
 
 	// 0x3DA
 	// also drift direction
-	short multDrift;
+	s16 multDrift;
 
 	// 0x3DC
 	// turbo_MeterRoomLeft has values 0-1000 (dec),
 	// can go negative and it draws farther left
-	short turbo_MeterRoomLeft;
+	s16 turbo_MeterRoomLeft;
 
 	// 0x3DE
-	short turbo_outsideTimer;
+	s16 turbo_outsideTimer;
 
 	// 0x3E0
-	short VehFire_AudioCooldown;
+	s16 VehFire_AudioCooldown;
 
 	// 0x3E2
-	short reserves;
+	s16 reserves;
 
 	// 0x3E4
-	short fireSpeedCap;
+	s16 fireSpeedCap;
 
 	// 0x3E6
-	short numFramesSpentSteering;
+	s16 numFramesSpentSteering;
 
 	// 0x3E8
-	short forwardDir;
+	s16 forwardDir;
 
 	// 0x3EA
-	short previousFrameMultDrift; // previous frame or just repeat?
+	s16 previousFrameMultDrift; // previous frame or just repeat?
 
 	// 0x3ec
-	short timeUntilDriftSpinout;
+	s16 timeUntilDriftSpinout;
 
 	// 0x3ee
-	short distanceFromGround;
+	s16 distanceFromGround;
 
 	// 0x3F0
 	// 10-frame buffer
-	short jump_TenBuffer;
+	s16 jump_TenBuffer;
 
 	// 0x3F2
 	// so you can't spam jump too fast
-	short jump_CooldownMS;
+	s16 jump_CooldownMS;
 
 	// 0x3F4
 	// time since driver left quadblock,
 	// the speedrunners call this "coyote jump"
-	short jump_CoyoteTimerMS;
+	s16 jump_CoyoteTimerMS;
 
 	// 0x3F6
 	// if not zero, and if touch ground,
 	// it forces player to jump
-	short jump_ForcedMS;
+	s16 jump_ForcedMS;
 
 	// 0x3F8
-	short jump_InitialVelY;
+	s16 jump_InitialVelY;
 
 	// 0x3FA
-	short jump_unknown;
+	s16 jump_unknown;
 
 	// 0x3FC
-	short jump_LandingBoost;
+	s16 jump_LandingBoost;
 
 	// 0x3FE
-	short set_0xF0_OnWallRub;
+	s16 set_0xF0_OnWallRub;
 
 	// 0x400
-	short NoInputTimer;
+	s16 NoInputTimer;
 
 	// 0x402
-	short burnTimer;
+	s16 burnTimer;
 
 	// 0x404
-	short squishTimer;
+	s16 squishTimer;
 
 	// 0x406
-	short StartDriving_0x60;
+	s16 StartDriving_0x60;
 
 	// 0x408
-	short StartRollback_0x280;
+	s16 StartRollback_0x280;
 
 	// 0x40A
-	short unknownTraction;
+	s16 unknownTraction;
 
 	// 0x40C
 	// when jumping and when hitting ground
-	short jumpSquishStretch;
+	s16 jumpSquishStretch;
 
-	short unk40E;
+	s16 unk40E;
 
 	// 0x410
 	// used to calculate the other ^^
-	short jumpSquishStretch2;
+	s16 jumpSquishStretch2;
 
-	short unk412;
+	s16 unk412;
 
 	// 0x414 (physics/terrain related)
-	short filler_short;
+	s16 filler_short;
 
 	/* Constant table - Metaphysics */
 
 	// 0x416 - 0x00
-	short const_Gravity; // OK
+	s16 const_Gravity; // OK
 
 	// 0x418 - 0x01
-	short const_JumpForce; // OK
+	s16 const_JumpForce; // OK
 
 	// 0x41A - 0x02
-	short const_PedalFriction_Perpendicular; // OK applied sideways to the kart
+	s16 const_PedalFriction_Perpendicular; // OK applied sideways to the kart
 
 	// 0x41C - 0x03
-	short const_PedalFriction_Forward; // OK
+	s16 const_PedalFriction_Forward; // OK
 
 	// 0x41E - 0x04
-	short const_NoPedalFriction_Perpendicular; // OK applied sideways to the kart
+	s16 const_NoPedalFriction_Perpendicular; // OK applied sideways to the kart
 
 	// 0x420 - 0x05
-	short const_NoPedalFriction_Forward; // OK
+	s16 const_NoPedalFriction_Forward; // OK
 
 	// 0x422 - 0x06
-	short const_BrakeFriction; // OK
+	s16 const_BrakeFriction; // OK
 
 	// 0x424 - 0x07
-	short const_DriftCurve; // OK
+	s16 const_DriftCurve; // OK
 
 	// 0x426 - 0x08
-	short const_DriftFriction; // OK
+	s16 const_DriftFriction; // OK
 
 	// 0x428 - 0x09
-	short const_Accel_ClassStat; // OK
+	s16 const_Accel_ClassStat; // OK
 
 	// 0x42A - 0x0A
-	short const_Accel_Reserves; // OK
+	s16 const_Accel_Reserves; // OK
 
 	// 0x42C - 0x0B
-	short const_Speed_ClassStat; // OK
+	s16 const_Speed_ClassStat; // OK
 
 	// 0x42E - 0x0C
-	short const_AccelSpeed_ClassStat; // OK
+	s16 const_AccelSpeed_ClassStat; // OK
 
 	// 0x430 - 0x0D
-	short const_SingleTurboSpeed; // OK
+	s16 const_SingleTurboSpeed; // OK
 
 	// 0x432 - 0x0E
-	short const_SacredFireSpeed; // OK
+	s16 const_SacredFireSpeed; // OK
 
 	// 0x434 - 0x0F
-	short const_BackwardSpeed; // OK
+	s16 const_BackwardSpeed; // OK
 
 	// 0x436 - 0x10
 	// for aku and uka weapons
-	short const_MaskSpeed;
+	s16 const_MaskSpeed;
 
 	// 0x438 - 0x11
-	short const_DamagedSpeed;
+	s16 const_DamagedSpeed;
 
 	// 0x43A - 0x12
 	char const_TurnRate; // OK
@@ -1126,19 +1126,19 @@ struct Driver
 	char const_BackwardTurnRate; // OK
 
 	// 0x43C - 0x14
-	short const_TurnDecreaseRate; // OK
+	s16 const_TurnDecreaseRate; // OK
 
 	// 0x43E - 0x15
-	short const_TurnInputDelay; // OK
+	s16 const_TurnInputDelay; // OK
 
 	// 0x440 - 0x16
-	short const_unk440;
+	s16 const_unk440;
 
 	// 0x442 - 0x17
-	short const_TerminalVelocity; // OK
+	s16 const_TerminalVelocity; // OK
 
 	// 0x444 - 0x18
-	short const_unk444;
+	s16 const_unk444;
 
 	// 0x446 - 0x19
 	char const_SteerAccel_Stage4_FirstFrame;
@@ -1153,26 +1153,26 @@ struct Driver
 	char boolFirstFrameSinceRevEngine;
 
 	// 0x44a - 0x1C
-	short const_SteerAccel_Stage1_MaxSteer;
+	s16 const_SteerAccel_Stage1_MaxSteer;
 
 	// 0x44c - 0x1D
-	short const_SteerAccel_Stage1_MinSteer;
+	s16 const_SteerAccel_Stage1_MinSteer;
 
 	// 0x44e - 0x1E (const 0x80)
-	short unk44e;
+	s16 unk44e;
 
 	// 0x450 - 0x1F (const zero)
-	short unk450;
+	s16 unk450;
 
 	// 0x452, 0x454 - 0x20, 0x21
 	// exaggerate model rotation while steering
-	short const_modelRotVelMax; // OK
-	short const_modelRotVelMin;
+	s16 const_modelRotVelMax; // OK
+	s16 const_modelRotVelMin;
 
 	// 0x456 - [part of 0x22?]
-	// either unused, or a short,
+	// either unused, or a s16,
 	// and then 457 is just the top
-	// byte of the short
+	// byte of the s16
 	char unusedPadding;
 
 	// all related to VehPhysGeneral_LerpToForwards
@@ -1205,20 +1205,20 @@ struct Driver
 	char const_Drifting_FramesTillSpinout;
 
 	// 0x464, 0x466, 0x468 - 0x2E, 0x2F, 0x30
-	short unk464; // impact turning?
-	short unk466; // impact turning?
-	short const_Drifting_CameraSpinRate;
+	s16 unk464; // impact turning?
+	s16 unk466; // impact turning?
+	s16 const_Drifting_CameraSpinRate;
 
 	// 0x46A, 0x46B - 0x31, 0x32
 	char unk46a; // destinedRot max lerping
 	char unk46b; // destinedRot min lerping?
 
 	// 0x46C, 0x46E, 0x470, 0x472, 0x474 - 0x33, 0x34, 0x35, 0x36, 0x37
-	short unk46c;
-	short unk46e;
-	short unk470; // sliding max angle rotation
-	short unk472; // sliding min angle rotation
-	short unk474; // sliding angle rotation factor?*
+	s16 unk46c;
+	s16 unk46e;
+	s16 unk470; // sliding max angle rotation
+	s16 unk472; // sliding min angle rotation
+	s16 unk474; // sliding angle rotation factor?*
 
 	// 0x476, 0x477, 0x478, 0x479, 0x47A - 0x38, 0x39, 0x3A, 0x3B, 0x3C
 	char const_turboMaxRoom;        // point where turbo meter is empty
@@ -1230,16 +1230,16 @@ struct Driver
 	char unk47B; // unused? metaphys skips straight to 0x47C
 
 	// 0x47C, 0x47E, 0x480 - 0x3D, 0x3E, 0x3F
-	short unk47C;
-	short unk47E;
-	short unk480;
+	s16 unk47C;
+	s16 unk47E;
+	s16 unk480;
 
 	// 0x484 - last of "main" constants,
 	// skip over 482, which is non-const
 
 	// 0x482
 	// 1st, 2nd, 3rd, etc
-	short driverRank;
+	s16 driverRank;
 
 	// 0x484 - MetaPhys stat no. 0x40
 	// Used in Aug4 and Aug14
@@ -1248,20 +1248,20 @@ struct Driver
 	// 0x484 - last of constants
 
 	// 0x488
-	unsigned int distanceToFinish_curr;
+	u32 distanceToFinish_curr;
 
 	// 0x48C
-	unsigned int distanceToFinish_checkpoint;
+	u32 distanceToFinish_checkpoint;
 
 	// 0x490
-	unsigned int distanceDrivenBackwards;
+	u32 distanceDrivenBackwards;
 
 	// 0x494
 	// 494=char, 495=char
-	unsigned char unknown_lap_related[2];
+	u8 unknown_lap_related[2];
 
 	// 0x496
-	unsigned short engineVol;
+	u16 engineVol;
 
 	// 0x498
 	struct Instance *instBigNum;
@@ -1291,8 +1291,8 @@ struct Driver
 		int cooldown;
 
 		// 0x4b4
-		short startX;
-		short startY;
+		s16 startX;
+		s16 startY;
 
 	} PickupTimeboxHUD;
 
@@ -1302,8 +1302,8 @@ struct Driver
 		int cooldown;
 
 		// 0x4bc
-		short startX;
-		short startY;
+		s16 startX;
+		s16 startY;
 
 		// 0x4c0
 		int numCollected;
@@ -1313,14 +1313,14 @@ struct Driver
 	struct
 	{
 		// 0x4c4
-		short cooldown;
+		s16 cooldown;
 
 		// 0x4c6
-		short modelID;
+		s16 modelID;
 
 		// 0x4c8
-		short startX;
-		short startY;
+		s16 startX;
+		s16 startY;
 
 		// 0x4cc
 		int numCollected;
@@ -1333,8 +1333,8 @@ struct Driver
 		int cooldown;
 
 		// 0x4d4
-		short startX;
-		short startY;
+		s16 startX;
+		s16 startY;
 
 		// 0x4d8
 		int unk;
@@ -1358,22 +1358,22 @@ struct Driver
 
 	// 0x4f0
 	// naughty dog bug
-	short quip1;
+	s16 quip1;
 
 	// 0x4f2
-	short quip2;
+	s16 quip2;
 
 	// 0x4f4
-	short quip3;
+	s16 quip3;
 
 	// 0x4f6
-	short quip4;
+	s16 quip4;
 
 	// 0x4f8
 	struct Instance *wakeInst;
 
 	// 0x4fc
-	short wakeScale;
+	s16 wakeScale;
 
 	// 0x4fe
 	// 0, 1, 2, depending on rev level
@@ -1390,10 +1390,10 @@ struct Driver
 
 	// 0x508
 	// backup of alpha, used for turbo fire
-	short alphaScaleBackup;
+	s16 alphaScaleBackup;
 
 	// 0x50A
-	short driverRankItemValue;
+	s16 driverRankItemValue;
 
 	// 0x50C
 	char numTimesAttackingPlayer[8];
@@ -1444,13 +1444,13 @@ struct Driver
 	int timeSpentBurnt;
 
 	// 0x550 (not an int)
-	short highestJump;
+	s16 highestJump;
 
 	// 0x552
-	short longestShot;
+	s16 longestShot;
 
 	// 0x554
-	short numberOfJumps;
+	s16 numberOfJumps;
 
 	// 0x556
 	char numTimesMovingPotionHitSomeone;
@@ -1503,7 +1503,7 @@ struct Driver
 	// characterID "Crash Bandicoot"
 
 	// 0x56c
-	short *EndOfRaceComment_ptrQuip;
+	s16 *EndOfRaceComment_ptrQuip;
 
 	// 0x570
 	int EndOfRaceComment_characterID;
@@ -1528,13 +1528,13 @@ struct Driver
 		{
 			// 0x580
 			// used to determine spinout
-			short numFramesDrifting;
+			s16 numFramesDrifting;
 
 			// 0x582
-			short driftBoostTimeMS;
+			s16 driftBoostTimeMS;
 
 			// 0x584
-			short driftTotalTimeMS;
+			s16 driftTotalTimeMS;
 
 			// 0x586
 			char numBoostsAttempted;
@@ -1550,10 +1550,10 @@ struct Driver
 		struct
 		{
 			// 0x580
-			short driftSpinRate;
+			s16 driftSpinRate;
 
 			// 0x582
-			short spinDir;
+			s16 spinDir;
 
 			// more?
 
@@ -1575,16 +1575,16 @@ struct Driver
 			int fireLevel;
 
 			// 0x58c
-			short timeMS;
+			s16 timeMS;
 
 			// 0x58e
-			short unk58e;
+			s16 unk58e;
 
 			// 0x590
-			short unk590;
+			s16 unk590;
 
 			// 0x592
-			unsigned char unk[2];
+			u8 unk[2];
 
 			// 0x594
 			int boolMaskGrab;
@@ -1601,10 +1601,10 @@ struct Driver
 			struct MaskHeadWeapon *maskObj;
 
 			// 0x584
-			short AngleAxis_NormalVec[3];
+			s16 AngleAxis_NormalVec[3];
 
 			// 0x58a
-			short animFrame;
+			s16 animFrame;
 
 			// 0x58c
 			char boolParticlesSpawned;
@@ -1667,14 +1667,14 @@ struct Driver
 	struct GhostTape *ghostTape;
 
 	// 0x630
-	short ghostID;
+	s16 ghostID;
 
 	// 0x632
-	short ghostBoolInit;
+	s16 ghostBoolInit;
 
 	// 0x634
-	short ghostBoolStarted;
-	short unk636;
+	s16 ghostBoolStarted;
+	s16 unk636;
 
 	// 0x638
 	// end of ghost struct (as determined by memset)

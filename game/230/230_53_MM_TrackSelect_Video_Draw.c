@@ -1,10 +1,10 @@
 #include <common.h>
 
-void DECOMP_MM_TrackSelect_Video_Draw(RECT *r, struct MainMenu_LevelRow *selectMenu, int trackIndex, int param_4, u_short param_5)
+void DECOMP_MM_TrackSelect_Video_Draw(RECT *r, struct MainMenu_LevelRow *selectMenu, int trackIndex, int param_4, u16 param_5)
 {
-	u_char u0;
-	u_char v0;
-	u_short tpage;
+	u8 u0;
+	u8 v0;
+	u16 tpage;
 	struct GameTracker *gGT = sdata->gGT;
 	struct BigHeader *bh = sdata->ptrBigfileCdPos_2;
 	struct BigEntry *entry = BIG_GETENTRY(bh);
@@ -62,8 +62,8 @@ void DECOMP_MM_TrackSelect_Video_Draw(RECT *r, struct MainMenu_LevelRow *selectM
 			if (D230.trackSel_videoStatePrev == 3)
 			{
 				// RECT position (x,y)
-				sdata->videoSTR_src_vramRect.x = (u_short)u0 + (tpage & 0xf) * 0x40 + 3;
-				sdata->videoSTR_src_vramRect.y = (u_short)v0 + (tpage & 0x10) * 0x10 + (short)(((u_int)tpage & 0x800) >> 2) + 2;
+				sdata->videoSTR_src_vramRect.x = (u16)u0 + (tpage & 0xf) * 0x40 + 3;
+				sdata->videoSTR_src_vramRect.y = (u16)v0 + (tpage & 0x10) * 0x10 + (s16)(((u32)tpage & 0x800) >> 2) + 2;
 
 				// RECT size (w,h)
 				sdata->videoSTR_src_vramRect.w = 0xaa;
@@ -120,5 +120,5 @@ void DECOMP_MM_TrackSelect_Video_Draw(RECT *r, struct MainMenu_LevelRow *selectM
 	D230.trackSel_videoStatePrev = D230.trackSel_videoStateCurr;
 
 	// Draw 2D Menu rectangle background
-	DECOMP_RECTMENU_DrawInnerRect(r, (short)(param_5 | 1), gGT->backBuffer->otMem.startPlusFour);
+	DECOMP_RECTMENU_DrawInnerRect(r, (s16)(param_5 | 1), gGT->backBuffer->otMem.startPlusFour);
 }

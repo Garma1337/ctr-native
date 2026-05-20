@@ -1,19 +1,19 @@
 #include <common.h>
 
-void DECOMP_DecalHUD_Arrow2D(struct Icon *icon, short posX, short posY, struct PrimMem *primMem, u_long *otMemPtr, u_int color1, u_int color2, u_int color3,
-                             u_int color4, char transparency, int scale, u_short rot)
+void DECOMP_DecalHUD_Arrow2D(struct Icon *icon, s16 posX, s16 posY, struct PrimMem *primMem, u_long *otMemPtr, u32 color1, u32 color2, u32 color3, u32 color4,
+                             char transparency, int scale, u16 rot)
 {
-	u_char y2;
-	u_int code;
+	u8 y2;
+	u32 code;
 	int bitshiftTopRightCorner;
-	u_int topRightCornerAndPageXY;
+	u32 topRightCornerAndPageXY;
 	int bitshiftPosY;
 	int iVar6;
 	int iVar7;
-	short sVar8;
-	u_int bottomMargin;
+	s16 sVar8;
+	u32 bottomMargin;
 	int iVar10;
-	u_int topLeftCornerAndPaletteXY;
+	u32 topLeftCornerAndPaletteXY;
 	int iVar12;
 	int iVar13;
 
@@ -24,10 +24,10 @@ void DECOMP_DecalHUD_Arrow2D(struct Icon *icon, short posX, short posY, struct P
 		return;
 	}
 
-	topRightCornerAndPageXY = *(u_int *)&icon->texLayout.u1;
-	topLeftCornerAndPaletteXY = *(u_int *)&icon->texLayout.u0;
+	topRightCornerAndPageXY = *(u32 *)&icon->texLayout.u1;
+	topLeftCornerAndPaletteXY = *(u32 *)&icon->texLayout.u0;
 	y2 = icon->texLayout.v2;
-	bottomMargin = *(u_int *)&icon->texLayout.u2;
+	bottomMargin = *(u32 *)&icon->texLayout.u2;
 
 	p = (POLY_GT4 *)primMem->curr;
 
@@ -43,7 +43,7 @@ void DECOMP_DecalHUD_Arrow2D(struct Icon *icon, short posX, short posY, struct P
 
 		// set top right corner UVs and texpage of primitive, and alter the blending mode bits of the texpage from 11 (Mode 3, which is no blending) to 00 (Mode
 		// 0, equivalent to regular 50% opacity)
-		*(int *)&p->u1 = topRightCornerAndPageXY & 0xff9fffff | ((u_int)transparency - 1) * 0x200000;
+		*(int *)&p->u1 = topRightCornerAndPageXY & 0xff9fffff | ((u32)transparency - 1) * 0x200000;
 	}
 
 	// set top left vertex color, and code in 7th byte of prim
@@ -51,17 +51,17 @@ void DECOMP_DecalHUD_Arrow2D(struct Icon *icon, short posX, short posY, struct P
 
 	posX = posX & 0xffff;
 	*(int *)&p->u0 = topLeftCornerAndPaletteXY;
-	*(short *)&p->u2 = (short)bottomMargin;
+	*(s16 *)&p->u2 = (s16)bottomMargin;
 
-	bitshiftPosY = (int)(((u_int)y2 - ((int)topLeftCornerAndPaletteXY >> 8 & 0xffU)) * (int)scale) >> 0xd;
+	bitshiftPosY = (int)(((u32)y2 - ((int)topLeftCornerAndPaletteXY >> 8 & 0xffU)) * (int)scale) >> 0xd;
 
-	*(u_short *)&p->u3 = *(u_short *)&icon->texLayout.u3;
+	*(u16 *)&p->u3 = *(u16 *)&icon->texLayout.u3;
 
 	bitshiftTopRightCorner = (int)(((topRightCornerAndPageXY & 0xff) - (topLeftCornerAndPaletteXY & 0xff)) * (int)scale) >> 0xd;
 
 	// stuff for rotation of primitive
-	iVar13 = *(int *)(&data.trigApprox[((u_int)rot & 0x3ff) * 4]) >> 0x10;
-	sVar8 = (short)*(int *)(&data.trigApprox[((u_int)rot & 0x3ff) * 4]);
+	iVar13 = *(int *)(&data.trigApprox[((u32)rot & 0x3ff) * 4]) >> 0x10;
+	sVar8 = (s16) * (int *)(&data.trigApprox[((u32)rot & 0x3ff) * 4]);
 
 	if ((rot & 0x400) == 0)
 	{
@@ -106,7 +106,7 @@ LAB_800232d8:
 	*(int *)&p->r3 = color4;
 
 	*(int *)p = *otMemPtr | 0xc000000;
-	*otMemPtr = (u_int)p & 0xffffff;
+	*otMemPtr = (u32)p & 0xffffff;
 
 	// POLY_GT4 is 0x34 bytes large
 	primMem->curr = p + 1;

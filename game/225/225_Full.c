@@ -14,7 +14,7 @@ enum VsPosY
 };
 
 // 2P, 3P, 4P
-short VsPosY_Config[3 * VsPosY_NUM] = {
+s16 VsPosY_Config[3 * VsPosY_NUM] = {
     0x32, 0x5a, 0x82, 0,    0,   // 2P
     0x1e, 0x46, 0x6e, 0x96, 0,   // 3P
     0xa,  0x35, 0x5b, 0x81, 0xa7 // 4P
@@ -27,28 +27,28 @@ void DECOMP_VB_EndEvent_DrawMenu(void)
 	struct PushBuffer *view;
 	struct RectMenu *endMenu;
 	char numPlyr;
-	short pos[2];
+	s16 pos[2];
 	RECT box;
 
-	short sVar1;
+	s16 sVar1;
 	int iVar2;
-	u_int uVar3;
-	short sVar5;
+	u32 uVar3;
+	s16 sVar5;
 	int iVar6;
 	int uVar7;
-	short *psVar8;
-	short sVar9;
+	s16 *psVar8;
+	s16 sVar9;
 	int iVar10;
 	int iVar11;
 	int iVar14;
-	u_short uStack112;
-	short sStack104;
-	u_short uStack96;
-	u_short uStack88;
-	short sStack80;
-	short sStack72;
+	u16 uStack112;
+	s16 sStack104;
+	u16 uStack96;
+	u16 uStack88;
+	s16 sStack80;
+	s16 sStack72;
 	int iStack60;
-	u_int uStack52;
+	u32 uStack52;
 	int iStack48;
 	int VsConfigIndex;
 
@@ -56,7 +56,7 @@ void DECOMP_VB_EndEvent_DrawMenu(void)
 	uStack88 = 1;
 	sStack80 = 0;
 
-	short asStack128[4];
+	s16 asStack128[4];
 	*(int *)&asStack128[0] = 0;
 	*(int *)&asStack128[2] = 0;
 
@@ -73,7 +73,7 @@ void DECOMP_VB_EndEvent_DrawMenu(void)
 	// lng index for BATTLE
 	iVar10 = 0x50;
 
-	short yCoord;
+	s16 yCoord;
 	// if you are not in battle mode
 	if ((gGT->gameMode1 & 0x20) == 0)
 	{
@@ -134,14 +134,14 @@ void DECOMP_VB_EndEvent_DrawMenu(void)
 
 	{
 		iStack60 = iVar10;
-		uStack52 = (u_int)(iVar10 < 3);
+		uStack52 = (u32)(iVar10 < 3);
 
 		iStack48 = 30;
 
 		for (iVar11 = 0; iVar11 < iStack60; iVar11++)
 		{
 			sVar1 = asStack128[gGT->battleSetup.unk1dc8[iVar11]];
-			sVar5 = (short)iVar14;
+			sVar5 = (s16)iVar14;
 
 			if (sdata->framesSinceRaceEnded > iStack48)
 			{
@@ -187,7 +187,7 @@ void DECOMP_VB_EndEvent_DrawMenu(void)
 			else
 			{
 				iVar10 = sVar1 * 0x1b0000;
-				uStack112 = (sVar5 + (short)((iVar10 >> 0x10) - (iVar10 >> 0x1f) >> 1)) - 0xd;
+				uStack112 = (sVar5 + (s16)((iVar10 >> 0x10) - (iVar10 >> 0x1f) >> 1)) - 0xd;
 
 				// loop through all players
 				for (iVar10 = 0; iVar10 < numPlyr; iVar10++)
@@ -267,10 +267,10 @@ void DECOMP_VB_EndEvent_DrawMenu(void)
 				sStack72 = 0;
 			}
 
-			sVar1 = (short)iVar11 - sStack72;
+			sVar1 = (s16)iVar11 - sStack72;
 			if (sStack72 == 0)
 			{
-				sVar1 = (short)iVar11;
+				sVar1 = (s16)iVar11;
 			}
 
 			iStack48 = iStack48 + 5;
@@ -285,7 +285,7 @@ void DECOMP_VB_EndEvent_DrawMenu(void)
 		}
 	}
 
-	for (unsigned char plCount = 0; plCount < (unsigned char)numPlyr; plCount++)
+	for (u8 plCount = 0; plCount < (u8)numPlyr; plCount++)
 	{
 		// get pointer to instance of Big Number in HUD
 		bigNum = gGT->drivers[plCount]->instBigNum;

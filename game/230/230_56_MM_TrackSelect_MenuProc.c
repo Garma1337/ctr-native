@@ -6,24 +6,24 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu *menu)
 	char bVar2;
 	char bVar3;
 	char bVar4;
-	short sVar5;
-	short currTrack;
-	short sVar7;
-	short elapsedFrames;
-	u_int uVar8;
+	s16 sVar5;
+	s16 currTrack;
+	s16 sVar7;
+	s16 elapsedFrames;
+	u32 uVar8;
 	int iVar9;
 	int iVar10;
 	int iVar11;
 	int *starColor;
-	u_int uVar14;
-	u_int uVar15;
+	u32 uVar14;
+	u32 uVar15;
 	int iVar17;
 	int iVar18;
 	RECT r;
 	RECT q;
 	RECT p;
-	u_int local_44;
-	short numTracks;
+	u32 local_44;
+	s16 numTracks;
 
 	struct MainMenu_LevelRow *selectMenu;
 	struct GameTracker *gGT = sdata->gGT;
@@ -240,7 +240,7 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu *menu)
 	// if lap selection menu is open
 	else
 	{
-		short lapSelTransitionState = 0;
+		s16 lapSelTransitionState = 0;
 
 		// copy LapRow from 8d920 to temp variable b55ae
 		D230.menuLapSel.rowSelected = sdata->uselessLapRowCopy;
@@ -346,7 +346,7 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu *menu)
 // This is just MATH_Cos and Math_Sin
 #if 0
 		// approximate trigonometry
-		sVar7 = (short)data.trigApprox[uVar15];
+		sVar7 = (s16)data.trigApprox[uVar15];
 		iVar9 = data.trigApprox[uVar15] >> 0x10;
 
 		if ((uVar15 & 0x400) == 0)
@@ -378,13 +378,13 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu *menu)
 		r.h = 0x19;
 
 		// posX of track list
-		iVar11 = (u_int)D230.transitionMeta_trackSel[0].currX + (DECOMP_MATH_Cos(uVar15) * 0x19 >> 9) + -0xb4;
+		iVar11 = (u32)D230.transitionMeta_trackSel[0].currX + (DECOMP_MATH_Cos(uVar15) * 0x19 >> 9) + -0xb4;
 
 		// posY of track list
-		iVar9 = (u_int)D230.transitionMeta_trackSel[0].currY + (DECOMP_MATH_Sin(uVar15) * 200 >> 0xc);
+		iVar9 = (u32)D230.transitionMeta_trackSel[0].currY + (DECOMP_MATH_Sin(uVar15) * 200 >> 0xc);
 
-		sVar7 = (short)iVar9 + 0x60;
-		r.x = (short)iVar11;
+		sVar7 = (s16)iVar9 + 0x60;
+		r.x = (s16)iVar11;
 		r.y = sVar7;
 
 		// if you are in time trial mode
@@ -444,7 +444,7 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu *menu)
 		// Draw string
 		DECOMP_DecalFont_DrawLine(sdata->lngStrings[data.metaDataLEV[selectMenu[iVar10].levID].name_LNG], (iVar11 + 8), (iVar9 + 0x65), FONT_BIG, ORANGE);
 
-		if ((D230.trackSel_changeTrack_frameCount == 0) && ((short)iVar18 == 4))
+		if ((D230.trackSel_changeTrack_frameCount == 0) && ((s16)iVar18 == 4))
 		{
 			// if you are in time trial mode
 			if ((gGT->gameMode1 & TIME_TRIAL) != 0)
@@ -522,11 +522,11 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu *menu)
 			{
 				// "SELECT"
 				DECOMP_DecalFont_DrawLine(sdata->lngStrings[0x69], (D230.transitionMeta_trackSel[3].currX + 0x18c),
-				                          (D230.transitionMeta_trackSel[3].currY + (u_int)p.y), FONT_BIG, (JUSTIFY_CENTER | ORANGE));
+				                          (D230.transitionMeta_trackSel[3].currY + (u32)p.y), FONT_BIG, (JUSTIFY_CENTER | ORANGE));
 
 				// "LEVEL"
 				DECOMP_DecalFont_DrawLine(sdata->lngStrings[0x6a], (D230.transitionMeta_trackSel[3].currX + 0x18c),
-				                          (D230.transitionMeta_trackSel[3].currY + (u_int)p.y + 0x10), FONT_BIG, (JUSTIFY_CENTER | ORANGE));
+				                          (D230.transitionMeta_trackSel[3].currY + (u32)p.y + 0x10), FONT_BIG, (JUSTIFY_CENTER | ORANGE));
 			}
 
 			// next, draw the map icon, below "SELECT LEVEL",
@@ -559,7 +559,7 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu *menu)
 				// map 6 is black and shifted 6px downwards and 12px to the right
 				for (iVar18 = 0; iVar18 < 6; iVar18++)
 				{
-					iVar10 = ((((u_int)bVar1 - (u_int)bVar2) + (u_int)bVar3) - (u_int)bVar4);
+					iVar10 = ((((u32)bVar1 - (u32)bVar2) + (u32)bVar3) - (u32)bVar4);
 
 					DECOMP_UI_Map_DrawMap(
 					    // top half
@@ -590,7 +590,7 @@ void DECOMP_MM_TrackSelect_MenuProc(struct RectMenu *menu)
 				}
 			}
 
-			DECOMP_MM_TrackSelect_Video_Draw(&p, selectMenu, (int)(short)D230.trackSel_currTrack, (u_int)(D230.trackSel_transitionState == EXITING_MENU), 0);
+			DECOMP_MM_TrackSelect_Video_Draw(&p, selectMenu, (int)(s16)D230.trackSel_currTrack, (u32)(D230.trackSel_transitionState == EXITING_MENU), 0);
 
 			return;
 		}

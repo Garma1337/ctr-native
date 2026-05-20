@@ -6,10 +6,10 @@ void TEST_DrawSkybox(struct Skybox *ptrSkybox, struct PushBuffer *pushBuffer, st
 		return;
 
 	POLY_G3 *p;
-	short posScreen1[4];
-	short posScreen2[4];
-	short posScreen3[4];
-	short posScreen4[4];
+	s16 posScreen1[4];
+	s16 posScreen2[4];
+	s16 posScreen3[4];
+	s16 posScreen4[4];
 
 	// remove transformation, standard for sky in most games,
 	// 3x3 viewProj was set in previosu call to TEST_226
@@ -26,12 +26,12 @@ void TEST_DrawSkybox(struct Skybox *ptrSkybox, struct PushBuffer *pushBuffer, st
 			p = primMem->curr;
 			void *pNext = p + 1;
 			void *pCurr = p;
-			if (pNext > ((unsigned int)primMem->end - 0x200))
+			if (pNext > ((u32)primMem->end - 0x200))
 				return;
 
-			struct ShortVertex *A = (struct ShortVertex *)((u_int)ptrSkybox->ptrVertex + (u_int)ptrFace[j].A);
-			struct ShortVertex *B = (struct ShortVertex *)((u_int)ptrSkybox->ptrVertex + (u_int)ptrFace[j].B);
-			struct ShortVertex *C = (struct ShortVertex *)((u_int)ptrSkybox->ptrVertex + (u_int)ptrFace[j].C);
+			struct ShortVertex *A = (struct ShortVertex *)((u32)ptrSkybox->ptrVertex + (u32)ptrFace[j].A);
+			struct ShortVertex *B = (struct ShortVertex *)((u32)ptrSkybox->ptrVertex + (u32)ptrFace[j].B);
+			struct ShortVertex *C = (struct ShortVertex *)((u32)ptrSkybox->ptrVertex + (u32)ptrFace[j].C);
 
 			*(int *)&p->r0 = *(int *)&A->Color;
 			*(int *)&p->r1 = *(int *)&B->Color;

@@ -1,32 +1,32 @@
 #include <common.h>
 
-void DECOMP_UI_WeaponBG_DrawShine(struct Icon *icon, short posX, short posY, struct PrimMem *primMem, u_long *ot, char param_6, short param_7, short param_8,
+void DECOMP_UI_WeaponBG_DrawShine(struct Icon *icon, s16 posX, s16 posY, struct PrimMem *primMem, u_long *ot, char param_6, s16 param_7, s16 param_8,
                                   int param9)
 {
-	short sVar1;
-	short sVar2;
-	short sVar3;
-	short sVar4;
-	short sVar5;
-	short sVar6;
+	s16 sVar1;
+	s16 sVar2;
+	s16 sVar3;
+	s16 sVar4;
+	s16 sVar5;
+	s16 sVar6;
 	POLY_GT4 *p;
 	int i;
-	short sVar11;
-	short sVar12;
+	s16 sVar11;
+	s16 sVar12;
 
-	u_int *wumpaShine = (u_int *)&sdata->wumpaShineColor1[0][0];
+	u32 *wumpaShine = (u32 *)&sdata->wumpaShineColor1[0][0];
 
 	if (param_6 == 3)
 	{
-		wumpaShine = (u_int *)&sdata->wumpaShineColor2[0][0];
+		wumpaShine = (u32 *)&sdata->wumpaShineColor2[0][0];
 	}
 
-	sVar3 = (short)(((icon->texLayout.u1 - icon->texLayout.u0) * (int)param_7) >> 0xc);
+	sVar3 = (s16)(((icon->texLayout.u1 - icon->texLayout.u0) * (int)param_7) >> 0xc);
 	sVar1 = posX + sVar3;
 	param_7 = param_7 >> 0xc;
 	sVar12 = sVar1 - param_7;
 
-	sVar4 = (short)(((icon->texLayout.v2 - icon->texLayout.v0) * (int)param_8) >> 0xc);
+	sVar4 = (s16)(((icon->texLayout.v2 - icon->texLayout.v0) * (int)param_8) >> 0xc);
 	sVar2 = posY + sVar4;
 	param_8 = param_8 >> 0xc;
 	sVar11 = sVar2 - param_8;
@@ -38,7 +38,7 @@ void DECOMP_UI_WeaponBG_DrawShine(struct Icon *icon, short posX, short posY, str
 		*(int *)&p->u0 = *(int *)&icon->texLayout.u0;
 		*(int *)&p->u1 = *(int *)&icon->texLayout.u1;
 		*(int *)&p->u2 = *(int *)&icon->texLayout.u2;
-		*(short *)&p->u3 = *(short *)&icon->texLayout.u3;
+		*(s16 *)&p->u3 = *(s16 *)&icon->texLayout.u3;
 
 		switch (i)
 		{
@@ -105,10 +105,10 @@ void DECOMP_UI_WeaponBG_DrawShine(struct Icon *icon, short posX, short posY, str
 		}
 
 		// color RGB
-		*(u_int *)&p->r0 = wumpaShine[2];
-		*(u_int *)&p->r1 = wumpaShine[1];
-		*(u_int *)&p->r2 = wumpaShine[1];
-		*(u_int *)&p->r3 = wumpaShine[0];
+		*(u32 *)&p->r0 = wumpaShine[2];
+		*(u32 *)&p->r1 = wumpaShine[1];
+		*(u32 *)&p->r2 = wumpaShine[1];
+		*(u32 *)&p->r3 = wumpaShine[0];
 
 		setPolyGT4(p);
 
@@ -117,7 +117,7 @@ void DECOMP_UI_WeaponBG_DrawShine(struct Icon *icon, short posX, short posY, str
         if (param_6 != 0)
 #endif
 		{
-			p->tpage = (p->tpage & ~(0x60)) | (((u_short)param_6 - 1) * 0x20);
+			p->tpage = (p->tpage & ~(0x60)) | (((u16)param_6 - 1) * 0x20);
 			p->code |= 2;
 		}
 

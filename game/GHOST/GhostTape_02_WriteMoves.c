@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_GhostTape_WriteMoves(short raceFinished)
+void DECOMP_GhostTape_WriteMoves(s16 raceFinished)
 {
 	char *pbVar1;
 	int iVar3;
@@ -13,7 +13,7 @@ void DECOMP_GhostTape_WriteMoves(short raceFinished)
 	char local_e;
 	char local_c;
 	struct GameTracker *gGT = sdata->gGT;
-	u_int gameMode = gGT->gameMode1;
+	u32 gameMode = gGT->gameMode1;
 
 	if (raceFinished == 0)
 	{
@@ -66,9 +66,9 @@ void DECOMP_GhostTape_WriteMoves(short raceFinished)
 		iVar6 = iVar7->matrix.t[2] >> 3;
 
 		// get change in position (x, y, z)
-		sdata->GhostRecording.VelX = (short)iVar4 - sdata->GhostRecording.VelX;
-		sdata->GhostRecording.VelY = (short)iVar3 - sdata->GhostRecording.VelY;
-		sdata->GhostRecording.VelZ = (short)iVar6 - sdata->GhostRecording.VelZ;
+		sdata->GhostRecording.VelX = (s16)iVar4 - sdata->GhostRecording.VelX;
+		sdata->GhostRecording.VelY = (s16)iVar3 - sdata->GhostRecording.VelY;
+		sdata->GhostRecording.VelZ = (s16)iVar6 - sdata->GhostRecording.VelZ;
 
 		// Time elapsed since last 0x80 buffer
 		iVar9 = sdata->GhostRecording.timeElapsedInRace - sdata->GhostRecording.timeOfLast80buffer;
@@ -200,7 +200,7 @@ void DECOMP_GhostTape_WriteMoves(short raceFinished)
 		    // if offset of ghost-recording buffer exceeds
 		    // the maximum size of a ghost that can be recorded
 		    // (if you're one frame away from max capacity)
-		    ((u_int)sdata->GhostRecording.ptrEndOffset < (u_int)pbVar1 + 0x40) &&
+		    ((u32)sdata->GhostRecording.ptrEndOffset < (u32)pbVar1 + 0x40) &&
 
 		    // bool canSaveGhost
 		    (sdata->boolCanSaveGhost = 0,
@@ -223,9 +223,9 @@ void DECOMP_GhostTape_WriteMoves(short raceFinished)
 		// Save this frame's X, Y, Z positions,
 		// so that they can be used next frame to
 		// calculate velocity
-		sdata->GhostRecording.VelX = (short)iVar4;
-		sdata->GhostRecording.VelY = (short)iVar3;
-		sdata->GhostRecording.VelZ = (short)iVar6;
+		sdata->GhostRecording.VelX = (s16)iVar4;
+		sdata->GhostRecording.VelY = (s16)iVar3;
+		sdata->GhostRecording.VelZ = (s16)iVar6;
 
 		// save incremeneted pointer
 		sdata->GhostRecording.ptrCurrOffset = pbVar1;

@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_UI_Map_DrawDrivers(int ptrMap, struct Thread *bucket, short *param_3)
+void DECOMP_UI_Map_DrawDrivers(int ptrMap, struct Thread *bucket, s16 *param_3)
 
 {
 	int kartColor;
@@ -53,7 +53,7 @@ void DECOMP_UI_Map_DrawDrivers(int ptrMap, struct Thread *bucket, short *param_3
 			iconID = 0x32;
 		}
 
-		DECOMP_UI_Map_DrawRawIcon(ptrMap, (int *)&bucket->inst->matrix.t[0], iconID, (short)kartColor, 0, 0x1000);
+		DECOMP_UI_Map_DrawRawIcon(ptrMap, (int *)&bucket->inst->matrix.t[0], iconID, (s16)kartColor, 0, 0x1000);
 	}
 	return;
 }

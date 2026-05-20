@@ -7,8 +7,8 @@ void DECOMP_AH_Map_Main(void)
 	struct UiElement2D *ptrHudData;
 	int iVar1;
 	int hubPtrs; // int*?
-	short local_20;
-	short local_1e[3];
+	s16 local_20;
+	s16 local_1e[3];
 
 	// force disable speedometer
 	sdata->HudAndDebugFlags &= 0xfffffff7;
@@ -69,8 +69,8 @@ void DECOMP_AH_Map_Main(void)
 
 		DECOMP_UI_Map_DrawDrivers(hubPtrs, gGT->threadBuckets[0].thread, &local_20);
 
-		DECOMP_AH_Map_Warppads((short *)hubPtrs, gGT->threadBuckets[5].thread,
-		                       (short *)&local_1e[0]); // local_1e index 1 and 2 are never assigned to, so garbage data?
+		DECOMP_AH_Map_Warppads((s16 *)hubPtrs, gGT->threadBuckets[5].thread,
+		                       (s16 *)&local_1e[0]); // local_1e index 1 and 2 are never assigned to, so garbage data?
 
 		DECOMP_AH_Map_HubItems((void *)hubPtrs, &local_1e[0]);
 

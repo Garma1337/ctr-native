@@ -2,7 +2,7 @@
 
 // search starts with driver thread's child
 // searches for turbo model
-struct Thread *DECOMP_PROC_SearchForModel(struct Thread *th, short modelID)
+struct Thread *DECOMP_PROC_SearchForModel(struct Thread *th, s16 modelID)
 {
 	while (th != 0)
 	{

@@ -5,16 +5,16 @@ void DECOMP_AH_HintMenu_MenuProc(struct RectMenu *menu)
 	struct GameTracker *gGT;
 	struct Instance *inst;
 
-	u_int *puVar1;
-	u_short uVar2;
+	u32 *puVar1;
+	u16 uVar2;
 	char bVar3;
-	u_int uVar6;
+	u32 uVar6;
 	int iVar7;
 	int *puVar8;
-	short sVar9;
+	s16 sVar9;
 	int iVar10;
 	int iVar11;
-	short sVar12;
+	s16 sVar12;
 	RECT box;
 	char hintsFound[32];
 	Color color;
@@ -31,7 +31,7 @@ void DECOMP_AH_HintMenu_MenuProc(struct RectMenu *menu)
 	int numHintsFound = 0;
 
 	int i = 0;
-	short *ptrLngID = &D232.hintMenu_lngIndexArr[0];
+	s16 *ptrLngID = &D232.hintMenu_lngIndexArr[0];
 
 	for (/**/; *ptrLngID > -1; ptrLngID++, i++)
 	{
@@ -50,7 +50,7 @@ void DECOMP_AH_HintMenu_MenuProc(struct RectMenu *menu)
 	if (menu->rowSelected > numHintsFound)
 		menu->rowSelected = numHintsFound;
 
-	if ((D232.hintMenu_scrollIndex > (numHintsFound + -4)) && (D232.hintMenu_scrollIndex = (short)(numHintsFound + -4), D232.hintMenu_scrollIndex < 0))
+	if ((D232.hintMenu_scrollIndex > (numHintsFound + -4)) && (D232.hintMenu_scrollIndex = (s16)(numHintsFound + -4), D232.hintMenu_scrollIndex < 0))
 	{
 		D232.hintMenu_scrollIndex = 0;
 	}
@@ -97,7 +97,7 @@ void DECOMP_AH_HintMenu_MenuProc(struct RectMenu *menu)
 		iVar7 = (iVar10 + 6);
 		box.x = 0xff - (iVar7 >> 1);
 		box.w = iVar7;
-		box.y = (short)iVar11 + 0x4e;
+		box.y = (s16)iVar11 + 0x4e;
 		box.h = 0x11;
 
 		u_long *ot = gGT->backBuffer->otMem.startPlusFour;
@@ -112,7 +112,7 @@ void DECOMP_AH_HintMenu_MenuProc(struct RectMenu *menu)
 		DECOMP_RECTMENU_DrawOuterRect_Edge(&box, color, 0x20, ot);
 
 		box.y = 0x28;
-		box.h = (short)iVar11 + 0x3b;
+		box.h = (s16)iVar11 + 0x3b;
 		box.x = -0xe;
 		box.w = 0x21c;
 
@@ -259,7 +259,7 @@ LAB_800b38cc:
 	{
 		do
 		{
-			iVar7 = D232.hintMenu_scrollIndex + (int)(short)iVar11;
+			iVar7 = D232.hintMenu_scrollIndex + (int)(s16)iVar11;
 			if (iVar7 < numHintsFound)
 			{
 				uVar6 = D232.hintMenu_lngIndexArr[hintsFound[iVar7]];
@@ -301,7 +301,7 @@ LAB_800b38cc:
 	DECOMP_RECTMENU_DrawOuterRect_Edge(&box, color, 0x20, ot);
 
 	box.y = 0x28;
-	box.h = (short)iVar10 + 0x2b;
+	box.h = (s16)iVar10 + 0x2b;
 	box.x = -0x14;
 	box.w = 0x228;
 

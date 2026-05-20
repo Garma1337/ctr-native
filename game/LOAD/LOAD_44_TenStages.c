@@ -5,13 +5,13 @@ void (*mainMenuInit[6])() = {DECOMP_MM_JumpTo_Title_FirstTime, DECOMP_MM_JumpTo_
 
 int DECOMP_LOAD_TenStages(struct GameTracker *gGT, int loadingStage, struct BigHeader *bigfile)
 {
-	short sVar4;
+	s16 sVar4;
 	int iVar5;
-	u_int uVar6;
+	u32 uVar6;
 	int iVar9;
 	int iVar12;
 	int *piVar15;
-	u_int uVar16;
+	u32 uVar16;
 	int levelID;
 	int ovrRegion1;
 	int ovrRegion3;
@@ -306,12 +306,12 @@ int DECOMP_LOAD_TenStages(struct GameTracker *gGT, int loadingStage, struct BigH
 			ptrArray[i] = 0;
 		}
 
-		DECOMP_LOAD_DriverMPK((unsigned int)bigfile, sdata->levelLOD);
+		DECOMP_LOAD_DriverMPK((u32)bigfile, sdata->levelLOD);
 		break;
 	}
 	case 5:
 	{
-		sdata->PLYROBJECTLIST = (int **)((unsigned int)sdata->ptrMPK + 4);
+		sdata->PLYROBJECTLIST = (int **)((u32)sdata->ptrMPK + 4);
 		if (sdata->ptrMPK == 0)
 			sdata->PLYROBJECTLIST = 0;
 
@@ -479,18 +479,18 @@ int DECOMP_LOAD_TenStages(struct GameTracker *gGT, int loadingStage, struct BigH
 			// they have bigger sizes that the
 			// search algorithm depends on
 
-			gGT->ptrCircle = (u_int)DecalGlobal_FindInLEV(lev, rdata.s_circle);
-			gGT->ptrClod = (u_int)DecalGlobal_FindInLEV(lev, rdata.s_clod);
-			gGT->ptrDustpuff = (u_int)DecalGlobal_FindInLEV(lev, rdata.s_dustpuff);
-			gGT->ptrSmoking = (u_int)DecalGlobal_FindInLEV(lev, rdata.s_smokering); // "Smoke Ring"
-			gGT->ptrSparkle = (u_int)DecalGlobal_FindInLEV(lev, rdata.s_sparkle);
+			gGT->ptrCircle = (u32)DecalGlobal_FindInLEV(lev, rdata.s_circle);
+			gGT->ptrClod = (u32)DecalGlobal_FindInLEV(lev, rdata.s_clod);
+			gGT->ptrDustpuff = (u32)DecalGlobal_FindInLEV(lev, rdata.s_dustpuff);
+			gGT->ptrSmoking = (u32)DecalGlobal_FindInLEV(lev, rdata.s_smokering); // "Smoke Ring"
+			gGT->ptrSparkle = (u32)DecalGlobal_FindInLEV(lev, rdata.s_sparkle);
 #endif
 		}
 
 		// if linked list of icons exists
 		if (gGT->mpkIcons != 0)
 		{
-			piVar15 = (int *)(*(u_int *)((u_int)gGT->mpkIcons + 4));
+			piVar15 = (int *)(*(u32 *)((u32)gGT->mpkIcons + 4));
 
 			// Removed usage of DecalGlobal_FindInMPK
 			// OG game would search every string one-by-one
@@ -545,7 +545,7 @@ int DECOMP_LOAD_TenStages(struct GameTracker *gGT, int loadingStage, struct BigH
 		DECOMP_LOAD_AppendQueue(0, LT_SETVRAM, BI_PODIUMVRMS + iVar9, NULL, DECOMP_LOAD_VramFileCallback);
 
 		// podium first place
-		u_char *ptrIndexArr = &gGT->podium_modelIndex_First;
+		u8 *ptrIndexArr = &gGT->podium_modelIndex_First;
 		int *ptrModelPtrArr = &data.podiumModel_firstPlace;
 		int baseIndexPM = BI_DANCEMODELWIN;
 

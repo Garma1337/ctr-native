@@ -35,17 +35,17 @@ void DECOMP_CS_Garage_ZoomOut(char zoomState)
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b7834-0x800b854c
 void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 {
-	short garageFrames;
-	short *barLen;
-	u_short classNamePosX;
+	s16 garageFrames;
+	s16 *barLen;
+	u16 classNamePosX;
 	int i;
-	u_int statNamePosX;
-	u_int statBarPosX;
+	u32 statNamePosX;
+	u32 statBarPosX;
 
-	u_int currSelectIndex = sdata->advCharSelectIndex_curr;
+	u32 currSelectIndex = sdata->advCharSelectIndex_curr;
 	struct GameTracker *gGT = sdata->gGT;
 	struct PrimMem *primMem = &gGT->backBuffer->primMem;
-	short currCharacterID = gGarage.unusedArr_garageChars[currSelectIndex];
+	s16 currCharacterID = gGarage.unusedArr_garageChars[currSelectIndex];
 	struct MetaDataCHAR *MDC = &data.MetaDataCharacters[currCharacterID];
 	int nameIndex = MDC->name_LNG_long;
 	RECT r;
@@ -72,7 +72,7 @@ void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 	for (i = 0; i < 3; i++)
 	{
 		barLen = &gGarage.barLen[i];
-		short stat = gGarage.barStat[MDC->engineID * 3 + i];
+		s16 stat = gGarage.barStat[MDC->engineID * 3 + i];
 
 
 #define BAR_RATE 3
@@ -126,10 +126,10 @@ void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 		i = 1;
 
 	// 7 pixels tall
-	u_short statBarStart_Y = 33;
-	u_short statBarEnd_Y = 40;
+	u16 statBarStart_Y = 33;
+	u16 statBarEnd_Y = 40;
 
-	u_short statBarShadows_Y = 34;
+	u16 statBarShadows_Y = 34;
 
 	// Draw class name
 	DECOMP_DecalFont_DrawLine(sdata->lngStrings[gGarage.unusedArr_lngIndex[i]], classNamePosX, 15, FONT_BIG, (JUSTIFY_CENTER | ORANGE));
@@ -165,8 +165,8 @@ void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 		for (int segmentIndex = 0; segmentIndex < 6; segmentIndex++)
 		{
 			// color data of bars (blue green yellow red)
-			u_int *barColor = &gGarage.barColors[segmentIndex];
-			short currSegmentLen = (short)segmentLen;
+			u32 *barColor = &gGarage.barColors[segmentIndex];
+			s16 currSegmentLen = (s16)segmentLen;
 
 			if (*barLen <= segmentEnd)
 			{
@@ -195,7 +195,7 @@ void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 				*(int *)&p->r2 = barColor[0] | 0x38000000;
 				*(int *)&p->r3 = barColor[1] | 0x38000000;
 
-				short segmentX = statBarPosX + segmentStart;
+				s16 segmentX = statBarPosX + segmentStart;
 
 				// top left
 				p->x0 = segmentX;
@@ -231,7 +231,7 @@ void DECOMP_CS_Garage_MenuProc(struct RectMenu *param_1)
 	}
 
 	// "Intermediate" (longest class name)
-	short classMaxLen = DECOMP_DecalFont_GetLineWidth(sdata->lngStrings[0x249], 1);
+	s16 classMaxLen = DECOMP_DecalFont_GetLineWidth(sdata->lngStrings[0x249], 1);
 
 	// Stats box
 	r.x = (classNamePosX - (classMaxLen >> 1)) - 6;
@@ -467,7 +467,7 @@ SKIP_CONTROLS:
 		gGarage.numFramesCurr_ZoomOut--;
 	}
 
-	u_int prevSelectIndex = sdata->advCharSelectIndex_prev;
+	u32 prevSelectIndex = sdata->advCharSelectIndex_prev;
 
 	// Pura->Crash
 	if ((currSelectIndex == 0) && (prevSelectIndex == 7))
@@ -490,8 +490,8 @@ SKIP_CONTROLS:
 	// pointer to rotation
 
 	int getPath;
-	short camPos[3];
-	short camRot[3];
+	s16 camPos[3];
+	s16 camRot[3];
 	DECOMP_CAM_Path_Move((int)garageFrames, &camPos[0], &camRot[0], &getPath);
 
 	// set position and rotation to pushBuffer

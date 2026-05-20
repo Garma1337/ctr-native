@@ -113,31 +113,31 @@ struct TextureLayout
 {
 	// 0x14
 	// top left corner
-	unsigned char u0;
-	unsigned char v0;
+	u8 u0;
+	u8 v0;
 
 	// 0x16
 	// holds X and Y with bit shifting
-	unsigned short clut;
+	u16 clut;
 
 	// 0x18
 	// top right corner
-	unsigned char u1;
-	unsigned char v1;
+	u8 u1;
+	u8 v1;
 
 	// 0x1a
 	// holds X and Y with bit shifting
-	unsigned short tpage;
+	u16 tpage;
 
 	// 0x1c
 	// bottom left corner
-	unsigned char u2;
-	unsigned char v2;
+	u8 u2;
+	u8 v2;
 
 	// 0x1e
 	// bottom right corner
-	unsigned char u3;
-	unsigned char v3;
+	u8 u3;
+	u8 v3;
 };
 
 struct Icon
@@ -159,19 +159,19 @@ struct IconGroup
 	char name[16];
 
 	// 0x10
-	short groupID;
+	s16 groupID;
 
 	// 0x12
-	short numIcons;
+	s16 numIcons;
 
 	// 0x14
 	// struct Icon* icons[0];
 };
-#define ICONGROUP_GETICONS(x) (struct Icon **)((unsigned int)x + sizeof(struct IconGroup))
+#define ICONGROUP_GETICONS(x) (struct Icon **)((u32)x + sizeof(struct IconGroup))
 
 _Static_assert(sizeof(struct TextureLayout) == 0xC);
 _Static_assert(sizeof(struct Icon) == 0x20);
 
-#define setIconUV(p, icon)                                                                                                                                    \
-	*(u_int *)&p->u0 = *(u_int *)&icon->texLayout.u0, *(u_int *)&p->u1 = *(u_int *)&icon->texLayout.u1, *(u_short *)&p->u2 = *(u_short *)&icon->texLayout.u2, \
-	        *(u_short *)&p->u3 = *(u_short *)&icon->texLayout.u3
+#define setIconUV(p, icon)                                                                                                                    \
+	*(u32 *)&p->u0 = *(u32 *)&icon->texLayout.u0, *(u32 *)&p->u1 = *(u32 *)&icon->texLayout.u1, *(u16 *)&p->u2 = *(u16 *)&icon->texLayout.u2, \
+	      *(u16 *)&p->u3 = *(u16 *)&icon->texLayout.u3

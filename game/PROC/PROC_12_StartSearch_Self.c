@@ -3,7 +3,7 @@
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x80042544-0x800425d4
 void DECOMP_PROC_StartSearch_Self(struct ScratchpadStruct *sps)
 {
-	short hitRadius;
+	s16 hitRadius;
 	struct GameTracker *gGT;
 
 	hitRadius = sps->Input1.hitRadius;

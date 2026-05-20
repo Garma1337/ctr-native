@@ -36,7 +36,7 @@ void DECOMP_RB_Hazard_ThCollide_Generic(struct Thread *thread)
 	modelID = inst->model->id;
 
 	// if red beaker or green beaker
-	if ((unsigned int)(modelID - STATIC_BEAKER_RED) < 2)
+	if ((u32)(modelID - STATIC_BEAKER_RED) < 2)
 	{
 #ifndef REBUILD_PS1
 		PlaySound3D(0x3f, inst);

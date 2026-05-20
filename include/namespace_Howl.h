@@ -2,8 +2,8 @@
 // this is a type in libsnd.h
 struct SndVolume
 {
-    unsigned short left;
-    unsigned short right;
+    u16 left;
+    u16 right;
 };
 #endif
 
@@ -12,14 +12,14 @@ struct SndVolume
 // https://github.com/TOMB5/TOMB5/blob/master/EMULATOR/LIBSPU.H
 typedef struct
 {
-	unsigned long mask;
-	long mode;
+	u32 mask;
+	s32 mode;
 
 	// SpuVolume from psn00b headers
 	SpuVolume depth; /* reverb depth */
 
-	long delay;    /* Delay Time  (ECHO, DELAY only)   */
-	long feedback; /* Feedback    (ECHO only)          */
+	s32 delay;    /* Delay Time  (ECHO, DELAY only)   */
+	s32 feedback; /* Feedback    (ECHO only)          */
 } SpuReverbAttr;
 #endif
 
@@ -32,20 +32,20 @@ struct ChannelAttr
 	// as + dr = ASDR (envelope standard)
 
 	// 0x4
-	short ad;
-	short sr;
+	s16 ad;
+	s16 sr;
 
 	// 0x8
-	short pitch;
+	s16 pitch;
 
 	// 0xa
-	short reverb;
+	s16 reverb;
 
 	// 0xc
-	short audioL;
+	s16 audioL;
 
 	// 0xe
-	short audioR;
+	s16 audioR;
 
 	// 0x10 bytes large
 };
@@ -60,7 +60,7 @@ struct ChannelStats
 	struct ChannelStats *prev;
 
 	// 0x8
-	u_char flags;
+	u8 flags;
 
 	// 0x9
 	char channelID;
@@ -85,20 +85,20 @@ struct ChannelStats
 	char echo;
 
 	// 0xf
-	unsigned char vol;
+	u8 vol;
 
 	// 0x10
-	unsigned char distort;
+	u8 distort;
 
 	// 0x11
-	unsigned char LR;
+	u8 LR;
 
 	// 0x12
-	short ad;
-	short sr;
+	s16 ad;
+	s16 sr;
 
 	// 0x16
-	short timeLeft;
+	s16 timeLeft;
 
 	// 0x18
 	// bitshifted top 2 bytes are "CountSounds"
@@ -124,7 +124,7 @@ struct GarageFX
 	char gsp_prev;
 
 	// 0x2
-	short volume;
+	s16 volume;
 
 	// 0x4
 	int LR;
@@ -138,17 +138,17 @@ struct GarageFX
 struct OtherFX
 {
 	// 0x0
-	unsigned char flags;
-	unsigned char volume;
+	u8 flags;
+	u8 volume;
 
 	// 0x2
-	unsigned short pitch;
+	u16 pitch;
 
 	// 0x4
-	unsigned short spuIndex;
+	u16 spuIndex;
 
 	// 0x6
-	unsigned short duration;
+	u16 duration;
 
 	// 0x8 -- size
 };
@@ -156,17 +156,17 @@ struct OtherFX
 struct EngineFX
 {
 	// 0x0
-	unsigned char flags;
-	unsigned char volume;
+	u8 flags;
+	u8 volume;
 
 	// 0x2
-	unsigned short pitch;
+	u16 pitch;
 
 	// 0x4
-	unsigned short unk;
+	u16 unk;
 
 	// 0x6
-	unsigned short spuIndex;
+	u16 spuIndex;
 
 	// 0x8 -- size
 };
@@ -211,21 +211,21 @@ struct SampleInstrument
 {
 	// 0x0
 	char alwaysOne;
-	unsigned char volume;
+	u8 volume;
 
 	// 0x2
-	short alwaysZero;
+	s16 alwaysZero;
 
 	// 0x4
 	// middle C at frequency 60
-	short basePitch;
+	s16 basePitch;
 
 	// 0x6
-	short spuIndex;
+	s16 spuIndex;
 
 	// 0x8
-	short ad;
-	short sr;
+	s16 ad;
+	s16 sr;
 
 	// 0xC -- end of struct
 };
@@ -234,16 +234,16 @@ struct SampleDrums
 {
 	// 0x0
 	char alwaysOne;
-	unsigned char volume;
+	u8 volume;
 
 	// 0x2
-	short pitch;
+	s16 pitch;
 
 	// 0x4
-	short spuIndex;
+	s16 spuIndex;
 
 	// 0x6
-	short alwaysZero;
+	s16 alwaysZero;
 
 	// 0x8 -- end of struct
 };
@@ -256,16 +256,16 @@ struct CseqSongHeader
 	char numSeqs;
 
 	// 0x2
-	short bpm; // beats per minute
+	s16 bpm; // beats per minute
 
 	// 0x4
-	short tpqn; // ticks per quarter note
+	s16 tpqn; // ticks per quarter note
 
 	// size of numSeqs
 	// each seq is an array of SongNote
-	// short seqOffsetArr[0];
+	// s16 seqOffsetArr[0];
 };
-#define SONGHEADER_GETSEQOFFARR(x) ((unsigned int)x + sizeof(struct CseqSongHeader))
+#define SONGHEADER_GETSEQOFFARR(x) ((u32)x + sizeof(struct CseqSongHeader))
 
 // right before first note
 struct SongNoteHeader
@@ -277,7 +277,7 @@ struct SongNoteHeader
 
 	// char notes[0];
 };
-#define NOTEHEADER_GETNOTES(x) ((unsigned int)x + sizeof(struct SongNoteHeader))
+#define NOTEHEADER_GETNOTES(x) ((u32)x + sizeof(struct SongNoteHeader))
 
 #if 0
 // AKA: SongNote
@@ -315,7 +315,7 @@ struct SongSeq
 	char flags;
 
 	// 0x1
-	unsigned char soundID;
+	u8 soundID;
 	char unk;
 
 	// 0x3 (SampleInstrument*)
@@ -327,10 +327,10 @@ struct SongSeq
 	// one is curr, one is desired
 
 	// 0x5
-	unsigned char vol_Curr;
+	u8 vol_Curr;
 
 	// 0x6
-	unsigned char vol_New;
+	u8 vol_New;
 
 	// 0x7
 	char vol_StepRate;
@@ -338,10 +338,10 @@ struct SongSeq
 	// one is curr, one is desired
 
 	// 0x8
-	unsigned char distort;
+	u8 distort;
 
 	// 0x9
-	unsigned char LR;
+	u8 LR;
 
 	// 0xA
 	char unk0A;
@@ -375,25 +375,25 @@ struct Song
 	// & 1 = Playing
 	// & 2 = Paused (can be &3 in menus)
 	// & 4 = needs to stop
-	unsigned char flags;
+	u8 flags;
 
 	// 0x1
 	char songPoolIndex;
 
 	// 0x2
 	// songID out of all songs in RAM
-	short id;
+	s16 id;
 
 	// 0x4
 	int songSetActiveBits;
 
 	// 0x8
 	// ticks per quarter note
-	short tpqn;
+	s16 tpqn;
 
 	// 0xA
 	// beats per minute
-	short bpm;
+	s16 bpm;
 
 	// 0xC
 	int tempo;
@@ -405,8 +405,8 @@ struct Song
 	int timeSpentPlaying;
 
 	// 0x18 = vol_Curr
-	unsigned char vol_Curr;
-	unsigned char vol_New;
+	u8 vol_Curr;
+	u8 vol_New;
 	char vol_StepRate;
 
 	// 0x1b
@@ -424,25 +424,25 @@ struct SongSet
 
 struct SampleBlockHeader
 {
-	short numSamples;
+	s16 numSamples;
 
-	// short spuIndexArr[0];
+	// s16 spuIndexArr[0];
 };
-#define SBHEADER_GETARR(x) (short *)((unsigned int)x + sizeof(struct SampleBlockHeader))
+#define SBHEADER_GETARR(x) (s16 *)((u32)x + sizeof(struct SampleBlockHeader))
 
 struct SpuAddrEntry
 {
-	unsigned short spuAddr;
-	unsigned short spuSize;
+	u16 spuAddr;
+	u16 spuSize;
 };
 
 struct Bank
 {
 	// 0x0
-	short bankID;
+	s16 bankID;
 
 	// 0x2
-	u_short flags;
+	u16 flags;
 
 	// min and max are ranges used in FUN_80029730,
 	// range for what kind of data?
@@ -451,10 +451,10 @@ struct Bank
 	// and offset 0x6 as number of elements
 
 	// 0x4
-	unsigned short min;
+	u16 min;
 
 	// 0x6
-	unsigned short max;
+	u16 max;
 
 	// 8 elements of 8-byte struct
 };

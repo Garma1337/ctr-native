@@ -1,6 +1,6 @@
 #include <common.h>
 
-uint8_t MEMCARD_Load(int slotIdx, char *name, uint8_t *ptrMemcard, int memcardFileSize, unsigned int param5)
+u8 MEMCARD_Load(int slotIdx, char *name, u8 *ptrMemcard, int memcardFileSize, u32 param5)
 {
 	if (sdata->memcard_stage != MC_STAGE_IDLE)
 		return MC_RETURN_TIMEOUT;

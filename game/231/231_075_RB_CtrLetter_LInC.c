@@ -2,7 +2,7 @@
 
 int DECOMP_RB_CtrLetter_LInC(struct Instance *letterInst, struct Thread *driverTh, struct ScratchpadStruct *sps)
 {
-	short posScreen[2];
+	s16 posScreen[2];
 	MATRIX *m;
 	struct Driver *driver;
 	struct PushBuffer *pb;

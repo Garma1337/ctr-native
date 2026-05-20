@@ -4,7 +4,7 @@ void DECOMP_SubmitName_MenuProc(struct RectMenu *menu)
 {
 	struct GameTracker *gGT = sdata->gGT;
 
-	short selection = DECOMP_SubmitName_DrawMenu(0x13f);
+	s16 selection = DECOMP_SubmitName_DrawMenu(0x13f);
 	menu->rowSelected = selection;
 
 	// not finished yet

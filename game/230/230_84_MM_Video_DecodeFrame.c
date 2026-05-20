@@ -1,10 +1,10 @@
 #include <common.h>
 
-u_int DECOMP_MM_Video_DecodeFrame(short offsetX, short offsetY)
+u32 DECOMP_MM_Video_DecodeFrame(s16 offsetX, s16 offsetY)
 
 {
 	int iVar1;
-	u_int boolDraw;
+	u32 boolDraw;
 
 	iVar1 = CdDiskReady(1);
 	if (V230.field3_0xc == 1)
@@ -62,7 +62,7 @@ u_int DECOMP_MM_Video_DecodeFrame(short offsetX, short offsetY)
 			DecDCTout(V230.out_Buf[V230.imgId], V230.field32_0x58);
 
 			// return 1, ready to draw
-			boolDraw = (u_int)V230.drawNextFrame;
+			boolDraw = (u32)V230.drawNextFrame;
 		}
 	}
 	return boolDraw;

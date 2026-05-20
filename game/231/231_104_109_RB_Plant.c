@@ -398,7 +398,7 @@ void DECOMP_RB_Plant_LInB(struct Instance *inst)
 {
 	struct Plant *plantObj;
 	struct SpawnType1 *ptrSpawnType1;
-	short *metaArray;
+	s16 *metaArray;
 	int plantID;
 
 	struct Thread *t = DECOMP_PROC_BirthWithObject(
@@ -430,7 +430,7 @@ void DECOMP_RB_Plant_LInB(struct Instance *inst)
 	{
 		// puts plants on separate cycles
 		void **pointers = ST1_GETPOINTERS(ptrSpawnType1);
-		metaArray = (short *)pointers[ST1_SPAWN];
+		metaArray = (s16 *)pointers[ST1_SPAWN];
 
 		plantID = inst->name[6] - '0';
 		t->cooldownFrameCount = metaArray[plantID * 2 + 0];

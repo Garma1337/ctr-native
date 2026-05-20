@@ -1,14 +1,14 @@
 #include <common.h>
 
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x800af7c0-0x800af994
-void CS_Podium_Prize_Spin(struct Instance *inst, short *prize)
+void CS_Podium_Prize_Spin(struct Instance *inst, s16 *prize)
 {
 	struct GamepadSystem *gGS;
-	u_int trigApprox;
-	short prevAngle;
+	u32 trigApprox;
+	s16 prevAngle;
 	int ratio;
-	u_int angle;
-	short lightDir[3];
+	u32 angle;
+	s16 lightDir[3];
 
 	prize[5] += 100;
 	ConvertRotToMatrix(&inst->matrix, &prize[4]);
@@ -31,19 +31,19 @@ void CS_Podium_Prize_Spin(struct Instance *inst, short *prize)
 	angle = prize[0xc] + (((prize[0xe] - prize[0xc]) * ratio) >> 11);
 
 	{
-		short sine1;
-		short cos1;
+		s16 sine1;
+		s16 cos1;
 
-		trigApprox = *(u_int *)&data.trigApprox[angle & 0x3ff];
+		trigApprox = *(u32 *)&data.trigApprox[angle & 0x3ff];
 		if ((angle & 0x400) == 0)
 		{
-			cos1 = (short)(trigApprox >> 16);
-			sine1 = (short)trigApprox;
+			cos1 = (s16)(trigApprox >> 16);
+			sine1 = (s16)trigApprox;
 		}
 		else
 		{
-			cos1 = -(short)trigApprox;
-			sine1 = (short)(trigApprox >> 16);
+			cos1 = -(s16)trigApprox;
+			sine1 = (s16)(trigApprox >> 16);
 		}
 		if ((angle & 0x800) != 0)
 		{
@@ -58,19 +58,19 @@ void CS_Podium_Prize_Spin(struct Instance *inst, short *prize)
 
 		angle = prize[0xd] + (((prize[0xf] - prize[0xd]) * ratio) >> 11);
 
-		short sine2;
-		short cos2;
+		s16 sine2;
+		s16 cos2;
 
-		trigApprox = *(u_int *)&data.trigApprox[angle & 0x3ff];
+		trigApprox = *(u32 *)&data.trigApprox[angle & 0x3ff];
 		if ((angle & 0x400) == 0)
 		{
-			cos2 = (short)(trigApprox >> 16);
-			sine2 = (short)trigApprox;
+			cos2 = (s16)(trigApprox >> 16);
+			sine2 = (s16)trigApprox;
 		}
 		else
 		{
-			cos2 = -(short)trigApprox;
-			sine2 = (short)(trigApprox >> 16);
+			cos2 = -(s16)trigApprox;
+			sine2 = (s16)(trigApprox >> 16);
 		}
 		if ((angle & 0x800) != 0)
 		{

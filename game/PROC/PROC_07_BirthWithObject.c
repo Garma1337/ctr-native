@@ -38,15 +38,15 @@ struct Thread *DECOMP_PROC_BirthWithObject(int flags, void *funcThTick, char *na
 	if (bucketID >= NUM_BUCKETS)
 	{
 		if (stackObj != 0)
-			DECOMP_PROC_DestroyObject((void *)((unsigned int)stackObj + 8), flags);
+			DECOMP_PROC_DestroyObject((void *)((u32)stackObj + 8), flags);
 		return 0;
 	}
 
 	// validate size fits in pool
-	if ((unsigned int)(flags >> 0x10) >= (stackPool->itemSize - 8))
+	if ((u32)(flags >> 0x10) >= (stackPool->itemSize - 8))
 	{
 		if (stackObj != 0)
-			DECOMP_PROC_DestroyObject((void *)((unsigned int)stackObj + 8), flags);
+			DECOMP_PROC_DestroyObject((void *)((u32)stackObj + 8), flags);
 		return 0;
 	}
 
@@ -60,7 +60,7 @@ struct Thread *DECOMP_PROC_BirthWithObject(int flags, void *funcThTick, char *na
 	// check thread allocated
 	if (th == 0)
 	{
-		DECOMP_PROC_DestroyObject((void *)((unsigned int)stackObj + 8), flags);
+		DECOMP_PROC_DestroyObject((void *)((u32)stackObj + 8), flags);
 		return 0;
 	}
 
@@ -106,7 +106,7 @@ struct Thread *DECOMP_PROC_BirthWithObject(int flags, void *funcThTick, char *na
 	// set remaining fields AFTER linking (ASM order)
 	th->funcThTick = funcThTick;
 	th->name = name;
-	th->object = (void *)(((unsigned int)stackObj) + 8);
+	th->object = (void *)(((u32)stackObj) + 8);
 
 	return th;
 }

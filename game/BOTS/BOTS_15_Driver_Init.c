@@ -7,7 +7,7 @@ struct Driver *DECOMP_BOTS_Driver_Init(int driverID)
 
 	char initialNavPathIndex = sdata->driver_pathIndexIDs[driverID];
 	char navPathIndex;
-	short navPathPointsCount; // = sdata->NavPath_ptrHeader[navPathIndex]->numPoints;
+	s16 navPathPointsCount; // = sdata->NavPath_ptrHeader[navPathIndex]->numPoints;
 
 	navPathIndex = initialNavPathIndex;
 	while (1)

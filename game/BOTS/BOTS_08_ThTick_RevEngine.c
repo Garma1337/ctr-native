@@ -11,9 +11,9 @@ void DECOMP_BOTS_ThTick_RevEngine(struct Thread *botThread)
 
 		if (mask != NULL)
 		{
-			mask->pos[0] = (short)(botDriver->posCurr.x >> 8);
-			mask->pos[1] = (short)(botDriver->posCurr.y >> 8);
-			mask->pos[2] = (short)(botDriver->posCurr.z >> 8);
+			mask->pos[0] = (s16)(botDriver->posCurr.x >> 8);
+			mask->pos[1] = (s16)(botDriver->posCurr.y >> 8);
+			mask->pos[2] = (s16)(botDriver->posCurr.z >> 8);
 		}
 
 		VehPhysForce_TranslateMatrix(botThread, botDriver);

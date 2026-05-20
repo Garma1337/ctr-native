@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_RECTMENU_GetWidth(struct RectMenu *m, short *width, int boolCheckSubmenu)
+void DECOMP_RECTMENU_GetWidth(struct RectMenu *m, s16 *width, int boolCheckSubmenu)
 {
 	int fontType;
 	struct MenuRow *row;

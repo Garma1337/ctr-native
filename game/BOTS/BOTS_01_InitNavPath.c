@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_BOTS_InitNavPath(struct GameTracker *gGT, short index)
+void DECOMP_BOTS_InitNavPath(struct GameTracker *gGT, s16 index)
 {
 	struct NavHeader *nh = 0;
 	struct NavHeader **LevNavTable = gGT->level1->LevNavTable;

@@ -2,7 +2,7 @@
 
 void DECOMP_Particle_FuncPtr_PotionShatter(struct Particle *p)
 {
-	short sVar2;
+	s16 sVar2;
 	int rng;
 
 	if (p->axis[1].velocity < 0x578)

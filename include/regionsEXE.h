@@ -2,8 +2,8 @@
 // Hacky matrix for baked data
 struct MatrixND
 {
-	short m[3][3];
-	short extraShort; // the heck is this?
+	s16 m[3][3];
+	s16 extraShort; // the heck is this?
 	int t[3];
 };
 
@@ -19,7 +19,7 @@ struct Scrub
 	// & 2
 	// & 4 - dont count time rubbing on wall
 	// & 8 - dont reset reserves
-	u_int flags;
+	u32 flags;
 
 	// 0x8
 	int unk_0x8;
@@ -38,7 +38,7 @@ struct Terrain
 
 	// 4
 	// & 0x20 - play sound
-	unsigned int flags;
+	u32 flags;
 
 	// 0x8
 	int unk_0x8;
@@ -71,13 +71,13 @@ struct Terrain
 	char vibrationData[4];
 
 	// 0x30 ?
-	short unk_0x30;
+	s16 unk_0x30;
 
 	// 0x32 sound?
-	short sound;
+	s16 sound;
 
 	// 0x34 ?
-	unsigned short unk_0x34[4];
+	u16 unk_0x34[4];
 
 	// 0x3C
 	// (old korky comments ???)
@@ -87,8 +87,8 @@ struct Terrain
 struct MetaDataLEV
 {
 	// 0x0
-	short hubID;
-	short padding;
+	s16 hubID;
+	s16 padding;
 	// 0 - gemstone
 	// 1 - n sanity
 	// 2 - lost ruin
@@ -114,7 +114,7 @@ struct MetaDataLEV
 
 	// 0x10
 	// in adventure arena
-	short numTrophiesToOpen;
+	s16 numTrophiesToOpen;
 
 	// 0x12
 	// 0 - red
@@ -122,17 +122,17 @@ struct MetaDataLEV
 	// 2 - blue
 	// 3 - yellow
 	// 4 - purple
-	short ctrTokenGroupID;
+	s16 ctrTokenGroupID;
 
 	// 0x14
 	// 0x0A - Roo on Roo's Tubes,
 	// 0xFF - Nobody (most tracks)
-	short characterID_Boss;
+	s16 characterID_Boss;
 
 	// 0x16
 	// Used in Aug14 prototype
 	// N Tropy calls it "Speed Champion"
-	short characterID_Champion;
+	s16 characterID_Champion;
 };
 
 struct MetaDataMODEL
@@ -155,21 +155,21 @@ struct MetaDataBOSS
 {
 	// 0x0
 	// where this section starts
-	unsigned char trackCheckpoint;
+	u8 trackCheckpoint;
 
 	// 2=throw, 3=normal
-	unsigned char throwFlag;
+	u8 throwFlag;
 
 	// 0x64=tnt, 0x65=bomb, 0x66=potion, 0xf=what?
-	unsigned char weaponType;
-	unsigned char unk1;
+	u8 weaponType;
+	u8 unk1;
 
 	// 0x4
-	unsigned short weaponCooldown;
+	u16 weaponCooldown;
 
 	// 0x6
 	// (0=no juice) (1=juice) (2=random)
-	unsigned short juiceFlag;
+	u16 juiceFlag;
 };
 
 // starts at 0x80086d84
@@ -183,12 +183,12 @@ struct MetaDataCHAR
 	// 4
 	// "Crash Bandicoot", "Penta Penguin"
 	// for character selection
-	short name_LNG_long;
+	s16 name_LNG_long;
 
 	// 6
 	// "Crash", "Penguin"
 	// for default high scores
-	short name_LNG_short;
+	s16 name_LNG_short;
 
 	// 8
 	// index in ptrIcons
@@ -1222,8 +1222,8 @@ struct rData
 
 struct Difficulty
 {
-	short params1[14];
-	short params2[14];
+	s16 params1[14];
+	s16 params2[14];
 };
 // Last PsyQ function?
 // 80080990 FlushCache
@@ -1248,7 +1248,7 @@ struct Data
 	// 8007ff44 -- JpnTrial
 	// 80081414 -- EurRetail
 	// 80084254 -- JpnRetail
-	short advDifficulty[0xC];
+	s16 advDifficulty[0xC];
 
 	// --------------------------
 
@@ -1297,7 +1297,7 @@ struct Data
 	// 8007ff94 -- JpnTrial
 	// 80081464 -- EurRetail
 	// 800842A4 -- JpnRetail
-	short botsThrottle[0xC];
+	s16 botsThrottle[0xC];
 
 	// 80080F48
 	MATRIX identity;
@@ -1310,7 +1310,7 @@ struct Data
 
 	// 80080FB0
 	// end of race camera
-	short EndOfRace_Camera_Size[0x12];
+	s16 EndOfRace_Camera_Size[0x12];
 
 	// 8007f1c4 -- SepReview
 	// 80080fd4 -- UsaRetail
@@ -1379,7 +1379,7 @@ struct Data
 	// 80082074 -- EurRetail
 	// 80084EB4 -- JpnRetail
 	// 0x230 bytes of colors
-	unsigned int colors[NUM_COLORS][4];
+	u32 colors[NUM_COLORS][4];
 
 	// 8007ff00 -- SepReview	0x20
 	// 80081D70 -- UsaRetail	0x23
@@ -1394,35 +1394,35 @@ struct Data
 // 80082330 -- EurRetail
 // 80085170 -- JpnRetail
 #if BUILD == SepReview
-	unsigned short ghostScrambleData[0x2ae + 0x42];
+	u16 ghostScrambleData[0x2ae + 0x42];
 #elif BUILD == UsaRetail
-	unsigned short ghostScrambleData[0x2ae];
+	u16 ghostScrambleData[0x2ae];
 #elif BUILD == JpnTrial
-	unsigned short ghostScrambleData[0x2ae];
+	u16 ghostScrambleData[0x2ae];
 #elif BUILD == EurRetail
-	unsigned short ghostScrambleData[0x2ae + 6];
+	u16 ghostScrambleData[0x2ae + 6];
 #elif BUILD == JpnRetail
-	unsigned short ghostScrambleData[0x2ae + 6];
+	u16 ghostScrambleData[0x2ae + 6];
 #endif
 
 	// 80082358 -- UsaRetail
 	// 800813bc -- JpnTrial
 	// 800856d8 -- JpnRetail
-	short font_IconGroupID[FONT_NUM];
+	s16 font_IconGroupID[FONT_NUM];
 
 	// 80080568 -- SepReview
 	// 80082360 -- UsaRetail
 	// 800813c4 -- JpnTrial
 	// 800828a0 -- EurRetail
 	// 800856e0 -- JpnRetail
-	short font_charPixWidth[FONT_NUM];
+	s16 font_charPixWidth[FONT_NUM];
 
 #if BUILD >= UsaRetail
 	// 80082368 -- UsaRetail
 	// 800813cc -- JpnTrial
 	// 800828a8 -- EurRetail
 	// 800856e8 -- JpnRetail
-	short font_charPixHeight[FONT_NUM];
+	s16 font_charPixHeight[FONT_NUM];
 #endif
 
 	// 80082370 -- UsaRetail
@@ -1430,7 +1430,7 @@ struct Data
 	// 800828b0 -- EurRetail
 	// 800856f0 -- JpnRetail
 	// punctuation, like period and colon
-	short font_puncPixWidth[FONT_NUM];
+	s16 font_puncPixWidth[FONT_NUM];
 
 // 80080578 -- SepReview
 // 80082378 -- UsaRetail
@@ -1440,10 +1440,10 @@ struct Data
 // contains the icon IDs of each ASCII character
 // US builds include array spaces for Japanese characters (0x5F onwards)
 #if BUILD != EurRetail
-	u_char font_characterIconID[0xE0];
+	u8 font_characterIconID[0xE0];
 #else
 	// Europe build trims the array down to 0x60
-	u_char font_characterIconID[0x60];
+	u8 font_characterIconID[0x60];
 #endif
 
 	// 80080658 -- SepReview
@@ -1451,21 +1451,21 @@ struct Data
 	// 800814bc -- JpnTrial
 	// 80082918 -- EurRetail
 	// 800857d8 -- JpnRetail
-	short font_buttonScale[FONT_NUM];
+	s16 font_buttonScale[FONT_NUM];
 
 	// 80080660 -- SepReview
 	// 80082460 -- UsaRetail
 	// 800814c4 -- JpnTrial
 	// 800857e0 -- JpnRetail
 	// added to character width, when using buttons
-	short font_buttonPixWidth[FONT_NUM];
+	s16 font_buttonPixWidth[FONT_NUM];
 
 	// 80080668 -- SepReview
 	// 80082468 -- UsaRetail
 	// 800814cc -- JpnTrial
 	// 80082928 -- EurRetail
 	// 800857e8 -- JpnRetail
-	short font_buttonPixHeight[FONT_NUM];
+	s16 font_buttonPixHeight[FONT_NUM];
 
 	// 80080670 -- SepReview
 	// 80082470 -- UsaRetail
@@ -1480,7 +1480,7 @@ struct Data
 	// 80082938 -- EurRetail
 	// 800857f8 -- JpnRetail
 	// 0x8 is debug width, 0xA is debug height, 0xC is small width, 0xE is small height, so on
-	short font_indentPixDimensions
+	s16 font_indentPixDimensions
 #if BUILD == SepReview
 	    [(FONT_NUM - 1) * 2]; // Naughty Dog typo
 #elif BUILD >= UsaRetail
@@ -1500,18 +1500,18 @@ struct Data
 // 80082948 -- EurRetail
 // width, height, icon scale in that order, same as font_indentPixDimensions except with 3 variables
 #if BUILD == EurRetail
-	short font_EurDiacriticalTilde[FONT_NUM * 3];
+	s16 font_EurDiacriticalTilde[FONT_NUM * 3];
 
 	// 80082960 -- EurRetail
-	short font_EurQuotationMarkWidth[FONT_NUM];
+	s16 font_EurQuotationMarkWidth[FONT_NUM];
 	// 80082968 -- EurRetail
-	short font_EurInvertedExclamationMarkData[FONT_NUM * 2];
+	s16 font_EurInvertedExclamationMarkData[FONT_NUM * 2];
 	// 80082978 -- EurRetail
-	short font_EurInvertedQuestionMarkData[FONT_NUM * 2];
+	s16 font_EurInvertedQuestionMarkData[FONT_NUM * 2];
 	// 80082988 -- EurRetail
-	short font_EurOrdinalIndicatorData[FONT_NUM * 2];
+	s16 font_EurOrdinalIndicatorData[FONT_NUM * 2];
 	// 80082998 -- EurRetail
-	short font_EurPixWidthExtra[FONT_NUM];
+	s16 font_EurPixWidthExtra[FONT_NUM];
 #endif
 
 	// 80080684 -- SepReview
@@ -1519,7 +1519,7 @@ struct Data
 	// 800815b4 -- JpnTrial
 	// 800829a0 -- EurRetail
 	// 800858d0 -- JpnRetail
-	unsigned short pauseScreenStrip[0x10];
+	u16 pauseScreenStrip[0x10];
 
 	// 800824a8 -- UsaRetail
 	struct
@@ -1553,19 +1553,19 @@ struct Data
 	// 80081ed8 -- JpnTrial
 	// 800832c4 -- EurRetail
 	// 80086208 -- JpnRetail
-	unsigned char volumeLR[0x100];
+	u8 volumeLR[0x100];
 
 	// 80082eac -- UsaRetail
 	// for notes ABCDEFG, and if all
 	// are set to the same value, all notes are the same
-	unsigned short noteFrequency[0x6C];
+	u16 noteFrequency[0x6C];
 
 // 80082f84
 // array of data for Instrument Pitch
 #if BUILD <= SepReview
-	unsigned short distortConst_Music[0x80];
+	u16 distortConst_Music[0x80];
 #else
-	unsigned short distortConst_Music[0x40];
+	u16 distortConst_Music[0x40];
 #endif
 
 #if BUILD == JpnRetail
@@ -1592,7 +1592,7 @@ struct Data
 	// 0x84 for UsaRetail, 0x60 for JpnRetail and beyond
 	struct
 	{
-		short index
+		s16 index
 #if BUILD <= UsaRetail
 		    [0x16]; // contains 0x13 numbers
 #elif BUILD >= JpnTrial
@@ -1620,23 +1620,23 @@ struct Data
 	int voiceSetPtr[0x10];
 
 	// 800838dc -- UsaRetail
-	unsigned char voiceID[0x18];
+	u8 voiceID[0x18];
 
 #if (BUILD == JpnTrial) || (BUILD == JpnRetail)
 	// JpnRetail, FUN_8002e940(Voiceline_StartPlay), 80086b74
-	short unkBetween_voiceID_SongSetBytes[10];
+	s16 unkBetween_voiceID_SongSetBytes[10];
 #endif
 
 	// 800838f4 -- UsaRetail
 	// 80086b88 -- JpnRetail
-	unsigned char advHubSongSetBytes[0x14];
+	u8 advHubSongSetBytes[0x14];
 
 	// 80081b84 -- SepReview
 	// 80083908 -- UsaRetail
 	// 80082808 -- JpnTrial
 	// 80083be0 -- EurRetail
 	// 80086b9c -- JpnRetail
-	short nTropyXA[6];
+	s16 nTropyXA[6];
 
 	// 80083914
 	char reverbMode[0x38];
@@ -1648,7 +1648,7 @@ struct Data
 	char levBank_Song[0x20];
 
 	// 8008398c
-	unsigned char levAmbientSound[0x84];
+	u8 levAmbientSound[0x84];
 
 	// 80081c8c -- SepReview
 	// 80083a10 -- UsaRetail
@@ -1701,7 +1701,7 @@ struct Data
 	// [0] (gemstone) = 0x62 (beat oxide)
 	// [1] (n sanity) = 0x5E (ripper roo key)
 	// etc
-	short BeatBossPrize[6];
+	s16 BeatBossPrize[6];
 
 	// 800840a4 -- UsaRetail
 	// 5 cups, 4 tracks each
@@ -1709,15 +1709,15 @@ struct Data
 
 	// 800840f4 -- UsaRetail
 	// array of track IDs in Adv, in order of trophies
-	short advHubTrackIDs[16];
+	s16 advHubTrackIDs[16];
 
 	// 80084114 -- UsaRetail
 	struct
 	{
-		short lngIndex_CupName;
+		s16 lngIndex_CupName;
 
 		// color of gem and token in portals
-		short color[3];
+		s16 color[3];
 
 	} AdvCups[5];
 
@@ -1725,22 +1725,22 @@ struct Data
 	// 0 - ripper roo's challenge
 	// 1 - papu's challenge
 	// ...
-	short lng_challenge[6];
+	s16 lng_challenge[6];
 
 	// 80084148 -- UsaRetail
 	struct
 	{
 		// used to draw each string
 		// in cup menu, and intro-race cutscene
-		short lngIndex_CupName;
+		s16 lngIndex_CupName;
 
 		struct
 		{
 			// used to load LEV
-			short trackID;
+			s16 trackID;
 
 			// used to draw in cup menu
-			short iconID;
+			s16 iconID;
 		} CupTrack[4];
 
 	} ArcadeCups[4];
@@ -1780,15 +1780,15 @@ struct Data
 
 #if BUILD <= EurRetail
 	// 80084238
-	short lngIndex_unused_multiplayerDirections[6];
+	s16 lngIndex_unused_multiplayerDirections[6];
 #endif
 
 	// 80084244
-	short lngIndex_gamepadUnplugged[6];
+	s16 lngIndex_gamepadUnplugged[6];
 
 	// 80084250
 	// heights that "gamepad unplugged" can be at
-	short errorPosY[4];
+	s16 errorPosY[4];
 #endif
 
 // 800824ac -- SepReview
@@ -1808,39 +1808,39 @@ struct Data
 	// 80084258
 	struct
 	{
-		short lngIndex;
-		short lo16;
-		short hi1;
+		s16 lngIndex;
+		s16 lo16;
+		s16 hi1;
 	} raceConfig_DeadZone[4];
 
 	// 80084270
 	struct
 	{
-		short lngIndex;
-		short lo16;
-		short hi1;
+		s16 lngIndex;
+		s16 lo16;
+		s16 hi1;
 	} raceConfig_Range[5];
-	short padding8008428e;
+	s16 padding8008428e;
 
 	// 80084290
 	// number of options on each page of race wheel config
-	unsigned short raceConfig_unk80084290[14];
+	u16 raceConfig_unk80084290[14];
 
 	// 800842ac
-	unsigned char raceConfig_colors_arrows[0xc];
+	u8 raceConfig_colors_arrows[0xc];
 
 	// 800842B8
-	unsigned char raceConfig_colors_blueRect[0x18];
+	u8 raceConfig_colors_blueRect[0x18];
 #endif
 
 #if BUILD <= JpnTrial
 	// 80082510 - Sep3
 	// 800842D0 - UsaRetail
 	// 800831d0 - JpnTrial
-	unsigned char unkNamcoGamepadRwdTriangleColors[0xc];
+	u8 unkNamcoGamepadRwdTriangleColors[0xc];
 
 	// 800842DC - UsaRetail
-	short unkNamcoGamepad_800842DC[0x30 / 2];
+	s16 unkNamcoGamepad_800842DC[0x30 / 2];
 #endif
 
 	// 8008254c -- sep3
@@ -1852,11 +1852,11 @@ struct Data
 
 	// 8008431c
 	// Controller 1, 2, 1A, 1B, 1C, 1D
-	short Options_StringIDs_Gamepads[6];
+	s16 Options_StringIDs_Gamepads[6];
 
 	// 80084328
 	// FX, MUSIC, VOICE, 4th for padding
-	short Options_StringIDs_Audio[4];
+	s16 Options_StringIDs_Audio[4];
 
 	// 0x80084330
 	// horizontal bar (blue),
@@ -1867,8 +1867,8 @@ struct Data
 	// 0x80084344
 	struct
 	{
-		unsigned short posY;
-		unsigned short sizeY;
+		u16 posY;
+		u16 sizeY;
 	} Options_HighlightBar[9];
 
 	// 0x800825A8 -- SepReview
@@ -1955,9 +1955,9 @@ struct Data
 	// 0x8008454C
 	// 1P, 2P, 4P
 	// LEV 0 - 0x19 (0x1c for alignment)
-	unsigned char primMem_SizePerLEV_1P[0x1c];
-	unsigned char primMem_SizePerLEV_2P[0x1c];
-	unsigned char primMem_SizePerLEV_4P[0x1c];
+	u8 primMem_SizePerLEV_1P[0x1c];
+	u8 primMem_SizePerLEV_2P[0x1c];
+	u8 primMem_SizePerLEV_4P[0x1c];
 
 	// 0x800845a0
 	// trigonometry approximation table (1kb)
@@ -2008,7 +2008,7 @@ struct Data
 	char data28_afterSlots[0x28];
 #elif BUILD == UsaRetail || BUILD == EurRetail || BUILD == JpnRetail
 	// 0x800859F8
-	unsigned char memcardIcon_HeaderSLOTS[0x38];
+	u8 memcardIcon_HeaderSLOTS[0x38];
 #endif
 
 // Something changed in JPN
@@ -2064,7 +2064,7 @@ struct Data
 	// 800849e4 -- JpnTrial
 	// 80085d90 -- EurRetail
 	// 80088d58 -- JpnRetail
-	short PlayerCommentBoxParams[8];
+	s16 PlayerCommentBoxParams[8];
 #endif
 
 // 80083D74 -- SepReview
@@ -2149,12 +2149,12 @@ struct Data
 	struct
 	{
 		// 0x0
-		short modelID;
-		short scale;
+		s16 modelID;
+		s16 scale;
 
 		// 0x4
 		// parameter to Vector_SpecLightSpin3D
-		short vec3_specular_inverted[3];
+		s16 vec3_specular_inverted[3];
 
 		// 0xA
 		char r;
@@ -2175,10 +2175,10 @@ struct Data
 	// 80085D0C
 	// used in the same function as
 	// MetaDataSaveLoad, but usage is unknown
-	short spinOffset_LoadSave[4];
+	s16 spinOffset_LoadSave[4];
 
 	// 80085d14
-	short lngIndex_LoadSave[4];
+	s16 lngIndex_LoadSave[4];
 
 	// "overwrite" can be triggered when
 	// going to Adventure -> New and trying
@@ -2195,16 +2195,16 @@ struct Data
 
 	// 80084058 -- SepReview
 	// 80085D88 -- UsaRetail
-	short lngStringsSaveLoadDelete[6];
+	s16 lngStringsSaveLoadDelete[6];
 
 // A.B.C.D... all the way to Z and then numbers,
 // used in high score "Enter Your Name" window
 // 80085D94 -- UsaRetail
 #if BUILD == SepReview || BUILD == UsaRetail || BUILD == EurRetail
 	// 26 letters, 10 numbers, period, underscore, arrow, nullptr
-	u_short unicodeAscii[40];
+	u16 unicodeAscii[40];
 #elif BUILD == JpnRetail
-	u_short unicodeAscii[40 + 94]; // extra Jpn characters
+	u16 unicodeAscii[40 + 94]; // extra Jpn characters
 #else
 	// this does not exist in JpnTrial
 #endif
@@ -2214,7 +2214,7 @@ struct Data
 	// pointer to sounds for menus
 	int soundIndexArray[6];
 #else
-	                               // this does not exist in JpnTrial
+	                           // this does not exist in JpnTrial
 #endif
 
 	// 800840CC -- SepReview
@@ -2264,31 +2264,31 @@ struct Data
 
 	// 8008626c
 	// 8 XY values
-	short trackerAnim1[8 * 2];
+	s16 trackerAnim1[8 * 2];
 
 	// 8008628c
 	// 11 XY values, but ND code
 	// sets variable to 12 instead of 11,
 	// Naughty Dog bug?
-	short trackerAnim2[0xb * 2];
+	s16 trackerAnim2[0xb * 2];
 
 	// 800862b8
-	short rankIconsDesired[8];
+	s16 rankIconsDesired[8];
 
 	// 800862c8
-	short rankIconsCurr[8];
+	s16 rankIconsCurr[8];
 
 	// 800862d8
-	short rankIconsTransitionTimer[8];
+	s16 rankIconsTransitionTimer[8];
 
 	// 800862e8
-	short trackerTimer[4];
+	s16 trackerTimer[4];
 
 	// 800862f0
-	short trackerDist[4];
+	s16 trackerDist[4];
 
 	// 800862f8
-	short trackerType[4];
+	s16 trackerType[4];
 
 	// 0x800845D0 -- SepReview
 	// 0x80086300 -- UsaRetail
@@ -2318,8 +2318,8 @@ struct Data
 	// UsaRetail -- 0x80086418
 	struct
 	{
-		short unk_playerAdvMap[3];
-		short unk2_playerAdvMap[3];
+		s16 unk_playerAdvMap[3];
+		s16 unk2_playerAdvMap[3];
 
 		// Each vertex in the triangle
 		// has an int for color, there
@@ -2333,11 +2333,11 @@ struct Data
 
 	// 0x8008643C
 	// FUN_8005045c
-	short stringIndexSuffix[8];
+	s16 stringIndexSuffix[8];
 
 	// 0x8008644C
 	// FUN_80050654
-	short battleScoreColor[4][4];
+	s16 battleScoreColor[4][4];
 
 	// 0x80084978 -- SepReview
 	// 0x8008646C -- UsaRetail
@@ -2349,9 +2349,9 @@ struct Data
 // 0x800864DC
 // LNG index for end-of-race comments
 #if BUILD >= JpnTrial
-	unsigned char data830[0x830];
+	u8 data830[0x830];
 #elif BUILD >= SepReview
-	unsigned char data850[0x850];
+	u8 data850[0x850];
 #endif
 
 #if 0
@@ -2424,11 +2424,11 @@ struct Data
 
 	struct QuipStr
 	{
-		short lngIndex;
-		short flag; // &1 means include Crash/Cortex/Coco name
+		s16 lngIndex;
+		s16 flag; // &1 means include Crash/Cortex/Coco name
 		
-		short unused1;
-		short unused2;
+		s16 unused1;
+		s16 unused2;
 	};
 
 	// Quip = End-Of-Race comment
@@ -2441,10 +2441,10 @@ struct Data
 		struct QuipStr* ptrQuipStrCurr;
 		struct QuipStr* ptrQuipStrNext;
 		
-		short unk0;
+		s16 unk0;
 
 		// 0xA
-		short unk1;
+		s16 unk1;
 
 		// 0xC
 		int unk2;
@@ -2465,11 +2465,11 @@ struct Data
 	// 0x80086fa8 -- EurRetail
 	// 0x8008A02C -- JpnRetail
 	// Red, Green, Blue, Yellow, Purple, NULL
-	short advCupStringIndex[6];
+	s16 advCupStringIndex[6];
 
 	// 0x80086d38
 	// Wumpa, Crystal, Nitro, Crash, NULL, NULL
-	short arcadeVsCupStringIndex[6];
+	s16 arcadeVsCupStringIndex[6];
 
 	// 0x80086d44
 	// characterIDs of all racers
@@ -2493,7 +2493,7 @@ struct Data
 	// 0x80085CD8 -- JpnTrial
 	// 0x80087100 -- EurRetail
 	// 0x8008a184 -- JpnRetail
-	short characterIDs[8];
+	s16 characterIDs[8];
 
 	// 0x80086e94
 	// bakedGteMath[0] is blank,
@@ -2654,10 +2654,10 @@ struct sData
 #endif
 
 	// 0x8008CF70
-	short *arcade_difficultyParams;
+	s16 *arcade_difficultyParams;
 
 	// 0x8008CF74
-	short *cup_difficultyParams;
+	s16 *cup_difficultyParams;
 
 	// 0x8008CF78
 	// path index for each AI
@@ -2683,10 +2683,10 @@ struct sData
 	struct
 	{
 		// 8008CF94
-		short posOffset[4];
+		s16 posOffset[4];
 
 		// 8008CF9C
-		short rotOffset[4];
+		s16 rotOffset[4];
 
 	} FirstPersonCamera;
 
@@ -2727,7 +2727,7 @@ struct sData
 	int LevClearColorRGB[3];
 
 	// 8008D000
-	u_int HudAndDebugFlags;
+	u32 HudAndDebugFlags;
 
 	// 8008D004
 	char unk_CTR_MatrixToRot_table[0x10];
@@ -2739,18 +2739,18 @@ struct sData
 	// 8008d018
 	// 6 four-byte pointers for pause/unpause,
 	// all relative to gGT->DB[0,1].primMem.end
-	char *PausePtrsVRAM[6]; // should maybe be `uint32_t*[]` instead of `char*[]`
+	char *PausePtrsVRAM[6]; // should maybe be `u32*[]` instead of `char*[]`
 
 	// 8008d030
-	u_int pause_backup_renderFlags;
+	u32 pause_backup_renderFlags;
 
 	// 8008d034
-	u_short pause_backup_hudFlags;
+	u16 pause_backup_hudFlags;
 
 	// 8008d036
 	// (0,1,2,3)
 	// "Kyle's Mom"
-	short pause_state;
+	s16 pause_state;
 
 	// 8008d038 -- UsaRetail
 	// 8008d3c0 -- EurRetail
@@ -2779,7 +2779,7 @@ struct sData
 	char s_ghost0[8];
 
 	// 8008D058
-	unsigned int audioRNG;
+	u32 audioRNG;
 
 	// 8008D05C
 	int boolAudioEnabled;
@@ -2810,7 +2810,7 @@ struct sData
 #if BUILD >= UsaRetail
 	// 8008d080
 	// used in Garage_LerpFX
-	unsigned char garageSoundIDs[8];
+	u8 garageSoundIDs[8];
 #endif
 
 	// ============================
@@ -2916,15 +2916,15 @@ struct sData
 		int stage;
 
 		// 8008d0fc
-		unsigned int Lev_ID_To_Load;
+		u32 Lev_ID_To_Load;
 
 		// 8008d100
 		struct
 		{
-			unsigned int AddBitsConfig0;
-			unsigned int RemBitsConfig0;
-			unsigned int AddBitsConfig8;
-			unsigned int RemBitsConfig8;
+			u32 AddBitsConfig0;
+			u32 RemBitsConfig0;
+			u32 AddBitsConfig8;
+			u32 RemBitsConfig8;
 		} OnBegin;
 
 	} Loading;
@@ -2996,13 +2996,13 @@ struct sData
 	char s_proto8[8];
 
 	// 8008d2a0
-	unsigned short finalLapTextTimer[4];
+	u16 finalLapTextTimer[4];
 
 #if BUILD >= UsaRetail
 	// 8008d2a8 -- UsaRetail
 	// 800906b4 -- JpnRetail
-	short TurboDisplayPos_Only1P;
-	short numPlayersFinishedRace;
+	s16 TurboDisplayPos_Only1P;
+	s16 numPlayersFinishedRace;
 #endif
 
 	// DoesNotExist -- Early June? PizzaHut USA
@@ -3043,10 +3043,10 @@ struct sData
 	// 8008d2cc
 	// (actually two shorts, not one int),
 	// (both related to requesting Aku Hint)
-	short AkuHint_RequestedHint;
+	s16 AkuHint_RequestedHint;
 
 	// 8008d2ce
-	short AkuHint_boolInterruptWarppad;
+	s16 AkuHint_boolInterruptWarppad;
 
 	// 8008d2d0
 	// 1,2,4,4,8,8,8,8
@@ -3061,11 +3061,11 @@ struct sData
 
 	// 8008d2e0
 	// one for RaceWheel, one for Namco
-	short posY_MultiLine[4];
+	s16 posY_MultiLine[4];
 
 	// 8008d2e8
 	// one for RaceWheel, one for Namco
-	short posY_Arrows[4];
+	s16 posY_Arrows[4];
 
 	// 8008d2f0
 	int unk_RaceWheelConfig[3];
@@ -3141,7 +3141,7 @@ struct sData
 	int memcard_stage;
 
 	// 8008d408
-	uint8_t *memcard_ptrStart;
+	u8 *memcard_ptrStart;
 
 	// 8008d40c
 	// memcard file descriptor, returned from "open(xxx)"
@@ -3172,9 +3172,9 @@ struct sData
 	int randomNumber;
 
 	// 8008d428
-	short unk_8008d428;
+	s16 unk_8008d428;
 
-	short unk_8008d42a;
+	s16 unk_8008d42a;
 
 	// 8008d42C
 	int unk_8008d42C;
@@ -3183,10 +3183,10 @@ struct sData
 	// -1 for no expansion
 	// or it holds the row
 	// you want to expand
-	short battleSetupExpandMenu;
+	s16 battleSetupExpandMenu;
 
 	// 8008d432
-	short battleSetupRowHighlighted;
+	s16 battleSetupRowHighlighted;
 
 	// 0x80 for Sep3???
 
@@ -3205,22 +3205,22 @@ struct sData
 	int RaceFlag_AnimationType;
 
 	// 8008d444
-	short RaceFlag_Position;
+	s16 RaceFlag_Position;
 
 	// 8008d446
-	short unk_CheckFlag1;
+	s16 unk_CheckFlag1;
 
 	// 8008b8a8 Sep3
 	// 8008d448 UsaRetail
-	short RaceFlag_CanDraw;
+	s16 RaceFlag_CanDraw;
 
 	// 8008d44a
-	short unk_CheckFlag2;
+	s16 unk_CheckFlag2;
 
 	// 8008b8ac Sep3
 	// 8008d44c UsaRetail
-	short RaceFlag_DrawOrder;
-	short padding_8008d44e;
+	s16 RaceFlag_DrawOrder;
+	s16 padding_8008d44e;
 
 #if BUILD >= UsaRetail
 	// 8008d450
@@ -3284,13 +3284,13 @@ struct sData
 
 	// 8008d478
 	// MC Start
-	short mcStart;
+	s16 mcStart;
 
 	// 8008d47a (MC_SCREEN)
-	short mcScreenText;
+	s16 mcScreenText;
 
 	// 8008d47c
-	short LoadSave_SpinRateY[4];
+	s16 LoadSave_SpinRateY[4];
 
 	// 8008d484
 	char stringFormat1[8];
@@ -3446,8 +3446,8 @@ struct sData
 		// 8008d568
 		// Normal flags are in registers,
 		// while 2P flags are from RAM
-		u_int textFlags1_2P;
-		u_int textFlags2_2P;
+		u32 textFlags1_2P;
+		u32 textFlags2_2P;
 
 	} Battle_EndOfRace;
 
@@ -3468,14 +3468,14 @@ struct sData
 	{
 		// 8008D578
 		// easy, medium, hard, null
-		short CupCompletion_curr[4];
+		s16 CupCompletion_curr[4];
 
 		// 8008D580
-		short CupCompletion_prev[4];
+		s16 CupCompletion_prev[4];
 
 		// 8008D588
 		// parking lot, north bowl, lab basement
-		short UnlockBattleMap[4];
+		s16 UnlockBattleMap[4];
 	} UnlockBitIndex;
 
 	// 8008D590
@@ -3547,7 +3547,7 @@ struct sData
 	struct Driver *bestHumanRank;
 
 	// 8008d678
-	short *difficultyParams[2];
+	s16 *difficultyParams[2];
 
 	// 8008d680
 	// if these are all zero, all AIs
@@ -3708,7 +3708,7 @@ struct sData
 	// & 1 for garage door + tiger temple
 	// & 2 for hub doors
 	// see 8001fc40
-	u_int doorAccessFlags;
+	u32 doorAccessFlags;
 
 	// 8008bb70 -- sep3
 	// 8008d72c -- UsaRetail
@@ -3717,19 +3717,19 @@ struct sData
 	{
 #if 0 // original game
 
-		unsigned int pixelX;
-		unsigned int pixelY;
+		u32 pixelX;
+		u32 pixelY;
 
 #else // had to, we were desperate
 
-		unsigned char u;
-		unsigned char v;
-		short padding[3];
+		u8 u;
+		u8 v;
+		s16 padding[3];
 
 #endif
 
-		unsigned short clut;
-		unsigned short tpage;
+		u16 clut;
+		u16 tpage;
 	} debugFont;
 
 	// 8008d738
@@ -3806,10 +3806,10 @@ struct sData
 
 #if BUILD >= UsaRetail
 	// 8008d79c
-	short currentVolume;
+	s16 currentVolume;
 
 	// 8008d79e
-	unsigned char storedVolume;
+	u8 storedVolume;
 
 	// 8008d79f
 	char boolStoringVolume;
@@ -3831,7 +3831,7 @@ struct sData
 	struct CseqHeader *ptrCseqHeader;
 
 	// 8008d7b4
-	short *ptrCseqSongStartOffset;
+	s16 *ptrCseqSongStartOffset;
 
 	// 8008d7b8
 	int vol_Music;
@@ -3864,10 +3864,10 @@ struct sData
 	struct SpuAddrEntry *howl_spuAddrs;
 
 	// 8008d7e0
-	unsigned short *howl_songOffsets;
+	u16 *howl_songOffsets;
 
 	// 8008d7e4
-	unsigned short *howl_bankOffsets;
+	u16 *howl_bankOffsets;
 
 	// 8008d7e8
 	struct SampleInstrument *ptrCseqLongSamples;
@@ -3880,14 +3880,14 @@ struct sData
 	char boolCanPlayWrongWaySFX;
 
 	// 8008d7ee
-	short voicelineCooldown;
+	s16 voicelineCooldown;
 
 	// 8008bc30 sep3
 	// 8008d7f0 usaRetail
-	short unkAudioState;
+	s16 unkAudioState;
 
 	// 8008d7f2
-	short desiredXA_RaceIntroIndex;
+	s16 desiredXA_RaceIntroIndex;
 
 	// 8008d7f4
 	// unused, would have changed the Final Lap XA,
@@ -3895,10 +3895,10 @@ struct sData
 	int desiredXA_FinalLapIndex;
 
 	// 8008d7f8
-	short desiredXA_RaceEndIndex;
+	s16 desiredXA_RaceEndIndex;
 
 	// 8008d7fa
-	short nTropyVoiceCount;
+	s16 nTropyVoiceCount;
 
 // 8008d7fc
 #if BUILD >= UsaRetail
@@ -3930,7 +3930,7 @@ struct sData
 	// 8008d810 usaRetail
 	// definitely unsigned, we can tell from assembly
 	// in Music_LowerVolume and Music_RaiseVolume
-	unsigned int cseqHighestIndex;
+	u32 cseqHighestIndex;
 
 	// 8008bc4c sep3
 	// 8008d814 usaRetail
@@ -3958,8 +3958,8 @@ struct sData
 
 	// 8008bc78 sep3
 	// 8008d83c usaRetil
-	short levelLOD;
-	short levelID;
+	s16 levelLOD;
+	s16 levelID;
 
 	// 8008d840
 	// need to rename, can be -1, 0, 1
@@ -4054,8 +4054,8 @@ struct sData
 	// 8008dc40 -- EurRetail
 	// 80090cb0 -- JpnRetail
 	// error message posY choice (0,1,2) (high, mid, low)
-	short errorMessagePosIndex;
-	short unk_aftererrormessageposindex;
+	s16 errorMessagePosIndex;
+	s16 unk_aftererrormessageposindex;
 #endif
 
 	// 8008d890
@@ -4118,7 +4118,7 @@ struct sData
 	int HwCARD_EvSpIOE;
 
 	// 8008d8cc
-	u_int memcardStatusFlags;
+	u32 memcardStatusFlags;
 
 	// 8008d8d0
 	int crc16_checkpoint_status;
@@ -4150,9 +4150,9 @@ struct sData
 	char data10_aaaaa[0xC];
 
 	// 8008d8f0 - Usa
-	u_short boolHasLoadedOptions;
+	u16 boolHasLoadedOptions;
 
-	u_short typeTimer;
+	u16 typeTimer;
 #elif BUILD == JpnRetail
 	char data14_aaaaa[0x14];
 #endif
@@ -4224,13 +4224,13 @@ struct sData
 	// 8008c888 -- JpnTrial
 	// 8008dce4 -- EurRetail
 	// 80090d5C -- JpnRetail
-	u_short trackSelBackup;
-	short padding_8008d932;
+	u16 trackSelBackup;
+	s16 padding_8008d932;
 
 	// 8008d934
 	// one bit for each player that has
 	// pressed X to select a character
-	u_int characterSelectFlags;
+	u32 characterSelectFlags;
 
 	// 8008d938
 	// next is 0x236 or 0x237
@@ -4333,7 +4333,7 @@ struct sData
 	int rcntTotalUnits;
 
 	// 8008d98C
-	u_int flags_timeTrialEndOfRace;
+	u32 flags_timeTrialEndOfRace;
 
 	// 8008d990
 	int wumpaShineTheta;
@@ -4342,8 +4342,8 @@ struct sData
 	int wumpaShineResult;
 
 	// 8008d998
-	unsigned char wumpaShineColor1[3][4];
-	unsigned char wumpaShineColor2[3][4];
+	u8 wumpaShineColor1[3][4];
+	u8 wumpaShineColor2[3][4];
 
 	// 8008d9b0
 	int relicTime_1min;
@@ -4418,7 +4418,7 @@ struct sData
 
 	// 8008d9ec
 	// rotX, rotY, rotZ, for something?
-	short unk_rot[4];
+	s16 unk_rot[4];
 
 	// 8008d9f4
 	// force of driver bounce?
@@ -4456,11 +4456,11 @@ struct sData
 
 	// 8008da48
 	// pointer at 8008cf70
-	short arcadeDiff[0xE]; // this might be a MATRIX too. (this is used as a MATRIX in some locations)
+	s16 arcadeDiff[0xE]; // this might be a MATRIX too. (this is used as a MATRIX in some locations)
 
 	// 8008da64
 	// pointer at 8008cf74
-	short cupDiff[0xE];
+	s16 cupDiff[0xE];
 
 	// 8008beb4 -- SepReview
 	// 8008da80 -- UsaRetail
@@ -4611,21 +4611,21 @@ struct sData
 		int boostCooldown1E;
 
 		// 8008fc18
-		short VelX;
+		s16 VelX;
 
 		// 8008fc1a
-		short VelY;
+		s16 VelY;
 
 		// 8008fc1C
-		short VelZ;
+		s16 VelZ;
 
 		// 8008fc1e
-		short unk_8fc1e;
+		s16 unk_8fc1e;
 
 		// 8008fc20
 		int animFrame;
 		int animIndex;
-		u_int instanceFlags;
+		u32 instanceFlags;
 
 	} GhostRecording;
 
@@ -4646,7 +4646,7 @@ struct sData
 	// & 0x10 - pitch
 	// & 0x20 - reverb voice
 	// & 0x40 - volume
-	u_int ChannelUpdateFlags[NUM_SFX_CHANNELS];
+	u32 ChannelUpdateFlags[NUM_SFX_CHANNELS];
 
 	// 8008fccc
 	// backed up every time Curr changes
@@ -4721,7 +4721,7 @@ struct sData
 		void *prev;
 
 		// 0x8
-		short voiceID;      // param_1
+		s16 voiceID;        // param_1
 		char characterID_1; // param_2
 		char characterID_2; // param_3
 
@@ -4833,13 +4833,13 @@ struct sData
 	int buttonHeldPerPlayer[4];
 
 	// 8009A974
-	short battleSettings[6];
+	s16 battleSettings[6];
 
 	// 8009A980
-	short characterIDs_backup[8];
+	s16 characterIDs_backup[8];
 
 	// 8009A990
-	u_int buttonTapPerPlayer[4];
+	u32 buttonTapPerPlayer[4];
 
 	// 8009A9A0
 	// 0x90 bytes total
@@ -4847,9 +4847,9 @@ struct sData
 	{
 		struct Instance *inst;
 
-		short rot[3];
+		s16 rot[3];
 
-		short padding;
+		s16 padding;
 
 		// 4 profiles, 3 instances per profile
 	} LoadSaveData[12];
@@ -4861,33 +4861,33 @@ struct sData
 	// result
 
 	// 8009AA34 (MC_RESULT)
-	short desired_memcardResult;
+	s16 desired_memcardResult;
 
 	// 8009aa36 (MC_ACTION)
-	short frame1_memcardAction;
+	s16 frame1_memcardAction;
 
 	// 8009aa38
-	short frame1_memcardSlot;
+	s16 frame1_memcardSlot;
 
 	// 8009aa3a
-	short frame2_memcardAction;
+	s16 frame2_memcardAction;
 
 	// 8009aa3c
-	short frame2_memcardSlot;
+	s16 frame2_memcardSlot;
 
 	// 8009aa3e
-	short frame3_memcardAction;
+	s16 frame3_memcardAction;
 
 	// 8009aa40
-	short frame3_memcardSlot;
+	s16 frame3_memcardSlot;
 
 	// 8009aa42
-	short frame4_memcardAction;
+	s16 frame4_memcardAction;
 
 	// 8009aa44
-	short frame4_memcardSlot;
+	s16 frame4_memcardSlot;
 
-	short padding8009aa46;
+	s16 padding8009aa46;
 
 	// 8009aa48
 	char *ghostProfile_fileName;
@@ -4901,18 +4901,18 @@ struct sData
 	struct GhostHeader *ghostProfile_ptrGhostHeader;
 
 	// 8009aa54 -- Size (saving = 3E00)
-	short ghostProfile_size3E00;
+	s16 ghostProfile_size3E00;
 
 	// 8009aa56
 	// only set for one frame,
 	// then resets to -1
-	short ghostProfile_rowSelect;
+	s16 ghostProfile_rowSelect;
 
 	// 8009aa58
-	short ghostProfile_indexSave;
+	s16 ghostProfile_indexSave;
 
 	// 8009aa5a
-	short ghostProfile_indexLoad;
+	s16 ghostProfile_indexLoad;
 
 	// 8009aa5c
 	int numGhostProfilesSaved;
@@ -5051,8 +5051,8 @@ _Static_assert(sizeof(struct MetaDataLEV) == 0x18);
 _Static_assert(sizeof(struct MetaDataMODEL) == 0xC);
 
 #if BUILD == UsaRetail
-#define OFFSETOF_SDATA(ELEMENT) ((unsigned int)&(((struct sData *)0x8008cf6c)->ELEMENT))
-#define OFFSETOF_DATA(ELEMENT)  ((unsigned int)&(((struct Data *)0x800809a0)->ELEMENT))
+#define OFFSETOF_SDATA(ELEMENT) ((u32) & (((struct sData *)0x8008cf6c)->ELEMENT))
+#define OFFSETOF_DATA(ELEMENT)  ((u32) & (((struct Data *)0x800809a0)->ELEMENT))
 
 _Static_assert(OFFSETOF_DATA(rowsQuit[0]) == 0x800841BC);
 _Static_assert(OFFSETOF_DATA(menuQuit) == 0x800841D0);

@@ -1,10 +1,10 @@
 #include <common.h>
 
-void DECOMP_MainFreeze_ConfigDrawArrows(short offsetX, short offsetY, char *str)
+void DECOMP_MainFreeze_ConfigDrawArrows(s16 offsetX, s16 offsetY, char *str)
 {
 	int lineWidth;
 	int color;
-	u_char **colorPtr;
+	u8 **colorPtr;
 	struct GameTracker *gGT = sdata->gGT;
 
 	// orange color
@@ -19,7 +19,7 @@ void DECOMP_MainFreeze_ConfigDrawArrows(short offsetX, short offsetY, char *str)
 	lineWidth = DECOMP_DecalFont_GetLineWidth(str, 1) >> 1;
 
 	// get color data
-	colorPtr = (u_char **)&data.ptrColor[color];
+	colorPtr = (u8 **)&data.ptrColor[color];
 
 	struct Icon **iconPtrArray = ICONGROUP_GETICONS(gGT->iconGroup[4]);
 

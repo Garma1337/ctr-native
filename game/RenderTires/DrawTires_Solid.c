@@ -3,19 +3,19 @@
 
 struct DrawTiresSolidScratch
 {
-	unsigned int savedRegs[12];
+	u32 savedRegs[12];
 	int numPlyr;
 	int playerCounter;
 	struct Icon **wheelSprites;
-	unsigned int tireColor;
+	u32 tireColor;
 	int otRangeNormal;
 	int otRangeSecondary;
-	unsigned short wheelSize;
-	unsigned short pad4a;
-	short vertSplit;
-	unsigned short pad4e;
-	short splitCameraY;
-	unsigned short pad52;
+	u16 wheelSize;
+	u16 pad4a;
+	s16 vertSplit;
+	u16 pad4e;
+	s16 splitCameraY;
+	u16 pad52;
 	int lodThreshold;
 	int wheelLocalPairA[4];
 	int wheelLocalPairB[4];
@@ -27,12 +27,12 @@ struct DrawTiresSolidScratch
 	int tireAxisB[8];
 	int projectedSxy[4];
 	int cornerDepthBias[2];
-	unsigned int jumpTable[8];
-	unsigned int pad150[4];
+	u32 jumpTable[8];
+	u32 pad150[4];
 	int instFlags;
 	int pad164[2];
-	short depthOffsetStartBytes;
-	short depthOffsetEndBytes;
+	s16 depthOffsetStartBytes;
+	s16 depthOffsetEndBytes;
 	int otRangeStart;
 	int otRangeEnd;
 };
@@ -69,11 +69,11 @@ _Static_assert(offsetof(POLY_FT4, x0) == 0x8);
 _Static_assert(offsetof(POLY_FT4, u0) == 0xc);
 _Static_assert(offsetof(POLY_FT4, x3) == 0x20);
 
-static const unsigned int sDrawTiresSolidJumpTable[8] = {
+static const u32 sDrawTiresSolidJumpTable[8] = {
     0x8006ed7c, 0x8006ed98, 0x8006edb4, 0x8006edcc, 0x8006ede4, 0x8006ee00, 0x8006ee1c, 0x8006ee3c,
 };
 
-static const unsigned char sDrawTiresSpriteIndexTable[0x81] = {
+static const u8 sDrawTiresSpriteIndexTable[0x81] = {
     0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x03,
     0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x03, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x05, 0x05, 0x05,
     0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x05, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07,
@@ -95,9 +95,9 @@ struct DrawTiresSolidProjectedWheel
 	int jumpIndex;
 };
 
-static short DrawTiresSolid_ReadS16(struct DrawTiresSolidScratch *scratch, int offset)
+static s16 DrawTiresSolid_ReadS16(struct DrawTiresSolidScratch *scratch, int offset)
 {
-	return *(short *)((char *)scratch + offset);
+	return *(s16 *)((char *)scratch + offset);
 }
 
 static int DrawTiresSolid_ReadS32(struct DrawTiresSolidScratch *scratch, int offset)
@@ -107,7 +107,7 @@ static int DrawTiresSolid_ReadS32(struct DrawTiresSolidScratch *scratch, int off
 
 static void DrawTiresSolid_WriteS16(struct DrawTiresSolidScratch *scratch, int offset, int value)
 {
-	*(short *)((char *)scratch + offset) = value;
+	*(s16 *)((char *)scratch + offset) = value;
 }
 
 static void DrawTiresSolid_WriteS32(struct DrawTiresSolidScratch *scratch, int offset, int value)
@@ -117,8 +117,8 @@ static void DrawTiresSolid_WriteS32(struct DrawTiresSolidScratch *scratch, int o
 
 static int DrawTiresSolid_CountLeadingSignBits(int value)
 {
-	unsigned int bits = value;
-	unsigned int sign = bits >> 31;
+	u32 bits = value;
+	u32 sign = bits >> 31;
 	int count = 0;
 
 	while (count < 32 && (((bits >> (31 - count)) & 1) == sign))
@@ -134,21 +134,21 @@ static int DrawTiresSolid_ReadMatrixWord(MATRIX *matrix, int offset)
 	return *(int *)((char *)matrix + offset);
 }
 
-static unsigned int DrawTiresSolid_PackXY(int x, int y)
+static u32 DrawTiresSolid_PackXY(int x, int y)
 {
-	return ((unsigned int)(unsigned short)x) | ((unsigned int)(unsigned short)y << 16);
+	return ((u32)(u16)x) | ((u32)(u16)y << 16);
 }
 
-static unsigned int DrawTiresSolid_LoadTrigPacked(int angle)
+static u32 DrawTiresSolid_LoadTrigPacked(int angle)
 {
 	struct TrigTable trigApprox = data.trigApprox[angle & 0x3ff];
 
-	return (unsigned short)trigApprox.sin | ((unsigned int)(unsigned short)trigApprox.cos << 16);
+	return (u16)trigApprox.sin | ((u32)(u16)trigApprox.cos << 16);
 }
 
 static struct DrawTiresSolidTrigPair DrawTiresSolid_TrigAngleSinCos(int angle)
 {
-	unsigned int packed = DrawTiresSolid_LoadTrigPacked(angle);
+	u32 packed = DrawTiresSolid_LoadTrigPacked(angle);
 	struct DrawTiresSolidTrigPair pair;
 
 	// NOTE(aalhendi): PSX-backfeed blocker: retail TRIG_AngleSinCos_r9r8r10
@@ -157,8 +157,8 @@ static struct DrawTiresSolidTrigPair DrawTiresSolid_TrigAngleSinCos(int angle)
 	// PSX backfeed.
 	if ((angle & 0x400) == 0)
 	{
-		pair.sin = (short)packed;
-		pair.cos = (short)(packed >> 16);
+		pair.sin = (s16)packed;
+		pair.cos = (s16)(packed >> 16);
 
 		if ((angle & 0x800) != 0)
 		{
@@ -168,8 +168,8 @@ static struct DrawTiresSolidTrigPair DrawTiresSolid_TrigAngleSinCos(int angle)
 	}
 	else
 	{
-		pair.sin = (short)(packed >> 16);
-		pair.cos = (short)packed;
+		pair.sin = (s16)(packed >> 16);
+		pair.cos = (s16)packed;
 
 		if ((angle & 0x800) != 0)
 			pair.sin = -pair.sin;
@@ -218,7 +218,7 @@ static int DrawTiresSolid_IntSqrt(int radicand)
 	int root = 0;
 	int remainder = 0;
 	int bitCount;
-	unsigned int work;
+	u32 work;
 
 	// NOTE(aalhendi): PSX-backfeed blocker: retail Unknown_8006ef98 receives
 	// the radicand in s5 and returns the integer square root through s6. Native
@@ -228,7 +228,7 @@ static int DrawTiresSolid_IntSqrt(int radicand)
 		return 0;
 
 	bitCount = DrawTiresSolid_CountLeadingSignBits(radicand) & 0x1e;
-	work = ((unsigned int)radicand) << bitCount;
+	work = ((u32)radicand) << bitCount;
 
 	for (bitCount ^= 0x1e; bitCount >= 0; bitCount -= 2)
 	{
@@ -296,7 +296,7 @@ static void DrawTiresSolid_BuildWheelLocalPairs(struct DrawTiresSolidScratch *sc
 
 	DrawTiresSolid_WriteS32(scratch, 0x40, idpp->unkE4);
 	DrawTiresSolid_WriteS32(scratch, 0x44, idpp->unkE8);
-	DrawTiresSolid_WriteS32(scratch, 0x48, (short)driver->wheelSize);
+	DrawTiresSolid_WriteS32(scratch, 0x48, (s16)driver->wheelSize);
 
 	steering = DrawTiresSolid_TrigAngleSinCos(driver->wheelRotation << 2);
 	DrawTiresSolid_WriteS16(scratch, 0x60, DrawTiresSolid_ReadS16(scratch, 0x58) - steering.cos);
@@ -501,7 +501,7 @@ static struct DrawTiresSolidProjectedWheel DrawTiresSolid_SelectProjectedWheel(s
 	struct DrawTiresSolidProjectedWheel selected;
 	int selectedOT = DrawTiresSolid_ReadS32(scratch, 0x40);
 	int splitDelta = DrawTiresSolid_ReadS16(scratch, 0x50) - DrawTiresSolid_ReadS16(scratch, centerOffset + 2);
-	unsigned int depthValue;
+	u32 depthValue;
 	int angleValue;
 	int spriteIndex;
 
@@ -539,12 +539,12 @@ static struct DrawTiresSolidProjectedWheel DrawTiresSolid_SelectProjectedWheel(s
 
 static void DrawTiresSolid_CopyIconUV(POLY_FT4 *p, struct Icon *icon)
 {
-	unsigned int uv23 = *(unsigned int *)&icon->texLayout.u2;
+	u32 uv23 = *(u32 *)&icon->texLayout.u2;
 
-	*(unsigned int *)&p->u0 = *(unsigned int *)&icon->texLayout.u0;
-	*(unsigned int *)&p->u1 = *(unsigned int *)&icon->texLayout.u1;
-	*(unsigned int *)&p->u2 = uv23;
-	*(unsigned int *)&p->u3 = uv23 >> 16;
+	*(u32 *)&p->u0 = *(u32 *)&icon->texLayout.u0;
+	*(u32 *)&p->u1 = *(u32 *)&icon->texLayout.u1;
+	*(u32 *)&p->u2 = uv23;
+	*(u32 *)&p->u3 = uv23 >> 16;
 }
 
 static int DrawTiresSolid_ApplyCornerOrder(struct DrawTiresSolidScratch *scratch, int jumpIndex, int *selectedOTSlot, int sxy[4])
@@ -618,10 +618,10 @@ static int DrawTiresSolid_ApplyCornerOrder(struct DrawTiresSolidScratch *scratch
 
 static void DrawTiresSolid_WritePrimitiveCorners(POLY_FT4 *p, int sxy[4])
 {
-	*(unsigned int *)&p->x0 = sxy[0];
-	*(unsigned int *)&p->x1 = sxy[1];
-	*(unsigned int *)&p->x2 = sxy[2];
-	*(unsigned int *)&p->x3 = sxy[3];
+	*(u32 *)&p->x0 = sxy[0];
+	*(u32 *)&p->x1 = sxy[1];
+	*(u32 *)&p->x2 = sxy[2];
+	*(u32 *)&p->x3 = sxy[3];
 }
 
 static void DrawTiresSolid_LinkPrimitive(struct DrawTiresSolidScratch *scratch, POLY_FT4 *p, int selectedOTSlot)
@@ -655,7 +655,7 @@ static int DrawTiresSolid_EmitProjectedWheel(struct DrawTiresSolidScratch *scrat
 	int selectedOTSlot = selected->selectedOTSlot;
 	int sxy[4];
 
-	*(unsigned int *)&p->r0 = scratch->tireColor;
+	*(u32 *)&p->r0 = scratch->tireColor;
 
 	if (selected->wheelSprite == 0)
 		return 1;
@@ -799,7 +799,7 @@ void DrawTires_Solid(struct Thread *thread, struct PrimMem *primMem, char numPly
 		if (driver == 0 || inst == 0)
 			continue;
 
-		for (int playerIndex = 0; playerIndex < (int)(unsigned char)numPlyr; playerIndex++)
+		for (int playerIndex = 0; playerIndex < (int)(u8)numPlyr; playerIndex++)
 		{
 			// Source-backs the early thread/player and IDPP gates at
 			// 0x8006e5fc-0x8006e688. Full primitive emission is source-backed,

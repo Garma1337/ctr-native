@@ -3,7 +3,7 @@
 void DECOMP_MM_TrackSelect_Init()
 {
 	struct MainMenu_LevelRow *selectMenu;
-	short numTracks;
+	s16 numTracks;
 
 	// lap selection menu is closed by default
 	D230.trackSel_boolOpenLapBox = false;

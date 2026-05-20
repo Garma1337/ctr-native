@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_FLARE_Init(short *pos)
+void DECOMP_FLARE_Init(s16 *pos)
 {
 	// 0xc = size
 	// 0 = no relation to param4

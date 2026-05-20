@@ -28,7 +28,7 @@ struct MaskHeadWeapon *DECOMP_VehPickupItem_MaskUseWeapon(struct Driver *driver,
 	for (currThread = t->childThread; currThread != 0; currThread = currThread->siblingThread)
 	{
 		// if thread->modelIndex is NOT Aku or Uka
-		if ((unsigned int)(currThread->modelIndex - STATIC_AKUAKU) >= 2)
+		if ((u32)(currThread->modelIndex - STATIC_AKUAKU) >= 2)
 			continue;
 
 		currThread->funcThTick = DECOMP_RB_MaskWeapon_ThTick;
@@ -75,7 +75,7 @@ struct MaskHeadWeapon *DECOMP_VehPickupItem_MaskUseWeapon(struct Driver *driver,
 
 	    (OtherFX_Play_Echo(soundID, 1, driver->actionsFlagSet & 0x10000),
 
-	     1 < (u_int)(driver->kartState - 4)))
+	     1 < (u32)(driver->kartState - 4)))
 	{
 		if (boolGoodGuy == 0)
 		{

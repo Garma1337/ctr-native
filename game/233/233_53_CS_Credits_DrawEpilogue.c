@@ -18,8 +18,8 @@ void CS_Credits_DrawEpilogue(struct CreditsObj *co)
 	if (co->epilogue_topString == 0)
 		return;
 
-	short timeRemaining = co->epilogueCount200;
-	short fadeAmount = 20;
+	s16 timeRemaining = co->epilogueCount200;
+	s16 fadeAmount = 20;
 
 	if (timeRemaining < 0xb5)
 	{
@@ -33,7 +33,7 @@ void CS_Credits_DrawEpilogue(struct CreditsObj *co)
 		fadeAmount = 200 - timeRemaining;
 	}
 
-	short colorSlot = 4;
+	s16 colorSlot = 4;
 
 	if (fadeAmount < 20)
 	{
@@ -48,9 +48,9 @@ void CS_Credits_DrawEpilogue(struct CreditsObj *co)
 			for (int i = 0; i < 4; i++)
 			{
 				int stride = i * 4;
-				dst[stride + 0] = (char)((unsigned char)src[stride + 0] * fade8 >> 8);
-				dst[stride + 1] = (char)((unsigned char)src[stride + 1] * fade8 >> 8);
-				dst[stride + 2] = (char)((unsigned char)src[stride + 2] * fade8 >> 8);
+				dst[stride + 0] = (char)((u8)src[stride + 0] * fade8 >> 8);
+				dst[stride + 1] = (char)((u8)src[stride + 1] * fade8 >> 8);
+				dst[stride + 2] = (char)((u8)src[stride + 2] * fade8 >> 8);
 			}
 		}
 		else
@@ -61,11 +61,11 @@ void CS_Credits_DrawEpilogue(struct CreditsObj *co)
 
 	if ((colorSlot >= 0) && (creditsBSS.boolAllBlue != 0))
 	{
-		short strLen = -1;
+		s16 strLen = -1;
 
 		if (co->epilogue_nextString != 0)
 		{
-			strLen = (short)(co->epilogue_nextString - co->epilogue_topString) - 1;
+			strLen = (s16)(co->epilogue_nextString - co->epilogue_topString) - 1;
 		}
 
 		DECOMP_DecalFont_DrawMultiLineStrlen(co->epilogue_topString, strLen, 0x100, 0xaf, 0x1cc, 2, colorSlot | 0x8000);

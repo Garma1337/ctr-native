@@ -1,6 +1,6 @@
 #include <common.h>
 
-int DECOMP_MATH_Sin(unsigned int angle)
+int DECOMP_MATH_Sin(u32 angle)
 {
 	/*int sine;
 
@@ -20,10 +20,10 @@ int DECOMP_MATH_Sin(unsigned int angle)
 	}
 	return sine;*/
 
-	// u_int uVar1;
+	// u32 uVar1;
 	// int iVar2;
 
-	// uVar1 = *(u_int*)&data.trigApprox[angle & 0x3ff];
+	// uVar1 = *(u32*)&data.trigApprox[angle & 0x3ff];
 	// if ((angle & 0x400) == 0) {
 	//	uVar1 = uVar1 << 0x10;
 	// }

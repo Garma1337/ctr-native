@@ -6,7 +6,7 @@
 // param2 = drawn position
 // param3 = absolute position
 // param4 = frame counter
-void DECOMP_UI_Lerp2D_Angular(short *ptrPos, short drawnPosition, short absolutePosition, short frameCounter)
+void DECOMP_UI_Lerp2D_Angular(s16 *ptrPos, s16 drawnPosition, s16 absolutePosition, s16 frameCounter)
 {
 	int angle;
 	int drawnPositionInt;
@@ -27,13 +27,13 @@ void DECOMP_UI_Lerp2D_Angular(short *ptrPos, short drawnPosition, short absolute
 	// if driver "just" passed another driver
 	if (absolutePositionInt < drawnPositionInt)
 	{
-		ptrPos[0] = (short)(angle * 0x14 >> 0xc) + 0x14;
+		ptrPos[0] = (s16)(angle * 0x14 >> 0xc) + 0x14;
 	}
 
 	// if driver "was" passed by another driver
 	else
 	{
-		ptrPos[0] = 0x14 - (short)(angle * 0x14 >> 0xc);
+		ptrPos[0] = 0x14 - (s16)(angle * 0x14 >> 0xc);
 	}
 
 	// absolutePositionInt - drawnPositionInt is either -1 or +1

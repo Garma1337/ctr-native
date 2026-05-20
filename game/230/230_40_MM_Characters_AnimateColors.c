@@ -1,14 +1,14 @@
 #include <common.h>
-void DECOMP_MM_Characters_AnimateColors(unsigned char *colorData, short playerID, short flag)
+void DECOMP_MM_Characters_AnimateColors(u8 *colorData, s16 playerID, s16 flag)
 {
-	u_char colorAdjustmentValue;
-	u_int trigApproximationIndex;
-	u_int trigApprox;
+	u8 colorAdjustmentValue;
+	u32 trigApproximationIndex;
+	u32 trigApprox;
 
 	// access int RGBA as a char array,
 	// for editing components of color
-	u_char *ptrColor;
-	ptrColor = (u_char *)data.ptrColor[playerID + PLAYER_BLUE];
+	u8 *ptrColor;
+	ptrColor = (u8 *)data.ptrColor[playerID + PLAYER_BLUE];
 
 	trigApprox = 0;
 
@@ -19,7 +19,7 @@ void DECOMP_MM_Characters_AnimateColors(unsigned char *colorData, short playerID
 		trigApproximationIndex = sdata->frameCounter * 0x100 + playerID * 0x400;
 
 		// approximate trigonometry
-		trigApprox = *(u_int *)&data.trigApprox[trigApproximationIndex & 0x3ff];
+		trigApprox = *(u32 *)&data.trigApprox[trigApproximationIndex & 0x3ff];
 
 		if ((trigApproximationIndex & 0x400) == 0)
 		{

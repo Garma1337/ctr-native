@@ -25,7 +25,7 @@ void DECOMP_VehStuckProc_Warp_Init(struct Thread *th, struct Driver *d)
 		d->driverAudioPtrs[i] = NULL;
 	}
 
-	u_char playerID = d->driverID;
+	u8 playerID = d->driverID;
 
 	int engine = data.MetaDataCharacters[data.characterIDs[playerID]].engineID;
 
@@ -41,7 +41,7 @@ void DECOMP_VehStuckProc_Warp_Init(struct Thread *th, struct Driver *d)
 	inst->flags | 0x4000;
 
 	// vertical line for split or reflection
-	inst->vertSplit = (short)(d->quadBlockHeight >> 8);
+	inst->vertSplit = (s16)(d->quadBlockHeight >> 8);
 
 	// you are now in a warp pad
 	d->kartState = KS_WARP_PAD;

@@ -1,8 +1,8 @@
 struct ParticleAxis
 {
 	int startVal;
-	short velocity;
-	short accel;
+	s16 velocity;
+	s16 accel;
 };
 
 struct Particle
@@ -19,24 +19,24 @@ struct Particle
 	// 0xC
 	struct IconGroup *ptrIconGroup;
 
-	// 0x10 (short)
-	short framesLeftInLife;
+	// 0x10 (s16)
+	s16 framesLeftInLife;
 
-	// 0x12 (short)
-	u_short flagsSetColor;
+	// 0x12 (s16)
+	u16 flagsSetColor;
 
 	// 0x14
 	// one bit per axis
-	u_short flagsAxis;
+	u16 flagsAxis;
 
 	// 0x16
-	short unk16;
+	s16 unk16;
 
 	// 0x18
-	// char[2], short[1] (0, 0xff, 0x0400)
+	// char[2], s16[1] (0, 0xff, 0x0400)
 	char unk18;
 	char unk19;
-	short unk1A;
+	s16 unk1A;
 
 	// 0x19
 	// driverID (if needed)
@@ -83,11 +83,11 @@ struct ParticleEmitter
 	// flags = 0 for last emitter
 	// flags = 1 for FuncInit
 	// flags = 0xC0 for AxisInit
-	unsigned short flags;
+	u16 flags;
 
 	// 0x2
 	// determines which axis is initialized
-	short initOffset;
+	s16 initOffset;
 
 	union
 	{
@@ -98,10 +98,10 @@ struct ParticleEmitter
 
 			// 0x8
 			// flags, passed to SetColors
-			u_short particle_colorFlags;
+			u16 particle_colorFlags;
 
 			// 0xA
-			short particle_lifespan;
+			s16 particle_lifespan;
 
 			// 0xC
 			//(ordinary, or heatWarp)

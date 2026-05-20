@@ -10,7 +10,7 @@ void DECOMP_VehPhysProc_PowerSlide_Init(struct Thread *t, struct Driver *d)
 	d->kartState = KS_DRIFTING;
 
 	// Character's Drift stat + ((Turning multiplier? << 2) / 5) * 100
-	short drift = (d->unk460 + ((d->turnConst << 2) / 5)) * 0x100;
+	s16 drift = (d->unk460 + ((d->turnConst << 2) / 5)) * 0x100;
 
 	// if simplified turning state is negative (means you're turning right)
 	if (d->simpTurnState < 0)

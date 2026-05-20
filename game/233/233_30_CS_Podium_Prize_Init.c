@@ -1,11 +1,11 @@
 #include <common.h>
 
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x800afe90-0x800b021c
-void CS_Podium_Prize_Init(u_int prizeModel, char *prizeName, short *posOnScreen)
+void CS_Podium_Prize_Init(u32 prizeModel, char *prizeName, s16 *posOnScreen)
 {
 	struct GameTracker *gGT = sdata->gGT;
 	struct Instance *inst;
-	short *prize;
+	s16 *prize;
 	int tx;
 	int ty;
 	int tz;
@@ -43,9 +43,9 @@ void CS_Podium_Prize_Init(u_int prizeModel, char *prizeName, short *posOnScreen)
 	ty = MFC2(26);
 	tz = MFC2(27);
 
-	prize[0] = posOnScreen[0] + (short)tx;
-	prize[1] = posOnScreen[1] + (short)ty + 0x1c0;
-	prize[2] = posOnScreen[2] + (short)tz;
+	prize[0] = posOnScreen[0] + (s16)tx;
+	prize[1] = posOnScreen[1] + (s16)ty + 0x1c0;
+	prize[2] = posOnScreen[2] + (s16)tz;
 	prize[10] = -0x200;
 
 	switch (prizeModel)
@@ -56,7 +56,7 @@ void CS_Podium_Prize_Init(u_int prizeModel, char *prizeName, short *posOnScreen)
 
 	case STATIC_GEM:
 	{
-		short *gemColor = data.AdvCups[gGT->cup.cupID].color;
+		s16 *gemColor = data.AdvCups[gGT->cup.cupID].color;
 
 		inst->colorRGBA = (gemColor[0] << 20) | (gemColor[1] << 12) | (gemColor[2] << 4);
 		prize[0xc] = 0x5d3;
@@ -76,8 +76,8 @@ void CS_Podium_Prize_Init(u_int prizeModel, char *prizeName, short *posOnScreen)
 	case STATIC_RELIC:
 	{
 		struct UiElement2D *hud = data.hudStructPtr[0];
-		u_int bitIndex = gGT->prevLEV + 0x3a;
-		u_int relicColor;
+		u32 bitIndex = gGT->prevLEV + 0x3a;
+		u32 relicColor;
 
 		prize[8] = hud[0xe].x;
 		prize[9] = hud[0xe].y - 0x3c;

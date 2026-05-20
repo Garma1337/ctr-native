@@ -9,10 +9,10 @@ void DECOMP_AH_Garage_ThTick(struct Thread *t)
 	int move;
 	int ratio;
 	int bottom;
-	short *check;
-	u_int bitIndex;
-	u_int uVar5;
-	u_int uVar8;
+	s16 *check;
+	u32 bitIndex;
+	u32 uVar5;
+	u32 uVar8;
 	int dist[3];
 	int pos[3];
 	struct BossGarageDoor *garage;
@@ -108,7 +108,7 @@ void DECOMP_AH_Garage_ThTick(struct Thread *t)
 		else if (garage->garageTopInst != 0)
 		{
 			// Update rotation of garagetop
-			garage->rot[0] += (short)garage->direction * 0x40;
+			garage->rot[0] += (s16)garage->direction * 0x40;
 
 			// converted to TEST in rebuildPS1
 			ConvertRotToMatrix(&garage->garageTopInst->matrix, &garage->rot[0]);

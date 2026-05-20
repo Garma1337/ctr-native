@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_GhostTape_WriteBoosts(int addReserve, u_char type, int speedCap)
+void DECOMP_GhostTape_WriteBoosts(int addReserve, u8 type, int speedCap)
 {
 	char *puVar1;
 
@@ -25,14 +25,14 @@ void DECOMP_GhostTape_WriteBoosts(int addReserve, u_char type, int speedCap)
 	puVar1[0] = 0x82;
 
 	// big endian reserve
-	puVar1[1] = (char)((u_int)addReserve >> 8);
+	puVar1[1] = (char)((u32)addReserve >> 8);
 	puVar1[2] = (char)addReserve;
 
 	// char, add type (increment or set)
 	puVar1[3] = type;
 
 	// big endian speedCcap
-	puVar1[4] = (char)((u_int)speedCap >> 8);
+	puVar1[4] = (char)((u32)speedCap >> 8);
 	puVar1[5] = (char)speedCap;
 
 	sdata->GhostRecording.ptrCurrOffset += 6;

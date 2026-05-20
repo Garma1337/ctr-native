@@ -5,8 +5,8 @@ void DECOMP_UI_INSTANCE_InitAll(void)
 	struct GameTracker *gGT;
 	struct Instance *crystal;
 	struct Instance *token;
-	u_int gameMode1;
-	u_int relicType;
+	u32 gameMode1;
+	u32 relicType;
 	int iVar5;
 
 #if 0
@@ -95,7 +95,7 @@ void DECOMP_UI_INSTANCE_InitAll(void)
 			}
 
 			// get relic time on this track, for this relic type (sapphire, gold, platinum)
-			unsigned int relicTime = data.RelicTime[gGT->levelID * 3 + relicType];
+			u32 relicTime = data.RelicTime[gGT->levelID * 3 + relicType];
 
 			// store globally for HUD to access later
 			sdata->relicTime_1min = relicTime / 0xe100;

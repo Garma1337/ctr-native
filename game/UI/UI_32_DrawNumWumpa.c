@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_UI_DrawNumWumpa(short posX, short posY, struct Driver *d)
+void DECOMP_UI_DrawNumWumpa(s16 posX, s16 posY, struct Driver *d)
 {
 	char currWumpa;
 	int currWumpa10s;

@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_GAMEPAD_ProcessState(struct GamepadBuffer *pad, int padState, short id)
+void DECOMP_GAMEPAD_ProcessState(struct GamepadBuffer *pad, int padState, s16 id)
 {
 	char uVar1;
 	int iVar2;
@@ -37,7 +37,7 @@ void DECOMP_GAMEPAD_ProcessState(struct GamepadBuffer *pad, int padState, short 
 			}
 
 			// set to zero by default
-			*(short *)&pad->motorPower[0] = 0;
+			*(s16 *)&pad->motorPower[0] = 0;
 
 			// loop through motors
 			for (iVar3 = 0; iVar3 < iVar2; iVar3++)

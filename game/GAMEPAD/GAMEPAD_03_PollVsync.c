@@ -2,8 +2,8 @@
 
 void DECOMP_GAMEPAD_PollVsync(struct GamepadSystem *gGamepads)
 {
-	u_int uVar2;
-	u_int uVar4;
+	u32 uVar2;
+	u32 uVar4;
 	struct GamepadBuffer *pad;
 	int port;
 	int numPorts;

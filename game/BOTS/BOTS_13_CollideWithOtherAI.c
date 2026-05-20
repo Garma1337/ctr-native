@@ -15,12 +15,12 @@ void DECOMP_BOTS_CollideWithOtherAI(struct Driver *robot_1, struct Driver *robot
 	// robot_1 = iVar2
 	// robot_2 = param_2
 
-	short *uVar3;
-	short *estimatePos;
+	s16 *uVar3;
+	s16 *estimatePos;
 	if ((robot_1->botData.botFlags & 1) == 0)
 	{
 		// nav path index
-		short botPathIndex = robot_1->botData.botPath;
+		s16 botPathIndex = robot_1->botData.botPath;
 
 		// pointer to navFrame
 		nfCurr = &robot_1->botData.botNavFrame;
@@ -47,19 +47,19 @@ void DECOMP_BOTS_CollideWithOtherAI(struct Driver *robot_1, struct Driver *robot
 
 	uVar3 = &nfNext->pos[0];
 
-	short pos[3];
+	s16 pos[3];
 	// position of one driver
-	pos[0] = (short)(robot_1->posCurr.x >> 8);
-	pos[1] = (short)(robot_1->posCurr.y >> 8);
-	pos[2] = (short)(robot_1->posCurr.z >> 8);
+	pos[0] = (s16)(robot_1->posCurr.x >> 8);
+	pos[1] = (s16)(robot_1->posCurr.y >> 8);
+	pos[2] = (s16)(robot_1->posCurr.z >> 8);
 
 	// two navFrame structs, and position pointer
 	int res1 = CAM_MapRange_PosPoints(uVar3, estimatePos, &pos[0]);
 
 	// position of other driver
-	pos[0] = (short)(robot_2->posCurr.x >> 8);
-	pos[1] = (short)(robot_2->posCurr.y >> 8);
-	pos[2] = (short)(robot_2->posCurr.z >> 8);
+	pos[0] = (s16)(robot_2->posCurr.x >> 8);
+	pos[1] = (s16)(robot_2->posCurr.y >> 8);
+	pos[2] = (s16)(robot_2->posCurr.z >> 8);
 
 	// two navFrame structs, and position pointer
 	int res2 = CAM_MapRange_PosPoints(uVar3, estimatePos, &pos[0]);

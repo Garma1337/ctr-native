@@ -4,10 +4,10 @@ void DECOMP_RB_Warpball_TurnAround(struct Thread *t)
 {
 	struct TrackerWeapon *tw;
 	struct Instance *inst;
-	unsigned short flags;
+	u16 flags;
 	struct GameTracker *gGT = sdata->gGT;
-	short sVar3;
-	short rot;
+	s16 sVar3;
+	s16 rot;
 
 	tw = t->object;
 	inst = t->inst;

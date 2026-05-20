@@ -3,12 +3,12 @@
 void DECOMP_MM_CupSelect_MenuProc(struct RectMenu *menu)
 {
 	char i;
-	u_char cupIndex;
-	u_char starIndex;
-	u_char trackIndex;
-	short elapsedFrames;
-	u_int txtColor;
-	u_int *starColor;
+	u8 cupIndex;
+	u8 starIndex;
+	u8 trackIndex;
+	s16 elapsedFrames;
+	u32 txtColor;
+	u32 *starColor;
 	int startX;
 	int startY;
 	struct GameTracker *gGT = sdata->gGT;
@@ -111,8 +111,8 @@ void DECOMP_MM_CupSelect_MenuProc(struct RectMenu *menu)
 				txtColor |= 4;
 		}
 
-		startX = (short)D230.transitionMeta_cupSel[cupIndex].currX + (cupIndex & 1) * 200;
-		startY = (short)D230.transitionMeta_cupSel[cupIndex].currY + (cupIndex >> 1) * 0x54;
+		startX = (s16)D230.transitionMeta_cupSel[cupIndex].currX + (cupIndex & 1) * 200;
+		startY = (s16)D230.transitionMeta_cupSel[cupIndex].currY + (cupIndex >> 1) * 0x54;
 
 		// draw the name of the cup
 		DECOMP_DecalFont_DrawLine(sdata->lngStrings[data.ArcadeCups[cupIndex].lngIndex_CupName], startX + 0xa2, startY + 0x44, 3, txtColor);

@@ -20,28 +20,28 @@ struct MaskHeadScratch
 	MATRIX m;
 
 	// 0x1f800128
-	short rot[4];
+	s16 rot[4];
 
 	// 0x1f800130
-	short posOffset[4];
+	s16 posOffset[4];
 };
 
 struct MaskHeadWeapon
 {
 	// 0x0
-	short rot[3];
+	s16 rot[3];
 
 	// 0x6
-	short duration;
+	s16 duration;
 
 	// 0x8
 	struct Instance *maskBeamInst;
 
 	// 0xC
-	short pos[3];
+	s16 pos[3];
 
 	// 0x12
-	short scale;
+	s16 scale;
 
 	// 0x14 bytes large
 };
@@ -63,28 +63,28 @@ struct TrackerWeapon
 	struct Particle *ptrParticle;
 
 	// 0x10
-	short vel[3];
+	s16 vel[3];
 
 	// 0x16
 	// & 1 - used 10 wumpa fruit
 	// & 0x20 - bomb backwards
-	u_short flags;
+	u16 flags;
 
 	// 0x18
-	short dir[3];
+	s16 dir[3];
 
 	// 0x1e
-	short rotY;
+	s16 rotY;
 
 	// 0x20
-	short frameCount_DontHurtParent;
-	short frameCount_Blind;
+	s16 frameCount_DontHurtParent;
+	s16 frameCount_Blind;
 
 	// 0x24
 	int audioPtr;
 
 	// 0x28
-	unsigned int distanceToTarget;
+	u32 distanceToTarget;
 
 	// === This point and beyond is Warpball ===
 
@@ -98,7 +98,7 @@ struct TrackerWeapon
 	// 0x34
 	// bitshift with driver->driverID
 	// one bit for every driver hit
-	u_int driversHit;
+	u32 driversHit;
 
 	// 0x38
 	// distY from track floor
@@ -111,13 +111,13 @@ struct TrackerWeapon
 	struct CheckpointNode *ptrNodeNext;
 
 	// 0x44
-	u_char nodeCurrIndex;
+	u8 nodeCurrIndex;
 
 	// 0x45
-	u_char nodeNextIndex;
+	u8 nodeNextIndex;
 
 	// 0x46
-	short padding;
+	s16 padding;
 
 	// 0x48
 	int timeAlive;
@@ -126,10 +126,10 @@ struct TrackerWeapon
 	int unk4c;
 
 	// 0x50
-	short unk50;
+	s16 unk50;
 
 	// 0x52
-	short turnAround;
+	s16 turnAround;
 
 	// 0x54
 	int framesSeekMine;
@@ -147,13 +147,13 @@ struct RainLocal
 	int frameCount;
 
 	// 0xC
-	short unk1[4];
+	s16 unk1[4];
 
 	// 0x14
-	short vel[4];
+	s16 vel[4];
 
 	// 0x1c
-	short pos[4];
+	s16 pos[4];
 
 	// 0x24
 	struct Instance *cloudInst;
@@ -167,11 +167,11 @@ struct RainCloud
 	struct RainLocal *rainLocal;
 
 	// 0x4
-	short timeMS;
+	s16 timeMS;
 
 	// 0x6
 	// I guess this is used for randomizing the items?
-	short boolScrollItem;
+	s16 boolScrollItem;
 
 	// size - 0x8
 };
@@ -182,14 +182,14 @@ struct Shield
 	int animFrame;
 
 	// 0x4
-	short duration;
+	s16 duration;
 
 	// 0x6
 	// & 1 - popped by VehPickState_NewState
 	// & 2 - shooting
 	// & 4 - blue shield
 	// & ??? - shooting
-	short flags;
+	s16 flags;
 
 	// 0x8
 	struct Instance *instColor;
@@ -198,8 +198,8 @@ struct Shield
 	struct Instance *instHighlight;
 
 	// 0x10
-	short highlightRot[3];
-	short highlightTimer;
+	s16 highlightRot[3];
+	s16 highlightTimer;
 
 	// 0x18
 };
@@ -229,47 +229,47 @@ struct MineWeapon
 	struct Instance *crateInst; // if colliding with one
 
 	// 0xc
-	short velocity[3];
+	s16 velocity[3];
 
 	// 0x12
 	// used by tnt, and potion_inAir
-	short stopFallAtY;
+	s16 stopFallAtY;
 
 	// 0x14
 	// causes explosion if != 0,
 	// this is how mine pool destroys oldest mine
-	short boolDestroyed;
+	s16 boolDestroyed;
 
 	// 0x16
 	// animation frame (on head)
-	short numFramesOnHead;
+	s16 numFramesOnHead;
 
 	// 0x18
 	struct WeaponSlot231 *weaponSlot231;
 
 	// 0x1C
 	// relative to driver
-	short deltaPos[3]; // Maybe SVECTOR but without padding?
+	s16 deltaPos[3]; // Maybe SVECTOR but without padding?
 
 	// 0x22
 	// how many more jumps until
 	// the tnt flies off your head
-	short jumpsRemaining;
+	s16 jumpsRemaining;
 
 	// 0x24
 	// number of frames that mine can't hurt parent
-	short frameCount_DontHurtParent;
+	s16 frameCount_DontHurtParent;
 
 	// 0x26
-	short tntSpinY;
+	s16 tntSpinY;
 
 	// 0x28
 	// 1 - red beaker
 	// 2 - thrown (papu or komodo joe) (tnt/potion)
-	u_short extraFlags;
+	u16 extraFlags;
 
 	// 0x2a
-	short cooldown;
+	s16 cooldown;
 };
 
 struct Baron
@@ -279,15 +279,15 @@ struct Baron
 	char unused[0x24];
 
 	// 0x24
-	u_int soundID_flags;
+	u32 soundID_flags;
 
 	// 0x28
 	// unused, for baron
 	struct Instance *otherInst;
 
 	// 0x2c
-	short pointIndex;
-	short footerPaddingUnused;
+	s16 pointIndex;
+	s16 footerPaddingUnused;
 
 	// 0x30 bytes large
 };
@@ -309,66 +309,66 @@ struct Crate
 
 struct Crystal
 {
-	short rot[3];
-	short padding;
+	s16 rot[3];
+	s16 padding;
 
 	// 0x8 bytes large
 };
 
 struct CtrLetter
 {
-	short rot[3];
-	short padding;
+	s16 rot[3];
+	s16 padding;
 	// 0x8 bytes large
 };
 
 struct StartBanner
 {
-	short unk0;
-	short unk1;
+	s16 unk0;
+	s16 unk1;
 	// 0x4 bytes large
 };
 
 struct Armadillo
 {
 	// 0x0
-	short rotCurr[3];
+	s16 rotCurr[3];
 
 	// 0x6
-	short velX;
+	s16 velX;
 
 	// 0x8
-	short rotDesired[3];
+	s16 rotDesired[3];
 
 	// 0xe
-	short velZ;
+	s16 velZ;
 
 	// 0x10
 	// at 0x500, it stops, and turns around
-	short timeRolling;
+	s16 timeRolling;
 
 	// 0x12
 	// unused
-	short numFramesSpinning;
+	s16 numFramesSpinning;
 
 	// 0x14
 	// starts at zero, rolls, gets to high number,
 	// then rolls back, and number goes back to zero
-	short distFromSpawn;
+	s16 distFromSpawn;
 
 	// 0x16
-	short spawnPosX;
+	s16 spawnPosX;
 
 	// 0x18
-	short spawnPosZ;
+	s16 spawnPosZ;
 
 	// 0 for one direction, 1 for the other
 	// 0x1a
-	short direction;
+	s16 direction;
 
 	// frames at edge, waiting to roll again
 	// 0x1c
-	short timeAtEdge;
+	s16 timeAtEdge;
 
 	// 0x20 bytes large
 };
@@ -376,25 +376,25 @@ struct Armadillo
 struct Fireball
 {
 	// 0x0
-	short cycleTimer;
+	s16 cycleTimer;
 
 	// 0x2
-	short fireballID;
+	s16 fireballID;
 
 	// 0x4
 	// puts fireballs on different cycles,
 	// just like spiders
-	short cooldown;
+	s16 cooldown;
 
 	// 0x6 (maybe a rot[3]?)
-	short unused[3];
+	s16 unused[3];
 
 	// 0xC
-	short velY;
+	s16 velY;
 
 	// 0xE
 	// unused
-	short direction;
+	s16 direction;
 
 	// 0x10 bytes large
 };
@@ -430,7 +430,7 @@ struct Follower
 	struct Thread *mineTh;
 	int backupTimesDestroyed;
 
-	short realPos[4];
+	s16 realPos[4];
 };
 
 #if 0
@@ -444,32 +444,32 @@ struct Minecart
 {
 	// 0x0
 	// removed in decomp optimizations
-	short posStart[3];
+	s16 posStart[3];
 
 	// 0x6
-	short betweenPoints_currFrame;
+	s16 betweenPoints_currFrame;
 
 	// 0x8
 	// removed in decomp optimizations
-	short posEnd[3];
+	s16 posEnd[3];
 
 	// 0xe
-	short dir[3];
+	s16 dir[3];
 
 	// 0x14
 	int posIndex;
 
 	// 0x18
-	short rotCurr[3];
+	s16 rotCurr[3];
 
 	// 0x1e
-	short betweenPoints_numFrames;
+	s16 betweenPoints_numFrames;
 
 	// 0x20
-	short rotDesired[3];
+	s16 rotDesired[3];
 
 	// 0x26
-	short rotSpeed;
+	s16 rotSpeed;
 
 	// 0x28
 	int audioPtr;
@@ -480,31 +480,31 @@ struct Minecart
 struct Orca
 {
 	// 0x0
-	short startPos[3];
+	s16 startPos[3];
 
 	// 0x6
-	short orcaID;
+	s16 orcaID;
 
 	// 0x8
-	short endPos[3];
+	s16 endPos[3];
 
 	// 0xE
-	short cooldown;
+	s16 cooldown;
 
 	// 0x10
-	short instDefRot[3];
+	s16 instDefRot[3];
 
 	// 0x16
-	short animIndex;
+	s16 animIndex;
 
 	// 0x26
-	short numFrames;
+	s16 numFrames;
 
 	// 0x28
-	short midpoint[3]; // ?
+	s16 midpoint[3]; // ?
 
 	// 0x2e
-	short direction;
+	s16 direction;
 
 	// 0x30 bytes large
 };
@@ -512,18 +512,18 @@ struct Orca
 struct Plant
 {
 	// 0x0
-	short cycleCount;
+	s16 cycleCount;
 
 	// 0x2
-	short cooldown;
+	s16 cooldown;
 
 	// 0x4
 	// 0: left side of track
 	// 1: right side of track
-	short LeftOrRight;
+	s16 LeftOrRight;
 
 	// 0x6
-	short boolEatingPlayer;
+	s16 boolEatingPlayer;
 
 	// 0x8 bytes large
 };
@@ -531,38 +531,38 @@ struct Plant
 struct Seal
 {
 	// 0x0
-	short spawnPos[3];
+	s16 spawnPos[3];
 
 	// 0x6
-	short sealID;
+	s16 sealID;
 
 	// 0x8
 	// unused, should erase
-	short endPos[3];
+	s16 endPos[3];
 
 	// 0xe
-	short distFromSpawn;
+	s16 distFromSpawn;
 
 	// 0x10
-	short rotCurr[3];
-	short padding16;
+	s16 rotCurr[3];
+	s16 padding16;
 
 	// 0x18
-	short rotDesired[3];
+	s16 rotDesired[3];
 
 	// 0x1e
-	short direction;
+	s16 direction;
 
 	// 0x20
 	// unused, should erase
-	short rotDesiredAlt[3];
+	s16 rotDesiredAlt[3];
 
 	// 0x26
-	short numFramesSpinning;
+	s16 numFramesSpinning;
 
 	// 0x28
-	short vel[3];
-	short padding2e;
+	s16 vel[3];
+	s16 padding2e;
 
 	// 0x30 bytes large
 };
@@ -570,16 +570,16 @@ struct Seal
 struct Snowball
 {
 	// 0x0
-	short rot_unused[3];
+	s16 rot_unused[3];
 
 	// 0x6
-	short pointIndex;
+	s16 pointIndex;
 
 	// 0x8
-	short numPoints;
+	s16 numPoints;
 
 	// 0xA
-	short snowID;
+	s16 snowID;
 
 	// 0xC
 	int audioPtr;
@@ -591,21 +591,21 @@ struct Spider
 {
 	// 0x0
 	// counts five times
-	short animLoopCount;
+	s16 animLoopCount;
 
 	// 0x2
-	short spiderID;
+	s16 spiderID;
 
 	// 0x4
 	// unused, use t->cooldownFrameCount instead
-	short delay;
+	s16 delay;
 
 	// 0x6
-	short boolNearRoof; // 0 on ground, 1 near roof
+	s16 boolNearRoof; // 0 on ground, 1 near roof
 
 	// 0x8
-	short unused;
-	short padding;
+	s16 unused;
+	s16 padding;
 
 	// 0xC
 	struct Instance *shadowInst;
@@ -633,23 +633,23 @@ struct Teeth
 struct Turtle
 {
 	// 0x0
-	short timer;
+	s16 timer;
 
 	// 0x2
 	// 0 from moment it hits top to moment it hits bottom
 	// 1 from moment it hits bottom to moment it hits top
-	short direction;
+	s16 direction;
 
 	// 0x4
-	short unk4;
+	s16 unk4;
 
 	// 0x6
-	short turtleID;
+	s16 turtleID;
 
 	// 0x8
 	// 0 - fully up (big jump)
 	// 1 - not fully up (small jump)
-	short state;
+	s16 state;
 
 	// 0xC bytes large
 };

@@ -3,13 +3,13 @@
 void DECOMP_MainFreeze_MenuPtrDefault(struct RectMenu *menu)
 {
 	int levID = 0; // dingo canyon
-	u_short stringID;
-	u_int gameMode;
+	u16 stringID;
+	u32 gameMode;
 
 	struct GameTracker *gGT = sdata->gGT;
 	gameMode = gGT->gameMode1;
 
-	unsigned char ADV_CUP = 100;
+	u8 ADV_CUP = 100;
 
 	// if you have not waited 5 frames since the game was paused then quit
 	if (gGT->cooldownfromPauseUntilUnpause != 0)

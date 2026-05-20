@@ -2,7 +2,7 @@
 
 static int cbDRAM = DECOMP_LOAD_DramFileCallback;
 
-void DECOMP_LOAD_DriverMPK(unsigned int param_1, int levelLOD)
+void DECOMP_LOAD_DriverMPK(u32 param_1, int levelLOD)
 {
 	int i;
 	int gameMode1;

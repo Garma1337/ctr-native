@@ -10,7 +10,7 @@ void CS_Credits_AnimateCreditGhost(struct Instance *dst, struct Instance *src, i
 
 	dst->matrix = src->matrix;
 
-	short scale = 0x1000 + (index + 1) * 300;
+	s16 scale = 0x1000 + (index + 1) * 300;
 
 	dst->scale[0] = scale;
 	dst->scale[1] = scale;
@@ -37,7 +37,7 @@ void CS_Credits_AnimateCreditGhost(struct Instance *dst, struct Instance *src, i
 
 	localModel->headers = (struct ModelHeader *)co->data_0x80_0x5[index].data;
 
-	short srcNumHeaders = srcModel->numHeaders;
+	s16 srcNumHeaders = srcModel->numHeaders;
 	if (srcNumHeaders > 0)
 	{
 		struct ModelHeader *dstHeaders = localModel->headers;

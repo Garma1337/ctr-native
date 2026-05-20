@@ -11,10 +11,10 @@ void DECOMP_TT_EndEvent_DrawMenu(void)
 {
 	int elapsedFrames;
 	int startX;
-	short endX;
-	short pos[2];
+	s16 endX;
+	s16 pos[2];
 	char **lngStrings;
-	u_int gameModeEnd;
+	u32 gameModeEnd;
 	struct GameTracker *gGT;
 
 	gGT = sdata->gGT;
@@ -255,12 +255,12 @@ void DECOMP_TT_EndEvent_DrawMenu(void)
 	return;
 }
 
-void DECOMP_TT_EndEvent_DisplayTime(int paramX, short paramY, u_int UI_DrawRaceClockFlags)
+void DECOMP_TT_EndEvent_DisplayTime(int paramX, s16 paramY, u32 UI_DrawRaceClockFlags)
 {
 	struct GameTracker *gGT;
 	struct Driver *d;
-	short textWidth;
-	short pos[2];
+	s16 textWidth;
+	s16 pos[2];
 	RECT rectangle;
 
 	gGT = sdata->gGT;
@@ -288,7 +288,7 @@ void DECOMP_TT_EndEvent_DisplayTime(int paramX, short paramY, u_int UI_DrawRaceC
 #endif
 
 	// "YOUR TIME"
-	DECOMP_DecalFont_DrawLine(sdata->lngStrings[197], paramX, ((u_int)pos[1] - 0x4c), FONT_BIG, (JUSTIFY_CENTER | ORANGE));
+	DECOMP_DecalFont_DrawLine(sdata->lngStrings[197], paramX, ((u32)pos[1] - 0x4c), FONT_BIG, (JUSTIFY_CENTER | ORANGE));
 
 	DECOMP_UI_DrawRaceClock(pos[0], pos[1], UI_DrawRaceClockFlags, d);
 
@@ -305,7 +305,7 @@ void DECOMP_TT_EndEvent_DisplayTime(int paramX, short paramY, u_int UI_DrawRaceC
 }
 
 // same in TT and RR, but not the same in Main Menu
-void DECOMP_TT_EndEvent_DrawHighScore(short startX, int startY)
+void DECOMP_TT_EndEvent_DrawHighScore(s16 startX, int startY)
 {
 	// This is different from High Score in Main Menu because Main Menu
 	// does not show the rank icons '1', '2', '3', '4', '5'
@@ -314,12 +314,12 @@ void DECOMP_TT_EndEvent_DrawHighScore(short startX, int startY)
 
 	char i;
 	char *timeString;
-	short nameColor;
-	u_int timeColor;
-	short pos[2];
-	short timebox_X;
-	short timebox_Y;
-	u_short currRowY;
+	s16 nameColor;
+	u32 timeColor;
+	s16 pos[2];
+	s16 timebox_X;
+	s16 timebox_Y;
+	u16 currRowY;
 	RECT box;
 
 	gGT = sdata->gGT;
@@ -379,7 +379,7 @@ void DECOMP_TT_EndEvent_DrawHighScore(short startX, int startY)
 		// Draw String for Rank ('1', '2', '3', '4', '5')
 		DECOMP_DecalFont_DrawLine((char *)&str_number224, startX - 0x32, timebox_Y - 1, 2, 4);
 
-		u_int iconColor = 0x808080;
+		u32 iconColor = 0x808080;
 
 		// Draw Character Icon
 		DECOMP_RECTMENU_DrawPolyGT4(gGT->ptrIcons[data.MetaDataCharacters[scoreEntry[i + 1].characterID].iconID], startX - 0x52, timebox_Y,

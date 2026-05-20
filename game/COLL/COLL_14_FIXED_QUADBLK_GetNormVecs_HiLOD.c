@@ -10,8 +10,8 @@ void DECOMP_COLL_FIXED_QUADBLK_GetNormVecs_HiLOD(struct ScratchpadStruct *sps, s
 	sps->dataOutput[6] = quad->triNormalVecBitShift;
 
 	// TriNormalVecDividend
-	short *SPS_TNVD = &sps->dataOutput[4];
-	short *QBL_TNVD = &quad->triNormalVecDividend[0];
+	s16 *SPS_TNVD = &sps->dataOutput[4];
+	s16 *QBL_TNVD = &quad->triNormalVecDividend[0];
 
 	// calculate normal vectors for eight triangles,
 	// no collision detection here

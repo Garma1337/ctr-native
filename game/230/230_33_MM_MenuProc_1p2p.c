@@ -3,7 +3,7 @@
 void DECOMP_MM_MenuProc_1p2p(struct RectMenu *menu)
 
 {
-	short row;
+	s16 row;
 
 	struct GameTracker *gGT;
 	gGT = sdata->gGT;
@@ -23,7 +23,7 @@ void DECOMP_MM_MenuProc_1p2p(struct RectMenu *menu)
 	else
 	{
 		// if on row 0 or 1
-		if ((unsigned char)row < 2)
+		if ((u8)row < 2)
 		{
 			// row 0 is 1P, row 1 is 2P
 			gGT->numPlyrNextGame = menu->rowSelected + 1;

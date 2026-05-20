@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_BOTS_SetGlobalNavData(short index)
+void DECOMP_BOTS_SetGlobalNavData(s16 index)
 {
 	sdata->lastPathIndex = index;
 

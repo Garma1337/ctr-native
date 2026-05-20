@@ -1,18 +1,18 @@
 #include <common.h>
 
 // byte budget 580/632
-void DECOMP_UI_TrackerBG(struct Icon *targetIcon, short centerX, short centerY, struct PrimMem *primMem, u_long *ot, short angleX, short angleY, int color)
+void DECOMP_UI_TrackerBG(struct Icon *targetIcon, s16 centerX, s16 centerY, struct PrimMem *primMem, u_long *ot, s16 angleX, s16 angleY, int color)
 {
-	short rightX;
-	short bottomY;
-	short offsY;
-	short tmpX;
-	short tmpY;
+	s16 rightX;
+	s16 bottomY;
+	s16 offsY;
+	s16 tmpX;
+	s16 tmpY;
 	POLY_FT4 *p;
 	int offsX;
 	int quadIndex;
-	short topY;
-	short leftX;
+	s16 topY;
+	s16 leftX;
 
 	// wumpaShineTheta (given to sine)
 	sdata->wumpaShineTheta += 0x100;
@@ -40,8 +40,8 @@ void DECOMP_UI_TrackerBG(struct Icon *targetIcon, short centerX, short centerY, 
 		*(int *)&p->r0 = *(int *)&color;
 		*(int *)&p->u0 = *(int *)&targetIcon->texLayout.u0;
 		*(int *)&p->u1 = *(int *)&targetIcon->texLayout.u1;
-		*(short *)&p->u2 = *(short *)&targetIcon->texLayout.u2;
-		*(short *)&p->u3 = *(short *)&targetIcon->texLayout.u3;
+		*(s16 *)&p->u2 = *(s16 *)&targetIcon->texLayout.u2;
+		*(s16 *)&p->u3 = *(s16 *)&targetIcon->texLayout.u3;
 
 		setPolyFT4(p);
 

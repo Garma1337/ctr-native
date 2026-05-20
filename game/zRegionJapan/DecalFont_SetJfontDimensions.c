@@ -18,14 +18,14 @@ void DECOMP_DecalFont_SetJfontDimensions()
 	jfontSmall = iconPtrArray[0];
 	jfontSmall0x18 = iconPtrArray[0x18];
 
-	sdata->font_jfontBigIconData[0] = *(u_int *)&jfontBig->texLayout.u0;
-	sdata->font_jfontBigIconData[1] = *(u_int *)&jfontBig->texLayout.u1;
-	sdata->font_jfontBigIconData[2] = *(u_int *)&jfontBig->texLayout.u2;
-	sdata->font_jfontSmallIconData[0] = *(u_int *)&jfontSmall->texLayout.u0;
-	sdata->font_jfontSmallIconData[1] = *(u_int *)&jfontSmall->texLayout.u1;
-	sdata->font_jfontSmallIconData[2] = *(u_int *)&jfontSmall->texLayout.u2;
-	sdata->font_jFontSmall0x18IconData[0] = *(u_int *)&jfontSmall0x18->texLayout.u0;
-	sdata->font_jFontSmall0x18IconData[1] = *(u_int *)&jfontSmall0x18->texLayout.u1;
-	sdata->font_jFontSmall0x18IconData[2] = *(u_int *)&jfontSmall0x18->texLayout.u2;
+	sdata->font_jfontBigIconData[0] = *(u32 *)&jfontBig->texLayout.u0;
+	sdata->font_jfontBigIconData[1] = *(u32 *)&jfontBig->texLayout.u1;
+	sdata->font_jfontBigIconData[2] = *(u32 *)&jfontBig->texLayout.u2;
+	sdata->font_jfontSmallIconData[0] = *(u32 *)&jfontSmall->texLayout.u0;
+	sdata->font_jfontSmallIconData[1] = *(u32 *)&jfontSmall->texLayout.u1;
+	sdata->font_jfontSmallIconData[2] = *(u32 *)&jfontSmall->texLayout.u2;
+	sdata->font_jFontSmall0x18IconData[0] = *(u32 *)&jfontSmall0x18->texLayout.u0;
+	sdata->font_jFontSmall0x18IconData[1] = *(u32 *)&jfontSmall0x18->texLayout.u1;
+	sdata->font_jFontSmall0x18IconData[2] = *(u32 *)&jfontSmall0x18->texLayout.u2;
 	return;
 }

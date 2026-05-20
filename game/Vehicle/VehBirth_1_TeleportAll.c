@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_VehBirth_TeleportAll(struct GameTracker *gGT, u_int spawnFlags)
+void DECOMP_VehBirth_TeleportAll(struct GameTracker *gGT, u32 spawnFlags)
 {
 	struct Driver *d;
 

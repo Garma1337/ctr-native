@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_OtherFX_RecycleNew(u_int *soundID_Count, u_int newSoundID, u_int modifyFlags)
+void DECOMP_OtherFX_RecycleNew(u32 *soundID_Count, u32 newSoundID, u32 modifyFlags)
 {
 	int local = *soundID_Count;
 
@@ -17,7 +17,7 @@ void DECOMP_OtherFX_RecycleNew(u_int *soundID_Count, u_int newSoundID, u_int mod
 		local = 0;
 	}
 
-	if (newSoundID != (u_int)-1)
+	if (newSoundID != (u32)-1)
 	{
 		// if this is a new sound
 		if (local == 0)

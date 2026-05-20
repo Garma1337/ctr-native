@@ -40,9 +40,9 @@ void Vector_SpecLightSpin2D(int param_1, undefined4 param_2, SVECTOR *param_3) /
 	//*(undefined4*)(puVar4 + 0x44) = uVar3;
 	// uVar3 = gte_stMAC3();
 	//*(undefined4*)(puVar4 + 0x48) = uVar3;
-	//*(short*)(puVar4 + 0x50) = *(short*)(puVar4 + 0x30) + *(short*)(puVar4 + 0x40);
-	//*(short*)(puVar4 + 0x52) = *(short*)(puVar4 + 0x34) + *(short*)(puVar4 + 0x44);
-	//*(short*)(puVar4 + 0x54) = *(short*)(puVar4 + 0x38) + *(short*)(puVar4 + 0x48);
+	//*(s16*)(puVar4 + 0x50) = *(s16*)(puVar4 + 0x30) + *(s16*)(puVar4 + 0x40);
+	//*(s16*)(puVar4 + 0x52) = *(s16*)(puVar4 + 0x34) + *(s16*)(puVar4 + 0x44);
+	//*(s16*)(puVar4 + 0x54) = *(s16*)(puVar4 + 0x38) + *(s16*)(puVar4 + 0x48);
 
 	//// MATH_VectorNormalize
 	// FUN_8003d378();

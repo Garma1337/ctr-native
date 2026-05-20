@@ -2,7 +2,7 @@
 struct MaskHint
 {
 	struct MaskHint *self; // why?
-	short scale;
+	s16 scale;
 
 	// end of struct
 };
@@ -16,7 +16,7 @@ struct BossGarageDoor
 
 	struct Instance *garageTopInst;
 
-	short rot[4];
+	s16 rot[4];
 
 	// 0x14 bytes large
 };
@@ -41,25 +41,25 @@ struct WoodDoor
 	struct Instance *keyInst[4];
 
 	// 0x14 (5)
-	short doorRot[4];
+	s16 doorRot[4];
 
 	// 0x1c (7)
-	short camFlags;
-	short camTimer_unused;
+	s16 camFlags;
+	s16 camTimer_unused;
 
 	// 0x20 (8)
 	int hudFlags;
 
 	// 0x24 (9)
-	short frameCount_unused;
-	short frameCount_doorOpenAnim;
+	s16 frameCount_unused;
+	s16 frameCount_doorOpenAnim;
 
 	// 0x28 (10)
-	short keyRot[4];
+	s16 keyRot[4];
 
 	// 0x30 (12)
-	short keyOrbit;
-	short keyShrinkFrame;
+	s16 keyOrbit;
+	s16 keyShrinkFrame;
 
 	// 0x34
 	int doorID;
@@ -94,47 +94,47 @@ struct WarpPad
 	struct Instance *inst[WPIS_NUM_INSTANCES];
 
 	// 0x28
-	short spinRot_Prize[4];
+	s16 spinRot_Prize[4];
 
 	// 0x30
-	short spinRot_Wisp[2][4];
+	s16 spinRot_Wisp[2][4];
 
 	// 0x40
-	short spinRot_Beam[4];
+	s16 spinRot_Beam[4];
 
 	// 0x48
-	short spinRot_Rewards[4];
+	s16 spinRot_Rewards[4];
 
 #if 0
 	// 0x50
-	short specLightGem[4];
+	s16 specLightGem[4];
 	
 	// 0x58
-	short specLightRelic[4];
+	s16 specLightRelic[4];
 	
 	// 0x60
-	short specLightToken[4];
+	s16 specLightToken[4];
 #endif
 
 	// 0x68
-	short digit10s;
+	s16 digit10s;
 
 	// 0x6a
-	short digit1s;
+	s16 digit1s;
 
 	// 0x6c (1b*4)
-	short levelID;
+	s16 levelID;
 
 	// 0x6e
 	// 0/3    1/3     2/3
 	// 0x0    0x555   0xAAA
-	unsigned short thirds[3];
+	u16 thirds[3];
 
 	// 0x74
-	short boolEnteredWarppad;
+	s16 boolEnteredWarppad;
 
 	// 0x76
-	short framesWarping;
+	s16 framesWarping;
 
 	// 0x78 -- size
 };
@@ -144,11 +144,11 @@ struct SaveObj
 	// 0x0
 	struct Instance *inst;
 	// 0x4
-	unsigned short flags;
+	u16 flags;
 	// 0x6
-	short scanlineFrame;
+	s16 scanlineFrame;
 	// 0x8
-	u_char hudFlagBackup;
+	u8 hudFlagBackup;
 
 	// total size unk
 };
@@ -156,13 +156,13 @@ struct SaveObj
 struct OverlayRDATA_232
 {
 	// 0x800aba3c
-	short battleTrackArr[8];
+	s16 battleTrackArr[8];
 
 	// 0x800aba4c
-	short bossTracks[6];
+	s16 bossTracks[6];
 
 	// 0x800aba58
-	short bossIDs[6];
+	s16 bossIDs[6];
 
 	// 0x800aba64
 	char s_garage[8];
@@ -172,19 +172,19 @@ struct OverlayRDATA_232
 	char s_key[4];
 
 	// 0x800aba8c
-	short keyFrame[0xc];
+	s16 keyFrame[0xc];
 };
 
 struct OverlayDATA_232
 {
 	// 800b4ddc (3*5 plus padding)
-	short specLightGem[16];
+	s16 specLightGem[16];
 
 	// 800b4dfc (3*5 plus padding)
-	short specLightRelic[16];
+	s16 specLightRelic[16];
 
 	// 800b4e1c (3*5 plus padding)
-	short specLightToken[16];
+	s16 specLightToken[16];
 
 	// 800b4e3c
 	struct MenuRow rowsTokenRelic[3];
@@ -193,31 +193,31 @@ struct OverlayDATA_232
 	struct RectMenu menuTokenRelic;
 
 	// 800b4e7c
-	short arrKeysNeeded[5];
+	s16 arrKeysNeeded[5];
 
 	// 800b4e86
-	short levelID;
+	s16 levelID;
 
 	// 800b4e88
 	int timeCrystalChallenge[7];
 
 	// 800b4ea4
-	short saveObjCameraOffset[4];
+	s16 saveObjCameraOffset[4];
 
 	// 800b4eac
-	short primOffsetXY_LoadSave[5 * 2];
+	s16 primOffsetXY_LoadSave[5 * 2];
 
 	// 800b4ec0
-	short primOffsetXY_HubArrow[5 * 2];
+	s16 primOffsetXY_HubArrow[5 * 2];
 
 	struct HubItem
 	{
 		// 0x0
-		short posX;
-		short posY;
+		s16 posX;
+		s16 posY;
 
 		// 0x4
-		short angle;
+		s16 angle;
 
 		// 0x6
 		// 0x03: boss
@@ -228,7 +228,7 @@ struct OverlayDATA_232
 		// -3: (0 key) Arrow gemstone->ruins
 		// -4: (2 key) Arrow beach->glacier
 		// -5: (3 key) Arrow glacier->citadel
-		short iconType;
+		s16 iconType;
 
 		// 0x8 -- size
 	}
@@ -247,22 +247,22 @@ struct OverlayDATA_232
 	// 800b4f9c -- array of pointers:
 	//		800b4ed4 800b4efc 800b4f24
 	//		800b4f4c 800b4f7c
-	short *hubItemsXY_ptrArray[5];
+	s16 *hubItemsXY_ptrArray[5];
 
 	// 800b4fb0
-	short hubArrowXY_Inner[2 * 3];
+	s16 hubArrowXY_Inner[2 * 3];
 
 	// 800b4fbc
-	short hubArrowXY_Outter[2 * 4];
+	s16 hubArrowXY_Outter[2 * 4];
 
 	// 800b4fcc
-	short loadSave_pos[2 * 4];
+	s16 loadSave_pos[2 * 4];
 
 	// 800b4fdc
 	int loadSave_col[4]; // maybe should be `char*` instead of `int`
 
 	// 800b4fec
-	short hubArrow_pos[2 * 3];
+	s16 hubArrow_pos[2 * 3];
 
 	// 800B4FF8
 	int hubArrow_col1[3]; // maybe should be `char*` instead of `int`
@@ -279,18 +279,18 @@ struct OverlayDATA_232
 	struct
 	{
 		// can be -1 if not hub page
-		short hubID;
+		s16 hubID;
 
 		// can be -1 for hubs, which then
 		// get name from MetaDataLev
-		short titleLng;
+		s16 titleLng;
 
 		// 0: draw tracks
 		// 1: draw 5 tokens
 		// 2: draw relics
-		short type;
+		s16 type;
 
-		short characterID_Boss;
+		s16 characterID_Boss;
 	} advPausePages[7];
 
 	// 0x800B5060
@@ -302,8 +302,8 @@ struct OverlayDATA_232
 	struct
 	{
 		// 0x0
-		short modelID;
-		short scale;
+		s16 modelID;
+		s16 scale;
 
 		// 0x4
 		int color;
@@ -314,7 +314,7 @@ struct OverlayDATA_232
 
 		// 0xC
 		// same for all gems
-		short specLight[4];
+		s16 specLight[4];
 
 
 		// 0x14 bytes each
@@ -324,7 +324,7 @@ struct OverlayDATA_232
 	struct RectMenu menuHintMenu;
 
 	// 0x800B51B8
-	short fiveArrow_pos[2 * 3];
+	s16 fiveArrow_pos[2 * 3];
 
 	// 0x800b51c4
 	int fiveArrow_col1[3];
@@ -333,25 +333,25 @@ struct OverlayDATA_232
 	int fiveArrow_col2[3];
 
 	// 0x800b51dc
-	short maskPos[4];
+	s16 maskPos[4];
 
 	// 0x800b51e4
-	short maskRot[4];
+	s16 maskRot[4];
 
 	// 0x800b51ec
-	short maskScale;
+	s16 maskScale;
 
 	// 0x800b51ee
-	short maskCooldown;
+	s16 maskCooldown;
 
 	// 0x800b51f0
-	short maskOffsetPos[4];
+	s16 maskOffsetPos[4];
 
 	// 0x800b51f8
-	short maskOffsetRot[4];
+	s16 maskOffsetRot[4];
 
 	// 0x800b5200
-	short maskVars[12];
+	s16 maskVars[12];
 
 	// 0x800b5218
 	int maskFrameCurr;
@@ -363,17 +363,17 @@ struct OverlayDATA_232
 	struct ParticleEmitter emSet_maskLeave[0xA];
 
 	// 0x800b54ec
-	short maskAudioSettings[4];
+	s16 maskAudioSettings[4];
 
 	// 800b54f4
 	// 20 hints, last two entries are null
-	short hintMenu_lngIndexArr[22];
+	s16 hintMenu_lngIndexArr[22];
 
 	// 800b5520
-	short eyePos[4];
+	s16 eyePos[4];
 
 	// 800b5528
-	short lookAtPos[4];
+	s16 lookAtPos[4];
 
 	// 800b5530
 	int colorQuad[4]; // maybe should be `char*` instead of `int`
@@ -382,20 +382,20 @@ struct OverlayDATA_232
 	int colorTri[3]; // maybe should be `char*` instead of `int`
 
 	// 800b554c
-	short pausePageDir;
+	s16 pausePageDir;
 
 	// 800b554e
-	short pausePageTimer;
+	s16 pausePageTimer;
 
 	// 800b5550
-	short pausePagePrev;
+	s16 pausePagePrev;
 
 	// 800b5552
-	short pausePageCurr;
+	s16 pausePageCurr;
 
 	// 800b5554
-	short pausePageDir_dup;
-	short padding3;
+	s16 pausePageDir_dup;
+	s16 padding3;
 
 	// 800b5558
 	int maskHintID;
@@ -404,10 +404,10 @@ struct OverlayDATA_232
 	int maskAngle;
 
 	// 800b5560
-	short maskCamPosStart[4];
+	s16 maskCamPosStart[4];
 
 	// 800b5568
-	short maskCamRotStart[4];
+	s16 maskCamRotStart[4];
 
 	// 800b5570
 	int maskWarppadDelayFrames;
@@ -424,11 +424,11 @@ struct OverlayDATA_232
 		struct
 		{
 			// 0x0
-			short indexAdvPauseInst;
-			short unlockFlag;
+			s16 indexAdvPauseInst;
+			s16 unlockFlag;
 
 			// 0x4
-			short rot[4];
+			s16 rot[4];
 
 			// 0xC
 			struct Instance *inst;
@@ -452,8 +452,8 @@ struct OverlayDATA_232
 	char audioBackup[4];
 
 	// 800B566c
-	short maskSpawnFrame;
-	short padding4;
+	s16 maskSpawnFrame;
+	s16 padding4;
 
 	// 800b5670
 	int unkModeHubItems;

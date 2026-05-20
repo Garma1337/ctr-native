@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_AH_MaskHint_SpawnParticles(short numParticles, struct ParticleEmitter *emSet, int maskAnim)
+void DECOMP_AH_MaskHint_SpawnParticles(s16 numParticles, struct ParticleEmitter *emSet, int maskAnim)
 
 {
 	struct Particle *particle;

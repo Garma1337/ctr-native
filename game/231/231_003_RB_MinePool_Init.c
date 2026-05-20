@@ -4,7 +4,7 @@ void DECOMP_RB_MinePool_Init(void)
 {
 	int i;
 	int numMines;
-	unsigned int addr;
+	u32 addr;
 	int gameMode;
 
 	DECOMP_LIST_Clear(&D231.minePoolTaken);

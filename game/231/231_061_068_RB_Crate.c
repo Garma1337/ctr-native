@@ -93,7 +93,7 @@ void RB_CrateAny_ExplodeInit(struct Instance *crateInst, int color)
 	struct Instance *explosionInst;
 	struct Crate *crateObj;
 	MATRIX matrix;
-	short rot[3];
+	s16 rot[3];
 
 	// hide crate
 	crateInst->scale[0] = 0;
@@ -206,7 +206,7 @@ struct Thread *RB_CrateAny_GrowInit(struct Instance *crateInst)
 int DECOMP_RB_CrateWeapon_LInC(struct Instance *crateInst, struct Thread *collidingTh, struct ScratchpadStruct *sps)
 {
 	struct PushBuffer *pb;
-	short posScreen[2];
+	s16 posScreen[2];
 	struct Thread *crateThread;
 	struct Crate *crateObj;
 	int hitModelID;
@@ -333,7 +333,7 @@ int DECOMP_RB_CrateWeapon_LInC(struct Instance *crateInst, struct Thread *collid
 int DECOMP_RB_CrateFruit_LInC(struct Instance *crateInst, struct Thread *collidingTh, struct ScratchpadStruct *sps)
 {
 	struct PushBuffer *pb;
-	short posScreen[2];
+	s16 posScreen[2];
 	struct Thread *crateThread;
 	struct Crate *crateObj;
 	int hitModelID;
@@ -413,7 +413,7 @@ int DECOMP_RB_CrateFruit_LInC(struct Instance *crateInst, struct Thread *collidi
 int DECOMP_RB_CrateTime_LInC(struct Instance *crateInst, struct Thread *driverTh, struct ScratchpadStruct *sps)
 {
 	struct PushBuffer *pb;
-	short posScreen[2];
+	s16 posScreen[2];
 	struct Driver *driver;
 
 	int modelID;

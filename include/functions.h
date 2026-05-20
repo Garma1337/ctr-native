@@ -4,21 +4,21 @@
 
 // BOTS
 
-void BOTS_SetGlobalNavData(u_short index);
-void BOTS_InitNavPath(struct GameTracker *gGT, short index);
+void BOTS_SetGlobalNavData(u16 index);
+void BOTS_InitNavPath(struct GameTracker *gGT, s16 index);
 void BOTS_EmptyFunc();
 int BOTS_Adv_NumTimesLostEvent(int index);
 void BOTS_Adv_AdjustDifficulty();
 void BOTS_UpdateGlobals();
 void BOTS_SetRotation(struct Driver *driver_perhaps, int param_2);
 void BOTS_LevInstColl(int param_1);
-void BOTS_ThTick_RevEngine(struct Thread *thread, u_int param_2, u_char *param_3, u_int param_4);
+void BOTS_ThTick_RevEngine(struct Thread *thread, u32 param_2, u8 *param_3, u32 param_4);
 void BOTS_MaskGrab(int param_1);
 void BOTS_Killplane(int param_1);
 void BOTS_ThTick_Drive(struct Thread *thread);
-u_int BOTS_ChangeState(
+u32 BOTS_ChangeState(
     struct Driver *d1, int param_2, struct Driver *d2,
-    int param_4); // either this needs to return int, or VehPickState_NewState needs to return u_int, if I were to guess, this one needs to return int.
+    int param_4); // either this needs to return int, or VehPickState_NewState needs to return u32, if I were to guess, this one needs to return int.
 void BOTS_CollideWithOtherAI(int param_1, int param_2);
 void BOTS_GotoStartingLine(struct Driver *driver);
 struct Driver *BOTS_Driver_Init(int driverID);
@@ -26,34 +26,34 @@ void BOTS_Driver_Convert(struct Driver *driver);
 
 // CAM
 
-void CAM_SkyboxGlow(short *param_1, struct PushBuffer *pb, struct PrimMem *primMem, u_long *ptrOT);
+void CAM_SkyboxGlow(s16 *param_1, struct PushBuffer *pb, struct PrimMem *primMem, u_long *ptrOT);
 void CAM_ClearScreen(struct GameTracker *gGT);
 void CAM_Init(struct CameraDC *cDC, int cameraID, struct Driver *d, struct PushBuffer *pb);
-void CAM_FindClosestQuadblock(short *scratchpad, struct CameraDC *cDC, struct Driver *d, short *param_4);
+void CAM_FindClosestQuadblock(s16 *scratchpad, struct CameraDC *cDC, struct Driver *d, s16 *param_4);
 int CAM_Path_GetNumPoints();
-u_int CAM_Path_Move(int frame, u_short *pos, u_short *rot, u_short *getPath);
+u32 CAM_Path_Move(int frame, u16 *pos, u16 *rot, u16 *getPath);
 void CAM_StartOfRace(struct CameraDC *cDC);
 void CAM_EndOfRace_Battle(struct CameraDC *cDC, struct Driver *d);
 void CAM_EndOfRace(struct CameraDC *cDC, struct Driver *d);
-u_char *CAM_StartLine_FlyIn_FixY(u_short *param_1);
-void CAM_ProcessTransition(short *camPosReturn, u_short *camRotReturn, short *camPosDest, short *camRotDest, short *camPosStart, short *camRotStart, int frame);
-void CAM_FollowDriver_AngleAxis(struct CameraDC *cDC, struct Driver *d, int param_3, short *pushBufferPos, short *pushBufferRot);
-void CAM_StartLine_FlyIn(int *param_1, short const0x96, int frame, u_short *camTransitionToPos, short *camTransitionToRot);
-u_int CAM_FollowDriver_TrackPath(struct CameraDC *cDC, short *param_2, int cDCspeed, int param_4);
-void CAM_LookAtPosition(int param_1, int *driverPos, short *camTransitionToPos, short *camTransitionToRot);
-void CAM_FollowDriver_Spin360(struct CameraDC *cDC, u_int param_2, struct Driver *d, short *camTransitionToPos, u_int param_5);
-void CAM_SetDesiredPosRot(int param_1, u_short *param_2, u_short *param_3);
-void CAM_FollowDriver_Normal(struct CameraDC *cDC, struct Driver *d, short *pushBuffer, int scratchpad, short *param_5);
-int CAM_MapRange_PosPoints(short *vec3sPos1, short *vec3sPos2, short *vec3iPos);
+u8 *CAM_StartLine_FlyIn_FixY(u16 *param_1);
+void CAM_ProcessTransition(s16 *camPosReturn, u16 *camRotReturn, s16 *camPosDest, s16 *camRotDest, s16 *camPosStart, s16 *camRotStart, int frame);
+void CAM_FollowDriver_AngleAxis(struct CameraDC *cDC, struct Driver *d, int param_3, s16 *pushBufferPos, s16 *pushBufferRot);
+void CAM_StartLine_FlyIn(int *param_1, s16 const0x96, int frame, u16 *camTransitionToPos, s16 *camTransitionToRot);
+u32 CAM_FollowDriver_TrackPath(struct CameraDC *cDC, s16 *param_2, int cDCspeed, int param_4);
+void CAM_LookAtPosition(int param_1, int *driverPos, s16 *camTransitionToPos, s16 *camTransitionToRot);
+void CAM_FollowDriver_Spin360(struct CameraDC *cDC, u32 param_2, struct Driver *d, s16 *camTransitionToPos, u32 param_5);
+void CAM_SetDesiredPosRot(int param_1, u16 *param_2, u16 *param_3);
+void CAM_FollowDriver_Normal(struct CameraDC *cDC, struct Driver *d, s16 *pushBuffer, int scratchpad, s16 *param_5);
+int CAM_MapRange_PosPoints(s16 *vec3sPos1, s16 *vec3sPos2, s16 *vec3iPos);
 void CAM_ThTick(struct Thread *t);
 
 // CDSYS
 
-u_int CDSYS_Init(int useDisc);
-u_int CDSYS_GetFilePosInt(char *fileString, int *filePos);
+u32 CDSYS_Init(int useDisc);
+u32 CDSYS_GetFilePosInt(char *fileString, int *filePos);
 void CDSYS_SetMode_StreamData();
 void CDSYS_SetMode_StreamAudio();
-u_int CDSYS_SetXAToLang(int lngIndex);
+u32 CDSYS_SetXAToLang(int lngIndex);
 void CDSYS_XaCallbackCdSync(char result);
 void CDSYS_XaCallbackCdReady(char result);
 void CDSYS_SpuCallbackIRQ();
@@ -61,9 +61,9 @@ void CDSYS_SpuCallbackTransfer();
 void CDSYS_SpuEnableIRQ();
 void CDSYS_SpuDisableIRQ();
 void CDSYS_SpuGetMaxSample();
-u_int CDSYS_XAGetNumTracks(int categoryID);
-u_int CDSYS_XASeek(int isCdControl, int categoryID, int audioTrackID);
-u_int CDSYS_XAGetTrackLength(int categoryID, int audioTrackID);
+u32 CDSYS_XAGetNumTracks(int categoryID);
+u32 CDSYS_XASeek(int isCdControl, int categoryID, int audioTrackID);
+u32 CDSYS_XAGetTrackLength(int categoryID, int audioTrackID);
 void CDSYS_XAPlay(int categoryID, int index);
 void CDSYS_XAPauseRequest();
 void CDSYS_XAPauseForce();
@@ -71,68 +71,68 @@ void CDSYS_XAPauseAtEnd();
 
 // COLL
 
-u_char *COLL_LevModelMeta(u_int index);
-u_int COLL_FIXED_INSTANC_TestPoint(struct ScratchpadStruct *param_1, struct BSP *node);
+u8 *COLL_LevModelMeta(u32 index);
+u32 COLL_FIXED_INSTANC_TestPoint(struct ScratchpadStruct *param_1, struct BSP *node);
 void COLL_FIXED_BSPLEAF_TestInstance(struct BSP *node, struct ScratchpadStruct *sps);
-void COLL_FIXED_BotsSearch(short *posCurr, short *posPrev, short *param_3);
+void COLL_FIXED_BotsSearch(s16 *posCurr, s16 *posPrev, s16 *param_3);
 void COLL_FIXED_PlayerSearch(struct Thread *t, struct Driver *d);
-void COLL_SearchBSP_CallbackQUADBLK(u_int *posTop, u_int *posBottom, struct ScratchpadStruct *sps,
+void COLL_SearchBSP_CallbackQUADBLK(u32 *posTop, u32 *posBottom, struct ScratchpadStruct *sps,
                                     int param_4); // posTop/posButtom may be backwards, also may have 6 params not 4???
 void COLL_SearchBSP_CallbackPARAM(struct BSP *param_1, struct BoundingBox *bbox, void (*callback)(struct BSP *, struct ScratchpadStruct *),
-                                  short *param_4); // 4th param might be `struct ScratchpadStruct*`
-u_int FUN_8001ede4(u_short *param_1, short *param_2, short *param_3, short *param_4);
+                                  s16 *param_4); // 4th param might be `struct ScratchpadStruct*`
+u32 FUN_8001ede4(u16 *param_1, s16 *param_2, s16 *param_3, s16 *param_4);
 void FUN_8001ef1c();
-void FUN_8001ef50(int param_1, short *param_2, short *param_3, short *param_4);
-void FUN_8001f2dc(int param_1, short *param_2, short *param_3, short *param_4);
+void FUN_8001ef50(int param_1, s16 *param_2, s16 *param_3, s16 *param_4);
+void FUN_8001f2dc(int param_1, s16 *param_2, s16 *param_3, s16 *param_4);
 void COLL_FIXED_QUADBLK_TestTriangles(struct QuadBlock *qb, struct ScratchpadStruct *sps);
 void COLL_FIXED_BSPLEAF_TestQuadblocks(struct BSP *node, struct ScratchpadStruct *sps);
 void FUN_8001f67c(int param_1, int param_2);
 void FUN_8001f6f0(int param_1, int param_2);
 void FUN_8001f7f0(int param_1);
-u_int FUN_8001f928(u_int *param_1, u_int *param_2, u_int *param_3, u_int *param_4);
-void FUN_8001fc40(u_int *param_1, int param_2, u_int param_3, u_int param_4);
+u32 FUN_8001f928(u32 *param_1, u32 *param_2, u32 *param_3, u32 *param_4);
+void FUN_8001fc40(u32 *param_1, int param_2, u32 param_3, u32 param_4);
 void COLL_MOVED_QUADBLK_TestTriangles(struct QuadBlock *qb, struct ScratchpadStruct *sps);
 void COLL_MOVED_BSPLEAF_TestQuadblocks(struct BSP *node, struct ScratchpadStruct *sps);
 void FUN_80020334(struct QuadBlock *qb, int triangleID, int param_3);
 void COLL_MOVED_PlayerSearch(struct Thread *t, struct Driver *d);
-u_int COLL_MOVED_ScrubImpact(struct Driver *d, struct Thread *t, int param_3, int param_4, int *param_5);
+u32 COLL_MOVED_ScrubImpact(struct Driver *d, struct Thread *t, int param_3, int param_4, int *param_5);
 
 // CTR
 
-void CTR_Box_DrawWirePrims(u_short x, u_short y, u_short u, u_short v, u_char r, u_char g, u_char b, u_long *otMem, struct PrimMem *primMem);
+void CTR_Box_DrawWirePrims(u16 x, u16 y, u16 u, u16 v, u8 r, u8 g, u8 b, u_long *otMem, struct PrimMem *primMem);
 void CTR_Box_DrawWireBox(RECT *r, int *unk, u_long *ot, struct PrimMem *primMem);
 void CTR_Box_DrawClearBox(
     RECT *r, Color *rgb, int transparency, u_long *otMem,
     struct PrimMem *primMem); // either this function shouldn't have a 5th parameter, or the DECOMP_ version of it is missing that 5th parameter.
-void CTR_Box_DrawSolidBox(RECT *r, u_int *rgb, u_long *otMem, struct PrimMem *primMem);
+void CTR_Box_DrawSolidBox(RECT *r, u32 *rgb, u_long *otMem, struct PrimMem *primMem);
 void CTR_CycleTex_LEV(struct AnimTex *animtex, int timer);
 void CTR_CycleTex_Model(struct AnimTex *pAnimTexArray, int timer);
-void CTR_CycleTex_AllModels(unsigned int numModels, struct Model **pModelArray, int timer);
+void CTR_CycleTex_AllModels(u32 numModels, struct Model **pModelArray, int timer);
 // CTR_CycleTex_2p3p4pWumpaHUD();
 void CTR_ClearRenderLists_1P2P(struct GameTracker *gGT, int numPlyrCurrGame);
 void CTR_ClearRenderLists_3P4P(struct GameTracker *gGT, int numPlyrCurrGame);
 void CTR_EmptyFunc_MainFrame_ResetDB();
 void CTR_ErrorScreen(char r, char g, char b);
-void CTR_MatrixToRot(SVECTOR *rot, MATRIX *matrix, u_int flags);
+void CTR_MatrixToRot(SVECTOR *rot, MATRIX *matrix, u32 flags);
 // CTR_ScrambleGhostString();
 
 // DebugFont
 
 void DebugFont_Init(struct GameTracker *gGT);
-void DebugFont_DrawNumbers(int param_1, u_int param_2, int param_3);
+void DebugFont_DrawNumbers(int param_1, u32 param_2, int param_3);
 
 // DecalFont
 
 #if BUILD == JpnRetail
-u_int DecalFont_boolRacingWheel();
+u32 DecalFont_boolRacingWheel();
 #endif
-int DecalFont_GetLineWidthStrlen(char *str, short len, short fontType);
-int DecalFont_GetLineWidth(char *str, short fontType);
-void DecalFont_DrawLineStrlen(char *str, short len, int posX, int posY, short fontType, int flags);
-void DecalFont_DrawLine(char *str, int posX, int posY, short fontType, int flags);
-void DecalFont_DrawLineOT(char *str, int posX, int posY, short fontType, int flags, u_long *ot);
-int DecalFont_DrawMultiLineStrlen(char *str, short len, short posX, short posY, short maxPixLen, short fontType, short flags);
-int DecalFont_DrawMultiLine(char *str, int posX, int posY, int maxPixLen, short fontType, int flags);
+int DecalFont_GetLineWidthStrlen(char *str, s16 len, s16 fontType);
+int DecalFont_GetLineWidth(char *str, s16 fontType);
+void DecalFont_DrawLineStrlen(char *str, s16 len, int posX, int posY, s16 fontType, int flags);
+void DecalFont_DrawLine(char *str, int posX, int posY, s16 fontType, int flags);
+void DecalFont_DrawLineOT(char *str, int posX, int posY, s16 fontType, int flags, u_long *ot);
+int DecalFont_DrawMultiLineStrlen(char *str, s16 len, s16 posX, s16 posY, s16 maxPixLen, s16 fontType, s16 flags);
+int DecalFont_DrawMultiLine(char *str, int posX, int posY, int maxPixLen, s16 fontType, int flags);
 
 // DecalGlobal
 
@@ -140,16 +140,16 @@ void DecalGlobal_EmptyFunc_MainFrame_ResetDB();
 void DecalGlobal_Clear(struct GameTracker *gGT);
 void DecalGlobal_Store(struct GameTracker *gGT, struct Icon *icon); // second parameter might be wrong --Super
 int *DecalGlobal_FindInLEV(struct Level *level, char *str);
-int *DecalGlobal_FindInMPK(u_int *param_1, char *str);
+int *DecalGlobal_FindInMPK(u32 *param_1, char *str);
 
 // DecalHUD
 
-void DecalHUD_DrawPolyFT4(struct Icon *icon, short posX, short posY, struct PrimMem *primMem, u_long *ot, char transparency, short scale);
-void DecalHUD_DrawWeapon(struct Icon *icon, short posX, short posY, struct PrimMem *primMem, u_long *ot, char transparency, short scale, char rot);
-void DecalHUD_DrawPolyGT4(struct Icon *icon, short posX, short posY, struct PrimMem *primMem, u_long *ot, u_int color0, u_int color1, u_int color2,
-                          u_int color3, char transparency, short scale);
-void DecalHUD_Arrow2D(struct Icon *icon, short posX, short posY, struct PrimMem *primMem, u_long *otMemPtr, u_int color1, u_int color2, u_int color3,
-                      u_int color4, char transparency, short scale, u_short rot);
+void DecalHUD_DrawPolyFT4(struct Icon *icon, s16 posX, s16 posY, struct PrimMem *primMem, u_long *ot, char transparency, s16 scale);
+void DecalHUD_DrawWeapon(struct Icon *icon, s16 posX, s16 posY, struct PrimMem *primMem, u_long *ot, char transparency, s16 scale, char rot);
+void DecalHUD_DrawPolyGT4(struct Icon *icon, s16 posX, s16 posY, struct PrimMem *primMem, u_long *ot, u32 color0, u32 color1, u32 color2, u32 color3,
+                          char transparency, s16 scale);
+void DecalHUD_Arrow2D(struct Icon *icon, s16 posX, s16 posY, struct PrimMem *primMem, u_long *otMemPtr, u32 color1, u32 color2, u32 color3, u32 color4,
+                      char transparency, s16 scale, u16 rot);
 
 // DecalMP
 
@@ -200,10 +200,10 @@ void GAMEPAD_ProcessSticks(struct GamepadSystem *gGamepads);
 void GAMEPAD_ProcessTapRelease(struct GamepadSystem *gGamepads);
 void GAMEPAD_ProcessMotors(struct GamepadSystem *gGamepads);
 void GAMEPAD_ProcessAnyoneVars(struct GamepadSystem *gGamepads);
-void GAMEPAD_JogCon1(struct Driver *driver, char param_2, u_short param_3);
-void GAMEPAD_JogCon2(struct Driver *driver, char param_2, u_short param_3);
-void GAMEPAD_ShockFreq(struct Driver *driver, char param_2, u_short param_3);
-void GAMEPAD_ShockForce1(struct Driver *driver, char param_2, u_short param_3);
+void GAMEPAD_JogCon1(struct Driver *driver, char param_2, u16 param_3);
+void GAMEPAD_JogCon2(struct Driver *driver, char param_2, u16 param_3);
+void GAMEPAD_ShockFreq(struct Driver *driver, char param_2, u16 param_3);
+void GAMEPAD_ShockForce1(struct Driver *driver, char param_2, u16 param_3);
 
 // GAMEPROG
 
@@ -224,25 +224,25 @@ void GAMEPROG_GetPtrHighScoreTrack();
 // GhostReplay_Init1()
 // GhostTape_Start()
 // GhostTape_End()
-void GhostTape_WriteMoves(short param_1);
-void GhostTape_WriteBoosts(int reserves, u_char type, int fireLevel);
+void GhostTape_WriteMoves(s16 param_1);
+void GhostTape_WriteBoosts(int reserves, u8 type, int fireLevel);
 void GhostTape_Destroy();
 
 // OtherFX
 
-short CountSounds();
-int OtherFX_Play(unsigned int soundID, int flags);
-void OtherFX_Play_Echo(unsigned int soundID, int flags, int echoFlag);
-int OtherFX_Play_LowLevel(u_int soundID, u_char flags1, u_int flags2);
+s16 CountSounds();
+int OtherFX_Play(u32 soundID, int flags);
+void OtherFX_Play_Echo(u32 soundID, int flags, int echoFlag);
+int OtherFX_Play_LowLevel(u32 soundID, u8 flags1, u32 flags2);
 // OtherFX_Modify()
 void OtherFX_Stop1(int soundID_count);
 void OtherFX_Stop2(int soundID_count);
 
 // EngineAudio
 
-char EngineAudio_InitOnce(u_int soundID, u_int flags);
-short EngineAudio_Recalculate(u_int soundID, u_int sfx);
-void EngineAudio_Stop(u_int soundID);
+char EngineAudio_InitOnce(u32 soundID, u32 flags);
+s16 EngineAudio_Recalculate(u32 soundID, u32 sfx);
+void EngineAudio_Stop(u32 soundID);
 
 // More OtherFX?
 
@@ -306,7 +306,7 @@ void CseqMusic_StopAll();
 
 // SongPool_FindFreeChannel()
 // SongPool_CalculateTempo()
-void SongPool_ChangeTempo(struct Song *song, short p2);
+void SongPool_ChangeTempo(struct Song *song, s16 p2);
 
 void SongPool_Start(struct Song *song, int songID, int deltaBPM, int boolLoopAtEnd, struct SongSet *songSet, int songSetActiveBits);
 
@@ -346,7 +346,7 @@ void Smart_ExitCriticalSection();
 
 void Channel_SetVolume(struct ChannelAttr *attr, int volume, int LR);
 int Channel_FindSound(int soundID);
-struct ChannelStats *Channel_AllocSlot_AntiSpam(short soundID, char boolUseAntiSpam, int flags, struct ChannelAttr *attr);
+struct ChannelStats *Channel_AllocSlot_AntiSpam(s16 soundID, char boolUseAntiSpam, int flags, struct ChannelAttr *attr);
 struct ChannelStats *Channel_AllocSlot(int flags, struct ChannelAttr *attr);
 struct ChannelStats *Channel_SearchFX_EditAttr(int type, int soundID, int updateFlags, struct ChannelAttr *attr);
 void Channel_SearchFX_Destroy(int type, int soundID, int flags);
@@ -368,7 +368,7 @@ void Voiceline_ClearTimeStamp();
 // Voiceline_PoolClear()
 // Voiceline_StopAll()
 // Voiceline_ToggleEnable()
-void Voiceline_RequestPlay(int, short, int);
+void Voiceline_RequestPlay(int, s16, int);
 // Voiceline_StartPlay()
 // Voiceline_Update()
 // Voiceline_EmptyFunc()
@@ -388,26 +388,26 @@ void Audio_Update1();
 
 void Music_SetIntro();
 void Music_LoadBanks();
-u_int Music_AsyncParseBanks();
+u32 Music_AsyncParseBanks();
 // Music_SetDefaults()
 // Music_Adjust()
 // Music_LowerVolume()
 // Music_RaiseVolume()
 void Music_Restart();
 void Music_Stop();
-void Music_Start(u_short param_1);
+void Music_Start(u16 param_1);
 void Music_End();
 // Music_GetHighestSongPlayIndex()
 
 // GTE (?)
 
 // GTE_AudioLR_Inst()
-void GTE_AudioLR_Driver(MATRIX *m, struct Driver *d, u_int *param_3);
+void GTE_AudioLR_Driver(MATRIX *m, struct Driver *d, u32 *param_3);
 // GTE_GetSquaredLength()
 
 // Even more OtherFX...
 
-// void OtherFX_RecycleNew(u_int* param_1, u_int param_2, u_int param_3);
+// void OtherFX_RecycleNew(u32* param_1, u32 param_2, u32 param_3);
 void OtherFX_RecycleMute(int *param_1);
 // OtherFX_DriverCrashing()
 
@@ -415,7 +415,7 @@ void OtherFX_RecycleMute(int *param_1);
 
 // GTE_GetSquaredDistance()
 // CalculateVolumeFromDistance()
-void PlayWarppadSound(u_int param_1);
+void PlayWarppadSound(u32 param_1);
 
 // Level (?)
 
@@ -426,8 +426,8 @@ void PlayWarppadSound(u_int param_1);
 
 // PlaySound3D
 
-void PlaySound3D(u_int soundID, struct Instance *inst);
-void PlaySound3D_Flags(u_int *flags, u_int soundID, struct Instance *inst);
+void PlaySound3D(u32 soundID, struct Instance *inst);
+void PlaySound3D_Flags(u32 *flags, u32 soundID, struct Instance *inst);
 
 // EngineSound
 
@@ -440,7 +440,7 @@ void PlaySound3D_Flags(u_int *flags, u_int soundID, struct Instance *inst);
 
 void Garage_Init();
 void Garage_Enter(char characterID);
-void Garage_PlayFX(u_int soundID, char characterID);
+void Garage_PlayFX(u32 soundID, char characterID);
 void Garage_LerpFX();
 void Garage_MoveLR(int desiredID);
 void Garage_Leave();
@@ -456,7 +456,7 @@ struct Instance *INSTANCE_BirthWithThread(int modelID, char *name, int poolType,
 struct Instance *INSTANCE_BirthWithThread_Stack(int *spArr);
 void INSTANCE_Death(struct Instance *inst);
 void INSTANCE_LevInitAll(struct InstDef *instDef, int num);
-void INSTANCE_LevDelayedLInBs(void *instDefs, u_int numInstances);
+void INSTANCE_LevDelayedLInBs(void *instDefs, u32 numInstances);
 
 // not really part of "INSTANCE" namespace
 int VehFrameInst_GetNumAnimFrames(struct Driver *driver, int param_2);
@@ -485,7 +485,7 @@ void LibraryOfModels_Clear(struct GameTracker *gGT);
 
 // LinkedCollide
 
-struct Instance *LinkedCollide_Radius(struct Instance *objInst, struct Thread *_objTh, struct Thread *thBucket, unsigned int hitRadius);
+struct Instance *LinkedCollide_Radius(struct Instance *objInst, struct Thread *_objTh, struct Thread *thBucket, u32 hitRadius);
 struct Instance *LinkedCollide_Hitbox_Desc(struct HitboxDesc *objBoxDesc);
 // LinkedCollide_Hitbox()
 
@@ -516,15 +516,15 @@ void LOAD_Callback_DriverModels(struct LoadQueueSlot *lqs);
 // LOAD_HubCallback()
 void LOAD_GlobalModelPtrs_MPK();
 void LOAD_HubSwapPtrs(struct GameTracker *gGT);
-void LOAD_StringToUpper(u_char *param_1);
+void LOAD_StringToUpper(u8 *param_1);
 void LOAD_InitCD();
 void *LOAD_ReadDirectory(char *filepath);
 // LOAD_DramFileCallback()
 // LOAD_DramFile()
 void LOAD_VramFileCallback(struct LoadQueueSlot *lqs);
-u_int LOAD_VramFile(struct BigHeader *bigfile, u_int fileIndex, u_int *destination, u_int *sizePtr, int callback);
+u32 LOAD_VramFile(struct BigHeader *bigfile, u32 fileIndex, u32 *destination, u32 *sizePtr, int callback);
 void LOAD_ReadFileASyncCallback();
-u_long *LOAD_ReadFile(struct BigHeader *bigfile, u_int loadType, u_int fileIndex, u_int *destination, u_int *sizePtr, int callback);
+u_long *LOAD_ReadFile(struct BigHeader *bigfile, u32 loadType, u32 fileIndex, u32 *destination, u32 *sizePtr, int callback);
 void *LOAD_XnfFile(char *file, void *addr, int *size);
 // LOAD_FindFile()
 
@@ -542,7 +542,7 @@ void LOAD_Robots2P(int bigfile, int p1, int p2, int callback);
 void LOAD_Robots1P(int characterID);
 void LOAD_DriverMPK(struct BigHeader *bigfile, int levelLOD, void *callback);
 void LOAD_LangFile(int bigfilePtr, int lang);
-int LOAD_GetBigfileIndex(unsigned int levelID, int lod, int fileType);
+int LOAD_GetBigfileIndex(u32 levelID, int lod, int fileType);
 void LOAD_AppendQueue(int bigfile, int type, int fileIndex, void *destinationPtr, void *callback);
 void LOAD_CDRequestCallback(struct LoadQueueSlot *lqs);
 void LOAD_NextQueuedFile();
@@ -550,8 +550,8 @@ void LOAD_NextQueuedFile();
 void LOAD_Hub_SwapNow();
 void LOAD_Hub_Main(struct BigHeader *bigfile);
 void LOAD_OvrLOD(int param_1);
-void LOAD_OvrEndRace(u_int *param_1);
-void LOAD_OvrThreads(u_int param_1);
+void LOAD_OvrEndRace(u32 *param_1);
+void LOAD_OvrThreads(u32 param_1);
 int LOAD_GetAdvPackIndex();
 int LOAD_TenStages(struct GameTracker *gGT, int loadingStage, struct BigHeader *bigfile);
 void LOAD_TalkingMask(int, int);
@@ -563,9 +563,9 @@ int LOAD_IsOpen_Podiums();
 
 // MainDB
 
-u_int MainDB_GetClipSize(u_int levelID, int numPlyrCurrGame);
-void MainDB_PrimMem(struct PrimMem *primMem, u_int size);
-void MainDB_OTMem(struct OTMem *otMem, u_int size);
+u32 MainDB_GetClipSize(u32 levelID, int numPlyrCurrGame);
+void MainDB_PrimMem(struct PrimMem *primMem, u32 size);
+void MainDB_OTMem(struct OTMem *otMem, u32 size);
 
 // MainDrawCb
 
@@ -578,14 +578,14 @@ void MainFrame_TogglePauseAudio(int bool_pause);
 // void MainFrame_ResetDB(struct GameTracker* gGT);
 void MainFrame_GameLogic(struct GameTracker *gGT, struct GamepadSystem *gGamepads);
 void MainFrame_VisMemFullFrame(struct GameTracker *gGT, struct Level *level);
-void MainFrame_InitVideoSTR(u_int boolPlayVideoStr, RECT *r, short posX, short posY);
-int MainFrame_HaveAllPads(short param_1);
+void MainFrame_InitVideoSTR(u32 boolPlayVideoStr, RECT *r, s16 posX, s16 posY);
+int MainFrame_HaveAllPads(s16 param_1);
 void MainFrame_RequestMaskHint();
 void MainFrame_RenderFrame(struct GameTracker *gGT, struct GamepadSystem *gGamepads);
 
 // MainFreeze
 
-void MainFreeze_ConfigDrawNPC105(short startX, short startY, short param_3, int param_4, short param_5, char *color, u_long *otMem, struct PrimMem *primMem);
+void MainFreeze_ConfigDrawNPC105(s16 startX, s16 startY, s16 param_3, int param_4, s16 param_5, char *color, u_long *otMem, struct PrimMem *primMem);
 void MainFreeze_ConfigDrawArrows(int posX, int posY, char *str);
 void MainFreeze_ConfigSetupEntry();
 void MainFreeze_MenuPtrOptions(struct RectMenu *menu);
@@ -599,7 +599,7 @@ void MainFreeze_IfPressStart();
 
 // MainGameEnd_SoloRaceGetReward()
 // MainGameEnd_SoloRaceSaveHighScore()
-// void MainGameEnd_Initialize(short);
+// void MainGameEnd_Initialize(s16);
 
 // MainGameStart (?)
 
@@ -609,10 +609,10 @@ void MainFreeze_IfPressStart();
 
 void MainInit_VisMem(struct GameTracker *gGT);
 // MainInit_RainBuffer()
-void MainInit_PrimMem(u_int *param_1);
+void MainInit_PrimMem(u32 *param_1);
 // MainInit_JitPoolsReset()
-void MainInit_OTMem(u_int *param_1);
-void MainInit_JitPoolsNew(u_int *param_1);
+void MainInit_OTMem(u32 *param_1);
+void MainInit_JitPoolsNew(u32 *param_1);
 void MainInit_Drivers(struct GameTracker *gGT);
 void MainInit_FinalizeInit();
 int MainInit_StringToLevID(char *str);
@@ -631,12 +631,12 @@ void MainLoadVLC();
 
 // main
 
-u_int main();
+u32 main();
 
 // MainRaceTrack
 
-void MainRaceTrack_StartLoad(short levelID);
-void MainRaceTrack_RequestLoad(short levelID);
+void MainRaceTrack_StartLoad(s16 levelID);
+void MainRaceTrack_RequestLoad(s16 levelID);
 
 // MainStats
 
@@ -645,8 +645,8 @@ void MainStats_RestartRaceCountLoss();
 
 // MATH
 
-int MATH_Sin(u_int angle);
-int MATH_Cos(u_int angle);
+int MATH_Sin(u32 angle);
+int MATH_Cos(u32 angle);
 int MATH_FastSqrt(int dist, int unk);
 MATRIX *MATH_HitboxMatrix(MATRIX *output, MATRIX *input);
 void MATH_VectorLength(VECTOR *input);
@@ -656,37 +656,37 @@ void MATH_MatrixMul(MATRIX *output, MATRIX *input, VECTOR *rotate);
 // MEMCARD
 
 void MEMCARD_SetIcon(int iconID);
-unsigned int MEMCARD_CRC16(unsigned int crc, int nextByte);
-void MEMCARD_ChecksumSave(unsigned char *saveBytes, int len);
-unsigned int MEMCARD_ChecksumLoad(unsigned char *saveBytes, int len);
+u32 MEMCARD_CRC16(u32 crc, int nextByte);
+void MEMCARD_ChecksumSave(u8 *saveBytes, int len);
+u32 MEMCARD_ChecksumLoad(u8 *saveBytes, int len);
 char *MEMCARD_StringInit(int slotIndex, char *dstString);
 void MEMCARD_StringSet(char *dstString, int slotIdx, char *srcString);
 void MEMCARD_InitCard();
 void MEMCARD_CloseCard();
-uint8_t MEMCARD_GetNextSwEvent(void);
-uint8_t MEMCARD_GetNextHwEvent(void);
+u8 MEMCARD_GetNextSwEvent(void);
+u8 MEMCARD_GetNextHwEvent(void);
 // MEMCARD_WaitForHwEvent()
 void MEMCARD_SkipEvents(void);
-int MEMCARD_NewTask(int slotIdx, char *name, uint8_t *ptrMemcard, int memcardFileSize, int flags);
+int MEMCARD_NewTask(int slotIdx, char *name, u8 *ptrMemcard, int memcardFileSize, int flags);
 void MEMCARD_CloseFile(void);
 int MEMCARD_ReadFile(int start_offset, int end_offset);
-uint8_t MEMCARD_WriteFile(int start_offset, const uint8_t *data, int end_offset);
+u8 MEMCARD_WriteFile(int start_offset, const u8 *data, int end_offset);
 void MEMCARD_GetFreeBytes(int slotIdx);
-uint8_t MEMCARD_GetInfo(int slotIdx);
+u8 MEMCARD_GetInfo(int slotIdx);
 // MEMCARD_Load()
 // MEMCARD_Save()
-uint8_t MEMCARD_Format(int slotIdx);
-uint8_t MEMCARD_IsFile(int slotIdx, char *save_name);
+u8 MEMCARD_Format(int slotIdx);
+u8 MEMCARD_IsFile(int slotIdx, char *save_name);
 char *MEMCARD_FindFirstGhost(int slotIdx, char *srcString);
 char *MEMCARD_FindNextGhost(void);
-uint8_t MEMCARD_EraseFile(int slotIdx, char *srcString);
+u8 MEMCARD_EraseFile(int slotIdx, char *srcString);
 
 // MEMPACK
 
 void MEMPACK_Init(int ramSize);
 void MEMPACK_SwapPacks(int index);
 void MEMPACK_NewPack(void *start, int size);
-u_int MEMPACK_GetFreeBytes();
+u32 MEMPACK_GetFreeBytes();
 void *MEMPACK_AllocMem(int allocSize); // also has a second parameter? --Super
 // void* MEMPACK_AllocHighMem(int allocSize, char*);
 void MEMPACK_ClearHighMem();
@@ -698,7 +698,7 @@ void MEMPACK_PopToState(int id);
 
 int MixRNG_Scramble();
 int MixRNG_Particles(int numParticle);
-u_int MixRNG_GetValue(int val);
+u32 MixRNG_GetValue(int val);
 
 // Particle
 
@@ -711,7 +711,7 @@ void Particle_UpdateAllParticles();
 // Particle_BitwiseClampByte()
 // Particle_SetColors()
 void Particle_RenderList(struct PushBuffer *pb, void *particleList);
-struct Particle *Particle_Init(u_int param_1, struct IconGroup *ig, struct ParticleEmitter *pe);
+struct Particle *Particle_Init(u32 param_1, struct IconGroup *ig, struct ParticleEmitter *pe);
 
 // PickupBots (?)
 
@@ -735,10 +735,10 @@ void PROC_DestroySelf(struct Thread *t);
 void PROC_DestroyBloodline(struct Thread *t);
 void PROC_CheckBloodlineForDead(struct Thread **replaceSelf, struct Thread *th);
 void PROC_CheckAllForDead();
-struct Thread *PROC_BirthWithObject(u_int creationFlags, void *behaviorFuncPtr, char *debugName,
+struct Thread *PROC_BirthWithObject(u32 creationFlags, void *behaviorFuncPtr, char *debugName,
                                     struct Thread *threadRelative); // 2nd param function ptr, maybe (void (*)(int))?
 void PROC_CollidePointWithSelf(struct Thread *th, void *buf);
-void PROC_CollidePointWithBucket(struct Thread *th, short *vec3_pos);
+void PROC_CollidePointWithBucket(struct Thread *th, s16 *vec3_pos);
 struct Thread *PROC_SearchForModel(struct Thread *th, int modelID);
 void PROC_PerBspLeaf_CheckInstances(struct BSP *bspLeaf, struct ScratchpadStruct *param_2);
 void PROC_StartSearch_Self(struct ScratchpadStruct *SPS);
@@ -748,8 +748,8 @@ void PROC_CollideHitboxWithBucket(struct Thread *param_1, struct ScratchpadStruc
 
 void PushBuffer_Init(struct PushBuffer *pb, int id, int total);
 // PushBuffer_SetPsyqGeom()
-void PushBuffer_SetDrawEnv_DecalMP(u_long *, struct DB *, short, short, short, short, short, short, short, short);
-void PushBuffer_SetDrawEnv_Normal(u_long *ot, struct PushBuffer *pb, struct DB *backBuffer, short *param_4, u_char param_5);
+void PushBuffer_SetDrawEnv_DecalMP(u_long *, struct DB *, s16, s16, s16, s16, s16, s16, s16, s16);
+void PushBuffer_SetDrawEnv_Normal(u_long *ot, struct PushBuffer *pb, struct DB *backBuffer, s16 *param_4, u8 param_5);
 void PushBuffer_SetMatrixVP(struct PushBuffer *pb);
 // PushBuffer_SetFrustumPlane()
 void PushBuffer_UpdateFrustum(struct PushBuffer *pb);
@@ -769,9 +769,9 @@ void PushBuffer_FadeAllWindows();
 // TitleFlag
 
 // RaceFlag_MoveModels()
-u_int RaceFlag_IsFullyOnScreen();
-u_int RaceFlag_IsFullyOffScreen();
-u_int RaceFlag_IsTransitioning();
+u32 RaceFlag_IsFullyOnScreen();
+u32 RaceFlag_IsFullyOffScreen();
+u32 RaceFlag_IsTransitioning();
 // RaceFlag_SetDrawOrder()
 void RaceFlag_BeginTransition(int param_1);
 void RaceFlag_SetFullyOnScreen();
@@ -784,14 +784,14 @@ void RaceFlag_DrawLoadingString();
 void RaceFlag_DrawSelf();
 
 // RECTMENU
-void RECTMENU_DrawOuterRect_Edge(RECT *r, u_int rgb, u_int param_3, u_long *otMem);
-u_char *RECTMENU_DrawTime(int milliseconds);
-void RECTMENU_DrawRwdBlueRect_Subset(short *pos, int *color, u_long *ot, struct PrimMem *primMem);
+void RECTMENU_DrawOuterRect_Edge(RECT *r, u32 rgb, u32 param_3, u_long *otMem);
+u8 *RECTMENU_DrawTime(int milliseconds);
+void RECTMENU_DrawRwdBlueRect_Subset(s16 *pos, int *color, u_long *ot, struct PrimMem *primMem);
 void RECTMENU_DrawRwdBlueRect(RECT *rect, char *metas, u_long *ot, struct PrimMem *primMem);
-void RECTMENU_DrawRwdTriangle(short *position, char *color, u_long *otMem, struct PrimMem *primMem);
-void RECTMENU_DrawOuterRect_LowLevel(RECT *r, short x, u_short y, u_int *rgb, short param_5, u_long *otMem);
-void RECTMENU_DrawOuterRect_HighLevel(RECT *r, u_int *rgb, u_int param_3, u_long *otMem);
-void RECTMENU_DrawQuip(char *, short, short, short, short, int, short);
+void RECTMENU_DrawRwdTriangle(s16 *position, char *color, u_long *otMem, struct PrimMem *primMem);
+void RECTMENU_DrawOuterRect_LowLevel(RECT *r, s16 x, u16 y, u32 *rgb, s16 param_5, u_long *otMem);
+void RECTMENU_DrawOuterRect_HighLevel(RECT *r, u32 *rgb, u32 param_3, u_long *otMem);
+void RECTMENU_DrawQuip(char *, s16, s16, s16, s16, int, s16);
 void RECTMENU_DrawInnerRect(RECT *r, int flag, u_long *ot);
 void RECTMENU_DrawFullRect(struct RectMenu *menu, RECT *r);
 // RECTMENU_GetHeight()
@@ -834,15 +834,15 @@ void SelectProfile_AdvPickMode_MenuProc(struct RectMenu *menu);
 // SelectProfile_DrawGhostProfile()
 void SelectProfile_MuteCursors();
 void SelectProfile_UnMuteCursors();
-void SelectProfile_ToggleMode(u_int param_1);
+void SelectProfile_ToggleMode(u32 param_1);
 // SelectProfile_InitAndDestroy()
-u_int SelectProfile_InputLogic(struct RectMenu *menu, short param_2, u_int confirm);
+u32 SelectProfile_InputLogic(struct RectMenu *menu, s16 param_2, u32 confirm);
 // SelectProfile_AllProfiles_MenuProc()
 
 // SubmitName
 
 // SubmitName_RestoreName()
-short SubmitName_DrawMenu(u_short stringID);
+s16 SubmitName_DrawMenu(u16 stringID);
 void SubmitName_MenuProc(struct RectMenu *menu);
 
 // PrixSaveBox (?)
@@ -881,40 +881,40 @@ int UI_ConvertX_2(int oldPosX, int newPosX);
 int UI_ConvertY_2(int oldPosY, int newPosY);
 // UI_INSTANCE_BirthWithThread()
 void UI_INSTANCE_InitAll();
-void UI_Map_DrawMap(struct Icon *mapTop, struct Icon *mapBottom, short posX, short posY, struct PrimMem *primMem, u_long *otMem, u_int colorID);
-void UI_Map_GetIconPos(short *ptrMap, int *posX, int *posY);
-void UI_Map_DrawAdvPlayer(int ptrMap, int *matrix, int unused1, int unused2, short param_5, short param_6);
-void UI_Map_DrawRawIcon(int ptrMap, int *param_2, int iconID, int colorID, int unused, short scale);
-void UI_Map_DrawDrivers(int ptrMap, struct Thread *bucket, short *param_3);
+void UI_Map_DrawMap(struct Icon *mapTop, struct Icon *mapBottom, s16 posX, s16 posY, struct PrimMem *primMem, u_long *otMem, u32 colorID);
+void UI_Map_GetIconPos(s16 *ptrMap, int *posX, int *posY);
+void UI_Map_DrawAdvPlayer(int ptrMap, int *matrix, int unused1, int unused2, s16 param_5, s16 param_6);
+void UI_Map_DrawRawIcon(int ptrMap, int *param_2, int iconID, int colorID, int unused, s16 scale);
+void UI_Map_DrawDrivers(int ptrMap, struct Thread *bucket, s16 *param_3);
 void UI_Map_DrawGhosts(int ptrMap, struct Thread *bucket);
 void UI_Map_DrawTracking(int ptrMap, struct Thread *bucket);
 // void UI_WeaponBG_AnimateShine();
 // UI_WeaponBG_DrawShine()
 // UI_TrackerBG()
-void UI_DrawDriverIcon(struct Icon *icon, short posX, short posY, struct PrimMem *primMem, u_long *ot, char transparency, short scale, u_int color);
-void UI_Lerp2D_Angular(short *ptrPos, short drawnPosition, short absolutePosition, short frameCounter);
-void UI_Lerp2D_HUD(short *ptrPos, short startX, short startY, short endX, short endY, int curFrame, short endFrame);
-void UI_Lerp2D_Linear(short *ptrPos, short startX, short startY, short endX, short endY, int curFrame, short endFrame);
-void UI_DrawRaceClock(u_short paramX, u_short paramY, u_int flags, struct Driver *driver);
-void UI_DrawLimitClock(short posX, short posY, short fontType);
+void UI_DrawDriverIcon(struct Icon *icon, s16 posX, s16 posY, struct PrimMem *primMem, u_long *ot, char transparency, s16 scale, u32 color);
+void UI_Lerp2D_Angular(s16 *ptrPos, s16 drawnPosition, s16 absolutePosition, s16 frameCounter);
+void UI_Lerp2D_HUD(s16 *ptrPos, s16 startX, s16 startY, s16 endX, s16 endY, int curFrame, s16 endFrame);
+void UI_Lerp2D_Linear(s16 *ptrPos, s16 startX, s16 startY, s16 endX, s16 endY, int curFrame, s16 endFrame);
+void UI_DrawRaceClock(u16 paramX, u16 paramY, u32 flags, struct Driver *driver);
+void UI_DrawLimitClock(s16 posX, s16 posY, s16 fontType);
 void UI_BattleDrawHeadArrows(struct Driver *);
 void UI_TrackerSelf(struct Driver *);
-void UI_DrawPosSuffix(short posX, short posY, struct Driver *d, short flags);
-void UI_DrawLapCount(short posX, int posY, int param_3, struct Driver *d);
+void UI_DrawPosSuffix(s16 posX, s16 posY, struct Driver *d, s16 flags);
+void UI_DrawLapCount(s16 posX, int posY, int param_3, struct Driver *d);
 void UI_DrawBattleScores(int, int, struct Driver *);
-void UI_Weapon_DrawSelf(short, short, short, struct Driver *);
-void UI_Weapon_DrawBG(short param_1, short param_2, short param_3, struct Driver *d);
+void UI_Weapon_DrawSelf(s16, s16, s16, struct Driver *);
+void UI_Weapon_DrawBG(s16 param_1, s16 param_2, s16 param_3, struct Driver *d);
 void UI_DrawNumWumpa(int param_1, int param_2, struct Driver *d);
 void UI_DrawNumTimebox(int posX, int posY, struct Driver *d);
 void UI_DrawNumRelic(int posX, int posY);
 void UI_DrawNumKey(int posX, int posY);
 void UI_DrawNumTrophy(int posX, int posY);
 void UI_DrawNumCrystal(int posX, int posY, struct Driver *d);
-void UI_DrawSpeedNeedle(short posX, short posY, struct Driver *driver);
+void UI_DrawSpeedNeedle(s16 posX, s16 posY, struct Driver *driver);
 void UI_DrawSpeedBG();
 void UI_JumpMeter_Update(struct Driver *d);
-void UI_JumpMeter_Draw(short posX, short posY, struct Driver *driver);
-void UI_DrawSlideMeter(short posX, short posY, struct Driver *driver);
+void UI_JumpMeter_Draw(s16 posX, s16 posY, struct Driver *driver);
+void UI_DrawSlideMeter(s16 posX, s16 posY, struct Driver *driver);
 void UI_DrawRankedDrivers();
 void UI_RenderFrame_Racing();
 void UI_RenderFrame_AdvHub();
@@ -959,7 +959,7 @@ struct Driver *VehBirth_Player(int index);
 
 int VehCalc_InterpBySpeed(int currentRot, int rotSpeed, int destinedRot);
 int VehCalc_MapToRange(int param_1, int param_2, int param_3, int param_4, int param_5);
-int VehCalc_SteerAccel(int param_1, int param_2, int param_3, u_int param_4, u_int param_5, u_int param_6);
+int VehCalc_SteerAccel(int param_1, int param_2, int param_3, u32 param_4, u32 param_5, u32 param_6);
 // VehCalc_FastSqrt()
 
 // VehParticle
@@ -973,7 +973,7 @@ void VehEmitter_DriverMain();
 // more uncategorized vehicle stuff
 
 void VehFire_Audio(struct Driver *driver, int speed_cap);
-void VehFire_Increment(struct Driver *driver, int reserves, u_int type, int fireLevel);
+void VehFire_Increment(struct Driver *driver, int reserves, u32 type, int fireLevel);
 // VehFrameInst_GetStartFrame()
 // VehFrameInst_GetNumAnimFrames()
 void VehFrameProc_Driving(struct Thread *t, struct Driver *d);
@@ -989,13 +989,13 @@ void VehPhysCrash_ConvertVecToSpeed(struct Driver *d, int *v);
 // VehPhysCrash_BounceSelf()
 // VehPhysCrash_AI()
 // VehPhysCrash_Attack()
-void VehPhysCrash_AnyTwoCars(struct Thread *thread, u_short *param_2, int *param_3);
-void VehPhysForce_ConvertSpeedToVec(struct Driver *d, short *velArr, int x);
+void VehPhysCrash_AnyTwoCars(struct Thread *thread, u16 *param_2, int *param_3);
+void VehPhysForce_ConvertSpeedToVec(struct Driver *d, s16 *velArr, int x);
 // VehPhysForce_OnGravity()
 void VehPhysForce_OnApplyForces(struct Thread *t, struct Driver *d);
 void VehPhysForce_CollideDrivers(struct Thread *t, struct Driver *d);
 void VehPhysForce_TranslateMatrix();
-void VehPhysForce_RotAxisAngle(MATRIX *m, short *normVec, short angle);
+void VehPhysForce_RotAxisAngle(MATRIX *m, s16 *normVec, s16 angle);
 void VehPhysForce_AccelTerrainSlope(struct Driver *d);
 
 // "VehPtr"
@@ -1006,9 +1006,9 @@ int VehPhysGeneral_LerpToForwards(struct Driver *driver, int param_2, int param_
 void VehPhysGeneral_JumpAndFriction();
 void VehPhysGeneral_SetHeldItem(struct Driver *driver);
 int VehPhysGeneral_GetBaseSpeed(struct Driver *driver);
-int VehPhysJoystick_ReturnToRest(int param_1, u_int param_2, struct RacingWheelData *param_3);
+int VehPhysJoystick_ReturnToRest(int param_1, u32 param_2, struct RacingWheelData *param_3);
 // void VehPhysJoystick_GetStrength()
-int VehPhysJoystick_GetStrengthAbsolute(int param_1, u_int param_2, struct RacingWheelData *param_3);
+int VehPhysJoystick_GetStrengthAbsolute(int param_1, u32 param_2, struct RacingWheelData *param_3);
 void VehPhysProc_Driving_PhysLinear(struct Thread *t, struct Driver *d);
 void VehPhysProc_Driving_Audio(struct Thread *t, struct Driver *d);
 void VehPhysProc_Driving_Update(struct Thread *t, struct Driver *d);
@@ -1131,7 +1131,7 @@ void RenderBucket_Execute(void *param_1, struct PrimMem *param_2);
 // Draw_KartInWaterMud()
 // ConvertRotToMatrix_InverseTranspose_NoRotY()
 // ConvertRotToMatrix_InverseTranspose()
-void ConvertRotToMatrix(MATRIX *m, short *rot);
+void ConvertRotToMatrix(MATRIX *m, s16 *rot);
 // ConvertRotToMatrix_Transpose()
 // MatrixRotate()
 // TRIG_AngleSinCos_r16r17r18_duplicate()
@@ -1153,9 +1153,9 @@ void DrawTires_Solid(struct Thread *thread, struct PrimMem *primMem, char numPly
 void DrawTires_Reflection(struct Thread *thread, struct PrimMem *primMem, char numPlyr);
 void RenderWeather(struct PushBuffer *pb, struct PrimMem *primMem, struct RainBuffer *rainBuffer, char numPlyr, int gameMode1);
 // TRIG_AngleSinCos_r16r17r18()
-int RenderLists_Init1P2P(struct BSP *bspRoot, int *visLeafList, struct PushBuffer *pb, u_int LevRenderList, void *bspList, char numPlyr);
+int RenderLists_Init1P2P(struct BSP *bspRoot, int *visLeafList, struct PushBuffer *pb, u32 LevRenderList, void *bspList, char numPlyr);
 void RenderLists_PreInit();
-int RenderLists_Init3P4P(struct BSP *bspRoot, int *visLeafList, struct PushBuffer *pb, u_int LevRenderList, void *bspList);
+int RenderLists_Init3P4P(struct BSP *bspRoot, int *visLeafList, struct PushBuffer *pb, u32 LevRenderList, void *bspList);
 void *RenderBucket_QueueLevInstances(struct CameraDC *cDC, u_long *otMem, void *rbi, char *lod, char numPlyr, int gameMode1);
 void *RenderBucket_QueueNonLevInstances(struct Item *item, u_long *otMem, void *rbi, char *lod, char numPlyr, int gameMode1);
 // RenderBucket_QueueDraw()
@@ -1181,7 +1181,7 @@ void AA_EndEvent_DrawMenu();
 void TT_EndEvent_DrawMenu();
 void CC_EndEvent_DrawMenu();
 void AH_Map_Main();
-void AH_MaskHint_Start(short requestedHint, short bool_interruptWarppad);
+void AH_MaskHint_Start(s16 requestedHint, s16 bool_interruptWarppad);
 void CS_BoxScene_InstanceSplitLines();
 
 void RB_Player_ToggleInvisible();
@@ -1206,7 +1206,7 @@ void DrawLevelOvr3P(void *LevRenderList, struct PushBuffer *pb, struct BSP *bspL
 void DrawLevelOvr4P(void *LevRenderList, struct PushBuffer *pb, struct BSP *bspList, struct PrimMem *primMem, void *VisMem10, void *VisMem14, void *VisMem18,
                     void *VisMem1C, void *waterEnvMap);
 
-u_int MM_Video_CheckIfFinished(int param_1);
+u32 MM_Video_CheckIfFinished(int param_1);
 void AH_Pause_Update();
 
 //=====================================================================================================================
@@ -1217,16 +1217,16 @@ void AH_Pause_Update();
 
 // void RECTMENU_ClearInput();
 // void RECTMENU_Show(struct RectMenu*);
-void RECTMENU_DrawPolyGT4(struct Icon *icon, short posX, short posY, struct PrimMem *primMem, u_long *ot, u_int color0, u_int color1, u_int color2,
-                          u_int color3, char transparency, short scale);
+void RECTMENU_DrawPolyGT4(struct Icon *icon, s16 posX, s16 posY, struct PrimMem *primMem, u_long *ot, u32 color0, u32 color1, u32 color2, u32 color3,
+                          char transparency, s16 scale);
 int ratan2(int x, int y);
 void RotTrans(SVECTOR *, VECTOR *, long *);
 void SetRotMatrix(MATRIX *);
 void SetTransMatrix(MATRIX *);
-void VehBirth_TeleportSelf(struct Driver *d, u_char spawnFlag, int spawnPosY); // this is present (but commented out) further up the file. Idk why.
-int RefreshCard_BoolGhostForLEV(u_short trackID);                              // this is present (but commented out) further up the file. Idk why.
-void StCdInterrupt();                                                          // 80078d34
-void DecDCTout(u_long *, int);                                                 // 80079940 guessed the signature
+void VehBirth_TeleportSelf(struct Driver *d, u8 spawnFlag, int spawnPosY); // this is present (but commented out) further up the file. Idk why.
+int RefreshCard_BoolGhostForLEV(u16 trackID);                              // this is present (but commented out) further up the file. Idk why.
+void StCdInterrupt();                                                      // 80078d34
+void DecDCTout(u_long *, int);                                             // 80079940 guessed the signature
 void DecDCTin(u_long *, int);
 void StSetStream(int, int, int, int, int); // guessed about a lot of these signatures (TheUbMunster)
 void StSetRing(u_long *, int);
@@ -1252,7 +1252,7 @@ void RB_MakeInstanceReflective(struct ScratchpadStruct *, struct Instance *);
 // void COLL_FIXED_PlayerSearch(struct Thread* thread, struct Driver* driver);
 void VehPhysForce_TranslateMatrix(struct Thread *thread, struct Driver *driver); // this is present WITH A DIFFERENT SIGNATURE further up the file. Idk why.
 void VehEmitter_DriverMain(struct Thread *thread, struct Driver *driver);        // this is present WITH A DIFFERENT SIGNATURE further up the file. Idk why.
-void FLARE_Init(short *);                                                        // this is present (but commented out) further up the file. Idk why.
+void FLARE_Init(s16 *);                                                          // this is present (but commented out) further up the file. Idk why.
 int EngineSound_VolumeAdjust(int desired, int current, int amount);              // this is present (but commented out) further up the file. Idk why.
 void RB_ShieldDark_ThTick_Grow(struct Thread *t);
 void RB_Warpball_ThTick(struct Thread *t);
@@ -1260,25 +1260,25 @@ struct CheckpointNode *RB_Warpball_NewPathNode(struct CheckpointNode *ptrNodeCur
 void RB_Warpball_Start(struct TrackerWeapon *tw);
 void RB_Warpball_SetTargetDriver(struct TrackerWeapon *tw);
 struct Driver *RB_Warpball_GetDriverTarget(struct TrackerWeapon *tw, struct Instance *inst);
-void RB_Warpball_SeekDriver(struct TrackerWeapon *tw, unsigned int param_2, struct Driver *d);
+void RB_Warpball_SeekDriver(struct TrackerWeapon *tw, u32 param_2, struct Driver *d);
 int RB_Hazard_HurtDriver(struct Driver *driverVictim, int damageType, struct Driver *driverAttacker, int reason);
 struct Driver *VehPickupItem_MissileGetTargetDriver(struct Driver *); // this is present (but commented out) further up the file. Idk why.
-u_int VehPickupItem_PotionThrow(struct MineWeapon *potion, struct Instance *inst,
-                                u_int flags); // this is present (but commented out) further up the file. Idk why.
-unsigned short RB_Hazard_CollLevInst(struct ScratchpadStruct *, struct Thread *);
+u32 VehPickupItem_PotionThrow(struct MineWeapon *potion, struct Instance *inst,
+                              u32 flags); // this is present (but commented out) further up the file. Idk why.
+u16 RB_Hazard_CollLevInst(struct ScratchpadStruct *, struct Thread *);
 void RB_GenericMine_ThDestroy(struct Thread *t, struct Instance *inst, struct MineWeapon *mw);
 void RB_Player_KillPlayer(struct Driver *player_1, struct Driver *player_2);
-void RB_Fruit_GetScreenCoords(struct PushBuffer *pb, struct Instance *inst, short *output);
+void RB_Fruit_GetScreenCoords(struct PushBuffer *pb, struct Instance *inst, s16 *output);
 void EngineSound_Player(struct Driver *driver);
 void VehPhysForce_OnGravity(struct Driver *driver, Vec3 *velocity);
-int RngDeadCoed(u_int *);
+int RngDeadCoed(u32 *);
 struct Model *VehBirth_GetModelByName(char *searchName);
-struct Terrain *VehAfterColl_GetTerrain(u_char terrainType);
+struct Terrain *VehAfterColl_GetTerrain(u8 terrainType);
 void UI_CupStandings_UpdateCupRanks();
 void UI_CupStandings_FinalizeCupRanks();
 void ThTick_SetAndExec(struct Thread *, void (*callbackMaybe)(struct Thread *)); // guessed about the signature
 void RB_Default_LInB(struct Instance *);
-u_short INSTANCE_GetNumAnimFrames(struct Instance *pInstance, int animIndex);
+u16 INSTANCE_GetNumAnimFrames(struct Instance *pInstance, int animIndex);
 void RB_RainCloud_Init(struct Driver *d);
 void RB_Explosion_InitPotion(struct Instance *inst);
 void RB_Blowup_Init(struct Instance *weaponInst);
@@ -1287,40 +1287,40 @@ void RB_Explosion_InitGeneric(struct Instance *inst);
 void MatrixRotate(MATRIX *, MATRIX *, MATRIX *);
 void RB_Warpball_Death(struct Thread *t);
 void RB_Potion_OnShatter_TeethSearch(struct Instance *);
-short rand(); // guessed about the signature. Also, where is the location of this function????
-void Vector_SpecLightSpin3D(struct Instance *, short *, short *);
-void Vector_SpecLightNoSpin3D(struct Instance *, short *, short *);
-void CS_Podium_Prize_Spin(struct Instance *inst, short *prize);
+s16 rand(); // guessed about the signature. Also, where is the location of this function????
+void Vector_SpecLightSpin3D(struct Instance *, s16 *, s16 *);
+void Vector_SpecLightNoSpin3D(struct Instance *, s16 *, s16 *);
+void CS_Podium_Prize_Spin(struct Instance *inst, s16 *prize);
 int howl_VolumeGet(int type);
 void SelectProfile_GetTrackID();
-void SelectProfile_PrintInteger(int integer, short posX, short posY, short fmt, u_short flags);
-void Vector_SpecLightSpin2D(struct Instance *, short *, short *); // guessed about the signature
+void SelectProfile_PrintInteger(int integer, s16 posX, s16 posY, s16 fmt, u16 flags);
+void Vector_SpecLightSpin2D(struct Instance *, s16 *, s16 *); // guessed about the signature
 void *MEMPACK_AllocHighMem(int allocSize);
 char *CS_Credits_GetNextString(char *);
 void CS_Credits_DestroyCreditGhost();
 void CdSetDebug(int);
 void Voiceline_PoolClear();
 void SpuSetIRQ(int);
-void SpuReadDecodedData(short *, int);
+void SpuReadDecodedData(s16 *, int);
 void SpuSetIRQCallback(void (*)(void));
 void SpuSetTransferCallback(void (*)(void));
 void MainInit_RainBuffer(struct GameTracker *);
 void CS_Podium_FullScene_Init();
 void CS_Cutscene_Start();
 void howl_StopAudio(int boolErasePauseBackup, int boolEraseMusic, int boolDestroyAllFX);
-u_int OtherFX_Modify(u_int soundId, u_int flags);
+u32 OtherFX_Modify(u32 soundId, u32 flags);
 void RB_TNT_ThTick_ThrowOnHead(struct Thread *);
 void RB_TNT_ThTick_ThrowOffHead(struct Thread *);
 void RB_Potion_ThTick_InAir(struct Thread *);
 void PadInitMtap(struct MultitapPacket *, struct MultitapPacket *);
 void PadStartCom();
 int PadSetMainMode(int, int, int);
-int PadInfoAct(short, int, int);
-int PadSetAct(short, char *, unsigned int);
-int PadSetActAlign(short, char *);
-int PadGetState(u_int);
-void SpuSetReverbModeDepth(short, short);
-void SpuSetReverb(short);
+int PadInfoAct(s16, int, int);
+int PadSetAct(s16, char *, u32);
+int PadSetActAlign(s16, char *);
+int PadGetState(u32);
+void SpuSetReverbModeDepth(s16, s16);
+void SpuSetReverb(s16);
 void SpuSetReverbModeParam(SpuReverbAttr *);
 void SpuSetCommonCDMix(int);
 void SpuSetVoiceADSRAttr(int, int, int, int, int, int, int, int, int);
@@ -1343,10 +1343,10 @@ void VehLap_UpdateProgress(struct Driver *);
 void MainGameEnd_Initialize();
 void SetDrawEnv(void *, DRAWENV *);
 int PushBuffer_SetFrustumPlane(char *, int, int, int);
-u_int VehCalc_FastSqrt(u_int, u_int);
+u32 VehCalc_FastSqrt(u32, u32);
 void VehBirth_NullThread(struct Thread *t);
-void SelectProfile_DrawAdvProfile(struct AdvProgress *adv, int posX, int posY, u_int isHighlighted, short slotIndex, u_short menuFlag);
-void SelectProfile_Init(u_short flags);
+void SelectProfile_DrawAdvProfile(struct AdvProgress *adv, int posX, int posY, u32 isHighlighted, s16 slotIndex, u16 menuFlag);
+void SelectProfile_Init(u16 flags);
 void Seal_CheckColl(struct Instance *sealInst, struct Thread *sealTh, int damage, int radius, int sound);
 void DotLights_AudioAndVideo(struct GameTracker *gGT);
 void EngineSound_NearestAIs(void);

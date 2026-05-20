@@ -84,5 +84,5 @@ int DECOMP_GAMEPAD_GetNumConnected(struct GamepadSystem *gGamepads)
 		return 0;
 
 	// return change
-	return (u_int)((bitwiseConnected ^ oldVal) & oldVal) != 0;
+	return (u32)((bitwiseConnected ^ oldVal) & oldVal) != 0;
 }

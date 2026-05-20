@@ -2,7 +2,7 @@
 
 void DECOMP_AH_Garage_Open(struct ScratchpadStruct *sps, struct Thread *otherTh)
 {
-	short sound;
+	s16 sound;
 	struct Instance *garageInst;
 	struct BossGarageDoor *garage;
 	struct Thread *garageThread;

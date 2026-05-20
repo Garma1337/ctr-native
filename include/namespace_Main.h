@@ -169,7 +169,7 @@ struct GameTracker
 		char data[6];
 
 		// 0x6
-		short boolUpdatedThisFrame;
+		s16 boolUpdatedThisFrame;
 
 		// 0x8
 		struct Instance *inst;
@@ -278,15 +278,15 @@ struct GameTracker
 	struct
 	{
 		// 0x1b00
-		short numParticles_curr;
+		s16 numParticles_curr;
 
 		// previous frame?
-		short unk1;
+		s16 unk1;
 
 		// 0x1b04
-		short numParticles_max;
+		s16 numParticles_max;
 
-		short unk2;
+		s16 unk2;
 
 		// 0x1b08
 		int velY; // negative
@@ -296,24 +296,24 @@ struct GameTracker
 	struct Stars stars;
 
 	// 1b14
-	unsigned int ptrCircle;
+	u32 ptrCircle;
 
 	// 1b18
-	unsigned int ptrClod;
+	u32 ptrClod;
 
 	// 1b1c
-	unsigned int ptrDustpuff;
+	u32 ptrDustpuff;
 
 	// 1b20
-	unsigned int ptrSmoking;
+	u32 ptrSmoking;
 
 	// 1b24
-	unsigned int ptrSparkle;
+	u32 ptrSparkle;
 
 	// 1b28
 	// handles character icons,
 	// traffic light sprites, etc
-	unsigned int mpkIcons;
+	u32 mpkIcons;
 
 	// 0x1b2c - 0x1c93
 	struct ThreadBucket threadBuckets[NUM_BUCKETS];
@@ -417,7 +417,7 @@ struct GameTracker
 	char bool_DrawOTag_InProgress;
 
 	// 1d31
-	u_char hudFlags;
+	u8 hudFlags;
 
 	// 1d32
 	char boolDemoMode;
@@ -428,11 +428,11 @@ struct GameTracker
 	// 1d34
 	// Variable is never given a value
 	// unused???
-	short unk_timerCooldown_similarTo_1d36;
+	s16 unk_timerCooldown_similarTo_1d36;
 
 	// 1d36
 	// used to make comments appear
-	short timerEndOfRaceVS;
+	s16 timerEndOfRaceVS;
 
 	// 1d38
 	char cooldownfromPauseUntilUnpause;
@@ -447,7 +447,7 @@ struct GameTracker
 
 	// 1d3a
 	// value is from 0 to 6
-	short advPausePage;
+	s16 advPausePage;
 
 	// ======== High Score related \/  \/ =============
 
@@ -459,7 +459,7 @@ struct GameTracker
 	int lapIndexNewBest;
 
 	// 1d44
-	u_int gameModeEnd;
+	u32 gameModeEnd;
 
 	// 1d48
 	char unknown_1d48_notFound;
@@ -470,26 +470,26 @@ struct GameTracker
 
 #if BUILD >= UsaRetail
 	// 0x1d4a
-	short notFoundInCode1;
+	s16 notFoundInCode1;
 #endif
 
 	// sep 0x1ce2
 	// usa 0x1d4c
 	// on-screen keyboard
-	short typeCursorPosition;
+	s16 typeCursorPosition;
 
 
 #if BUILD >= UsaRetail
 	// 0x1d4e
-	short notFoundInCode2;
+	s16 notFoundInCode2;
 
 	// 0x1d50
-	short langIndex;
+	s16 langIndex;
 #endif
 
 	// sep 1ce4 -- found
 	// usa 1d52 -- found
-	short constVal_9000;
+	s16 constVal_9000;
 
 	// sep 1ce6
 	// usa 1d54
@@ -502,7 +502,7 @@ struct GameTracker
 #if BUILD >= UsaRetail
 	// 1d76
 	// 1d77
-	short nameEnterPadding;
+	s16 nameEnterPadding;
 #endif
 
 	// usa 1d78 -- found
@@ -558,7 +558,7 @@ struct GameTracker
 		// 0b0101 for some on team 1 and some on team 3
 		// 0b1111 for all four teams active
 		// etc
-		u_int teamFlags;
+		u32 teamFlags;
 
 		// 1ddc
 		int numTeams;
@@ -654,7 +654,7 @@ struct GameTracker
 
 #if BUILD >= UsaRetail
 	// 1ec0
-	unsigned int numMissiles;
+	u32 numMissiles;
 	// 1ec4
 	int numPlayersWith3Missiles;
 #endif
@@ -677,7 +677,7 @@ struct GameTracker
 	// In real demos (june 1999, spyro2), this is used to
 	// end the demo while inactive, and reboot game. Both
 	// are exactly 4 bytes after GreenOn
-	unsigned int demoCountdownTimer;
+	u32 demoCountdownTimer;
 
 	// 1ee0
 	int unk1ee0;
@@ -1208,16 +1208,16 @@ struct GameTracker
 	// 2548
 	// records if hub was swapped at least once,
 	// useless really
-	short boolHubSwapped;
+	s16 boolHubSwapped;
 
 	// 254a
-	short activeMempackIndex; // 0,1,2
+	s16 activeMempackIndex; // 0,1,2
 
 	// 254c
 	// for swapping adv hubs, async,
 	// index 0,3 are not used,
 	// index 1,2 are used
-	short levID_in_each_mempack[4];
+	s16 levID_in_each_mempack[4];
 
 	// 2554
 	int unk_filler_between_levIDs_winnerIndex;
@@ -1226,7 +1226,7 @@ struct GameTracker
 	int winnerIndex[4];
 
 	// 2568
-	unsigned int numWinners;
+	u32 numWinners;
 
 	// 256c
 	// uint bitwise rendering flags, controls rendering flow. checked a lot in FUN_80035e70, which is game drawing func
@@ -1253,11 +1253,11 @@ struct GameTracker
 	//				screens, plus screen outline (battle)
 
 	// rest unknown or no visible effects
-	unsigned int renderFlags;
+	u32 renderFlags;
 
 	// 2570
 	// bit0 enabled clock effect, rest does nothing visually
-	unsigned short clockEffectEnabled;
+	u16 clockEffectEnabled;
 
 	// =======================================
 	// =======================================
@@ -1266,18 +1266,18 @@ struct GameTracker
 	// all podium related?
 
 	// 2572
-	unsigned short podiumRewardID;
+	u16 podiumRewardID;
 
 	// 2574
-	unsigned char bool_AdvHub_NeedToSwapLEV;
+	u8 bool_AdvHub_NeedToSwapLEV;
 
 	// 2575
-	unsigned char podium_modelIndex_First;
-	unsigned char podium_modelIndex_Second;
-	unsigned char podium_modelIndex_Third;
+	u8 podium_modelIndex_First;
+	u8 podium_modelIndex_Second;
+	u8 podium_modelIndex_Third;
 
 	// 2578
-	unsigned char podium_modelIndex_tawna;
+	u8 podium_modelIndex_tawna;
 
 
 	// transition from podium overlay to
@@ -1287,19 +1287,19 @@ struct GameTracker
 	//  2 or 3 -- request overlay load
 	//  1 - spawn lev threads with 232
 	//  0 - null
-	unsigned char overlayTransition;
+	u8 overlayTransition;
 
 	// =======================================
 	// =======================================
 
 	// 257a
 	// only updated for human players
-	unsigned char humanPlayerPositions[8];
+	u8 humanPlayerPositions[8];
 
 	// 2582
 	//  determines if you see Oxide Intro,
 	//  or Demo Mode, from main menu inactivity
-	unsigned short boolSeenOxideIntro;
+	u16 boolSeenOxideIntro;
 
 // 2584 (end of UsaRetail)
 

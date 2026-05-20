@@ -1,6 +1,6 @@
 #include <common.h>
 
-u_int DECOMP_CAM_FollowDriver_TrackPath(struct CameraDC *cDC, short *pos, int speed, int update)
+u32 DECOMP_CAM_FollowDriver_TrackPath(struct CameraDC *cDC, s16 *pos, int speed, int update)
 {
 	struct CheckpointNode *node = (struct CheckpointNode *)cDC->unk88;
 	if (node == NULL)

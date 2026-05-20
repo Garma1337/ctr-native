@@ -4,7 +4,7 @@
 // param_2 - deltaBPM
 // param_3 - 8008d068 for AdvHub
 // param_4 - songSetActiveBits
-void DECOMP_Music_Adjust(u_int songID, int newTempo, struct SongSet *set, u_int songSetActiveBits)
+void DECOMP_Music_Adjust(u32 songID, int newTempo, struct SongSet *set, u32 songSetActiveBits)
 {
 	songID &= 0xffff;
 

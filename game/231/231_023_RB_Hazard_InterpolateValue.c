@@ -1,13 +1,13 @@
 #include <common.h>
 
-int DECOMP_RB_Hazard_InterpolateValue(short currRot, short desiredRot, short rotSpeed)
+int DECOMP_RB_Hazard_InterpolateValue(s16 currRot, s16 desiredRot, s16 rotSpeed)
 {
 	if (currRot == desiredRot)
 		return currRot;
 
 	int delta = (rotSpeed * sdata->gGT->elapsedTimeMS) >> 5;
 
-	// adjust for range of "short" [0-0xffff]
+	// adjust for range of "s16" [0-0xffff]
 	// compared to range of degrees [0-0xfff]
 	int diff = ((desiredRot - currRot) & 0xfff);
 	if (diff > 0x7ff)

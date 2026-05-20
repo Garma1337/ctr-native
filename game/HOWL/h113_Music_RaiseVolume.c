@@ -3,7 +3,7 @@
 // after "FINAL LAP!" is done
 void DECOMP_Music_RaiseVolume(void)
 {
-	u_int setVolume;
+	u32 setVolume;
 
 	if (sdata->cseqBoolPlay != 0)
 	{

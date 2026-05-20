@@ -2,7 +2,7 @@
 
 void DECOMP_RECTMENU_DrawFullRect(struct RectMenu *menu, RECT *inner)
 {
-	u_int *rgb;
+	u32 *rgb;
 	RECT outer;
 	struct GameTracker *gGT = sdata->gGT;
 

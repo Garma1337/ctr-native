@@ -3,28 +3,28 @@
 void DECOMP_MM_Battle_MenuProc(struct RectMenu *unused)
 {
 	char numPlyr;
-	u_short uVar4;
-	short sVar6;
+	u16 uVar4;
+	s16 sVar6;
 	int i, j;
 	int iVar8;
 	int iVar9;
-	u_int uVar10;
-	u_int color;
-	u_int uVar12;
+	u32 uVar10;
+	u32 color;
+	u32 uVar12;
 	int iVar13;
 	int iVar16;
-	u_int uVar17;
-	short *puVar18;
-	short sVar20;
+	u32 uVar17;
+	s16 *puVar18;
+	s16 sVar20;
 	RECT local_60;
-	u_short local_60b[4];
+	u16 local_60b[4];
 	RECT local_58;
-	short local_58b[4];
+	s16 local_58b[4];
 	RECT local_50;
 	RECT local_48;
 	RECT local_40;
-	short local_38;
-	short local_36;
+	s16 local_38;
+	s16 local_36;
 	Color color_;
 
 	struct RectMenu *box;
@@ -42,7 +42,7 @@ void DECOMP_MM_Battle_MenuProc(struct RectMenu *unused)
 	sVar6 = D230.battle_transitionFrames;
 	if (D230.battle_transitionState != 1)
 	{
-		if ((short)D230.battle_transitionState < 2)
+		if ((s16)D230.battle_transitionState < 2)
 		{
 			// if transitioning in
 			if (D230.battle_transitionState == 0)
@@ -108,7 +108,7 @@ void DECOMP_MM_Battle_MenuProc(struct RectMenu *unused)
 	for (i = 0; i < numPlyr; i++)
 	{
 		// get the team of each player
-		uVar12 = (short)(1 << gGT->battleSetup.teamOfEachPlayer[i]);
+		uVar12 = (s16)(1 << gGT->battleSetup.teamOfEachPlayer[i]);
 
 		// If we have not accounted for this team existing
 		if ((gGT->battleSetup.teamFlags & uVar12) == 0)
@@ -204,7 +204,7 @@ void DECOMP_MM_Battle_MenuProc(struct RectMenu *unused)
 	    ((sdata->buttonTapPerPlayer[0] & 0x4007f) != 0))
 	{
 		// if you are not in any drop-down menu
-		if ((short)sdata->battleSetupExpandMenu < 0)
+		if ((s16)sdata->battleSetupExpandMenu < 0)
 		{
 			int buttonTapP1 = sdata->buttonTapPerPlayer[0];
 
@@ -261,7 +261,7 @@ void DECOMP_MM_Battle_MenuProc(struct RectMenu *unused)
 									// Enable or disable a weapon when you click it
 									gGT->battleSetup.enabledWeapons ^=
 									    D230.battleWeaponsEnabled[((int)sdata->battleSetupWeaponHighlighted +
-									                               ((int)(((u_int)sdata->battleSetupRowHighlighted - 3) * 0x10000) >> 0x10) * 6) *
+									                               ((int)(((u32)sdata->battleSetupRowHighlighted - 3) * 0x10000) >> 0x10) * 6) *
 									                              2];
 									break;
 
@@ -360,7 +360,7 @@ void DECOMP_MM_Battle_MenuProc(struct RectMenu *unused)
 						else
 						{
 							// if row 3 or 4 (weapons)
-							if ((unsigned int)sdata->battleSetupRowHighlighted - 3 < 2)
+							if ((u32)sdata->battleSetupRowHighlighted - 3 < 2)
 							{
 								// change which weapon is highlighted
 								sdata->battleSetupWeaponHighlighted++;
@@ -380,7 +380,7 @@ void DECOMP_MM_Battle_MenuProc(struct RectMenu *unused)
 					else
 					{
 						// if row 3 or 4 (weapons)
-						if ((unsigned int)sdata->battleSetupRowHighlighted - 3 < 2)
+						if ((u32)sdata->battleSetupRowHighlighted - 3 < 2)
 						{
 							// change which weapon is highlighted
 							sdata->battleSetupWeaponHighlighted--;
@@ -440,16 +440,16 @@ void DECOMP_MM_Battle_MenuProc(struct RectMenu *unused)
 
 			// If you are a row less than 5,
 			// any row except the bottom
-			if ((unsigned int)sdata->battleSetupRowHighlighted - 3 < 2)
+			if ((u32)sdata->battleSetupRowHighlighted - 3 < 2)
 			{
-				i = (u_int)sdata->battleSetupRowHighlighted - 2;
+				i = (u32)sdata->battleSetupRowHighlighted - 2;
 				if (sdata->battleSetupWeaponHighlighted < 0)
 				{
 					sdata->battleSetupWeaponHighlighted = 0;
 				}
 				if (6 - (i) < (int)sdata->battleSetupWeaponHighlighted)
 				{
-					sdata->battleSetupWeaponHighlighted = 6 - (short)i;
+					sdata->battleSetupWeaponHighlighted = 6 - (s16)i;
 				}
 			}
 
@@ -476,7 +476,7 @@ void DECOMP_MM_Battle_MenuProc(struct RectMenu *unused)
 				}
 				else
 				{
-					if ((short)D230.menuBattleType.rowSelected < 2)
+					if ((s16)D230.menuBattleType.rowSelected < 2)
 					{
 						if (D230.menuBattleType.rowSelected == 0)
 						{
@@ -648,7 +648,7 @@ LAB_800b25f0:
 	for (j = 0; j < 4; j++)
 	{
 		iVar16 = i;
-		iVar13 = (int)(short)j;
+		iVar13 = (int)(s16)j;
 		local_58b[iVar13] = 0;
 		local_60b[iVar13] = 4;
 
@@ -696,7 +696,7 @@ LAB_800b25f0:
 		{
 			if (gGT->battleSetup.teamOfEachPlayer[iVar16] == i)
 			{
-				sVar6 = (short)iVar13;
+				sVar6 = (s16)iVar13;
 				iVar13 = iVar13 + 0x2a;
 
 				DECOMP_MM_Battle_DrawIcon_Character(gGT->ptrIcons[data.MetaDataCharacters[data.characterIDs[iVar16]].iconID],
@@ -707,9 +707,9 @@ LAB_800b25f0:
 		}
 
 		local_48.h = 0x1a;
-		local_48.x = tmbattle[4].currX + (short)iVar8 + 0;
+		local_48.x = tmbattle[4].currX + (s16)iVar8 + 0;
 		local_48.y = tmbattle[4].currY + sVar20 + 5;
-		iVar8 = iVar8 + (u_int)uVar4;
+		iVar8 = iVar8 + (u32)uVar4;
 
 		local_48.w = uVar4;
 
@@ -821,24 +821,24 @@ LAB_800b25f0:
 	// Loop through all 11 weapon icons
 	for (i = 0; i < 11; i++)
 	{
-		iVar8 = (int)(short)i;
+		iVar8 = (int)(s16)i;
 		j = (iVar8 / 6);
 
-		color = (u_int)&D230.color1;
+		color = (u32)&D230.color1;
 		uVar17 = 4;
 
 		// Check if this weapon is not enabled
 		if ((gGT->battleSetup.enabledWeapons & D230.battleWeaponsEnabled[iVar8 * 2]) == 0)
 		{
-			color = (u_int)&D230.color2;
+			color = (u32)&D230.color2;
 			uVar17 = 0x15;
 		}
 
 		// iVar4 % 6
 		// Go to 2nd row after 6th icon
-		iVar13 = (u_int)local_40.x + 6 + (iVar8 % 6) * 0x34 + j * 0x1a;
+		iVar13 = (u32)local_40.x + 6 + (iVar8 % 6) * 0x34 + j * 0x1a;
 
-		j = (u_int)local_40.y + 2 + j * 0x20;
+		j = (u32)local_40.y + 2 + j * 0x20;
 
 		// If the icon is bowling bomb or missile on the 2nd row
 		if ((i - 7U & 0xffff) < 2)
@@ -848,10 +848,10 @@ LAB_800b25f0:
 		}
 
 		DECOMP_MM_Battle_DrawIcon_Weapon(gGT->ptrIcons[D230.battleWeaponsEnabled[iVar8 * 2 + 1]], iVar13, j, &gGT->backBuffer->primMem,
-		                                 (u_int *)gGT->pushBuffer_UI.ptrOT, 1, 0x1000, 1, (u_int *)color);
+		                                 (u32 *)gGT->pushBuffer_UI.ptrOT, 1, 0x1000, 1, (u32 *)color);
 	}
 
-	if ((unsigned int)sdata->battleSetupRowHighlighted - 3 < 2)
+	if ((u32)sdata->battleSetupRowHighlighted - 3 < 2)
 	{
 		sVar6 = local_40.x + sdata->battleSetupWeaponHighlighted * 0x34;
 		local_60.x = sVar6 + 4;

@@ -5,12 +5,12 @@ typedef void (*VehicleFuncPtr)(struct Thread *thread, struct Driver *driver);
 void DECOMP_MainFrame_GameLogic(struct GameTracker *gGT, struct GamepadSystem *gGamepads)
 {
 	char bVar1;
-	short sVar2;
-	u_int uVar3;
+	s16 sVar2;
+	u32 uVar3;
 	int iVar4;
 	VehicleFuncPtr pcVar5;
-	u_int uVar5;
-	u_int uVar6;
+	u32 uVar5;
+	u32 uVar6;
 	int *piVar7;
 	struct Driver *psVar8;
 	struct Driver *psVar9;
@@ -38,7 +38,7 @@ void DECOMP_MainFrame_GameLogic(struct GameTracker *gGT, struct GamepadSystem *g
 			{
 				if (psVar9->clockReceive == 0)
 				{
-					uVar3 = (u_int)psVar9->clockSend;
+					uVar3 = (u32)psVar9->clockSend;
 					if (uVar3 == 0)
 					{
 						if ((gGT->clockEffectEnabled & 1) == 0)
@@ -52,7 +52,7 @@ void DECOMP_MainFrame_GameLogic(struct GameTracker *gGT, struct GamepadSystem *g
 					{
 						psVar9->clockReceive = 0;
 					}
-					uVar3 = (u_int)psVar9->clockReceive;
+					uVar3 = (u32)psVar9->clockReceive;
 				}
 
 #ifndef REBUILD_PS1
@@ -156,16 +156,15 @@ void DECOMP_MainFrame_GameLogic(struct GameTracker *gGT, struct GamepadSystem *g
 					psVar9 = psVar9;
 				}
 				psVar10 = psVar8;
-				if ((u_char)psVar9->numTimesAttacking < (u_char)psVar8->numTimesAttacking)
+				if ((u8)psVar9->numTimesAttacking < (u8)psVar8->numTimesAttacking)
 					goto LAB_80035098;
 			}
 		}
 #endif
 
-		if (((psVar8 != 0) && (psVar9 != 0)) &&
-		    (iVar4 = (u_int)(u_char)psVar9->numTimesAttacking - (u_int)(u_char)psVar8->numTimesAttacking, psVar8->quip2 < iVar4))
+		if (((psVar8 != 0) && (psVar9 != 0)) && (iVar4 = (u32)(u8)psVar9->numTimesAttacking - (u32)(u8)psVar8->numTimesAttacking, psVar8->quip2 < iVar4))
 		{
-			psVar8->quip2 = (short)iVar4;
+			psVar8->quip2 = (s16)iVar4;
 		}
 
 		for (iVar4 = 0; iVar4 < NUM_BUCKETS; iVar4++)
@@ -218,7 +217,7 @@ void DECOMP_MainFrame_GameLogic(struct GameTracker *gGT, struct GamepadSystem *g
 		BOTS_UpdateGlobals();
 #endif
 		DECOMP_GhostTape_WriteMoves(0);
-		gGT->unk1cc4[4] = (u_int)(gGT->unk1cc4[4] * 10000) / 0x147e;
+		gGT->unk1cc4[4] = (u32)(gGT->unk1cc4[4] * 10000) / 0x147e;
 
 #ifndef REBUILD_PS1
 
@@ -306,9 +305,9 @@ void DECOMP_MainFrame_GameLogic(struct GameTracker *gGT, struct GamepadSystem *g
 								if ((((uVar5 != 0) &&
 								      ((
 #ifndef REBUILD_PS1
-								          uVar3 = MainFrame_HaveAllPads((u_short)(u_char)gGT->numPlyrNextGame), (uVar3 & 0xffff) == 0 &&
+								          uVar3 = MainFrame_HaveAllPads((u16)(u8)gGT->numPlyrNextGame), (uVar3 & 0xffff) == 0 &&
 #endif
-								                                                                                    ((gGT->gameMode1 & PAUSE_ALL) == 0)))) ||
+								                                                                            ((gGT->gameMode1 & PAUSE_ALL) == 0)))) ||
 								     ((gGamepads->gamepad[iVar4].buttonsTapped & BTN_START) != 0)) &&
 								    (gGT->overlayIndex_Threads != -1))
 								{

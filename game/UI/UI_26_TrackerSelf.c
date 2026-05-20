@@ -2,16 +2,16 @@
 
 void DECOMP_UI_TrackerSelf(struct Driver *d)
 {
-	short y;
-	short x;
-	short timer;
-	short sVar4;
-	short sVar5;
-	short sVar6;
-	short *ptrAnim;
-	u_short driverid;
-	short screenPosXY[2];
-	u_int rgb0, rgb1, rgb2;
+	s16 y;
+	s16 x;
+	s16 timer;
+	s16 sVar4;
+	s16 sVar5;
+	s16 sVar6;
+	s16 *ptrAnim;
+	u16 driverid;
+	s16 screenPosXY[2];
+	u32 rgb0, rgb1, rgb2;
 	int warpballDist;
 	int missileDist;
 	int beep_rate;
@@ -19,11 +19,11 @@ void DECOMP_UI_TrackerSelf(struct Driver *d)
 	POLY_G3 *p;
 	SVECTOR pos;
 	struct PrimMem *primMem;
-	short orientation;
-	u_int bgColor;
-	short sVar18;
+	s16 orientation;
+	u32 bgColor;
+	s16 sVar18;
 	int screenPosX;
-	short screenPosY;
+	s16 screenPosY;
 	struct GameTracker *gGT = sdata->gGT;
 
 	// get index of driver in driver array
@@ -39,7 +39,7 @@ void DECOMP_UI_TrackerSelf(struct Driver *d)
 	    (d->thTrackingMe == 0))
 	{
 		// clear type of object tracking the player
-		data.trackerType[driverid] = (short)(int)NULL;
+		data.trackerType[driverid] = (s16)(int)NULL;
 		return;
 	}
 
@@ -115,9 +115,9 @@ LAB_8004fe8c:
 	gte_SetRotMatrix(m);
 	gte_SetTransMatrix(m);
 
-	pos.vx = (short)d->instSelf->matrix.t[0];
-	pos.vy = (short)d->instSelf->matrix.t[1];
-	pos.vz = (short)d->instSelf->matrix.t[2];
+	pos.vx = (s16)d->instSelf->matrix.t[0];
+	pos.vy = (s16)d->instSelf->matrix.t[1];
+	pos.vz = (s16)d->instSelf->matrix.t[2];
 
 	gte_ldv0(&pos);
 	gte_rtps();
@@ -144,7 +144,7 @@ LAB_8004fe8c:
 #endif
 
 		missileDist = missileDist / 0x32;
-		sVar18 = (short)missileDist;
+		sVar18 = (s16)missileDist;
 		data.trackerDist[driverid] = sVar18;
 
 		beep_rate = 5;
@@ -198,8 +198,8 @@ LAB_8004fe8c:
 	}
 
 	// driver screenspace x and y
-	screenPosX = (short)screenPosXY[0];
-	screenPosY = (short)screenPosXY[1];
+	screenPosX = (s16)screenPosXY[0];
+	screenPosY = (s16)screenPosXY[1];
 
 	// check distance
 	if (warpballDist < 16000)
@@ -207,7 +207,7 @@ LAB_8004fe8c:
 		primMem = &gGT->backBuffer->primMem;
 
 		// if curr < near-end
-		if (((unsigned int)primMem->curr + 4) > (unsigned int)primMem->endMin100)
+		if (((u32)primMem->curr + 4) > (u32)primMem->endMin100)
 			return;
 
 		// increment curr
@@ -215,7 +215,7 @@ LAB_8004fe8c:
 		primMem->curr = p + 4;
 
 		sVar6 = sVar18 + (x >> 8);
-		sVar5 = (short)((y * 7) >> 12);
+		sVar5 = (s16)((y * 7) >> 12);
 
 		for (char i = 0; i < 2; i++)
 		{
@@ -262,7 +262,7 @@ LAB_8004fe8c:
 			ot = gGT->pushBuffer[driverid].ptrOT;
 
 			*(int *)p = *ot | 0x6000000;
-			*ot = (u_int)p & 0xffffff;
+			*ot = (u32)p & 0xffffff;
 
 			// next Prim
 			POLY_G3 *pLast = p;
@@ -299,7 +299,7 @@ LAB_8004fe8c:
 			p->y2 = screenPosY + sVar5 - 12;
 
 			*(int *)p = *ot | 0x6000000;
-			*ot = (u_int)p & 0xffffff;
+			*ot = (u32)p & 0xffffff;
 
 			p++;
 		}

@@ -3,8 +3,8 @@
 void DECOMP_AH_Garage_LInB(struct Instance *inst)
 {
 	char bossIsOpen, i;
-	short *check;
-	u_int bitIndex;
+	s16 *check;
+	u32 bitIndex;
 	int levelID;
 	int ratio;
 	struct AdvProgress *adv;

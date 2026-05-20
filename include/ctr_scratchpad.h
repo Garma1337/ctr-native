@@ -10,7 +10,7 @@
 // maps an OS page at the same virtual address so raw retail addresses and
 // helper-based accesses share storage. The retail scratchpad is 1 KiB; native
 // maps one 4 KiB page because that is the usual minimum virtual-memory unit.
-#define CTR_SCRATCHPAD_BASE                 ((unsigned char *)CTR_SCRATCHPAD_ADDR)
+#define CTR_SCRATCHPAD_BASE                 ((u8 *)CTR_SCRATCHPAD_ADDR)
 #define CTR_SCRATCHPAD_PTR(type, offset)    ((type *)(void *)(CTR_SCRATCHPAD_BASE + (offset)))
 #define CTR_SCRATCHPAD_ADDR_PTR(type, addr) ((type *)(void *)(addr))
 

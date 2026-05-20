@@ -2,8 +2,8 @@
 
 void DECOMP_BOTS_LevInstColl(struct Thread *param_1)
 {
-	short currPos[6];
-	short prevPos[3];
+	s16 currPos[6];
+	s16 prevPos[3];
 	struct Driver *d = (struct Driver *)param_1->object;
 	struct ScratchpadStruct *sps = (struct ScratchpadStruct *)0x1f800108;
 
@@ -16,14 +16,14 @@ void DECOMP_BOTS_LevInstColl(struct Thread *param_1)
 	sps->Input1.hitRadius = 0x19; // this might be the wrong name for this location, idk.
 
 	// grab driver stuff
-	currPos[0] = (short)(d->posCurr.x >> 8);
-	currPos[1] = ((short)(d->posCurr.y >> 8)) + 0x19;
-	currPos[2] = (short)(d->posCurr.z >> 8);
-	prevPos[0] = (short)(d->posPrev.x >> 8);
-	prevPos[1] = ((short)(d->posPrev.y >> 8)) + 0x19;
-	prevPos[2] = (short)(d->posPrev.z >> 8);
+	currPos[0] = (s16)(d->posCurr.x >> 8);
+	currPos[1] = ((s16)(d->posCurr.y >> 8)) + 0x19;
+	currPos[2] = (s16)(d->posCurr.z >> 8);
+	prevPos[0] = (s16)(d->posPrev.x >> 8);
+	prevPos[1] = ((s16)(d->posPrev.y >> 8)) + 0x19;
+	prevPos[2] = (s16)(d->posPrev.z >> 8);
 
-	COLL_FIXED_BotsSearch(currPos, prevPos, (short *)sps);
+	COLL_FIXED_BotsSearch(currPos, prevPos, (s16 *)sps);
 
 	if (sps->boolDidTouchHitbox)
 	{

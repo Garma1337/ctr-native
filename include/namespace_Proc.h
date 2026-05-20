@@ -87,7 +87,7 @@ struct Thread
 	// & 0xXXX0000 = size of object allocated
 
 	// 0x1c
-	u_int flags;
+	u32 flags;
 
 	// 0x20
 	int timesDestroyed;
@@ -118,19 +118,19 @@ struct Thread
 	int driver_unk1;
 
 	// 0x3c
-	short driver_unk2;
-	short driver_unk3E;
+	s16 driver_unk2;
+	s16 driver_unk3E;
 
 	// 0x40
-	short driver_unk3;
+	s16 driver_unk3;
 
 	// 0x42
 	// only for driver collisions
-	short driver_HitRadius;
+	s16 driver_HitRadius;
 
 	// 0x44
-	short modelIndex;
-	short padding;
+	s16 modelIndex;
+	s16 padding;
 
 	// this struct is 0x48 bytes large
 };
@@ -139,7 +139,7 @@ struct Thread
 struct BucketSearchParams
 {
 	// 0x0
-	short pos[4];
+	s16 pos[4];
 
 	// 0x8
 	struct Thread *th;
@@ -148,10 +148,10 @@ struct BucketSearchParams
 	int radius; // actually probably (radius or diameter) squared
 
 	// 0x10
-	short distX;
-	short distY;
-	short distZ;
-	short padding;
+	s16 distX;
+	s16 distY;
+	s16 distZ;
+	s16 padding;
 };
 
 // These are used to recursively

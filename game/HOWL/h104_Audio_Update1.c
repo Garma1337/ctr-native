@@ -3,10 +3,10 @@
 void DECOMP_Audio_Update1(void)
 {
 	char i;
-	short uVar1;
-	u_int uVar2;
+	s16 uVar1;
+	u32 uVar2;
 	struct Driver *d = 0;
-	u_int maskTempo;
+	u32 maskTempo;
 	int iVar7;
 	struct GameTracker *gGT = sdata->gGT;
 

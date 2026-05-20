@@ -12,8 +12,8 @@ char memcardBytes[0x1680];
 struct sData sdata_static = {.langBufferSize = 0x3F04,
 
 #if NO_BSS
-                             .arcade_difficultyParams = (short *)0x8008da48,
-                             .cup_difficultyParams = (short *)0x8008da64,
+                             .arcade_difficultyParams = (s16 *)0x8008da48,
+                             .cup_difficultyParams = (s16 *)0x8008da64,
 #else
                              .arcade_difficultyParams = &sdata_static.arcadeDiff[0],
                              .cup_difficultyParams = &sdata_static.cupDiff[0],

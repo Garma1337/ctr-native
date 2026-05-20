@@ -9,24 +9,24 @@ void DECOMP_VehPhysGeneral_PhysAngular(struct Thread *thread, struct Driver *dri
 	int elapsedTimeMS;
 	int classSpeed_original;
 	int driverSpeed;
-	u_int destinedRot;
+	u32 destinedRot;
 	int classSpeed_halved;
 	struct Terrain *terrain;
 	int rotCurrW_original;
 	int iVar1;
-	u_short angle;
+	u16 angle;
 	int turnResistMinBitshift;
 	int turnResistMaxBitshift;
 	int driftAngleCurr_Final;
 	int turnResistMax;
 	int turnResistMin;
-	u_int actionsFlagSet;
+	u32 actionsFlagSet;
 	char char_interpLessThanOG;
 	char char_wInterpLessThan0;
-	short forwardDir;
+	s16 forwardDir;
 	int rotCurrW_interp;
 	char simpTurnState;
-	short driftAngleCurr_og;
+	s16 driftAngleCurr_og;
 
 	void PhysLerpRot(struct Driver * driver, int iVar13);
 	PhysLerpRot(driver, 0);
@@ -77,7 +77,7 @@ void DECOMP_VehPhysGeneral_PhysAngular(struct Thread *thread, struct Driver *dri
 
 		rotCurrW_interp = DECOMP_VehCalc_InterpBySpeed(rotCurrW_original, rate, 0);
 
-		forwardDir = (short)rotCurrW_interp;
+		forwardDir = (s16)rotCurrW_interp;
 	}
 	else
 	{
@@ -105,7 +105,7 @@ void DECOMP_VehPhysGeneral_PhysAngular(struct Thread *thread, struct Driver *dri
 			char_interpLessThanOG = rotCurrW_original < rotCurrW_interp;
 			goto LAB_8005fee4;
 		}
-		forwardDir = (short)rotCurrW_original;
+		forwardDir = (s16)rotCurrW_original;
 		if (char_wInterpLessThan0)
 		{
 			forwardDir = -forwardDir;
@@ -125,13 +125,13 @@ void DECOMP_VehPhysGeneral_PhysAngular(struct Thread *thread, struct Driver *dri
 		{
 			classSpeed_halved = 0;
 		}
-		driver->timeUntilDriftSpinout = (short)classSpeed_halved;
+		driver->timeUntilDriftSpinout = (s16)classSpeed_halved;
 	}
 
-	classSpeed_halved = (u_int)(u_short)driver->const_Speed_ClassStat << 0x10;
+	classSpeed_halved = (u32)(u16)driver->const_Speed_ClassStat << 0x10;
 	classSpeed_original = classSpeed_halved >> 0x10;
-	turnResistMax = (u_int)(u_char)driver->const_turnResistMax * classSpeed_original;
-	turnResistMin = (u_int)(u_char)driver->const_turnResistMin * classSpeed_original;
+	turnResistMax = (u32)(u8)driver->const_turnResistMax * classSpeed_original;
+	turnResistMin = (u32)(u8)driver->const_turnResistMin * classSpeed_original;
 	forwardDir = driver->unk_LerpToForwards;
 	rotCurrW_interp = (int)driver->const_modelRotVelMax;
 	turnResistMaxBitshift = turnResistMax >> 8;
@@ -170,7 +170,7 @@ void DECOMP_VehPhysGeneral_PhysAngular(struct Thread *thread, struct Driver *dri
 	}
 
 	// this prevents you from steering sharp at low speeds
-	turnResistMin = ((u_int)(u_char)driver->const_TurnRate + ((int)driver->turnConst << 1) / 5) * 0x100;
+	turnResistMin = ((u32)(u8)driver->const_TurnRate + ((int)driver->turnConst << 1) / 5) * 0x100;
 	turnResistMax = DECOMP_VehCalc_MapToRange(driverSpeed, turnResistMinBitshift, turnResistMaxBitshift, turnResistMin, 0);
 
 	classSpeed_halved = 0;
@@ -203,14 +203,14 @@ void DECOMP_VehPhysGeneral_PhysAngular(struct Thread *thread, struct Driver *dri
 	// when the drifting ends. "LerpToForwards"
 	driver->unk_LerpToForwards = DECOMP_VehPhysGeneral_LerpToForwards(driver, (int)driftAngleCurr_og, (int)forwardDir, classSpeed_halved);
 
-	classSpeed_halved = (int)(short)driver->unk_LerpToForwards;
+	classSpeed_halved = (int)(s16)driver->unk_LerpToForwards;
 
 	if (terrain->unk_0x20[1] != 0x100)
 	{
 		classSpeed_halved = terrain->unk_0x20[1] * classSpeed_halved >> 8;
 	}
 	driftAngleCurr_Final = (int)driftAngleCurr_og + ((classSpeed_halved * elapsedTimeMS) >> 5);
-	driver->turnAngleCurr = (short)driftAngleCurr_Final;
+	driver->turnAngleCurr = (s16)driftAngleCurr_Final;
 	turnResistMinBitshift = rotCurrW_original;
 	if ((0x2ff < speedApprox) && ((actionsFlagSet & 1) != 0))
 	{
@@ -320,17 +320,17 @@ LAB_80060284:
 			rotCurrW_interp = -rotCurrW_original;
 		}
 		rotCurrW_interp = DECOMP_VehCalc_InterpBySpeed(turnResistMax, rotCurrW_interp, 0);
-		forwardDir = (short)rotCurrW_interp;
+		forwardDir = (s16)rotCurrW_interp;
 	}
 	else
 	{
 		turnResistMaxBitshift = turnResistMaxBitshift + -1;
-		forwardDir = driver->unk3D4[0] + (short)rotCurrW_original;
+		forwardDir = driver->unk3D4[0] + (s16)rotCurrW_original;
 	}
 	angle = driver->angle;
-	driver->unk3D4[2] = (short)turnResistMaxBitshift;
+	driver->unk3D4[2] = (s16)turnResistMaxBitshift;
 	driver->unk3D4[0] = forwardDir;
-	driver->unk3D4[1] = (short)rotCurrW_original;
+	driver->unk3D4[1] = (s16)rotCurrW_original;
 	rotCurrW_interp = DECOMP_VehCalc_MapToRange(speedApprox, 0, 0x600, classSpeed_halved, 0);
 	rotCurrW_original = (rotCurrW_interp * elapsedTimeMS) >> 5;
 	rotCurrW_interp = rotCurrW_original;
@@ -340,15 +340,15 @@ LAB_80060284:
 	}
 	if (1 < rotCurrW_interp)
 	{
-		angle = angle - (short)rotCurrW_original & 0xfff;
+		angle = angle - (s16)rotCurrW_original & 0xfff;
 	}
-	driver->ampTurnState = (short)turnResistMinBitshift;
+	driver->ampTurnState = (s16)turnResistMinBitshift;
 
-	angle += (short)((turnResistMinBitshift * elapsedTimeMS) >> 0xd);
+	angle += (s16)((turnResistMinBitshift * elapsedTimeMS) >> 0xd);
 	angle &= 0xfff;
 	driver->angle = angle;
 
-	(driver->rotCurr).y = angle + (short)driftAngleCurr_Final + forwardDir;
+	(driver->rotCurr).y = angle + (s16)driftAngleCurr_Final + forwardDir;
 
 	if (((actionsFlagSet & 8) == 0) && (driver->mashXUnknown < 7))
 	{
@@ -362,7 +362,7 @@ LAB_80060284:
 		turnResistMinBitshift = (turnResistMinBitshift * 10) >> 8;
 	}
 
-	driver->axisRotationX += (short)((turnResistMinBitshift * elapsedTimeMS) >> 0xd);
+	driver->axisRotationX += (s16)((turnResistMinBitshift * elapsedTimeMS) >> 0xd);
 	driver->axisRotationX &= 0xfff;
 
 	// Located in Drifting_FuncPtrs.c

@@ -2,7 +2,7 @@
 
 void DECOMP_RB_Burst_CollLevInst(struct ScratchpadStruct *sps, struct BSP *bspHitbox)
 {
-	short model;
+	s16 model;
 	struct Instance *inst;
 	struct InstDef *instdef;
 	struct MetaDataMODEL *meta;

@@ -7,9 +7,9 @@ void DECOMP_GAMEPAD_ProcessHold(struct GamepadSystem *gGamepads)
 {
 	char j;
 	char *btnMapPtr;
-	u_int *puVar2;
-	unsigned short uVar4;
-	u_int uVar5;
+	u32 *puVar2;
+	u16 uVar4;
+	u32 uVar5;
 
 	struct GamepadBuffer *pad;
 	struct ControllerPacket *ptrControllerPacket;

@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_SongPool_ChangeTempo(struct Song *song, short deltaBPM)
+void DECOMP_SongPool_ChangeTempo(struct Song *song, s16 deltaBPM)
 {
 	struct CseqSongHeader *csh = (struct CseqSongHeader *)&sdata->ptrCseqSongData[sdata->ptrCseqSongStartOffset[song->id]];
 

@@ -3,15 +3,15 @@
 // You see this in 1P mode, right before traffic lights count down
 void DECOMP_UI_RaceStart_IntroText1P(void)
 {
-	short windowHeight;
+	s16 windowHeight;
 	struct GameTracker *gGT;
 	int iVar2;
 	int gameMode;
 	int posX;
-	short *txtArray;
+	s16 *txtArray;
 	char *pcVar6;
-	short sVar7;
-	short font;
+	s16 sVar7;
+	s16 font;
 	int textID;
 	int transition;
 	char trackText[12];

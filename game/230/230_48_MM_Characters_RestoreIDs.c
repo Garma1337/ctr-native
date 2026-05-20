@@ -3,11 +3,11 @@
 void DECOMP_MM_Characters_RestoreIDs(void)
 {
 	struct GameTracker *gGT = sdata->gGT;
-	short *currID;
+	s16 *currID;
 	int iVar3;
 	int iVar4;
 	char i;
-	short uVar1;
+	s16 uVar1;
 
 	// erase select bits
 	sdata->characterSelectFlags = 0;

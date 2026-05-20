@@ -118,7 +118,7 @@ void DECOMP_CS_Credits_Init(void)
 
 	for (i = 0; i < creditsBSS.numStrings; i++)
 	{
-		ptrStrings[i] = (char *)((unsigned int)ptrStrings[i] + (unsigned int)creditsDst);
+		ptrStrings[i] = (char *)((u32)ptrStrings[i] + (u32)creditsDst);
 	}
 
 	creditsObj->credits_posY = 340;

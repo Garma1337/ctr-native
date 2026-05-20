@@ -4,8 +4,8 @@ void DECOMP_AH_MaskHint_Update()
 {
 	struct GameTracker *gGT = sdata->gGT;
 	struct Driver *d = gGT->drivers[0];
-	short pos[3];
-	short rot[3];
+	s16 pos[3];
+	s16 rot[3];
 
 	switch (sdata->AkuAkuHintState - 1)
 	{
@@ -48,7 +48,7 @@ void DECOMP_AH_MaskHint_Update()
 
 			// Get pos and rot, then set them as desired
 			CAM_FollowDriver_AngleAxis(cdc, d, 0x1f800108, pos, rot);
-			CAM_SetDesiredPosRot((int)cdc, (u_short *)pos, (u_short *)rot);
+			CAM_SetDesiredPosRot((int)cdc, (u16 *)pos, (u16 *)rot);
 
 #else
 
@@ -186,7 +186,7 @@ void DECOMP_AH_MaskHint_Update()
 	{
 		int lngIndex = 0;
 		int boolFound = 0;
-		short *ptrLngID = &D232.hintMenu_lngIndexArr[0];
+		s16 *ptrLngID = &D232.hintMenu_lngIndexArr[0];
 
 		for (/**/; *ptrLngID > -1; ptrLngID++)
 		{

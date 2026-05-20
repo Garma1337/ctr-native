@@ -2,8 +2,8 @@
 
 void DECOMP_RB_MaskWeapon_FadeAway(struct Thread *t)
 {
-	unsigned short uVar1;
-	short totalTime;
+	u16 uVar1;
+	s16 totalTime;
 	int ratio;
 	MATRIX *m;
 	struct Instance *inst;

@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_Garage_PlayFX(u_int soundId, char charId)
+void DECOMP_Garage_PlayFX(u32 soundId, char charId)
 {
 	if (charId < PINSTRIPE)
 	{

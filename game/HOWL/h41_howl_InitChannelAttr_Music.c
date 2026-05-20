@@ -3,7 +3,7 @@
 void DECOMP_howl_InitChannelAttr_Music(struct SongSeq *seq, struct ChannelAttr *attr, int index, int channelVol)
 {
 	int pitch;
-	unsigned int sampleVol;
+	u32 sampleVol;
 	int songIndex = seq->songPoolIndex;
 
 	sampleVol = (sdata->vol_Music * sdata->songPool[songIndex].vol_Curr * seq->vol_Curr) >> 10;
@@ -21,7 +21,7 @@ void DECOMP_howl_InitChannelAttr_Music(struct SongSeq *seq, struct ChannelAttr *
 		attr->ad = longSample->ad;
 		attr->sr = longSample->sr;
 
-		sampleVol *= (u_int)longSample->volume;
+		sampleVol *= (u32)longSample->volume;
 	}
 
 	// drums
@@ -45,10 +45,10 @@ void DECOMP_howl_InitChannelAttr_Music(struct SongSeq *seq, struct ChannelAttr *
 		attr->ad = 0x80ff;
 		attr->sr = 0x1fc2;
 
-		sampleVol *= (u_int)shortSample->volume;
+		sampleVol *= (u32)shortSample->volume;
 	}
 
-	DECOMP_Channel_SetVolume(attr, (u_int)(sampleVol * channelVol) >> 0xf, seq->LR);
+	DECOMP_Channel_SetVolume(attr, (u32)(sampleVol * channelVol) >> 0xf, seq->LR);
 
 	attr->pitch = pitch;
 	attr->reverb = seq->reverb;

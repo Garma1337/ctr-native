@@ -2,7 +2,7 @@
 
 void DECOMP_RECTMENU_DrawRwdBlueRect(RECT *rect, char *metas, u_long *ot, struct PrimMem *primMem)
 {
-	short pos[4];
+	s16 pos[4];
 	int gradient[2];
 	int colors[4];
 
@@ -18,8 +18,8 @@ void DECOMP_RECTMENU_DrawRwdBlueRect(RECT *rect, char *metas, u_long *ot, struct
 		colors[1] = gradient[0];
 		colors[2] = gradient[1];
 		colors[3] = gradient[1];
-		pos[1] = rect->y + (short)(meta[3] * rect->h / 100);
-		pos[3] = rect->y + (short)(meta[7] * rect->h / 100) - pos[1] + 1;
+		pos[1] = rect->y + (s16)(meta[3] * rect->h / 100);
+		pos[3] = rect->y + (s16)(meta[7] * rect->h / 100) - pos[1] + 1;
 
 		DECOMP_RECTMENU_DrawRwdBlueRect_Subset(pos, colors, ot, primMem);
 	}

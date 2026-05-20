@@ -1,6 +1,6 @@
 #include <common.h>
 
-void *DECOMP_VehAfterColl_GetSurface(u_int scrubId)
+void *DECOMP_VehAfterColl_GetSurface(u32 scrubId)
 {
 	struct Scrub *sc = &data.MetaDataScrub[0];
 

@@ -17,8 +17,8 @@ struct Model *VehBirth_GetModelByName(char *searchName)
 		m = models[i];
 
 		// 12/16 bytes is enough
-		if ((m != NULL) && (*(u_int *)&m->name[0] == *(u_int *)&searchName[0]) && (*(u_int *)&m->name[4] == *(u_int *)&searchName[4]) &&
-		    (*(u_int *)&m->name[8] == *(u_int *)&searchName[8]) && (*(u_int *)&m->name[12] == *(u_int *)&searchName[12]))
+		if ((m != NULL) && (*(u32 *)&m->name[0] == *(u32 *)&searchName[0]) && (*(u32 *)&m->name[4] == *(u32 *)&searchName[4]) &&
+		    (*(u32 *)&m->name[8] == *(u32 *)&searchName[8]) && (*(u32 *)&m->name[12] == *(u32 *)&searchName[12]))
 		{
 			// character found, return pointer
 			return m;
@@ -35,8 +35,8 @@ struct Model *VehBirth_GetModelByName(char *searchName)
 		for (i = 0, m = models[i]; m != NULL; i++, m = models[i])
 		{
 			// 12/16 bytes is enough
-			if ((*(u_int *)&m->name[0] == *(u_int *)&searchName[0]) && (*(u_int *)&m->name[4] == *(u_int *)&searchName[4]) &&
-			    (*(u_int *)&m->name[8] == *(u_int *)&searchName[8]) && (*(u_int *)&m->name[12] == *(u_int *)&searchName[12]))
+			if ((*(u32 *)&m->name[0] == *(u32 *)&searchName[0]) && (*(u32 *)&m->name[4] == *(u32 *)&searchName[4]) &&
+			    (*(u32 *)&m->name[8] == *(u32 *)&searchName[8]) && (*(u32 *)&m->name[12] == *(u32 *)&searchName[12]))
 			{
 				// character found, return pointer
 				return m;

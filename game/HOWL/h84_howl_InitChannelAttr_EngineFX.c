@@ -4,10 +4,10 @@ void DECOMP_howl_InitChannelAttr_EngineFX(struct EngineFX *engineFX, struct Chan
 {
 	DECOMP_Channel_SetVolume(attr, (sdata->vol_FX * engineFX->volume * vol) >> 10, LR);
 
-	short pitch = engineFX->pitch;
+	s16 pitch = engineFX->pitch;
 
 	if (distort != 0x80)
-		pitch = ((unsigned int)pitch * data.distortConst_Engine[distort]) >> 0x10;
+		pitch = ((u32)pitch * data.distortConst_Engine[distort]) >> 0x10;
 
 	attr->pitch = pitch;
 

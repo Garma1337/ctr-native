@@ -5,7 +5,7 @@ void DECOMP_RB_RainCloud_Init(struct Driver *d)
 	struct Instance *cloudInst;
 	struct RainCloud *rcloud;
 	struct RainLocal *rlocal;
-	unsigned short uVar3;
+	u16 uVar3;
 
 	// if driver -> cloudTh is invalid
 	if (d->thCloud == NULL)
@@ -83,7 +83,7 @@ void DECOMP_RB_RainCloud_Init(struct Driver *d)
 		int rng = DECOMP_MixRNG_Scramble();
 
 		// random (related to driver offset 0x50a)
-		rcloud->boolScrollItem = (short)((rng % 400) / 100);
+		rcloud->boolScrollItem = (s16)((rng % 400) / 100);
 	}
 	return;
 }

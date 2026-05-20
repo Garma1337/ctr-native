@@ -1,16 +1,16 @@
 #include <common.h>
 
-void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver *driver)
+void DECOMP_UI_JumpMeter_Draw(s16 posX, s16 posY, struct Driver *driver)
 {
 	struct GameTracker *gGT;
-	u_int colorAndCode;
-	short jumpMeter;
+	u32 colorAndCode;
+	s16 jumpMeter;
 	struct DB *backDB;
 	int iVar5;
 	u_long *primmemCurr;
 	POLY_F4 *p;
 	int iVar8;
-	short sVar9;
+	s16 sVar9;
 	int iVar10;
 	int iVar11;
 	RECT box;
@@ -58,7 +58,7 @@ void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver *driver)
 
 	if (p != 0)
 	{
-		*(u_int *)&p->r0 = 0x28ffffff;
+		*(u32 *)&p->r0 = 0x28ffffff;
 		p->x1 = posX + 13;
 		p->x3 = posX + 13;
 		p->x0 = box.x;
@@ -72,7 +72,7 @@ void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver *driver)
 		primmemCurr = gGT->pushBuffer_UI.ptrOT;
 
 		*(int *)p = *primmemCurr | 0x5000000;
-		*primmemCurr = (u_int)p & 0xffffff;
+		*primmemCurr = (u32)p & 0xffffff;
 
 		box2.y = posY - barHeight;
 		box2.w = 0xc;
@@ -114,7 +114,7 @@ void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver *driver)
 					}
 				}
 			}
-			*(u_int *)&p->r0 = colorAndCode;
+			*(u32 *)&p->r0 = colorAndCode;
 			jumpMeterHeight = (int)sVar9 * barHeight;
 			sVar9 = posX + 0xc;
 			p->x0 = posX;
@@ -123,14 +123,14 @@ void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver *driver)
 			p->y2 = posY;
 			p->x3 = sVar9;
 			p->y3 = posY;
-			jumpMeter = posY - ((short)(jumpMeterHeight / 0x960));
+			jumpMeter = posY - ((s16)(jumpMeterHeight / 0x960));
 			p->y0 = jumpMeter;
 			p->y1 = jumpMeter;
 
 			primmemCurr = gGT->pushBuffer_UI.ptrOT;
 
 			*(int *)p = *primmemCurr | 0x5000000;
-			*primmemCurr = (u_int)p & 0xffffff;
+			*primmemCurr = (u32)p & 0xffffff;
 
 			backDB = gGT->backBuffer;
 			primmemCurr = backDB->primMem.curr;
@@ -146,7 +146,7 @@ void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver *driver)
 
 			if (p != 0)
 			{
-				*(u_int *)&p->r0 = 0x28808080;
+				*(u32 *)&p->r0 = 0x28808080;
 				p->x0 = posX;
 				p->y0 = posY - barHeight;
 				p->x1 = sVar9;
@@ -160,7 +160,7 @@ void DECOMP_UI_JumpMeter_Draw(short posX, short posY, struct Driver *driver)
 				primmemCurr = gGT->pushBuffer_UI.ptrOT;
 
 				*(int *)p = *primmemCurr | 0x5000000;
-				*primmemCurr = (u_int)p & 0xffffff;
+				*primmemCurr = (u32)p & 0xffffff;
 			}
 		}
 	}

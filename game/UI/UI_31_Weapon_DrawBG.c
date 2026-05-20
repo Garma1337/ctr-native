@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_UI_Weapon_DrawBG(short param_1, short param_2, short param_3, struct Driver *d)
+void DECOMP_UI_Weapon_DrawBG(s16 param_1, s16 param_2, s16 param_3, struct Driver *d)
 {
 	int iVar1;
 	int iVar2;

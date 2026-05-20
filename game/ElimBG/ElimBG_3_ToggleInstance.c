@@ -2,7 +2,7 @@
 
 void DECOMP_ElimBG_ToggleInstance(struct Instance *inst, char boolGameIsPaused)
 {
-	u_int flags;
+	u32 flags;
 
 	// if game is being paused
 	if (boolGameIsPaused)

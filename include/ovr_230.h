@@ -15,10 +15,10 @@ struct Title
 	struct Instance *i[6];
 
 	// 0x1c
-	short cameraPosOffset[3];
+	s16 cameraPosOffset[3];
 
 	// 0x22
-	short UnusedPadding;
+	s16 UnusedPadding;
 
 	// 0x24 -- size of struct
 };
@@ -29,7 +29,7 @@ struct MainMenu_LevelRow
 	// 0 - dingo canyon
 	// 3 - crash cove
 	// etc
-	short levID;
+	s16 levID;
 
 // NTSC-J also has this,
 // but changing it now without proper refactor will break pointer compiles
@@ -37,22 +37,22 @@ struct MainMenu_LevelRow
 	// Do not represent AI Difficulty
 	// Number of Wumpas drawn representing levels of difficulty on NTSC-J
 	// Left unused on PAL
-	short difficulty_level;
+	s16 difficulty_level;
 #endif
 
 	// texture that shows before video plays
-	short videoThumbnail;
+	s16 videoThumbnail;
 
 	// which black+white map draws
-	short mapTextureID;
+	s16 mapTextureID;
 
 	// 0xFFFF for unlock by default
 	// otherwise has a flag for what is needed,
 	// 0xFFFE means "only show in 1P mode" (oxide station)
-	short unlock;
+	s16 unlock;
 
 #if BUILD >= EurRetail
-	short unlock_padding;
+	s16 unlock_padding;
 #endif
 
 	// changes which video of level plays
@@ -68,8 +68,8 @@ struct MainMenu_LevelRow
 struct CharacterSelectMeta
 {
 	// 0x0
-	short posX;
-	short posY;
+	s16 posX;
+	s16 posY;
 
 	// 0x4
 	// up, down, left, right
@@ -79,22 +79,22 @@ struct CharacterSelectMeta
 	char indexNext[4];
 
 	// 0x8
-	short characterID;
-	u_short unlockFlags;
+	s16 characterID;
+	u16 unlockFlags;
 
 	// 0xC -- size
 };
 
 struct TransitionMeta
 {
-	short distX;
-	short distY;
+	s16 distX;
+	s16 distY;
 
 	// change when each one starts to move
-	short headStart;
+	s16 headStart;
 
-	short currX;
-	short currY;
+	s16 currX;
+	s16 currY;
 
 	// 0xA -- size
 };
@@ -253,7 +253,7 @@ struct OverlayDATA_230
 
 #if BUILD == EurRetail
 	// 800b4e28
-	short langIndex[6];
+	s16 langIndex[6];
 
 	// 800b4e34
 	struct MenuRow rowsLanguage[7];
@@ -324,13 +324,13 @@ struct OverlayDATA_230
 	// 800b87f4 - JpnRetail
 	struct
 	{
-		short modelID;
+		s16 modelID;
 
 		// related to frame, or sound, idk
-		short frameIndex_startMoving;
-		short unk2;
+		s16 frameIndex_startMoving;
+		s16 unk2;
 
-		u_short boolTrophy;
+		u16 boolTrophy;
 	}
 #if BUILD == JpnRetail
 	titleInstances[7];
@@ -341,8 +341,8 @@ struct OverlayDATA_230
 	// 800B4830 - UsaRetail
 	// 800b500c - EurRetail
 	// 800b882c - JpnRetail
-	short titleCameraPos[4];
-	short titleCameraRot[4];
+	s16 titleCameraPos[4];
+	s16 titleCameraRot[4];
 
 	// 800B4840 - UsaRetail
 	// 800b501c - EurRetail
@@ -362,27 +362,27 @@ struct OverlayDATA_230
 	int title_numTransition;
 
 	// 800B4848
-	short title_mainPosX;
-	short title_mainPosY;
+	s16 title_mainPosX;
+	s16 title_mainPosY;
 
 	// 800B484c
-	short title_advPosX;
-	short title_advPosY;
+	s16 title_advPosX;
+	s16 title_advPosY;
 
 	// 800B4850
-	short title_racePosX;
-	short title_racePosY;
+	s16 title_racePosX;
+	s16 title_racePosY;
 
 	// 800B4854
-	short title_plyrPosX;
-	short title_plyrPosY;
+	s16 title_plyrPosX;
+	s16 title_plyrPosY;
 
 	// 800B4858
-	short title_diffPosX;
-	short title_diffPosY;
+	s16 title_diffPosX;
+	s16 title_diffPosY;
 
 	// 800B485c
-	short title_camPos[4];
+	s16 title_camPos[4];
 
 	// 800B4864
 	struct TransitionMeta transitionMeta_Menu[8];
@@ -397,8 +397,8 @@ struct OverlayDATA_230
 	// 800b88c8 - JpnRetail
 	struct
 	{
-		short frameToPlay;
-		short soundID;
+		s16 frameToPlay;
+		s16 soundID;
 	}
 #if BUILD != JpnRetail
 	titleSounds[8];
@@ -434,17 +434,17 @@ struct OverlayDATA_230
 	// 800B4D2C - UsaRetail
 	// 800b5508 - EurRetail
 	// 800B8D68 - JpnRetail
-	u_short cupDifficultyUnlockFlags[4];
+	u16 cupDifficultyUnlockFlags[4];
 
 	// 800B4D34 - UsaRetail
 	// 800b5510 - EurRetail
 	// 800B8D70 - JpnRetail
-	short cupDifficultyLngIndex[4];
+	s16 cupDifficultyLngIndex[4];
 
 	// 800B4D3C - UsaRetail
 	// 800B5518 - EurRetail
 	// 800B8D78 - JpnRetail
-	short cupDifficultySpeed[4];
+	s16 cupDifficultySpeed[4];
 
 	// ============= Character Select CONST ================
 
@@ -453,8 +453,8 @@ struct OverlayDATA_230
 	// 800b8d80 - JpnRetail
 	struct
 	{
-		short posX;
-		short posY;
+		s16 posX;
+		s16 posY;
 	} characterSelectWindowPos[0xD];
 
 	// pointer
@@ -464,23 +464,23 @@ struct OverlayDATA_230
 
 	// 800B4D90 - UsaRetail
 	// 800b556c - EurRetail
-	short windowW[6];
+	s16 windowW[6];
 
 	// 800B4D9C - UsaRetail
 	// 800b5578 - EurRetail
-	short windowH[6];
+	s16 windowH[6];
 
 	// 800b4da8 - UsaRetail
 	// 800b5584 - EurRetail
-	short driverPosZ[6];
+	s16 driverPosZ[6];
 
 	// 800b4db4 - UsaRetail
 	// 800b5590 - EurRetail
-	short driverPosY[6];
+	s16 driverPosY[6];
 
 	// 800b4dc0 - UsaRetail
 	// 800b559c - EurRetail
-	short textPosArr[6];
+	s16 textPosArr[6];
 
 	// 800b4dcc - UsaRetail
 	// 800b55a8 - EurRetail
@@ -507,7 +507,7 @@ struct OverlayDATA_230
 	// the character select menu has a different order for playable characters
 	// this array contains the IDs used for each character in the character select menu
 	// each member of the array corresponds to the character order used in the rest of the game, see enum Characters
-	short characterMenuID[0x10];
+	s16 characterMenuID[0x10];
 
 	// 0x15 for transition meta array:
 	// 14 character icons + title text + 4 kart screens + 2 more?
@@ -518,7 +518,7 @@ struct OverlayDATA_230
 	struct TransitionMeta transitionMeta_csm_1P2P[0x15];
 
 	// 0x2 byte padding
-	short padding800b51A6;
+	s16 padding800b51A6;
 
 	// 3P mode
 	// 800b51A8 - UsaRetail
@@ -526,7 +526,7 @@ struct OverlayDATA_230
 	struct TransitionMeta transitionMeta_csm_3P[0x15];
 
 	// 0x2 byte padding
-	short padding800B527A;
+	s16 padding800B527A;
 
 	// 4P mode
 	// 800b527c - UsaRetail
@@ -534,7 +534,7 @@ struct OverlayDATA_230
 	struct TransitionMeta transitionMeta_csm_4P[0x15];
 
 	// 0x2 byte padding
-	short padding800B534E;
+	s16 padding800B534E;
 
 	// 800B5350 - UsaRetail
 	// 800b5b2c - EurRetail
@@ -542,9 +542,9 @@ struct OverlayDATA_230
 
 	// 800B5360 - UsaRetail
 	// 800b5b3c - EurRetail
-	short csm_instPos[4];
-	short csm_instRot[3];
-	short moveModels;
+	s16 csm_instPos[4];
+	s16 csm_instRot[3];
+	s16 moveModels;
 
 	// 800B5370 - UsaRetail
 	// 800b5b4c - EurRetail
@@ -562,20 +562,20 @@ struct OverlayDATA_230
 	char getNextDriver2[4];
 
 	// 800b538c -- UsaRetail
-	u_int characterSelect_Outline; // should be `Color` instead of `u_int`?
+	u32 characterSelect_Outline; // should be `Color` instead of `u32`?
 
 	// 800b5390 - UsaRetail
 	// 800b5b6c - EurRetail
-	u_int characterSelect_NeutralColor; // should be `Color` instead of `u_int`?
+	u32 characterSelect_NeutralColor; // should be `Color` instead of `u32`?
 
 	// 800b5394 - UsaRetail
 	// 800b5b70 - EurRetail
-	u_int characterSelect_ChosenColor; // should be `Color` instead of `u_int`?
+	u32 characterSelect_ChosenColor; // should be `Color` instead of `u32`?
 
 	// 800b5398 - UsaRetail
 	// 800b5b74 - EurRetail
 	char characterSelect_BlueRectColors[0x18];
-	// u_int characterSelect_BlueRectColors[6];
+	// u32 characterSelect_BlueRectColors[6];
 
 	// =========== Track Select CONST ============
 
@@ -594,10 +594,10 @@ struct OverlayDATA_230
 	// 800b95e0 - JpnRetail
 	// Not all of this is actually transitionmeta, needs proper look
 	struct TransitionMeta transitionMeta_trackSel[5];
-	short padding_800B5572;
+	s16 padding_800B5572;
 
 	// 800b5574
-	short lapRowVal[4];
+	s16 lapRowVal[4];
 
 	// 800b557c
 	struct MenuRow rowsLapSel[4];
@@ -609,8 +609,8 @@ struct OverlayDATA_230
 	int videoCol;
 
 	// 800B55C4
-	short timeTrialStarCol[2];
-	short timeTrialFlagGet[2];
+	s16 timeTrialStarCol[2];
+	s16 timeTrialFlagGet[2];
 
 #if BUILD == JpnRetail
 	// 800b966c
@@ -621,9 +621,9 @@ struct OverlayDATA_230
 	// 800b9670 -- JpnRetail
 	struct
 	{
-		short offsetX;
-		short offsetY;
-		short type;
+		s16 offsetX;
+		s16 offsetY;
+		s16 type;
 	} drawMapOffset[6];
 
 	// ============== Cup Select ==================
@@ -636,17 +636,17 @@ struct OverlayDATA_230
 	// 800b562c - UsaRetail
 	// 800b5e6c - EurRetail
 	// 800b96d0 - JpnRetail
-	short cupSel_StarColorIndex[4];
+	s16 cupSel_StarColorIndex[4];
 
 	// 800b5634 - UsaRetail
 	// 800b5e74 - EurRetail
 	// 800b96d8 - JpnRetail
-	u_short cupSel_StarUnlockFlag[4];
+	u16 cupSel_StarUnlockFlag[4];
 
 	// 800b563c - UsaRetail
 	// 800b5e7c - EurRetail
 	// 800b96e0 - JpnRetail
-	u_int cupSel_Color; // of what?
+	u32 cupSel_Color; // of what?
 
 	// ============= Battle CONST ================
 
@@ -656,7 +656,7 @@ struct OverlayDATA_230
 	struct TransitionMeta transitionMeta_battle[0xB];
 
 	// 2 byte padding
-	short padding800b56ae;
+	s16 padding800b56ae;
 
 	// 800b56b0 - UsaRetail
 	// 800b5ef0 - EurRetail
@@ -731,7 +731,7 @@ struct OverlayDATA_230
 	// 800b58a8 - UsaRetail
 	// 800b60e8 - EurRetail
 	// 800b994c - JpnRetail
-	u_int FlagesGameMode1_BattleType[3];
+	u32 FlagesGameMode1_BattleType[3];
 
 	// 800b58b4 - UsaRetail
 	// 800b60f4 - EurRetail
@@ -758,17 +758,17 @@ struct OverlayDATA_230
 	// 800b5948 - UsaRetail
 	// 800b6188 - EurRetail
 	// 800b99ec - JpnRetail
-	short colorIndexArray[2];
+	s16 colorIndexArray[2];
 
 	// 800b594c - UsaRetail
 	// 800b618c - EurRetail
 	// 800b99f0 - JpnRetail
-	u_short highscore_ghostBeatFlags[2];
+	u16 highscore_ghostBeatFlags[2];
 
 	// 800b5950 - UsaRetail
 	// 800b6190 - EurRetail
 	// 800b99f4 - JpnRetail
-	u_int highscore_iconColor;
+	u32 highscore_iconColor;
 
 	// 800b5954 - UsaRetail
 	// 800b6194 - EurRetail
@@ -783,16 +783,16 @@ struct OverlayDATA_230
 	// 800B5998 - UsaRetail
 	// 800b61d8 - EurRetail
 	// 800b9a3c - JpnRetail
-	short highScore_trackDesired;
-	short highScore_rowDesired;
-	short highScore_trackCurr;
-	short highScore_rowCurr;
+	s16 highScore_trackDesired;
+	s16 highScore_rowDesired;
+	s16 highScore_trackCurr;
+	s16 highScore_rowCurr;
 
 #if BUILD == EurRetail
 
 	// 800b61e0 - EurRetail
 	// why not just use the one at 800b4e28?
-	short fileIndexLngBoot[6];
+	s16 fileIndexLngBoot[6];
 
 	// 800b61ec - EurRetail
 	struct MenuRow rowsLngBoot[7];
@@ -822,81 +822,81 @@ struct OverlayDATA_230
 	// 800b59a8 - UsaRetail
 	// 800b624c - EurRetail
 	// 800b9a54 - JpnRetail
-	short trackSel_currTrack;
+	s16 trackSel_currTrack;
 	// 800b59aa - UsaRetail
 	// 800b625e - EurRetail
-	short trackSel_direction;
+	s16 trackSel_direction;
 	// 800b59ac - UsaRetail
 	// 800b6250 - EurRetail
-	short trackSel_boolOpenLapBox;
+	s16 trackSel_boolOpenLapBox;
 	// 800b59ae - UsaRetail
 	// 800b6252 - EurRetail
-	short trackSel_transitionState;
+	s16 trackSel_transitionState;
 	// 800b59b0 - UsaRetail
 	// 800b6254 - EurRetail
-	short trackSel_StartRaceAfterFadeOut;
+	s16 trackSel_StartRaceAfterFadeOut;
 	// 800b59b2 - UsaRetail
 	// 800b6256 - EurRetail
-	short trackSel_transitionFrames;
+	s16 trackSel_transitionFrames;
 	// 800b59b4 - UsaRetail
 	// 800b6258 - EurRetail
-	short trackSel_video_frameCount; // video box transition frames instead?
+	s16 trackSel_video_frameCount; // video box transition frames instead?
 	// 800b59b6 - UsaRetail
 	// 800b625a - EurRetail
-	short trackSel_video_boolAllocated;
+	s16 trackSel_video_boolAllocated;
 
 	// Also used in HighScore menu
 	// 800b59b8 - UsaRetail
 	// 800b625c - EurRetail
-	short trackSel_videoStateCurr;
+	s16 trackSel_videoStateCurr;
 	// 800b59ba - UsaRetail
 	// 800b625e - EurRetail
-	short trackSel_videoStatePrev;
+	s16 trackSel_videoStatePrev;
 
 	// ============== Cup Select DYN ========================
 
 	// 800b59bc - UsaRetail
 	// 800b6260 - EurRetail
-	short cupSel_transitionState;
+	s16 cupSel_transitionState;
 	// 800b59be - UsaRetail
 	// 800b6262 - EurRetail
-	short cupSel_postTransition_boolStart;
+	s16 cupSel_postTransition_boolStart;
 	// 800b59c0 - UsaRetail
 	// 800b6264 - EurRetail
-	short cupSel_transitionFrames;
+	s16 cupSel_transitionFrames;
 
 	// ============== Battle DYN ==========================
 
 	// 800b59c2 - UsaRetail
 	// 800b6266 - EurRetail
-	short battle_transitionState;
+	s16 battle_transitionState;
 	// 800b59c4 - UsaRetail
 	// 800b6268 - EurRetail
-	short battle_postTransition_boolStart;
+	s16 battle_postTransition_boolStart;
 	// 800b59c6 - UsaRetail
 	// 800b626a - EurRetail
-	short battle_transitionFrames;
+	s16 battle_transitionFrames;
 
 	// =============== High Score DYN ===================
 
 	// 800b59c8 - UsaRetail
 	// 800b626c - EurRetail
-	short highScore_transitionState;
+	s16 highScore_transitionState;
 
 	// 800b59ca - UsaRetail
 	// 800b626e - EurRetail
 	// 0) Transition in/out menu
 	// 1) Horizontal (in-menu)
 	// 2) Vertical (in-menu)
-	short highScore_transitionFrames[3];
+	s16 highScore_transitionFrames[3];
 
 	// 800b59d0 - UsaRetail
 	// 800b6274 - EurRetail
 	// X (horizontal) and Y (vertical) Axes
 	// -1 for negative direction and 1 for positive direction
 	// not sure why each need two buffers, perhaps to prevent mid-transition error
-	short highScore_horizontalMove[2];
-	short highScore_verticalMove[2];
+	s16 highScore_horizontalMove[2];
+	s16 highScore_verticalMove[2];
 
 	// =============== Scrapbook ===================
 
@@ -908,8 +908,8 @@ struct OverlayDATA_230
 
 	// 800b59dc - UsaRetail
 	// 800b6280 - EurRetail
-	short characterSelect_sizeY;
-	short unk_aftercharacterselect_sizey;
+	s16 characterSelect_sizeY;
+	s16 unk_aftercharacterselect_sizey;
 
 	// 800b59e0 - UsaRetail
 	// 800b6284 - EurRetail
@@ -919,24 +919,24 @@ struct OverlayDATA_230
 	// 800b59e4 -- UsaRetail
 	// 800b6288 -- EurRetail
 	// 800b9a90 -- JpnRetail
-	short movingToTrackMenu;
-	short unk_aftermovingtotrackmenu;
+	s16 movingToTrackMenu;
+	s16 unk_aftermovingtotrackmenu;
 
 	// 800b59e8 -- UsaRetail
 	// 800b628c -- EurRetail
-	short characterSelect_MoveDir[4];
+	s16 characterSelect_MoveDir[4];
 
 	// 800b59f0 -- UsaRetail
 	// 800b6294 -- EurRetail
-	short characterSelect_charIDs_desired[4];
+	s16 characterSelect_charIDs_desired[4];
 
 	// 800b59f8 - UsaRetail
 	// 800b629c - EurRetail
-	short characterSelect_charIDs_curr[4];
+	s16 characterSelect_charIDs_curr[4];
 
 	// 800b5a00 - UsaRetail
 	// 800b62a4 - EurRetail
-	short characterSelect_angle[4];
+	s16 characterSelect_angle[4];
 
 	// 800b5a08 - UsaRetail
 	// 800b62ac - EurRetail
@@ -945,7 +945,7 @@ struct OverlayDATA_230
 
 	// 800b5a0c - UsaRetail
 	// 800b62b0 - EurRetail
-	short *characterSelect_ptrWindowXY;
+	s16 *characterSelect_ptrWindowXY;
 
 	// 800b5a10 - UsaRetail
 	// 800b62b4 - EurRetail
@@ -974,7 +974,7 @@ struct OverlayDATA_230
 	// 800b5a24 - UsaRetail
 	// 800b62c8 - EurRetail
 	// 800b9ad0 - JpnRetail
-	short timerPerPlayer[4];
+	s16 timerPerPlayer[4];
 
 #if BUILD == EurRetail
 	// 800b62d0
@@ -996,7 +996,7 @@ struct OverlayDATA_230
 	// 800b5a34 - UsaRetail
 	// 800b62dc - EurRetail
 	// 800b9ae0 - JpnRetail
-	short *ptrIntroCam;
+	s16 *ptrIntroCam;
 
 	// 800b5a38 - UsaRetail
 	// 800b62e0 - EurRetail
@@ -1039,30 +1039,30 @@ struct OVR_230_VideoBSS
 	int field3_0xc;
 
 	// 800b67bc
-	short totalFrames;
+	s16 totalFrames;
 
 	// 800b67be
-	short frameCounter;
+	s16 frameCounter;
 
 	// 800b67c0
-	short DCT_MODE;
+	s16 DCT_MODE;
 
 	// 800b67c2
-	short drawNextFrame;
+	s16 drawNextFrame;
 
 	// 800b67c4
-	short field8_0x18;
-	short field9_0x1a;
+	s16 field8_0x18;
+	s16 field9_0x1a;
 
 	// 800b67c8
-	short field10_0x1c;
+	s16 field10_0x1c;
 
 	// 800b67ca
-	short imgId;
+	s16 imgId;
 
 	// 800b67cc
-	short field12_0x20;
-	short field13_0x22;
+	s16 field12_0x20;
+	s16 field13_0x22;
 
 	// 800b67d0
 	int field14_0x24;
@@ -1081,13 +1081,13 @@ struct OVR_230_VideoBSS
 	// 2 - has Audio
 	// 4 - is looping
 	// 8 - is Scrapbook (?)
-	u_int flags;
+	u32 flags;
 
 	// 800b67ec
 	int RING_SIZE;
 
 	// 800b67f0
-	u_int isDone;
+	u32 isDone;
 
 	int field25_0x48;
 

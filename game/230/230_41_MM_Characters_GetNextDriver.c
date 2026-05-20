@@ -1,9 +1,9 @@
 #include <common.h>
 
-int DECOMP_MM_Characters_GetNextDriver(short dpad, char characterID)
+int DECOMP_MM_Characters_GetNextDriver(s16 dpad, char characterID)
 {
 	char nextDriver;
-	short unlocked;
+	s16 unlocked;
 	char newDriver;
 
 	nextDriver = D230.csm_Active[characterID].indexNext[dpad];

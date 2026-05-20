@@ -2,15 +2,15 @@
 
 void DECOMP_ElimBG_HandleState(struct GameTracker *gGT)
 {
-	short sVar1;
-	short sVar2;
+	s16 sVar1;
+	s16 sVar2;
 	char cVar4;
 	int iVar5;
 	int iVar6;
 	POLY_FT4 *p;
-	u_int uVar7;
+	u32 uVar7;
 	char cVar8;
-	u_int uVar9;
+	u32 uVar9;
 	int iVar10;
 	RECT rect1;
 	RECT rect2;
@@ -20,14 +20,14 @@ void DECOMP_ElimBG_HandleState(struct GameTracker *gGT)
 	{
 		// rdataPauseData
 		// TODO: modify this code to just properly assign to the rect's members instead of this jank.
-		((u_int *)&rect1)[0] = 0x200;
-		((u_int *)&rect1)[1] = 0x1000040;
-		((u_int *)&rect2)[0] = 0x240;
-		((u_int *)&rect2)[1] = 0x1000040;
+		((u32 *)&rect1)[0] = 0x200;
+		((u32 *)&rect1)[1] = 0x1000040;
+		((u32 *)&rect2)[0] = 0x240;
+		((u32 *)&rect2)[1] = 0x1000040;
 
 		// load from RAM, back to VRAM
-		LoadImage(&rect1, (uint32_t *)sdata->PausePtrsVRAM[0]);
-		LoadImage(&rect2, (uint32_t *)sdata->PausePtrsVRAM[1]);
+		LoadImage(&rect1, (u32 *)sdata->PausePtrsVRAM[0]);
+		LoadImage(&rect2, (u32 *)sdata->PausePtrsVRAM[1]);
 
 		DrawSync(0);
 
@@ -68,7 +68,7 @@ void DECOMP_ElimBG_HandleState(struct GameTracker *gGT)
 		do
 		{
 			uVar9 = 0;
-			sVar1 = (short)iVar10;
+			sVar1 = (s16)iVar10;
 			do
 			{
 				// backBuffer->primMem.curr
@@ -79,7 +79,7 @@ void DECOMP_ElimBG_HandleState(struct GameTracker *gGT)
 
 				setPolyFT4(p);
 
-				sVar2 = (short)uVar9;
+				sVar2 = (s16)uVar9;
 
 				// RGB
 				setRGB0(p, 0x80, 0x80, 0x80);
@@ -96,7 +96,7 @@ void DECOMP_ElimBG_HandleState(struct GameTracker *gGT)
 				iVar5 = (int)(uVar7 & 0x3ff) >> 6;
 
 				// tpage
-				p->tpage = (u_short)iVar5;
+				p->tpage = (u16)iVar5;
 
 				// clut
 				p->clut = 0x3fe0;

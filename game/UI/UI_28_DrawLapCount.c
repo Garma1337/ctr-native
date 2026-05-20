@@ -1,9 +1,9 @@
 #include <common.h>
 
-void DECOMP_UI_DrawLapCount(short posX, int posY, int param_3, struct Driver *d)
+void DECOMP_UI_DrawLapCount(s16 posX, int posY, int param_3, struct Driver *d)
 {
-	short type;
-	short currLap;
+	s16 type;
+	s16 currLap;
 	int numLaps;
 	int flags;
 

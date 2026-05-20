@@ -5,7 +5,7 @@ void DECOMP_CS_Thread_LInB(struct Instance *inst)
 {
 	struct Thread *t;
 	struct CutsceneObj *cs;
-	short modelID;
+	s16 modelID;
 	char *scriptPtr;
 
 	OVR_233.isCutsceneOver = 0;
@@ -32,7 +32,7 @@ void DECOMP_CS_Thread_LInB(struct Instance *inst)
 
 	if (modelID < NDI_BOX_BOX_01)
 	{
-		if ((u_short)(modelID - STATIC_CRASHINTRO) < 0x10)
+		if ((u16)(modelID - STATIC_CRASHINTRO) < 0x10)
 		{
 			scriptPtr = OVR_233.introModelScripts[modelID - STATIC_CRASHINTRO];
 		}
@@ -52,9 +52,9 @@ void DECOMP_CS_Thread_LInB(struct Instance *inst)
 
 	{
 		int rng = DECOMP_MixRNG_Scramble();
-		short *meta = (short *)cs->metadata;
-		short frameStart = meta[2];
-		short frameEnd = meta[3];
+		s16 *meta = (s16 *)cs->metadata;
+		s16 frameStart = meta[2];
+		s16 frameEnd = meta[3];
 
 		cs->unk1c = 0;
 		cs->unk20 = 0;
@@ -68,7 +68,7 @@ void DECOMP_CS_Thread_LInB(struct Instance *inst)
 		cs->desiredScale = 0x1000;
 		cs->particleID = 0xff;
 
-		cs->unk14 = frameStart + (short)(((rng >> 2 & 0xfff) * ((frameEnd - frameStart) + 1)) >> 0xc);
+		cs->unk14 = frameStart + (s16)(((rng >> 2 & 0xfff) * ((frameEnd - frameStart) + 1)) >> 0xc);
 
 		struct GameTracker *gGT = sdata->gGT;
 

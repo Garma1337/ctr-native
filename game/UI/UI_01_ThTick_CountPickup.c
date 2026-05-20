@@ -3,8 +3,8 @@
 void DECOMP_UI_ThTick_CountPickup(struct Thread *bucket)
 {
 	struct GameTracker *gGT;
-	short rotSpd;
-	u_int flags;
+	s16 rotSpd;
+	u32 flags;
 	MATRIX *mat;
 
 	gGT = sdata->gGT;
@@ -33,7 +33,7 @@ void DECOMP_UI_ThTick_CountPickup(struct Thread *bucket)
 			else
 			{
 				// wumpaShineResult
-				inst->alphaScale = ((short)sdata->wumpaShineResult + -0x80) * 0x10;
+				inst->alphaScale = ((s16)sdata->wumpaShineResult + -0x80) * 0x10;
 			}
 			goto LAB_8004c7a4;
 		}
@@ -63,7 +63,7 @@ LAB_8004c7d4:
 	mat = &inst->matrix;
 
 	// converted to TEST in rebuildPS1
-	ConvertRotToMatrix(mat, (short *)obj->rot);
+	ConvertRotToMatrix(mat, (s16 *)obj->rot);
 
 #ifndef REBUILD_PS1
 	MatrixRotate(mat, &obj->m, mat);

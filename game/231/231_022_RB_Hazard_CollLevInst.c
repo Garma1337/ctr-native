@@ -2,10 +2,10 @@
 
 //  (tnt, potion, warpball, etc) (not hazard? moving explosive?)
 
-unsigned short DECOMP_RB_Hazard_CollLevInst(struct ScratchpadStruct *sps, struct Thread *th)
+u16 DECOMP_RB_Hazard_CollLevInst(struct ScratchpadStruct *sps, struct Thread *th)
 {
-	unsigned short flag;
-	short model;
+	u16 flag;
+	s16 model;
 	struct Instance *inst;
 	struct InstDef *instdef;
 	struct MetaDataMODEL *meta;

@@ -78,7 +78,7 @@ struct Particle *DECOMP_VehEmitter_Exhaust(struct Driver *d, VECTOR *param_2, VE
 	// if not engine revving
 	else
 	{
-		short meterLeft = d->turbo_MeterRoomLeft;
+		s16 meterLeft = d->turbo_MeterRoomLeft;
 		if ((meterLeft < 129) || (((d->const_turboLowRoomWarning + 2) * 32) < meterLeft))
 		{
 			return p;

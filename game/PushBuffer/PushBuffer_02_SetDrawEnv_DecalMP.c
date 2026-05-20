@@ -1,7 +1,7 @@
 #include <common.h>
 
-void DECOMP_PushBuffer_SetDrawEnv_DecalMP(void *ot, struct DB *backBuffer, RECT viewport, u_short offsetX, u_short offsetY, u_char dtd, u_char dfe, u_char isbg,
-                                          u_char tpageUpper, u_char tpageLower)
+void DECOMP_PushBuffer_SetDrawEnv_DecalMP(void *ot, struct DB *backBuffer, RECT viewport, u16 offsetX, u16 offsetY, u8 dtd, u8 dfe, u8 isbg, u8 tpageUpper,
+                                          u8 tpageLower)
 {
 	void *p;
 
@@ -11,7 +11,7 @@ void DECOMP_PushBuffer_SetDrawEnv_DecalMP(void *ot, struct DB *backBuffer, RECT 
 	int *dst = (int *)&newDrawEnv;
 	int *src = (int *)&backBuffer->drawEnv;
 
-	for (unsigned int i = 0; i < sizeof(DRAWENV) / 4; i++)
+	for (u32 i = 0; i < sizeof(DRAWENV) / 4; i++)
 		dst[i] = src[i];
 
 	// Now modify DrawEnv...
@@ -29,7 +29,7 @@ void DECOMP_PushBuffer_SetDrawEnv_DecalMP(void *ot, struct DB *backBuffer, RECT 
 	newDrawEnv.ofs[1] = offsetY;
 
 	// tpage
-	newDrawEnv.tpage = (uint16_t)((tpageUpper << 8) | tpageLower);
+	newDrawEnv.tpage = (u16)((tpageUpper << 8) | tpageLower);
 
 	// dtd (dithering)
 	newDrawEnv.dtd = dtd;
@@ -46,7 +46,7 @@ void DECOMP_PushBuffer_SetDrawEnv_DecalMP(void *ot, struct DB *backBuffer, RECT 
 	if (p <= backBuffer->primMem.endMin100)
 	{
 		// advance curr
-		backBuffer->primMem.curr = (void *)((unsigned int)backBuffer->primMem.curr + 0x40);
+		backBuffer->primMem.curr = (void *)((u32)backBuffer->primMem.curr + 0x40);
 
 		// DrawEnv just built
 		SetDrawEnv(p, &newDrawEnv);

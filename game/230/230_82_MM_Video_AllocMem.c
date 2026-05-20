@@ -1,9 +1,9 @@
 #include <common.h>
 
-void DECOMP_MM_Video_AllocMem(u_int width, u_short height, u_int flags, int size, int param_5)
+void DECOMP_MM_Video_AllocMem(u32 width, u16 height, u32 flags, int size, int param_5)
 {
 	char isRGB24;
-	u_int uVar2;
+	u32 uVar2;
 	int iVar3;
 
 	MEMPACK_PushState();
@@ -23,7 +23,7 @@ void DECOMP_MM_Video_AllocMem(u_int width, u_short height, u_int flags, int size
 
 	iVar3 = (isRGB24) ? 3 : 2;
 
-	V230.DCT_MODE = (u_short)isRGB24;
+	V230.DCT_MODE = (u16)isRGB24;
 
 	uVar2 = (((height - 1) >> 4) + 1) * 0x10;
 	V230.totalFrames = (((width - 1) >> 4) + 1U) - 1;
@@ -43,7 +43,7 @@ void DECOMP_MM_Video_AllocMem(u_int width, u_short height, u_int flags, int size
 
 	V230.slice.x = 0;
 	V230.slice.y = 0;
-	V230.slice.w = (short)(iVar3 << 3);
+	V230.slice.w = (s16)(iVar3 << 3);
 	V230.slice.h = height;
 
 	// reinitialize everything

@@ -6,21 +6,21 @@ void DECOMP_VehPhysProc_PowerSlide_PhysAngular(struct Thread *th, struct Driver 
 	char bVar2;
 	char bVar3;
 	struct GameTracker *gGT;
-	short sVar5;
-	u_short uVar6;
-	u_short uVar7;
+	s16 sVar5;
+	u16 uVar6;
+	u16 uVar7;
 	int iVar8;
 	int iVar9;
-	u_int uVar10;
+	u32 uVar10;
 	int iVar11;
 	int iVar13;
-	u_int uVar14;
+	u32 uVar14;
 	int iVar15;
 
-	short iVar12_A;
+	s16 iVar12_A;
 	int elapsedTimeDouble;
-	short iVar12_C;
-	short iVar12_D;
+	s16 iVar12_C;
+	s16 iVar12_D;
 
 	int absVal_NumFrameDrift;
 	int absVal_DistortCurr;
@@ -122,7 +122,7 @@ void DECOMP_VehPhysProc_PowerSlide_PhysAngular(struct Thread *th, struct Driver 
 	}
 
 	// Map "simpTurnState" from [0, const_TurnRate] to [0, driftDirection]
-	iVar13 = DECOMP_VehCalc_MapToRange(iVar13, 0, ((u_int)driver->const_TurnRate + ((int)driver->turnConst << 1) / 5) * 0x100, 0, iVar9 << 8);
+	iVar13 = DECOMP_VehCalc_MapToRange(iVar13, 0, ((u32)driver->const_TurnRate + ((int)driver->turnConst << 1) / 5) * 0x100, 0, iVar9 << 8);
 
 	if ((iVar13 < 0) || ((
 	                        // compare two turning rates
@@ -194,7 +194,7 @@ void DECOMP_VehPhysProc_PowerSlide_PhysAngular(struct Thread *th, struct Driver 
 
 	// Map value from [oldMin, oldMax] to [newMin, newMax]
 	// inverting newMin and newMax will give an inverse range mapping
-	iVar13 = DECOMP_VehCalc_MapToRange((int)driver->KartStates.Drifting.driftTotalTimeMS, 0, (u_int)driver->unk462 << 5,
+	iVar13 = DECOMP_VehCalc_MapToRange((int)driver->KartStates.Drifting.driftTotalTimeMS, 0, (u32)driver->unk462 << 5,
 	                                   (int)driver->unk461 * (int)driver->multDrift >> 8, iVar15);
 	if (-1 < iVar13)
 	{
@@ -202,14 +202,14 @@ void DECOMP_VehPhysProc_PowerSlide_PhysAngular(struct Thread *th, struct Driver 
 		{
 			iVar12_D = -iVar13;
 		}
-		sVar5 = (short)iVar12_D;
+		sVar5 = (s16)iVar12_D;
 		if (0 < iVar13)
 			goto LAB_800632cc;
 	}
-	sVar5 = (short)iVar12_D;
+	sVar5 = (s16)iVar12_D;
 	if (-iVar13 < iVar12_D)
 	{
-		sVar5 = (short)-iVar13;
+		sVar5 = (s16)-iVar13;
 	}
 LAB_800632cc:
 	iVar12_D = iVar13;
@@ -255,7 +255,7 @@ LAB_800632cc:
 
 	iVar15 = iVar12_D >> 3;
 
-	sVar5 = (short)iVar15;
+	sVar5 = (s16)iVar15;
 	if (iVar12_D != 0)
 	{
 		if (iVar15 == 0)
@@ -348,20 +348,20 @@ LAB_800632cc:
 	// near-spinout distortion SFX
 	driver->unk3D4[0] = sVar5;
 
-	driver->ampTurnState = (short)(iVar9 + iVar13);
+	driver->ampTurnState = (s16)(iVar9 + iVar13);
 
-	driver->angle += (short)((driver->ampTurnState * gGT->elapsedTimeMS) >> 0xd);
+	driver->angle += (s16)((driver->ampTurnState * gGT->elapsedTimeMS) >> 0xd);
 	driver->angle &= 0xfff;
 
 	if (driver->KartStates.Drifting.driftBoostTimeMS != 0)
 	{
 		// decrease by elpased time
-		driver->KartStates.Drifting.driftBoostTimeMS -= (u_int)gGT->elapsedTimeMS;
+		driver->KartStates.Drifting.driftBoostTimeMS -= (u32)gGT->elapsedTimeMS;
 
 		if (driver->KartStates.Drifting.driftBoostTimeMS < 0)
 			driver->KartStates.Drifting.driftBoostTimeMS = 0;
 
-		sVar5 = (short)((int)((u_int)driver->unk47A * gGT->elapsedTimeMS) >> 5);
+		sVar5 = (s16)((int)((u32)driver->unk47A * gGT->elapsedTimeMS) >> 5);
 
 		if (driver->turnAngleCurr < 0)
 		{
@@ -377,8 +377,8 @@ LAB_800632cc:
 	// increment this by milliseconds
 	driver->KartStates.Drifting.driftTotalTimeMS += gGT->elapsedTimeMS;
 
-	if (driver->KartStates.Drifting.driftTotalTimeMS > (int)((u_int)driver->unk462 << 5))
-		driver->KartStates.Drifting.driftTotalTimeMS = (u_short)driver->unk462 << 5;
+	if (driver->KartStates.Drifting.driftTotalTimeMS > (int)((u32)driver->unk462 << 5))
+		driver->KartStates.Drifting.driftTotalTimeMS = (u16)driver->unk462 << 5;
 
 	// Located in Drifting_FuncPtrs.c
 	void PhysTerrainSlope(struct Driver * driver);
@@ -402,8 +402,8 @@ void PhysLerpRot(struct Driver *driver, int iVar13)
 	}
 
 	// max spin this frame
-	int uVar10 = (u_int)driver->unk46a;
-	if ((int)uVar14 < (int)(u_int)driver->unk46a)
+	int uVar10 = (u32)driver->unk46a;
+	if ((int)uVar14 < (int)(u32)driver->unk46a)
 	{
 		uVar10 = uVar14;
 	}

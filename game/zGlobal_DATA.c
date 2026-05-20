@@ -125,10 +125,10 @@ void AH_Sign_LInB()
 #define SET_MDM(x, y, z) {.name = x, .LInB = y, .LInC = z}
 #endif
 
-// usage of this macro is mainly because I'm too lazy to go through this file and manually recalculate all the values where short is expected instead of uint.
+// usage of this macro is mainly because I'm too lazy to go through this file and manually recalculate all the values where s16 is expected instead of uint.
 // this is purely to reduce warnings in the compiler output. (i.e., the compiler was doing this implicitly). (literally 800 lines of warnings at
 // time-of-writing).
-#define AS(x) ((short)x)
+#define AS(x) ((s16)x)
 
 // Using visual studio, here are some regexes for finding and replacing candidates for "any hex value with 4 leading F's, and then wrapping it in 'AS(value)'"
 // FIND:            (?<!AS\()(?i:0x(?=ffff)[0-9abcdef]+)
@@ -140,7 +140,7 @@ void AH_Sign_LInB()
 
 // e.g., if input is "0xfffffbb4", then in windows' calculator "0 - 0xfbb4" = "0xffff_ffff_ffff_044c", then replace the original number with "-0x044c"
 
-// short-to-int downcasting is "implementation specified" (i.e., *not* undefined, *not* defined by the spec). It turns out that GCC handles this the way we like
+// s16-to-int downcasting is "implementation specified" (i.e., *not* undefined, *not* defined by the spec). It turns out that GCC handles this the way we like
 // (I think??), but we *should* manually fix this eventually.
 
 // also see https://discord.com/channels/527135227546435584/637616020177289236/1307309914691076167

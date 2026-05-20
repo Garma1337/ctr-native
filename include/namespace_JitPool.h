@@ -5,7 +5,7 @@ struct JitPool
 	struct LinkedList taken;
 
 	int maxItems;
-	unsigned int itemSize;
+	u32 itemSize;
 	int poolSize;
 	void *ptrPoolData;
 };

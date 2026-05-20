@@ -45,9 +45,9 @@ struct Instance *DECOMP_RB_Hazard_CollideWithDrivers(struct Instance *weaponInst
 		distCheck = dist[0] + dist[2];
 
 		// to be more optimal, just do weaponInst->thread->funcThTick == GenericMine_ThTick
-		if (((unsigned int)modelID - STATIC_BEAKER_RED < 2) || // red or green potion
-		    (modelID == PU_EXPLOSIVE_CRATE) ||                 // Nitro
-		    (modelID == STATIC_CRATE_TNT)                      // TNT
+		if (((u32)modelID - STATIC_BEAKER_RED < 2) || // red or green potion
+		    (modelID == PU_EXPLOSIVE_CRATE) ||        // Nitro
+		    (modelID == STATIC_CRATE_TNT)             // TNT
 		)
 		{
 			// upgrade to 2D collision to 3D sphere

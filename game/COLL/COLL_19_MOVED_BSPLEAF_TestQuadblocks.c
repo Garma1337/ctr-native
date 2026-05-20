@@ -2,7 +2,7 @@
 
 void DECOMP_COLL_MOVED_BSPLEAF_TestQuadblocks(struct BSP *node, struct ScratchpadStruct *sps)
 {
-	u_int numQuads;
+	u32 numQuads;
 	struct QuadBlock *ptrQuad;
 
 	// if bsp flag is water

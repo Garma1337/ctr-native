@@ -32,7 +32,7 @@ void DECOMP_SongPool_Start(struct Song *song, int songID, int deltaBPM, int bool
 	song->unk10 = 0;
 	song->timeSpentPlaying = 0;
 
-	if ((unsigned short)(songID - 1) < 2)
+	if ((u16)(songID - 1) < 2)
 	{
 		// full volume
 		vol = 0xff;
@@ -57,7 +57,7 @@ void DECOMP_SongPool_Start(struct Song *song, int songID, int deltaBPM, int bool
 	song->vol_StepRate = 1;
 	song->numSequences = 0;
 
-	short *seqOffsetArr = (short *)SONGHEADER_GETSEQOFFARR(csh);
+	s16 *seqOffsetArr = (s16 *)SONGHEADER_GETSEQOFFARR(csh);
 
 	// first note header comes after end of CseqSongHeader
 	// and the full array of seqOffsets within the header

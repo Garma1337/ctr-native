@@ -5,7 +5,7 @@ void DECOMP_CDSYS_SetMode_StreamAudio()
 	char buf[8];
 
 	// https://www.cybdyn-systems.com.au/forum/viewtopic.php?t=1956
-	// CdControl('\x0e',local_10,(u_char *)0x0);
+	// CdControl('\x0e',local_10,(u8 *)0x0);
 	// param_1: 0xe = CdlSetmode
 	// param_2: 0xE8 = set speed, play ADPCM, set sector
 	// param_3: 0 = normal speed, 1 = double speed

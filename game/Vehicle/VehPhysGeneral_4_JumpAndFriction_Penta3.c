@@ -30,16 +30,16 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 {
 	char BackWardTurnRate;
 	bool IsJumping;
-	short turnFriction;
+	s16 turnFriction;
 	int jumpVelocity;
 	int tempVelocity;
-	short turnFrictionMagnitude;
+	s16 turnFrictionMagnitude;
 	int ApproxSpeed;
 	int tempValue;
-	unsigned int verticalMovement;
-	unsigned int verticalDisplacement;
+	u32 verticalMovement;
+	u32 verticalDisplacement;
 	int absSpeed;
-	unsigned int velocityMagnitude;
+	u32 velocityMagnitude;
 	int VecX;
 	int VecY;
 	int VecZ;
@@ -47,7 +47,7 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 
 #if 0 // og code
     int referenceVelocity;
-	unsigned int driverPtr;
+	u32 driverPtr;
 	char* VecXYZ;
 	char auStack_40[40];
 	VecXYZ = auStack_40;
@@ -78,7 +78,7 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 
 // og code, "param_2"
 #if 0
-		VecY = (unsigned int)d->baseSpeed;
+		VecY = (u32)d->baseSpeed;
 #endif
 
 		tempValue = VecZ;
@@ -90,7 +90,7 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 		{
 			VecX = tempValue;
 		}
-		turnFrictionMagnitude = (short)VecX;
+		turnFrictionMagnitude = (s16)VecX;
 		turnFriction = -turnFrictionMagnitude;
 		if (VecZ < 0)
 		{
@@ -119,15 +119,15 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 	movement.vz = d->velocity.z;
 
 #else // og code
-	*(unsigned int *)(VecXYZ + 0x18) = *(unsigned int *)(driverPtr + 0x88);
-	*(unsigned int *)(VecXYZ + 0x1c) = *(unsigned int *)(driverPtr + 0x8c);
+	*(u32 *)(VecXYZ + 0x18) = *(u32 *)(driverPtr + 0x88);
+	*(u32 *)(VecXYZ + 0x1c) = *(u32 *)(driverPtr + 0x8c);
 #endif
 
 	velocityMagnitude = 0;
 
 // og code
 #if 0
-	* (unsigned int*)(VecXYZ + 0x20) = *(unsigned int*)(driverPtr + 0x90);
+	* (u32*)(VecXYZ + 0x20) = *(u32*)(driverPtr + 0x90);
 #endif
 
 	tempValue = 0;
@@ -147,7 +147,7 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 				if (tempValue < 0) {
 					tempValue = tempValue + 3;
 				}
-				d->jump_InitialVelY = (short)(tempValue >> 2);
+				d->jump_InitialVelY = (s16)(tempValue >> 2);
 				DECOMP_OtherFX_Play_Echo(9, 1, d->actionsFlagSet & 0x10000);
 				d->jump_unknown = 0x180;
 
@@ -221,7 +221,7 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 
 			else
 			{
-				d->jump_InitialVelY = (short)((d->const_JumpForce * 3) / 2);
+				d->jump_InitialVelY = (s16)((d->const_JumpForce * 3) / 2);
 			}
 			d->forcedJump_trampoline = 0;
 		}
@@ -277,7 +277,7 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 		read_mt(VecX, VecY, VecZ);
 		if (d->baseSpeed < 0)
 		{
-			d->unk_offset3B2 = -(short)verticalMovement;
+			d->unk_offset3B2 = -(s16)verticalMovement;
 
 // rewritten code
 #if 1
@@ -289,16 +289,16 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 
 			*(int *)(VecXYZ + 0x18) = *(int *)(VecXYZ + 0x18) - VecX;
 			*(int *)(VecXYZ + 0x20) = *(int *)(VecXYZ + 0x20) - VecZ;
-			*(unsigned int *)(VecXYZ + 0x1c) = *(int *)(VecXYZ + 0x1c) - VecY;
+			*(u32 *)(VecXYZ + 0x1c) = *(int *)(VecXYZ + 0x1c) - VecY;
 #endif
 
-			d->unkVectorX = -(short)VecX;
-			d->unkVectorY = -(short)VecY;
-			d->unkVectorZ = -(short)VecZ;
+			d->unkVectorX = -(s16)VecX;
+			d->unkVectorY = -(s16)VecY;
+			d->unkVectorZ = -(s16)VecZ;
 		}
 		else
 		{
-			d->unk_offset3B2 = (short)verticalMovement;
+			d->unk_offset3B2 = (s16)verticalMovement;
 // rewritten code
 #if 1
 			movement.vx += VecX;
@@ -309,13 +309,13 @@ void DECOMP_VehPhysGeneral_JumpAndFriction(struct Thread *t, struct Driver *d)
 #else
 			*(int *)(VecXYZ + 0x18) = *(int *)(VecXYZ + 0x18) + VecX;
 			*(int *)(VecXYZ + 0x20) = *(int *)(VecXYZ + 0x20) + VecZ;
-			*(unsigned int *)(VecXYZ + 0x1c) = *(int *)(VecXYZ + 0x1c) + VecY;
+			*(u32 *)(VecXYZ + 0x1c) = *(int *)(VecXYZ + 0x1c) + VecY;
 #endif
 
 
-			d->unkVectorX = (short)VecX;
-			d->unkVectorY = (short)VecY;
-			d->unkVectorZ = (short)VecZ;
+			d->unkVectorX = (s16)VecX;
+			d->unkVectorY = (s16)VecY;
+			d->unkVectorZ = (s16)VecZ;
 		}
 
 // og code
@@ -378,7 +378,7 @@ PROCESS_JUMP:
 	do {
 		absSpeed = tempValue;
 
-		jumpVelocity = DECOMP_VehPhysGeneral_JumpGetVelY((unsigned int)d + ApproxSpeed, VecXYZ + 0x18);
+		jumpVelocity = DECOMP_VehPhysGeneral_JumpGetVelY((u32)d + ApproxSpeed, VecXYZ + 0x18);
 
 		tempVelocity = jumpVelocity;
 		if (jumpVelocity < 0) {
@@ -413,7 +413,7 @@ PROCESS_JUMP:
 
 //rewritten code
 #else
-	short *axisAngle = &d->AxisAngle1_normalVec;
+	s16 *axisAngle = &d->AxisAngle1_normalVec;
 	absSpeed = axisAngle;
 	if ((d->actionsFlagSet & 1) == 0)
 	{
@@ -468,7 +468,7 @@ PROCESS_JUMP:
 // og code
 #if 0
 	if (*(int*)(VecXYZ + 0x1c) < (int)verticalDisplacement) {
-		*(unsigned int*)(VecXYZ + 0x1c) = verticalDisplacement;
+		*(u32*)(VecXYZ + 0x1c) = verticalDisplacement;
 	}
 //rewritten code
 #else
@@ -494,7 +494,7 @@ NOT_JUMPING:
 #endif
 
 	tempValue = d->speed - velocityMagnitude;
-	d->speed = (short)tempValue;
+	d->speed = (s16)tempValue;
 	if (tempValue * 0x10000 < 0)
 	{
 		d->speed = 0;
@@ -513,12 +513,12 @@ NOT_JUMPING:
 		}
 		else
 		{
-			turnFrictionMagnitude = (short)(d->unk36E * 0xd + (sdata->gGT->timer & 7) * 0x300 >> 4);
+			turnFrictionMagnitude = (s16)(d->unk36E * 0xd + (sdata->gGT->timer & 7) * 0x300 >> 4);
 		}
 	}
 	else
 	{
-		turnFrictionMagnitude = (short)(d->unk36E * 0xd + tempValue * 3 >> 4);
+		turnFrictionMagnitude = (s16)(d->unk36E * 0xd + tempValue * 3 >> 4);
 	}
 	d->unk36E = turnFrictionMagnitude;
 

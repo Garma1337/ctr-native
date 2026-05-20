@@ -1,11 +1,11 @@
 #include <common.h>
 
-int DECOMP_DecalFont_DrawMultiLineStrlen(char *str, short len, short posX, short posY, short maxPixLen, short fontType, short flags)
+int DECOMP_DecalFont_DrawMultiLineStrlen(char *str, s16 len, s16 posX, s16 posY, s16 maxPixLen, s16 fontType, s16 flags)
 {
 	char strCharacter;
-	short lineLen;
+	s16 lineLen;
 	char *currPointer;
-	short lettersRemaining;
+	s16 lettersRemaining;
 	char *strPointer;
 	int totalPassageHeight;
 
@@ -73,7 +73,7 @@ int DECOMP_DecalFont_DrawMultiLineStrlen(char *str, short len, short posX, short
 					}
 				}
 
-				lineLen = DECOMP_DecalFont_GetLineWidthStrlen(str, (u_int)currPointer - (u_int)str, (int)fontType);
+				lineLen = DECOMP_DecalFont_GetLineWidthStrlen(str, (u32)currPointer - (u32)str, (int)fontType);
 
 				if (
 				    // if parameter line length is longer than string line length
@@ -96,7 +96,7 @@ int DECOMP_DecalFont_DrawMultiLineStrlen(char *str, short len, short posX, short
 #if BUILD > UsaRetail
 		if (!(flags & 0x800))
 #endif
-			DECOMP_DecalFont_DrawLineStrlen(str, (u_int)strPointer - (u_int)str, (int)posX, posY + totalPassageHeight, (int)fontType, (int)flags);
+			DECOMP_DecalFont_DrawLineStrlen(str, (u32)strPointer - (u32)str, (int)posX, posY + totalPassageHeight, (int)fontType, (int)flags);
 
 #if BUILD > SepReview
 
@@ -106,7 +106,7 @@ int DECOMP_DecalFont_DrawMultiLineStrlen(char *str, short len, short posX, short
 
 		// did font_charPixHeight not exist in 903?
 
-		lettersRemaining = (short)totalPassageHeight;
+		lettersRemaining = (s16)totalPassageHeight;
 		totalPassageHeight = (int)lettersRemaining + 8;
 		if ((int)fontType == 1)
 		{

@@ -6,7 +6,7 @@ void DECOMP_cseq_opcode0a(struct SongSeq *seq)
 	struct ChannelStats *curr, *backupNext;
 	int soundID = seq->soundID;
 
-	unsigned char *currNote = seq->currNote;
+	u8 *currNote = seq->currNote;
 	seq->distort = currNote[1];
 
 	for (curr = (struct ChannelStats *)sdata->channelTaken.first; curr != NULL; curr = backupNext)

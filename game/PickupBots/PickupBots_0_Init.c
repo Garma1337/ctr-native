@@ -18,7 +18,7 @@ void DECOMP_PickupBots_Init(void)
 	{
 		// set pointer to boss weapon meta
 		// sdata->bossWeaponMeta = data.bossWeaponMetaPtr[hub]
-		*(unsigned int *)0x8008d8e8 = data.bossWeaponMetaPtr[hub];
+		*(u32 *)0x8008d8e8 = data.bossWeaponMetaPtr[hub];
 	}
 	return;
 }

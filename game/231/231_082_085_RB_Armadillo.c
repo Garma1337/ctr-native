@@ -125,7 +125,7 @@ void DECOMP_RB_Armadillo_LInB(struct Instance *inst)
 {
 	struct Armadillo *armObj;
 	struct InstDef *instDef;
-	short *metaArray;
+	s16 *metaArray;
 
 	struct Thread *t = DECOMP_PROC_BirthWithObject(
 	    // creation flags
@@ -143,7 +143,7 @@ void DECOMP_RB_Armadillo_LInB(struct Instance *inst)
 
 	// puts armadillos on separate cycles
 	void **pointers = ST1_GETPOINTERS(sdata->gGT->level1->ptrSpawnType1);
-	metaArray = (short *)pointers[ST1_SPAWN];
+	metaArray = (s16 *)pointers[ST1_SPAWN];
 	t->cooldownFrameCount = metaArray[inst->name[0xA] - '0'];
 
 	// rolling animation

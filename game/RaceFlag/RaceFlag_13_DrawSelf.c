@@ -1,10 +1,10 @@
 #include <common.h>
 
 #ifdef REBUILD_PC
-u_int scratchpadBuf[0x1000];
+u32 scratchpadBuf[0x1000];
 #endif
 
-force_inline char RaceFlag_CalculateBrightness(u_int sine, u_char darkTile)
+force_inline char RaceFlag_CalculateBrightness(u32 sine, u8 darkTile)
 {
 	if (darkTile)
 	{
@@ -15,7 +15,7 @@ force_inline char RaceFlag_CalculateBrightness(u_int sine, u_char darkTile)
 
 // inline Sine operation
 // drops clock from ~130 to
-force_inline int MathSinInline(u_int param_1)
+force_inline int MathSinInline(u32 param_1)
 {
 	int iVar1;
 
@@ -43,15 +43,15 @@ void DECOMP_RaceFlag_DrawSelf()
 	int column, row;
 	int toggle;
 
-	short flagPos;
+	s16 flagPos;
 	u_long *ot;
-	u_int *scratchpad;
-	u_int screenlimit;
-	u_int dimensions;
+	u32 *scratchpad;
+	u32 screenlimit;
+	u32 dimensions;
 
 	int var2;
 	int var3;
-	u_int var1;
+	u32 var1;
 
 	POLY_G4 *p;
 	struct GameTracker *gGT = sdata->gGT;
@@ -61,8 +61,8 @@ void DECOMP_RaceFlag_DrawSelf()
 	int lightR;
 
 	// scratchpad
-	u_int *posL;
-	u_int *posR;
+	u32 *posL;
+	u32 *posR;
 	int *local;
 	SVECTOR *pos;
 
@@ -99,7 +99,7 @@ SKIP_LOADING_TEXT:
 	scratchpad = &scratchpadBuf[0];
 	memset(&scratchpadBuf[0], 0, 0x1000 * 4);
 #else
-	scratchpad = (u_int *)0x1f800000;
+	scratchpad = (u32 *)0x1f800000;
 #endif
 
 	dimensions = 0xd80200;
@@ -118,11 +118,11 @@ SKIP_LOADING_TEXT:
 		local = &scratchpadBuf[0xF0 / 4];
 		pos = &scratchpadBuf[0x108 / 4];
 #else
-		posL = (u_int *)(0x1f800000 + toggle * 0x78 - 4);
+		posL = (u32 *)(0x1f800000 + toggle * 0x78 - 4);
 		toggle = toggle ^ 1;
-		posR = (u_int *)(0x1f800000 + toggle * 0x78);
-		local = (u_int *)(0x1f8000F0);
-		pos = (u_int *)(0x1f800108);
+		posR = (u32 *)(0x1f800000 + toggle * 0x78);
+		local = (u32 *)(0x1f8000F0);
+		pos = (u32 *)(0x1f800108);
 #endif
 
 		local[0] = data.checkerFlagVariables[0];
@@ -196,7 +196,7 @@ SKIP_LOADING_TEXT:
 				var1 += 300;
 
 				// change all vector posZ
-				vect->vz = (short)var2 + (short)(var3 * 0x20 >> 0xd);
+				vect->vz = (s16)var2 + (s16)(var3 * 0x20 >> 0xd);
 			}
 
 			gte_ldv3(&pos[0], &pos[1], &pos[2]);
@@ -223,9 +223,9 @@ SKIP_LOADING_TEXT:
 		toggle = toggle ^ 1;
 		posR = &scratchpadBuf[(toggle * 0x78 / 4)];
 #else
-		posL = (u_int *)((0x1f800000 + toggle * 0x78) - 4);
+		posL = (u32 *)((0x1f800000 + toggle * 0x78) - 4);
 		toggle = toggle ^ 1;
-		posR = (u_int *)(0x1f800000 + toggle * 0x78);
+		posR = (u32 *)(0x1f800000 + toggle * 0x78);
 #endif
 
 		// === Step 1 ===
@@ -285,7 +285,7 @@ SKIP_LOADING_TEXT:
 				var1 += 300;
 
 				// change all vector posZ
-				vect->vz = (short)var2 + (short)(var3 * 0x20 >> 0xd);
+				vect->vz = (s16)var2 + (s16)(var3 * 0x20 >> 0xd);
 			}
 
 			gte_ldv3(&pos[0], &pos[1], &pos[2]);
@@ -312,13 +312,13 @@ SKIP_LOADING_TEXT:
 				    ((dimensions - posR[0] & dimensions - posR[1] & dimensions - posL[0] & dimensions - posL[1] & screenlimit) == 0))
 				{
 					// TRUE for gray, FALSE for white
-					u_char boolDark = (((column >> 2) + (i >> 2) & 1U) != 0);
+					u8 boolDark = (((column >> 2) + (i >> 2) & 1U) != 0);
 
-					u_char colorR = RaceFlag_CalculateBrightness(lightR, boolDark);
+					u8 colorR = RaceFlag_CalculateBrightness(lightR, boolDark);
 					setRGB0(p, colorR, colorR, colorR);
 					*(int *)&p->r2 = *(int *)&p->r0;
 
-					u_char colorL = RaceFlag_CalculateBrightness(lightL, boolDark);
+					u8 colorL = RaceFlag_CalculateBrightness(lightL, boolDark);
 					setRGB1(p, colorL, colorL, colorL);
 					*(int *)&p->r3 = *(int *)&p->r1;
 
@@ -334,7 +334,7 @@ SKIP_LOADING_TEXT:
 					// Prim/OT
 					// addPrim(ot, p); works but uses more instructions.
 					*(int *)p = *ot | 0x8000000;
-					*ot = (u_int)p & 0xffffff;
+					*ot = (u32)p & 0xffffff;
 
 					p++;
 				}

@@ -6,11 +6,11 @@
 void DECOMP_AH_Door_ThTick(struct Thread *t)
 {
 	char doorIsOpen;
-	short doorID;
-	short lev;
-	short numKeys;
-	u_short hintId;
-	u_int chkRewards;
+	s16 doorID;
+	s16 lev;
+	s16 numKeys;
+	u16 hintId;
+	u32 chkRewards;
 	int i;
 	int ratio;
 	int distX;
@@ -19,9 +19,9 @@ void DECOMP_AH_Door_ThTick(struct Thread *t)
 	int dist;
 	int iVar17;
 	int iVar18;
-	short desiredPos[3];
-	short desiredRot[3];
-	short *scaler;
+	s16 desiredPos[3];
+	s16 desiredRot[3];
+	s16 *scaler;
 
 	struct GameTracker *gGT = sdata->gGT;
 	struct WoodDoor *door = t->object;
@@ -304,7 +304,7 @@ void DECOMP_AH_Door_ThTick(struct Thread *t)
 							}
 
 #ifndef REBUILD_PS1
-							short *kr = &door->keyRot[0];
+							s16 *kr = &door->keyRot[0];
 
 							// desiredPos is actually specLightDir in this case, variable re-use
 							Vector_SpecLightSpin3D(keyInst, kr, &desiredPos[0]);
@@ -364,7 +364,7 @@ void DECOMP_AH_Door_ThTick(struct Thread *t)
 		i = DECOMP_MATH_Cos((int)doorInst->instDef->rot[1] + 0x400);
 
 		// desired posX for transition
-		desiredPos[0] = doorInst->matrix.t[0] + (short)(ratio * 0x312 >> 0xc) + (short)(i * 0x600 >> 0xc);
+		desiredPos[0] = doorInst->matrix.t[0] + (s16)(ratio * 0x312 >> 0xc) + (s16)(i * 0x600 >> 0xc);
 		// desired posY for transition
 		desiredPos[1] = doorInst->matrix.t[1] + 0x17a;
 
@@ -373,7 +373,7 @@ void DECOMP_AH_Door_ThTick(struct Thread *t)
 		i = DECOMP_MATH_Sin((int)doorInst->instDef->rot[1] + 0x400);
 
 		// desired posZ for transition
-		desiredPos[2] = doorInst->matrix.t[2] + (short)(ratio * 0x312 >> 0xc) + (short)(i * 0x600 >> 0xc);
+		desiredPos[2] = doorInst->matrix.t[2] + (s16)(ratio * 0x312 >> 0xc) + (s16)(i * 0x600 >> 0xc);
 
 		// desired rotation for transition
 		desiredRot[0] = doorInst->instDef->rot[0] + 0x800;
@@ -415,7 +415,7 @@ void DECOMP_AH_Door_ThTick(struct Thread *t)
 	// decrease key scale, then quit function
 	if (door->keyShrinkFrame < 0xb)
 	{
-		scaler = (short *)R232.keyFrame;
+		scaler = (s16 *)R232.keyFrame;
 
 		// loop through 4 keys
 		for (i = 0; i < 4; i++)

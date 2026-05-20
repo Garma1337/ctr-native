@@ -7,17 +7,17 @@ void DECOMP_CS_Thread_MoveOnPath(struct Thread *t)
 	struct Instance *inst = t->inst;
 	struct Level *level;
 	struct GameTracker *gGT;
-	short modelID;
+	s16 modelID;
 	int switchVal;
 	int digit;
 	struct SpawnType2 *spawnEntry;
-	short *coords;
-	short *curr;
-	short *next;
-	u_short progress;
+	s16 *coords;
+	s16 *curr;
+	s16 *next;
+	u16 progress;
 	int idx;
-	u_short frac;
-	short rot[3];
+	u16 frac;
+	s16 rot[3];
 
 	if ((cs->flags & 1) != 0)
 		return;
@@ -26,9 +26,9 @@ void DECOMP_CS_Thread_MoveOnPath(struct Thread *t)
 		return;
 
 	modelID = inst->model->id;
-	switchVal = (short)(modelID - 0xA1);
+	switchVal = (s16)(modelID - 0xA1);
 
-	if ((u_int)switchVal >= 63)
+	if ((u32)switchVal >= 63)
 		return;
 
 	gGT = sdata->gGT;
@@ -39,7 +39,7 @@ void DECOMP_CS_Thread_MoveOnPath(struct Thread *t)
 	case 0x00:
 	case 0x3E:
 
-		digit = (u_char)inst->name[strlen(inst->name) - 1] - '0';
+		digit = (u8)inst->name[strlen(inst->name) - 1] - '0';
 
 		if (level->numSpawnType2 <= digit)
 			return;
@@ -51,8 +51,8 @@ void DECOMP_CS_Thread_MoveOnPath(struct Thread *t)
 			return;
 
 		progress = cs->unk28;
-		idx = (short)progress >> 5;
-		cs->unk28 = (u_short)(progress + (u_short)gGT->elapsedTimeMS);
+		idx = (s16)progress >> 5;
+		cs->unk28 = (u16)(progress + (u16)gGT->elapsedTimeMS);
 		frac = progress & 0x1f;
 
 		if (idx >= spawnEntry->numCoords - 1)
@@ -95,7 +95,7 @@ void DECOMP_CS_Thread_MoveOnPath(struct Thread *t)
 	case 0x39:
 	case 0x3A:
 
-		digit = (u_char)inst->name[strlen(inst->name) - 1] - '0';
+		digit = (u8)inst->name[strlen(inst->name) - 1] - '0';
 
 		if (level->numSpawnType2_PosRot <= digit)
 			return;
@@ -107,8 +107,8 @@ void DECOMP_CS_Thread_MoveOnPath(struct Thread *t)
 			return;
 
 		progress = cs->unk28;
-		cs->unk28 = (u_short)(progress + (u_short)gGT->elapsedTimeMS);
-		idx = (short)progress >> 5;
+		cs->unk28 = (u16)(progress + (u16)gGT->elapsedTimeMS);
+		idx = (s16)progress >> 5;
 
 		if (idx >= spawnEntry->numCoords - 1)
 		{
@@ -117,7 +117,7 @@ void DECOMP_CS_Thread_MoveOnPath(struct Thread *t)
 		}
 
 		{
-			short *point = &coords[idx * 6];
+			s16 *point = &coords[idx * 6];
 
 			inst->matrix.t[0] = point[0];
 			inst->matrix.t[1] = point[1];

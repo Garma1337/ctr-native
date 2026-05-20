@@ -4,8 +4,8 @@ void DECOMP_PushBuffer_FadeOneWindow(struct PushBuffer *pb)
 {
 	typedef struct
 	{
-		u_int tag;
-		u_int tpage;
+		u32 tag;
+		u32 tpage;
 		POLY_F4 f4;
 	} multiCmdPacket;
 
@@ -14,7 +14,7 @@ void DECOMP_PushBuffer_FadeOneWindow(struct PushBuffer *pb)
 
 	struct DB *backBuffer = sdata->gGT->backBuffer;
 
-	short currValue = pb->fadeFromBlack_currentValue;
+	s16 currValue = pb->fadeFromBlack_currentValue;
 
 	// if not 0x1000, which means there must be
 	// some amount of fading
@@ -52,9 +52,9 @@ void DECOMP_PushBuffer_FadeOneWindow(struct PushBuffer *pb)
 		// strength of fade
 		fadeStrength = fadeStrength >> 4;
 
-		p->f4.r0 = (u_char)fadeStrength;
-		p->f4.g0 = (u_char)fadeStrength;
-		p->f4.b0 = (u_char)fadeStrength;
+		p->f4.r0 = (u8)fadeStrength;
+		p->f4.g0 = (u8)fadeStrength;
+		p->f4.b0 = (u8)fadeStrength;
 		p->f4.x1 = pb->rect.w;
 		p->f4.y1 = 0;
 		p->f4.x2 = 0;

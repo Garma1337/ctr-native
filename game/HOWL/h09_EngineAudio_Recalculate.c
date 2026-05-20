@@ -1,12 +1,12 @@
 #include <common.h>
 
-short DECOMP_EngineAudio_Recalculate(u_int soundID, u_int sfx)
+s16 DECOMP_EngineAudio_Recalculate(u32 soundID, u32 sfx)
 {
 	int iVar1;
-	u_int distortion = (sfx >> 8) & 0xff;
-	u_int volume = (sfx >> 0x10) & 0xff;
-	u_short echo = (sfx >> 0x18) & 0xff;
-	u_short LR = sfx & 0xff;
+	u32 distortion = (sfx >> 8) & 0xff;
+	u32 volume = (sfx >> 0x10) & 0xff;
+	u16 echo = (sfx >> 0x18) & 0xff;
+	u16 LR = sfx & 0xff;
 
 	struct EngineFX *ptrEngineFX;
 	struct ChannelStats *channel;

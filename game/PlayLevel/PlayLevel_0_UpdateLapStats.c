@@ -4,9 +4,9 @@
 
 void DECOMP_PlayLevel_UpdateLapStats(void)
 {
-	u_char bVar1;
+	u8 bVar1;
 	int iVar2;
-	u_char lapCounter;
+	u8 lapCounter;
 	int iVar4;
 	struct Driver *firstRank;
 	struct Driver *currDriver;
@@ -222,7 +222,7 @@ void DECOMP_PlayLevel_UpdateLapStats(void)
 			// if player did not JUST cross finish backwards
 			else
 			{
-				unsigned int trackLen = gGT->level1->ptr_restart_points[0].distToFinish;
+				u32 trackLen = gGT->level1->ptr_restart_points[0].distToFinish;
 
 				if (
 				    // if player did not EVER cross finish backwards
@@ -318,7 +318,7 @@ void DECOMP_PlayLevel_UpdateLapStats(void)
 			        // AND
 
 			        // new lowest distance (max progress)
-			        (currDriver->distanceToFinish_curr < (unsigned int)minDistance)))
+			        (currDriver->distanceToFinish_curr < (u32)minDistance)))
 			{
 				// set new min distToFinish (max progress)
 				minDistance = currDriver->distanceToFinish_curr;

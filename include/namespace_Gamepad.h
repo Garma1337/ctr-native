@@ -58,7 +58,7 @@ enum Plug
 struct __attribute__((packed)) ControllerPacket
 {
 	// 0x0
-	uint8_t plugged;
+	u8 plugged;
 
 	// 0x1
 	// single byte that you can access as either a pair of nibbles or a whole integer
@@ -66,23 +66,23 @@ struct __attribute__((packed)) ControllerPacket
 	{
 		struct
 		{
-			uint8_t payloadLength : 4;  // Payload length / 2, 0 for multitap
-			uint8_t controllerType : 4; // Device type (PadTypeID)
+			u8 payloadLength : 4;  // Payload length / 2, 0 for multitap
+			u8 controllerType : 4; // Device type (PadTypeID)
 		};
-		uint8_t controllerData;
+		u8 controllerData;
 	};
 
 	// 0x2
 	// Button states, see RawInput enum
-	// set up us a union because like 1 function needs the short to be accessed as two separate bytes
+	// set up us a union because like 1 function needs the s16 to be accessed as two separate bytes
 	union
 	{
 		struct
 		{
-			uint8_t controllerInput1;
-			uint8_t controllerInput2;
+			u8 controllerInput1;
+			u8 controllerInput2;
 		};
-		uint16_t controllerInput;
+		u16 controllerInput;
 	};
 
 	// 0x4
@@ -91,28 +91,28 @@ struct __attribute__((packed)) ControllerPacket
 	{
 		struct
 		{
-			uint8_t rightX, rightY; // Right stick coordinates
-			uint8_t leftX, leftY;   // Left stick coordinates
+			u8 rightX, rightY; // Right stick coordinates
+			u8 leftX, leftY;   // Left stick coordinates
 		} analog;
 		struct
 		{
-			int8_t x_mov, y_mov; // X, Y movement of mouse
+			s8 x_mov, y_mov; // X, Y movement of mouse
 		} mouse;
 		struct
 		{
-			uint8_t twist; // Controller twist
-			uint8_t btn_1; // 1 button value
-			uint8_t btn_2; // 2 button value
-			uint8_t trg_l; // L trigger value
+			u8 twist; // Controller twist
+			u8 btn_1; // 1 button value
+			u8 btn_2; // 2 button value
+			u8 trg_l; // L trigger value
 		} neGcon;
 		struct
 		{
-			uint16_t jog_rot; // Jog rotation
+			u16 jog_rot; // Jog rotation
 		} jogcon;
 		struct
 		{
-			uint16_t gun_x; // Gun X position in dotclocks
-			uint16_t gun_y; // Gun Y position in scanlines
+			u16 gun_x; // Gun X position in dotclocks
+			u16 gun_y; // Gun Y position in scanlines
 		} guncon;
 	};
 
@@ -123,7 +123,7 @@ struct __attribute__((packed)) MultitapPacket
 {
 	// 0x0
 	// see ControllerPacket
-	uint8_t plugged;
+	u8 plugged;
 
 	// 0x1
 	// ditto
@@ -131,10 +131,10 @@ struct __attribute__((packed)) MultitapPacket
 	{
 		struct
 		{
-			uint8_t payloadLength : 4;
-			uint8_t controllerType : 4;
+			u8 payloadLength : 4;
+			u8 controllerType : 4;
 		};
-		uint8_t controllerData;
+		u8 controllerData;
 	};
 
 	// 0x2
@@ -146,7 +146,7 @@ struct __attribute__((packed)) MultitapPacket
 struct GamepadBuffer
 {
 	// 0
-	short unk_0;
+	s16 unk_0;
 
 	// stick values
 	// 0 for left
@@ -154,25 +154,25 @@ struct GamepadBuffer
 	// FF for right
 
 	// 2
-	short unk_1;
+	s16 unk_1;
 
 	// 4
-	short stickLX;
+	s16 stickLX;
 
 	// 6
-	short stickLY;
+	s16 stickLY;
 
 	// 8
-	short stickLX_dontUse1;
+	s16 stickLX_dontUse1;
 
 	// A
-	short stickLY_dontUse1;
+	s16 stickLY_dontUse1;
 
 	// C
-	short stickRX;
+	s16 stickRX;
 
 	// E
-	short stickRY;
+	s16 stickRY;
 
 	// 0x10
 	int buttonsHeldCurrFrame;
@@ -192,15 +192,15 @@ struct GamepadBuffer
 	struct ControllerPacket *ptrControllerPacket;
 
 	// 0x24
-	short gamepadID; // 0 - 7
+	s16 gamepadID; // 0 - 7
 
 	// 0x26
 	// 0 - no analog sticks
 	// 2 - dual analog, or dualshock
-	short gamepadType;
+	s16 gamepadType;
 
 	// 0x28
-	unsigned short framesSinceLastInput;
+	u16 framesSinceLastInput;
 
 	// desired can be nullified before submission,
 	// if power is above the 60-unit hardware budget
@@ -236,10 +236,10 @@ struct GamepadBuffer
 	char unk45; // 2A
 
 	// elapsedTim timers
-	short unk46; // vib1 2A
-	short unk48; // vib2 2A
+	s16 unk46; // vib1 2A
+	s16 unk48; // vib2 2A
 
-	short padding;
+	s16 padding;
 
 	// 0x4c
 	struct RacingWheelData *rwd;
@@ -251,7 +251,7 @@ struct GamepadSystem
 	struct GamepadBuffer gamepad[8];
 
 	// 0x280
-	short unk;
+	s16 unk;
 
 // no clue if this is right, but it fixes Sep3 padding for now,
 // the only important part of the struct is the gamepad[8] anyway,
@@ -263,16 +263,16 @@ struct GamepadSystem
 	// what's 0x282?
 
 	// 0x290, 0x294, 0x298, 0x29c,
-	unsigned int anyoneHeldCurr;
-	unsigned int anyoneTapped;
-	unsigned int anyoneReleased;
-	unsigned int anyoneHeldPrev;
+	u32 anyoneHeldCurr;
+	u32 anyoneTapped;
+	u32 anyoneReleased;
+	u32 anyoneHeldPrev;
 
 	// 0x2A0
 	char unk22[0x22];
 
 	// 2C2
-	short unk_2C2;
+	s16 unk_2C2;
 
 	// 2C4
 	int unk_2C4;
@@ -303,7 +303,7 @@ struct GamepadSystem
 	int numGamepadsConnected;
 
 	// 0x318
-	unsigned int gamepadsConnectedByFlag;
+	u32 gamepadsConnectedByFlag;
 
 // 0x31C
 // end of gamepad system
@@ -321,13 +321,13 @@ struct GamepadSystem
 struct RacingWheelData
 {
 	// 0x0
-	unsigned short gamepadCenter;
+	u16 gamepadCenter;
 
 	// 0x2
-	short deadZone;
+	s16 deadZone;
 
 	// 0x4
-	short range;
+	s16 range;
 };
 
 _Static_assert(sizeof(struct GamepadBuffer) == 0x50);

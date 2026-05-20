@@ -3,14 +3,14 @@
 void DECOMP_VehStuckProc_RevEngine_Animate(struct Thread *t, struct Driver *d)
 {
 	char bVar1;
-	u_char bVar2;
-	short uVar3;
+	u8 bVar2;
+	s16 uVar3;
 	int iVar4;
 	int local_18;
-	short sVar5;
+	s16 sVar5;
 	int uVar6;
 	int iVar7;
-	u_int uVar8;
+	u32 uVar8;
 	int iVar9;
 
 	struct Instance *inst = t->inst;
@@ -167,7 +167,7 @@ void DECOMP_VehStuckProc_RevEngine_Animate(struct Thread *t, struct Driver *d)
 
 LAB_80067dec:
 
-	if ((*(u_int *)&d->KartStates.RevEngine.unk590 & 0x200ffff) == 0)
+	if ((*(u32 *)&d->KartStates.RevEngine.unk590 & 0x200ffff) == 0)
 	{
 		// if curr rev < ???
 		if (d->KartStates.RevEngine.fireLevel < d->const_AccelSpeed_ClassStat)
@@ -218,7 +218,7 @@ LAB_80067dec:
 		iVar9 = iVar4 + d->const_SacredFireSpeed;
 	}
 
-	uVar3 = DECOMP_VehCalc_MapToRange(d->KartStates.RevEngine.fireLevel, iVar7, iVar9, (u_int)bVar1 << 5, local_18);
+	uVar3 = DECOMP_VehCalc_MapToRange(d->KartStates.RevEngine.fireLevel, iVar7, iVar9, (u32)bVar1 << 5, local_18);
 
 	d->turbo_MeterRoomLeft = uVar3;
 
@@ -242,8 +242,8 @@ LAB_80067dec:
 
 	// Reduce height a little
 	inst->scale[1] = 3276 - iVar4;
-	inst->scale[0] = (short)((iVar4 * 6) / 10) + 3276;
-	inst->scale[2] = (short)((iVar4 * 6) / 10) + 3276;
+	inst->scale[0] = (s16)((iVar4 * 6) / 10) + 3276;
+	inst->scale[2] = (s16)((iVar4 * 6) / 10) + 3276;
 
 	d->jumpSquishStretch = iVar4;
 }

@@ -1,6 +1,6 @@
 #include <common.h>
 
-short crystalLightDir[4] = {0x94F, 0x94F, 0x94F, 0};
+s16 crystalLightDir[4] = {0x94F, 0x94F, 0x94F, 0};
 
 void DECOMP_RB_Crystal_ThTick(struct Thread *t)
 {
@@ -61,7 +61,7 @@ void DECOMP_RB_Crystal_LInB(struct Instance *inst)
 int DECOMP_RB_Crystal_LInC(struct Instance *LevInst, struct Thread *driverTh, struct ScratchpadStruct *sps)
 {
 	struct PushBuffer *pb;
-	short posScreen[2];
+	s16 posScreen[2];
 	struct Driver *driver;
 	int modelID;
 

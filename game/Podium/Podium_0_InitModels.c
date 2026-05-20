@@ -12,7 +12,7 @@ void DECOMP_Podium_InitModels(struct GameTracker *gGT)
 	gGT->podium_modelIndex_Second = 0;
 	gGT->podium_modelIndex_Third = 0;
 
-	unsigned char *podiumModelIndexArr = &gGT->podium_modelIndex_First;
+	u8 *podiumModelIndexArr = &gGT->podium_modelIndex_First;
 
 	for (i = 0; i < 8; i++)
 	{

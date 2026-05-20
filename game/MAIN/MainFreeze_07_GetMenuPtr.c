@@ -20,7 +20,7 @@ struct RectMenu *DECOMP_MainFreeze_GetMenuPtr(void)
 		return &data.menuArcadeCup;
 	}
 
-	u_int gameMode = gGT->gameMode1;
+	u32 gameMode = gGT->gameMode1;
 	int *flagPtr = &mainFreezeFlags[0];
 	struct RectMenu **menuPtrToPtr = &mainFreezeMenuArr[0];
 

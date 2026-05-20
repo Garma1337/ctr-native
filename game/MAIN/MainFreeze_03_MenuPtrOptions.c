@@ -250,22 +250,22 @@ force_inline void DISPLAYRECTMENU_MainFreeze_MenuPtrOptions(struct RectMenu *men
 		int volume = howl_VolumeGet(i) & 0xff;
 		int volumeSliderValue = volume * (volumeSliderWidth - 5);
 
-		short volumeSliderPosY = (menuRowsNegativePadding / 2) + (i * 10);
+		s16 volumeSliderPosY = (menuRowsNegativePadding / 2) + (i * 10);
 
 		if (volumeSliderValue < 0)
 			volumeSliderValue += 0xff;
 
 		int volumeSliderTriangleLeftPosX = 30 + volumeSliderTriangleLeftMargin;
-		int volumeSliderBarPosX = 0x38 + volumeSliderTriangleLeftPosX + (short)((u_int)volumeSliderValue >> 8);
+		int volumeSliderBarPosX = 0x38 + volumeSliderTriangleLeftPosX + (s16)((u32)volumeSliderValue >> 8);
 
-		short volumeSliderTriangle[8] = {// 0, 1
-		                                 volumeSliderTriangleLeftPosX + 56, volumeSliderPosY + 58,
+		s16 volumeSliderTriangle[8] = {// 0, 1
+		                               volumeSliderTriangleLeftPosX + 56, volumeSliderPosY + 58,
 
-		                                 // 2, 3
-		                                 volumeSliderTriangleLeftPosX + volumeSliderWidth + 56, volumeSliderPosY + 48,
+		                               // 2, 3
+		                               volumeSliderTriangleLeftPosX + volumeSliderWidth + 56, volumeSliderPosY + 48,
 
-		                                 // 4, 5
-		                                 0, 0};
+		                               // 4, 5
+		                               0, 0};
 
 		volumeSliderTriangle[4] = volumeSliderTriangle[2];
 		volumeSliderTriangle[5] = volumeSliderTriangle[1];

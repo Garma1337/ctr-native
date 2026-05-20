@@ -4,10 +4,10 @@
 void DECOMP_VehStuckProc_Warp_PhysAngular(struct Thread *th, struct Driver *d)
 {
 	int uVar1;
-	short sVar2;
+	s16 sVar2;
 	int iVar3;
 	int timer;
-	short pos[4];
+	s16 pos[4];
 
 	// get instance from driver object
 	struct Instance *inst = d->instSelf;
@@ -39,7 +39,7 @@ void DECOMP_VehStuckProc_Warp_PhysAngular(struct Thread *th, struct Driver *d)
 	if (timer <= 800)
 	{
 		// interpolate until scale is [0x12c0, 0x960, 0x12c0],
-		// car is wide and short
+		// car is wide and s16
 
 		for (char i = 0; i < 3; i++)
 			inst->scale[i] = VehCalc_InterpBySpeed(inst->scale[i], 120, 4800 >> (i & 1));
@@ -67,11 +67,11 @@ void DECOMP_VehStuckProc_Warp_PhysAngular(struct Thread *th, struct Driver *d)
 			if ((inst->flags & HIDE_MODEL) == 0)
 			{
 				// position above kart
-				pos[0] = (short)(d->posCurr.x >> 8);
-				pos[1] = (short)(d->KartStates.Warp.quadHeight >> 8) + 0x40;
-				pos[2] = (short)(d->posCurr.z >> 8);
+				pos[0] = (s16)(d->posCurr.x >> 8);
+				pos[1] = (s16)(d->KartStates.Warp.quadHeight >> 8) + 0x40;
+				pos[2] = (s16)(d->posCurr.z >> 8);
 
-				FLARE_Init((short *)&pos);
+				FLARE_Init((s16 *)&pos);
 			}
 
 			// make invisible
@@ -86,7 +86,7 @@ void DECOMP_VehStuckProc_Warp_PhysAngular(struct Thread *th, struct Driver *d)
 	}
 
 	// drift angle = ((drift angle + warp timer + 0x800) & 0xfff) - 0x800
-	sVar2 = (d->turnAngleCurr + (short)(timer) + 0x800U & 0xfff) - 0x800;
+	sVar2 = (d->turnAngleCurr + (s16)(timer) + 0x800U & 0xfff) - 0x800;
 	d->turnAngleCurr = sVar2;
 
 	// cameraRotY = ??? + kart angle + drift angle

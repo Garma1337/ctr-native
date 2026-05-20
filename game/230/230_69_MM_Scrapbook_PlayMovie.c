@@ -12,7 +12,7 @@ __attribute__((optimize("O0"))) int ScrapBookPlayMovie_DecodeFrame()
 
 void DECOMP_MM_Scrapbook_PlayMovie(struct RectMenu *menu)
 {
-	short lev;
+	s16 lev;
 	int cdPos;
 	int getButtonPress = 0;
 	DRAWENV *ptrDrawEnv;

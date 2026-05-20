@@ -10,7 +10,7 @@ void DECOMP_COLL_FIXED_QUADBLK_LoadScratchpadVerts(struct ScratchpadStruct *sps)
 	struct QuadBlock *ptrQuad = t9;
 	struct BspSearchVertex *bsv;
 	struct LevVertex *vertCurr;
-	short *index;
+	s16 *index;
 
 	bsv = &sps->bspSearchVert[0];
 

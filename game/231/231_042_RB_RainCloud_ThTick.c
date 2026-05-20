@@ -2,7 +2,7 @@
 
 void DECOMP_RB_RainCloud_ThTick(struct Thread *t)
 {
-	short animFrame;
+	s16 animFrame;
 	int numFrames;
 	int reduce;
 	int rng;

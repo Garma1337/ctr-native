@@ -3,7 +3,7 @@
 void DECOMP_UI_VsQuipDrawAll(void)
 {
 	char *print;
-	short *printArr;
+	s16 *printArr;
 	struct Driver *d;
 
 	struct GameTracker *gGT = sdata->gGT;
@@ -19,8 +19,8 @@ void DECOMP_UI_VsQuipDrawAll(void)
 		if ((sdata->Battle_EndOfRace.boolPressX[d->driverID] & 2) != 0)
 			continue;
 
-		// This is secretly a short[2], to hold a config bit
-		printArr = (short *)d->EndOfRaceComment_ptrQuip;
+		// This is secretly a s16[2], to hold a config bit
+		printArr = (s16 *)d->EndOfRaceComment_ptrQuip;
 
 		if (printArr == 0)
 			continue;

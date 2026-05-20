@@ -2,7 +2,7 @@
 
 void DECOMP_Music_SetIntro(void)
 {
-	u_int boolSuccess;
+	u32 boolSuccess;
 	struct Bank thisBank;
 
 	sdata->audioDefaults[7] = 0;

@@ -2,8 +2,8 @@
 
 void DECOMP_VehFrameProc_LastSpin(struct Thread *t, struct Driver *d)
 {
-	short sVar1;
-	u_short interp;
+	s16 sVar1;
+	u16 interp;
 	int numFrames;
 	int startFrame;
 	struct Instance *inst;

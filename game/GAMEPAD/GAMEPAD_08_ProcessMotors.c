@@ -14,7 +14,7 @@ void DECOMP_GAMEPAD_ProcessMotors(struct GamepadSystem *gGS)
 		{
 			if (packet->controllerData == ((PAD_ID_JOGCON << 4) | 3))
 			{
-				unsigned char bVar1 = 0x40;
+				u8 bVar1 = 0x40;
 
 				if (pad->unk44 == 0)
 				{

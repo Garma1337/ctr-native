@@ -4,7 +4,7 @@ void DECOMP_VehPhysProc_SlamWall_PhysAngular(struct Thread *t, struct Driver *d)
 {
 	int elapsedTimeMS = sdata->gGT->elapsedTimeMS;
 
-	d->angle += (short)((d->ampTurnState * elapsedTimeMS) >> 0xd);
+	d->angle += (s16)((d->ampTurnState * elapsedTimeMS) >> 0xd);
 	d->angle &= 0xfff;
 
 	d->rotCurr.y = d->unk3D4[0] + d->angle + d->turnAngleCurr;

@@ -1,7 +1,7 @@
 #include <common.h>
 
 // param1 pointer to array of two shorts (x,y)
-void DECOMP_UI_Lerp2D_Linear(short *ptrPos, short startX, short startY, short endX, short endY, int curFrame, short endFrame)
+void DECOMP_UI_Lerp2D_Linear(s16 *ptrPos, s16 startX, s16 startY, s16 endX, s16 endY, int curFrame, s16 endFrame)
 {
 	int endFrameInt;
 	int newPosX;
@@ -18,10 +18,10 @@ void DECOMP_UI_Lerp2D_Linear(short *ptrPos, short startX, short startY, short en
 		curFrame = curFrame * ((int)endY - (int)startY);
 
 		// posX
-		*ptrPos = startX + (short)(newPosX / endFrameInt);
+		*ptrPos = startX + (s16)(newPosX / endFrameInt);
 
 		// posY
-		ptrPos[1] = startY + (short)(curFrame / endFrameInt);
+		ptrPos[1] = startY + (s16)(curFrame / endFrameInt);
 		return;
 	}
 

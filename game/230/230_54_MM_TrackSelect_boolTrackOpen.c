@@ -2,7 +2,7 @@
 
 char DECOMP_MM_TrackSelect_boolTrackOpen(struct MainMenu_LevelRow *menuSelect)
 {
-	short flag = menuSelect->unlock;
+	s16 flag = menuSelect->unlock;
 	char unlocked = false;
 
 	if (

@@ -4,7 +4,7 @@ void DECOMP_MainInit_FinalizeInit(struct GameTracker *gGT)
 {
 	int i;
 	int numPlyr;
-	u_char *puVar3;
+	u8 *puVar3;
 	struct Driver *d;
 	struct Level *lev1;
 	struct Instance *inst;
@@ -42,7 +42,7 @@ void DECOMP_MainInit_FinalizeInit(struct GameTracker *gGT)
 	for (i = 0; i < 12; i++)
 	{
 		gGT->DecalMP[i].inst = NULL;
-		*(short *)&gGT->DecalMP[i].data[0] = 1000;
+		*(s16 *)&gGT->DecalMP[i].data[0] = 1000;
 
 		gGT->DecalMP[i].ptrOT1 = 0;
 		gGT->DecalMP[i].ptrOT2 = 0;
@@ -157,9 +157,9 @@ void DECOMP_MainInit_FinalizeInit(struct GameTracker *gGT)
 // dont write unused variables
 #if 0
     // lev -> clearColor rgb
-    sdata->LevClearColorRGB[0] = (u_int)(char *)(lev1->clearColorRGBA)[0];
-    sdata->LevClearColorRGB[1] = (u_int)(char *)(lev1->clearColorRGBA)[1];
-    sdata->LevClearColorRGB[2] = (u_int)(char *)(lev1->clearColorRGBA)[2];
+    sdata->LevClearColorRGB[0] = (u32)(char *)(lev1->clearColorRGBA)[0];
+    sdata->LevClearColorRGB[1] = (u32)(char *)(lev1->clearColorRGBA)[1];
+    sdata->LevClearColorRGB[2] = (u32)(char *)(lev1->clearColorRGBA)[2];
 #endif
 
 	// Used in Coco Park, encoded as Blue
@@ -197,7 +197,7 @@ void DECOMP_MainInit_FinalizeInit(struct GameTracker *gGT)
 	numPlyr = gGT->numPlyrCurrGame;
 
 	// stars
-	gGT->stars.numStars = (short)(lev1->stars.numStars / numPlyr);
+	gGT->stars.numStars = (s16)(lev1->stars.numStars / numPlyr);
 	gGT->stars.spread = lev1->stars.spread;
 	gGT->stars.seed = lev1->stars.seed;
 	gGT->stars.distance = lev1->stars.distance;

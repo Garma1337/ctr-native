@@ -11,7 +11,7 @@ void DECOMP_howl_InitChannelAttr_OtherFX(struct OtherFX *otherFX, struct Channel
 
 	DECOMP_Channel_SetVolume(attr, (otherVol * otherFX->volume * vol) >> 10, LR);
 
-	short pitch = otherFX->pitch;
+	s16 pitch = otherFX->pitch;
 
 	if (distort != 0x80)
 		pitch = ((int)pitch * (int)data.distortConst_OtherFX[distort]) >> 0x10;

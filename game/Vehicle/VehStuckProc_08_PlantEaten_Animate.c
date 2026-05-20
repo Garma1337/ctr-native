@@ -2,12 +2,12 @@
 
 void DECOMP_VehStuckProc_PlantEaten_Animate(struct Thread *t, struct Driver *d)
 {
-	short sVar1;
-	long dist;
+	s16 sVar1;
+	s32 dist;
 	struct Instance *inst;
 	SVECTOR plantVector;
 	VECTOR camVec;
-	long alStack32[2];
+	s32 alStack32[2];
 
 	struct GameTracker *gGT = sdata->gGT;
 
@@ -53,12 +53,12 @@ void DECOMP_VehStuckProc_PlantEaten_Animate(struct Thread *t, struct Driver *d)
 		int camX = camVec.vx - inst->matrix.t[0];
 		int camZ = camVec.vz - inst->matrix.t[2];
 
-		pb->rot[1] = (short)ratan2(camX, camZ);
+		pb->rot[1] = (s16)ratan2(camX, camZ);
 
 		// get distance between car and camera
 		dist = SquareRoot0_stub(camX * camX + camZ * camZ);
 
-		pb->rot[0] = (short)0x800 - ratan2(pb->pos[1] - inst->matrix.t[1], dist);
+		pb->rot[0] = (s16)0x800 - ratan2(pb->pos[1] - inst->matrix.t[1], dist);
 
 		pb->rot[2] = 0;
 	}

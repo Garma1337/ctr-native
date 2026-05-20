@@ -2,7 +2,7 @@
 
 void DECOMP_MM_Characters_SetMenuLayout(void)
 {
-	unsigned short unlocked;
+	u16 unlocked;
 	char expand;
 	int iVar3;
 	int i;

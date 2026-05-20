@@ -1,24 +1,24 @@
 struct BoundingBox
 {
-	short min[3];
-	short max[3];
+	s16 min[3];
+	s16 max[3];
 };
 
 struct BspSearchVertex
 {
 	// 0x0
-	short pos[3];
+	s16 pos[3];
 
 	// 0x6
 	// FUN_8001f2dc - COLL_FIXED_TRIANGL_GetNormVec
 	// FUN_8001ef50 - COLL_FIXED_TRIANGL_TestPoint
-	u_short flags;
+	u16 flags;
 
 	// 0x8
 	struct LevVertex *pLevelVertex;
 
 	// 0xC
-	short normalVec[4];
+	s16 normalVec[4];
 
 	// 0x14 large
 };
@@ -40,8 +40,8 @@ struct ScratchpadStruct
 		// this "pos" for quadblock: posMin of object
 
 		// 0x0
-		short pos[3];
-		short hitRadius;
+		s16 pos[3];
+		s16 hitRadius;
 
 		// 0x8
 		int hitRadiusSquared;
@@ -60,17 +60,17 @@ struct ScratchpadStruct
 			// hitRadius could just be a copy
 
 			// 0x10
-			short pos[3];
-			short hitRadius;
+			s16 pos[3];
+			s16 hitRadius;
 
 			// 0x18
 			int hitRadiusSquared;
 
 			// 0x1C
-			short hitPos[3];
+			s16 hitPos[3];
 
 			// 0x22
-			short searchFlags;
+			s16 searchFlags;
 
 			// 0x24
 			int qbFlagsWanted;
@@ -85,15 +85,15 @@ struct ScratchpadStruct
 		struct
 		{
 			// 0x10
-			short distance[3];
-			short unk;
+			s16 distance[3];
+			s16 unk;
 
 			// 0x18
 			struct Thread *thread;
 
 			// 0x1c
-			short min[3];
-			short max[3];
+			s16 min[3];
+			s16 max[3];
 
 			// 0x28
 			// could be non-union 0x28
@@ -110,17 +110,17 @@ struct ScratchpadStruct
 
 	// 0x3C...
 	// 1f800144, can be ptr_mesh_info, or search flags
-	short unk3C;
+	s16 unk3C;
 
 	// 0x3e
-	short boolDidTouchQuadblock;
+	s16 boolDidTouchQuadblock;
 
 	// 0x40
-	// short boolDidTouch_What?
-	short unk40;
+	// s16 boolDidTouch_What?
+	s16 unk40;
 
 	// 0x42
-	short boolDidTouchHitbox;
+	s16 boolDidTouchHitbox;
 
 	// 0x44
 	struct mesh_info *ptr_mesh_info_2;
@@ -132,18 +132,18 @@ struct ScratchpadStruct
 	struct
 	{
 		// 0x4c
-		short hitPos[3];
+		s16 hitPos[3];
 
 		// 0x52
 		// which way does normal point
-		short BspSearchVertexFlags;
+		s16 BspSearchVertexFlags;
 
 		// 0x54
-		short normalVec[4];
+		s16 normalVec[4];
 
 		// 0x5c
 		// distanceFromDriverToUNK
-		short unk[3];
+		s16 unk[3];
 
 		// 0x62
 		char unk62;
@@ -158,14 +158,14 @@ struct ScratchpadStruct
 	struct
 	{
 		// 0x68
-		short hitPos[3];
+		s16 hitPos[3];
 
 		// 0x6e
 		// which way does normal point
-		short BspSearchVertexFlags;
+		s16 BspSearchVertexFlags;
 
 		// 0x70
-		short normalVec[4];
+		s16 normalVec[4];
 
 		// 0x78
 		// distanceFromDriverToUNK
@@ -188,7 +188,7 @@ struct ScratchpadStruct
 	int numInstHitboxesHit;
 
 	// 0xc8, 0xca,
-	short barycentrics[2];
+	s16 barycentrics[2];
 
 	// 0xcc, 0xd0, 0xd4
 	struct LevVertex *levVertHit[3];
@@ -201,7 +201,7 @@ struct ScratchpadStruct
 
 	// vec3, bsp->0x10 - position (FUN_8001d0c4)
 	// 0xe8, 0xea, 0xec, 0xee
-	short unkVecE8[4];
+	s16 unkVecE8[4];
 
 	// 0xf0
 	struct BspSearchVertex bspSearchVert[9];
@@ -241,10 +241,10 @@ struct ScratchpadStructExtended
 	MATRIX cameraMatrix;
 
 	// 0x2ec - 1f8003f4
-	short cameraRot[3];
+	s16 cameraRot[3];
 
 	// 0x2f2 - 1f8003fa
-	short unk2;
+	s16 unk2;
 
 	// 0x2f4 - 1f8003fc
 	int unk3;

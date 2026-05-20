@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_UI_DrawDriverIcon(struct Icon *icon, Point point, u_long *ot, unsigned transparency, int scale, Color color)
+void DECOMP_UI_DrawDriverIcon(struct Icon *icon, Point point, u_long *ot, u32 transparency, int scale, Color color)
 {
 	PolyFT4 *p;
 	GetPrimMem(p);
@@ -43,7 +43,7 @@ void DECOMP_UI_DrawDriverIcon(struct Icon *icon, Point point, u_long *ot, unsign
 		p->colorCode.code.poly.semiTransparency = 1;
 	}
 
-	unsigned int bottomV = (icon->texLayout.v0 + bottomY) - point.y;
+	u32 bottomV = (icon->texLayout.v0 + bottomY) - point.y;
 	p->v[0].texCoords.u = icon->texLayout.u0;
 	p->v[0].texCoords.v = icon->texLayout.v0;
 	p->v[1].texCoords.u = icon->texLayout.u1;

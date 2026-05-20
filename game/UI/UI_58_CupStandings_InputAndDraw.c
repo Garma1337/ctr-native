@@ -5,31 +5,31 @@ void DECOMP_UI_CupStandings_InputAndDraw(void)
 	// Too many variables, many reused registers
 	// same variable names used for different purposes
 	struct GameTracker *gGT;
-	short sVar1;
-	u_short uVar2;
-	short sVar5;
+	s16 sVar1;
+	u16 uVar2;
+	s16 sVar5;
 	int i;
 	int framesPassed;
 	int local_90;
 	int local_30;
 	int local_38;
-	u_int uVar6;
-	short sVar7;
-	u_int uVar8;
-	short uVar9;
+	u32 uVar6;
+	s16 sVar7;
+	u32 uVar8;
+	s16 uVar9;
 	int iVar10;
 	int iVar12;
 	int *ranks;
-	short uVar14;
+	s16 uVar14;
 	int iVar15;
 	int numDrivers;
-	short sVar18;
+	s16 sVar18;
 
-	u_short local_58[2];
+	u16 local_58[2];
 
 	gGT = sdata->gGT;
 
-	unsigned char ADV_CUP = 100;
+	u8 ADV_CUP = 100;
 
 	numDrivers = gGT->numPlyrCurrGame + gGT->numBotsNextGame;
 
@@ -84,7 +84,7 @@ void DECOMP_UI_CupStandings_InputAndDraw(void)
 
 	if (sdata->framesSinceRaceEnded <= 0xf0)
 	{
-		uVar9 = ((short)0xffffff6a);
+		uVar9 = ((s16)0xffffff6a);
 		uVar14 = 0x100;
 		local_90 = 0x1e;
 		iVar12 = (int)local_38;
@@ -174,7 +174,7 @@ void DECOMP_UI_CupStandings_InputAndDraw(void)
 	sVar18 = 0;
 	for (i = 0; i < sdata->numIconsEOR; i++)
 	{
-		sVar5 = (short)i;
+		sVar5 = (s16)i;
 		// If you are in Purple Gem Cup
 		if (gGT->cup.cupID == 4)
 		{
@@ -182,7 +182,7 @@ void DECOMP_UI_CupStandings_InputAndDraw(void)
 			{
 				uVar9 = 0x60;
 				sVar7 = rectX;
-				sVar5 = (short)((rectW + -0x20) / 5) * sVar5 + 0x10;
+				sVar5 = (s16)((rectW + -0x20) / 5) * sVar5 + 0x10;
 				goto LAB_800568d4;
 			}
 			sVar7 = 0;
@@ -222,7 +222,7 @@ void DECOMP_UI_CupStandings_InputAndDraw(void)
 				if (gGT->numBotsNextGame == 0)
 				{
 					uVar9 = 0x6c;
-					sVar7 = rectX + (short)((rectW - (numDrivers * 0x5a) + 0xc) / 2) + sVar18;
+					sVar7 = rectX + (s16)((rectW - (numDrivers * 0x5a) + 0xc) / 2) + sVar18;
 					goto LAB_800568d8;
 				}
 
@@ -467,7 +467,7 @@ void DECOMP_UI_CupStandings_InputAndDraw(void)
 					if (d != 0)
 					{
 						// Set final ranking of each player
-						d->driverRank = (short)i;
+						d->driverRank = (s16)i;
 					}
 
 					// set driver's cup score to zero
@@ -492,7 +492,7 @@ void DECOMP_UI_CupStandings_InputAndDraw(void)
 					if (data.cupPositionPerPlayer[0] == gGT->drivers[0]->driverID)
 					{
 						int bitIndex = 0x6a + i;
-						unsigned int *rewardsSet = sdata->advProgress.rewards;
+						u32 *rewardsSet = sdata->advProgress.rewards;
 
 						if (CHECK_ADV_BIT(rewardsSet, bitIndex) == 0)
 						{

@@ -29,7 +29,7 @@ void DECOMP_Channel_ParseSongToChannels()
 		int unk10_total = song->unk10;
 
 		song->timeSpentPlaying += unk10_total >> 0x10;
-		song->unk10 = (unsigned short)unk10_total;
+		song->unk10 = (u16)unk10_total;
 
 		int volCurr = song->vol_Curr;
 		int volNew = song->vol_New;

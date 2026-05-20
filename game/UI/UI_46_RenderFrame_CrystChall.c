@@ -8,7 +8,7 @@ void DECOMP_UI_RenderFrame_CrystChall(void)
 	struct Driver *player;
 	struct UiElement2D *hudStructPtr;
 	int iVar5;
-	short local_18[2];
+	s16 local_18[2];
 
 	player = gGT->drivers[0];
 	hudStructPtr = data.hudStructPtr[0];

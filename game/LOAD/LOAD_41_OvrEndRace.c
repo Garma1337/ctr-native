@@ -3,12 +3,12 @@
 void OVR_Region1();
 
 // DLL loaded = param_1 + 221
-void DECOMP_LOAD_OvrEndRace(unsigned int param_1)
+void DECOMP_LOAD_OvrEndRace(u32 param_1)
 {
 	struct GameTracker *gGT = sdata->gGT;
 
 	// if new EndOfRace overlay needs to load
-	if ((unsigned int)gGT->overlayIndex_EndOfRace != param_1)
+	if ((u32)gGT->overlayIndex_EndOfRace != param_1)
 	{
 #ifndef REBUILD_PC
 		// EndOfRace overlay 221-225

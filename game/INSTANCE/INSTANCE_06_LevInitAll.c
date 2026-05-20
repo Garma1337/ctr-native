@@ -4,8 +4,8 @@
 // param2 - number of instances
 void DECOMP_INSTANCE_LevInitAll(struct InstDef *levInstDef, int numInst)
 {
-	short sVar5;
-	u_short modelID;
+	s16 sVar5;
+	u16 modelID;
 	int *dst;
 	int *src;
 	struct Instance *inst;
@@ -92,7 +92,7 @@ void DECOMP_INSTANCE_LevInitAll(struct InstDef *levInstDef, int numInst)
 		modelID = levInstDef->model->id;
 
 		// can be -1
-		if ((short)modelID > 0)
+		if ((s16)modelID > 0)
 		{
 			// Only continue if LEV instances are enabled,
 			// they may be disabled due to podium scene on adv hub
@@ -108,9 +108,9 @@ void DECOMP_INSTANCE_LevInitAll(struct InstDef *levInstDef, int numInst)
 			}
 		}
 
-		int boolArcadeOnly = ((((unsigned int)modelID - PU_FRUIT_CRATE) < 2) || (modelID == PU_WUMPA_FRUIT));
+		int boolArcadeOnly = ((((u32)modelID - PU_FRUIT_CRATE) < 2) || (modelID == PU_WUMPA_FRUIT));
 
-		int boolRelicOnly = ((((unsigned int)modelID - STATIC_TIME_CRATE_02) < 2) || (modelID == STATIC_TIME_CRATE_01));
+		int boolRelicOnly = ((((u32)modelID - STATIC_TIME_CRATE_02) < 2) || (modelID == STATIC_TIME_CRATE_01));
 
 		if ((gGT->gameMode1 & TIME_TRIAL) != 0)
 		{
@@ -158,7 +158,7 @@ void DECOMP_INSTANCE_LevInitAll(struct InstDef *levInstDef, int numInst)
 		    ((gGT->gameMode1 & ADVENTURE_MODE) == 0) || ((gGT->gameMode2 & TOKEN_RACE) == 0))
 		{
 			// disable C-T-R letters
-			if ((unsigned int)(modelID - STATIC_C) < 3)
+			if ((u32)(modelID - STATIC_C) < 3)
 				inst->flags &= ~(0xf);
 		}
 

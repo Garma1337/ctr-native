@@ -3,11 +3,11 @@
 void DECOMP_MainInit_JitPoolsNew(struct GameTracker *gGT)
 {
 	char numPlyr;
-	u_int gameMode;
+	u32 gameMode;
 	struct JitPool *pool;
-	u_int uVar5;
-	u_int uVar7;
-	u_int uVar9;
+	u32 uVar5;
+	u32 uVar7;
+	u32 uVar9;
 	int *pointer;
 
 	// game mode
@@ -70,7 +70,7 @@ void DECOMP_MainInit_JitPoolsNew(struct GameTracker *gGT)
 	DECOMP_JitPool_Init(&gGT->JitPools.thread, numThread, sizeof(struct Thread), /*"ThreadPool"*/ 0);
 
 #ifdef CTR_INTERNAL
-	fprintf(stderr, "  thread:       %3d items x 0x%X bytes\n", numThread, (unsigned)sizeof(struct Thread));
+	fprintf(stderr, "  thread:       %3d items x 0x%X bytes\n", numThread, (u32)sizeof(struct Thread));
 #endif
 
 
@@ -137,8 +137,7 @@ void DECOMP_MainInit_JitPoolsNew(struct GameTracker *gGT)
 	                    /*"InstancePool"*/ 0);
 
 #ifdef CTR_INTERNAL
-	fprintf(stderr, "  instance:     %3d items x 0x%X bytes\n", numInstance,
-	        (unsigned)(sizeof(struct Instance) + (sizeof(struct InstDrawPerPlayer) * numPlyr)));
+	fprintf(stderr, "  instance:     %3d items x 0x%X bytes\n", numInstance, (u32)(sizeof(struct Instance) + (sizeof(struct InstDrawPerPlayer) * numPlyr)));
 #endif
 
 

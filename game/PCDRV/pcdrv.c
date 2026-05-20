@@ -2,7 +2,7 @@
 #if 0
 typedef struct {
 	CdlLOC	pos;		/* file location */
-	u_int	size;		/* file size */
+	u32	size;		/* file size */
 	char	name[16];	/* file name (body) */
 } CdlFILE;
 #endif
@@ -93,7 +93,7 @@ CdlFILE *pcCdSearchFile(CdlFILE *loc, const char *filename)
 // TODO, put his decoding in vsync callback
 int boolDecodeXaDuringVsyncCallback = 0;
 
-int pcCdControl(u_char com, u_long *buf, u_char *result)
+int pcCdControl(u8 com, u_long *buf, u8 *result)
 {
 #ifdef REBUILD_PC
 	int v1;
@@ -180,7 +180,7 @@ int pcCdRead(int sectors, u_long *buf, int mode)
 	return 1;
 }
 
-int pcCdReadSync(int mode, uint8_t *result)
+int pcCdReadSync(int mode, u8 *result)
 {
 	// do nothing, pcCdRead() already finished
 

@@ -285,7 +285,7 @@ enum MODEL_ID
 struct ModelFrame
 {
 	// origin
-	short pos[4];
+	s16 pos[4];
 	char unk16[16];
 	int vertexOffset; // always 0x1C
 
@@ -297,22 +297,22 @@ struct ModelAnim
 {
 	char name[0x10];
 
-	unsigned short numFrames;
-	short frameSize;
+	u16 numFrames;
+	s16 frameSize;
 
 	// 0x14
 	// same as model -> 0x30
 	// copied to instance -> 0xd4
 	// used for compressed animations,
 	// or nullptr if animation is uncompressed
-	u_int *ptrDeltaArray;
+	u32 *ptrDeltaArray;
 
 	// 0x18
 	// struct ModelFrame firstFrame;
 	// then verts, then next ModelFrame, then verts, etc...
 };
 
-#define MODELANIM_GETFRAME(x) ((unsigned int)x + sizeof(struct ModelAnim))
+#define MODELANIM_GETFRAME(x) ((u32)x + sizeof(struct ModelAnim))
 
 struct ModelHeader
 {
@@ -325,19 +325,19 @@ struct ModelHeader
 	int unk1;
 
 	// 0x14
-	short maxDistanceLOD;
+	s16 maxDistanceLOD;
 
 	// 0x16
 	// 0x0 - normal 3D model
 	// 0x1 - always point north
 	// 0x2 - always point to camera (warppad numbers)
-	unsigned short flags;
+	u16 flags;
 
 	// 0x18
-	short scale[4];
+	s16 scale[4];
 
 	// 0x20
-	unsigned int ptrCommandList;
+	u32 ptrCommandList;
 
 	// 0x24
 	// null if there are animations
@@ -347,14 +347,14 @@ struct ModelHeader
 	struct TextureLayout **ptrTexLayout; // same as LEV
 
 	// 0x2C
-	unsigned int *ptrColors; // CLUT = color lookup table
+	u32 *ptrColors; // CLUT = color lookup table
 
 	// 0x30
 	// same as anim->0x14
-	unsigned int unk3;
+	u32 unk3;
 
 	// 0x34
-	unsigned int numAnimations;
+	u32 numAnimations;
 
 	// 0x38
 	struct ModelAnim **ptrAnimations;
@@ -373,10 +373,10 @@ struct Model
 
 	// index of 2160 array
 	// 0x10
-	short id;
+	s16 id;
 
 	// 0x12
-	short numHeaders;
+	s16 numHeaders;
 
 	// 0x14
 	struct ModelHeader *headers;
@@ -391,13 +391,13 @@ struct InstDef
 	struct Model *model;
 
 	// 0x14 (0x1c - 8)
-	short scale[4];
+	s16 scale[4];
 
 	// 0x1c (0x24 - 8)
-	unsigned int colorRGBA;
+	u32 colorRGBA;
 
 	// 0x20 (0x28 - 8)
-	unsigned int flags;
+	u32 flags;
 
 	int unk24;
 	int unk28;
@@ -406,10 +406,10 @@ struct InstDef
 	struct Instance *ptrInstance;
 
 	// 0x30
-	short pos[3];
+	s16 pos[3];
 
 	// 0x36
-	short rot[3];
+	s16 rot[3];
 
 	// 0x3c
 	int modelID;
@@ -441,13 +441,13 @@ struct InstDrawPerPlayer
 	struct ModelFrame *ptrNextFrame;
 
 	// 0xc8
-	unsigned int ptrCommandList;
+	u32 ptrCommandList;
 
 	// 0xcc
 	struct TextureLayout **ptrTexLayout;
 
 	// 0xd0
-	unsigned int ptrColorLayout; // maybe should be `unsigned int*`
+	u32 ptrColorLayout; // maybe should be `u32*`
 
 	// 0xd4
 	int ptrDeltaArray;
@@ -456,7 +456,7 @@ struct InstDrawPerPlayer
 	int lodIndex;
 
 	// 0xdc
-	short depthOffset[2];
+	s16 depthOffset[2];
 
 	// 0xe0 - pointer to LOD ModelHeader
 	struct ModelHeader *mh;
@@ -471,7 +471,7 @@ struct InstDrawPerPlayer
 	// 0xf0 - func (for what?)
 
 	// 0xf4
-	short specLight[4];
+	s16 specLight[4];
 
 	// 0xfc = end of struct
 
@@ -495,17 +495,17 @@ struct Instance
 	struct Model *model;
 
 	// 0x1c
-	short scale[3];
+	s16 scale[3];
 
 	// 0x22
-	short alphaScale;
+	s16 alphaScale;
 
 	// 0x24
-	unsigned int colorRGBA;
+	u32 colorRGBA;
 
 	// 0x28
 	// see InstanceFlags enum
-	unsigned int flags;
+	u32 flags;
 
 	// 0x2c
 	// comes from LEVs
@@ -516,23 +516,23 @@ struct Instance
 	MATRIX matrix;
 
 	// 0x50
-	u_char unk50;
-	u_char unk51;
+	u8 unk50;
+	u8 unk51;
 
 	// 0x52
-	u_char animIndex;
+	u8 animIndex;
 	char unk53;
 
 	// 0x54
-	short animFrame; // this might be a `u_short` instead of `short`
+	s16 animFrame; // this might be a `u16` instead of `s16`
 
 	// 0x56
 	// mud, water, ice
-	short vertSplit;
+	s16 vertSplit;
 
 	// 0x58
 	// on ice
-	unsigned int reflectionRGBA;
+	u32 reflectionRGBA;
 
 	// instance->0x5C
 	// instance->0x60 (funcPtr for individual prims)
@@ -570,4 +570,4 @@ struct Instance
 	// struct InstDrawPerPlayer idpp[0];
 };
 
-#define INST_GETIDPP(x) (struct InstDrawPerPlayer *)((unsigned int)x + sizeof(struct Instance))
+#define INST_GETIDPP(x) (struct InstDrawPerPlayer *)((u32)x + sizeof(struct Instance))

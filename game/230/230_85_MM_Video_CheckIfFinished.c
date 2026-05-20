@@ -1,9 +1,9 @@
 #include <common.h>
 
-u_int DECOMP_MM_Video_CheckIfFinished(int param_1)
+u32 DECOMP_MM_Video_CheckIfFinished(int param_1)
 {
 	char bVar1;
-	u_int uVar2;
+	u32 uVar2;
 	int iVar3;
 	int local_20;
 	int local_1c;
@@ -83,7 +83,7 @@ u_int DECOMP_MM_Video_CheckIfFinished(int param_1)
 		}
 
 		// end of scrapbook
-		uVar2 = (u_int)V230.field8_0x18;
+		uVar2 = (u32)V230.field8_0x18;
 	}
 	return uVar2;
 }

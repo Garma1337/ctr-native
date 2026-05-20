@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_RECTMENU_GetHeight(struct RectMenu *m, short *height, int boolCheckSubmenu)
+void DECOMP_RECTMENU_GetHeight(struct RectMenu *m, s16 *height, int boolCheckSubmenu)
 {
 	int lineHeight;
 	struct MenuRow *row;

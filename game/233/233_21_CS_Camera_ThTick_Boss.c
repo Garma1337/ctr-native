@@ -6,7 +6,7 @@ void CS_Camera_ThTick_Boss(struct Thread *t)
 	char i;
 
 	int cutsceneID;
-	short levID;
+	s16 levID;
 
 	struct Instance *inst;
 	struct CutsceneObj *cs;

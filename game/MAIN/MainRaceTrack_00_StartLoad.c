@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_MainRaceTrack_StartLoad(short levelID)
+void DECOMP_MainRaceTrack_StartLoad(s16 levelID)
 
 {
 	// clear backup,

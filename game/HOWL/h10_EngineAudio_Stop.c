@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_EngineAudio_Stop(u_int soundID)
+void DECOMP_EngineAudio_Stop(u32 soundID)
 {
 	if (sdata->boolAudioEnabled == 0)
 		return;

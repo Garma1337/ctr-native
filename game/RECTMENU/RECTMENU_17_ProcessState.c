@@ -10,7 +10,7 @@ void DECOMP_RECTMENU_ProcessState()
 {
 	struct RectMenu *currMenu;
 	int currState;
-	short width;
+	s16 width;
 	int state;
 
 	// check for curr box

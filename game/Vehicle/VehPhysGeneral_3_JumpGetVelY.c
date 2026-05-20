@@ -1,6 +1,6 @@
 #include <common.h>
 
-int DECOMP_VehPhysGeneral_JumpGetVelY(short *normalVec, int *speedXYZ)
+int DECOMP_VehPhysGeneral_JumpGetVelY(s16 *normalVec, int *speedXYZ)
 {
 	int y1 = normalVec[1];
 	int result = y1;

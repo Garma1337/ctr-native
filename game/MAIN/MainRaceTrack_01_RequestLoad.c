@@ -1,6 +1,6 @@
 #include <common.h>
 
-void DECOMP_MainRaceTrack_RequestLoad(short levelID)
+void DECOMP_MainRaceTrack_RequestLoad(s16 levelID)
 {
 	// Turn off HUD
 	sdata->gGT->hudFlags &= 0xfe;

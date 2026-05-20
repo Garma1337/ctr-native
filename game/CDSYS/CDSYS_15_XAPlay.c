@@ -20,7 +20,7 @@ void DECOMP_CDSYS_XAPlay(int categoryID, int xaID)
 		vol = sdata->vol_Music;
 
 	sdata->XA_VolumeBitshift = vol << 7;
-	SpuSetCommonCDVolume((short)sdata->XA_VolumeBitshift, (short)sdata->XA_VolumeBitshift);
+	SpuSetCommonCDVolume((s16)sdata->XA_VolumeBitshift, (s16)sdata->XA_VolumeBitshift);
 
 	sdata->XA_Playing_Index = xaID;
 	sdata->XA_Playing_Category = categoryID;

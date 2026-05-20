@@ -2,10 +2,10 @@
 
 // function that only appears in the japanese retail version
 
-u_int DECOMP_DecalFont_boolRacingWheel()
+u32 DECOMP_DecalFont_boolRacingWheel()
 {
 	struct ControllerPacket *controllerPacketP1 = sdata->gGamepads->gamepad[0].ptrControllerPacket;
-	u_int isRacingWheel = false;
+	u32 isRacingWheel = false;
 
 	if (((
 	         // controllerPacketP1->payLoadLength == 3

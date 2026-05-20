@@ -1,6 +1,6 @@
 #include <common.h>
 
-uint8_t MEMCARD_WaitForHwEvent(void)
+u8 MEMCARD_WaitForHwEvent(void)
 {
 	while (1)
 	{

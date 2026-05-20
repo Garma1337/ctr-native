@@ -2,11 +2,11 @@
 
 void DECOMP_UI_RaceEnd_MenuProc(struct RectMenu *menu)
 {
-	short option;
+	s16 option;
 	struct GameTracker *gGT;
-	u_int uVar3;
+	u32 uVar3;
 	int iVar4;
-	u_short style;
+	u16 style;
 
 	gGT = sdata->gGT;
 

@@ -2,9 +2,9 @@
 
 void DECOMP_VehFire_Audio(struct Driver *driver, int speed_cap)
 {
-	u_int distortion;
-	u_int volume;
-	u_int extraFlags;
+	u32 distortion;
+	u32 volume;
+	u32 extraFlags;
 
 	// if turbo audio cooldown is not done
 	if (driver->VehFire_AudioCooldown != 0)

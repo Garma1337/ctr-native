@@ -21,11 +21,11 @@ void DECOMP_CS_OVR233_LoadData(void)
 	fread(&OVR_233, 1, OVR233_DATA_SIZE, f);
 	fclose(f);
 
-	uint32_t delta = (uintptr_t)&OVR_233 - PSX_OVR233_BASE;
+	u32 delta = (uintptr_t)&OVR_233 - PSX_OVR233_BASE;
 
-	uint32_t *p = (uint32_t *)&OVR_233;
-	uint32_t ovr_start = PSX_OVR233_BASE;
-	uint32_t ovr_end = PSX_OVR233_BASE + 56844;
+	u32 *p = (u32 *)&OVR_233;
+	u32 ovr_start = PSX_OVR233_BASE;
+	u32 ovr_end = PSX_OVR233_BASE + 56844;
 	int count = OVR233_DATA_SIZE / 4;
 
 #define CODE_REGION_END 0x3E4

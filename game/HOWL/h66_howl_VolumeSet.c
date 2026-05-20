@@ -5,7 +5,7 @@ extern int *settingsPtrArr[3];
 
 extern void (*settingsFuncArr[3])();
 
-void DECOMP_howl_VolumeSet(int type, unsigned char vol)
+void DECOMP_howl_VolumeSet(int type, u8 vol)
 {
 	if (*settingsPtrArr[type] == vol)
 		return;

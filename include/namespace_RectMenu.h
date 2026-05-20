@@ -57,7 +57,7 @@ struct MenuRow
 	// determine if the row is "locked"
 
 	// 0x0
-	short stringIndex;
+	s16 stringIndex;
 
 	// 0x2
 	char rowOnPressUp;
@@ -75,14 +75,14 @@ struct MenuRow
 struct RectMenu
 {
 	// 0x0
-	short stringIndexTitle; // string index of title (null, with no row)
+	s16 stringIndexTitle; // string index of title (null, with no row)
 
 	// position for current frame
-	unsigned short posX_curr; // X position
-	unsigned short posY_curr; // Y position
+	u16 posX_curr; // X position
+	u16 posY_curr; // Y position
 
 	// 0x6
-	unsigned short unk1;
+	u16 unk1;
 
 	// 0x8
 	// This is an int, see FUN_800469dc
@@ -103,7 +103,7 @@ struct RectMenu
 	// & 0x8000, anyone can use menu
 	// & 0x100000, top of menu hierarchy
 	// & 0x800000, mute sound of moving cursor
-	unsigned int state;
+	u32 state;
 
 	// 0xC
 	struct MenuRow *rows;
@@ -115,26 +115,26 @@ struct RectMenu
 	// text color, box color, etc
 	// one-byte variable with
 	// two-byte alignment
-	u_short drawStyle;
+	u16 drawStyle;
 
 	// 0x16
 	// position for previous frame
-	short posX_prev;
-	short posY_prev;
+	s16 posX_prev;
+	s16 posY_prev;
 
 	// 0x1a
-	short rowSelected;
+	s16 rowSelected;
 
 	// 0x1c
-	short unk1c;
+	s16 unk1c;
 
 	// 0x1e
 	// no idea, used in save/load
-	short unk1e;
+	s16 unk1e;
 
 	// 0x20
-	short width;
-	short height;
+	s16 width;
+	s16 height;
 
 	// 0x24
 	struct RectMenu *ptrNextBox_InHierarchy;
@@ -147,7 +147,7 @@ struct RectMenu
 	// size is 0x2C
 
 #if BUILD == SepReview
-	unsigned char theRest[8]; // extra size?
+	u8 theRest[8]; // extra size?
 #endif
 };
 

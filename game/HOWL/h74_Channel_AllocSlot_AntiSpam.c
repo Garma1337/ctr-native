@@ -2,7 +2,7 @@
 
 void Channel_DestroySelf(struct ChannelStats *stats);
 
-struct ChannelStats *DECOMP_Channel_AllocSlot_AntiSpam(short soundID, char boolUseAntiSpam, int flags, struct ChannelAttr *attr)
+struct ChannelStats *DECOMP_Channel_AllocSlot_AntiSpam(s16 soundID, char boolUseAntiSpam, int flags, struct ChannelAttr *attr)
 {
 	struct ChannelAttr *newAttr;
 	struct ChannelStats *curr, *backupNext;
@@ -24,7 +24,7 @@ struct ChannelStats *DECOMP_Channel_AllocSlot_AntiSpam(short soundID, char boolU
 			    (curr->type == 1) &&
 
 			    // matching ID
-			    ((short)curr->soundID == soundID))
+			    ((s16)curr->soundID == soundID))
 			{
 				int duration = sdata->gGT->frameTimer_MainFrame_ResetDB - curr->startFrame;
 
@@ -44,7 +44,7 @@ struct ChannelStats *DECOMP_Channel_AllocSlot_AntiSpam(short soundID, char boolU
 void Channel_DestroySelf(struct ChannelStats *stats)
 {
 	// set channel to OFF, and remove PLAYING bit
-	u_int *flagPtr = &sdata->ChannelUpdateFlags[stats->channelID];
+	u32 *flagPtr = &sdata->ChannelUpdateFlags[stats->channelID];
 	*flagPtr |= 1;
 	*flagPtr &= ~(2);
 

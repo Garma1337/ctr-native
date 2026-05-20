@@ -3,7 +3,7 @@
 void DECOMP_MM_Video_DecDCToutCallbackFunc(void)
 {
 // part of PSYQ BSS
-#define StCdIntrFlag *(u_int *)0x8009ebf8
+#define StCdIntrFlag *(u32 *)0x8009ebf8
 
 	if (((V230.flags & 1) != 0) && (StCdIntrFlag != 0))
 	{

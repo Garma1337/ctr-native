@@ -100,15 +100,15 @@ void DECOMP_PushBuffer_UpdateFrustum(struct PushBuffer *pb)
 		read_mt(tx, ty, tz);
 
 		// far clip: pos + dir*100
-		posX = (short)tx * 0x100 + cameraPosX;
-		posY = (short)ty * 0x100 + cameraPosY;
-		posZ = (short)tz * 0x100 + cameraPosZ;
+		posX = (s16)tx * 0x100 + cameraPosX;
+		posY = (s16)ty * 0x100 + cameraPosY;
+		posZ = (s16)tz * 0x100 + cameraPosZ;
 
 		iVar19 = 0x1000;
 
-		fcOUT->pos[0] = (short)tx + cameraPosX;
-		fcOUT->pos[1] = (short)ty + cameraPosY;
-		fcOUT->pos[2] = (short)tz + cameraPosZ;
+		fcOUT->pos[0] = (s16)tx + cameraPosX;
+		fcOUT->pos[1] = (s16)ty + cameraPosY;
+		fcOUT->pos[2] = (s16)tz + cameraPosZ;
 
 		// far clip: pos + dir*100
 		spf->pos[0] = posX;
@@ -230,13 +230,13 @@ void DECOMP_PushBuffer_UpdateFrustum(struct PushBuffer *pb)
 		fcOUT--;
 	}
 
-	pb->bbox.min[0] = (short)min_X;
-	pb->bbox.min[1] = (short)min_Y;
-	pb->bbox.min[2] = (short)min_Z;
+	pb->bbox.min[0] = (s16)min_X;
+	pb->bbox.min[1] = (s16)min_Y;
+	pb->bbox.min[2] = (s16)min_Z;
 
-	pb->bbox.max[0] = (short)max_X;
-	pb->bbox.max[1] = (short)max_Y;
-	pb->bbox.max[2] = (short)max_Z;
+	pb->bbox.max[0] = (s16)max_X;
+	pb->bbox.max[1] = (s16)max_Y;
+	pb->bbox.max[2] = (s16)max_Z;
 
 	// cameraPos (x,y,z)
 	spf->camPos[0] = cameraPosX;
@@ -265,9 +265,9 @@ void DECOMP_PushBuffer_UpdateFrustum(struct PushBuffer *pb)
 	int retZ;
 	read_mt(retX, retY, retZ);
 
-	*(short *)&pb->frustumData[0x20] = -(short)retX;
-	*(short *)&pb->frustumData[0x22] = -(short)retY;
-	*(short *)&pb->frustumData[0x24] = -(short)retZ;
+	*(s16 *)&pb->frustumData[0x20] = -(s16)retX;
+	*(s16 *)&pb->frustumData[0x22] = -(s16)retY;
+	*(s16 *)&pb->frustumData[0x24] = -(s16)retZ;
 
 
 	int distToScreen = pb->distanceToScreen_PREV;
@@ -278,10 +278,10 @@ void DECOMP_PushBuffer_UpdateFrustum(struct PushBuffer *pb)
 		iVar9 = distToScreen + 3;
 	}
 
-	*(short *)&pb->frustumData[0x26] = (short)(-(cameraPosX * (short)retX + cameraPosY * (short)retY + cameraPosZ * (short)retZ) >> 0xd) - (short)(iVar9 >> 2);
+	*(s16 *)&pb->frustumData[0x26] = (s16)(-(cameraPosX * (s16)retX + cameraPosY * (s16)retY + cameraPosZ * (s16)retZ) >> 0xd) - (s16)(iVar9 >> 2);
 
 	// Negation Flags
-	int flags = (unsigned int)retX >> 0x1f;
+	int flags = (u32)retX >> 0x1f;
 	if (retY < 0)
 	{
 		flags = flags | 2;
@@ -301,8 +301,8 @@ void DECOMP_PushBuffer_UpdateFrustum(struct PushBuffer *pb)
 
 	read_mt(retX, retY, retZ);
 
-	*(short *)&pb->data6[0] = (short)retX + cameraPosX;
-	*(short *)&pb->data6[2] = (short)retY + cameraPosY;
-	*(short *)&pb->data6[4] = (short)retZ + cameraPosZ;
+	*(s16 *)&pb->data6[0] = (s16)retX + cameraPosX;
+	*(s16 *)&pb->data6[2] = (s16)retY + cameraPosY;
+	*(s16 *)&pb->data6[4] = (s16)retZ + cameraPosZ;
 	return;
 }

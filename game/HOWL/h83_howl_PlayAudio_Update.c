@@ -4,7 +4,7 @@ void DECOMP_howl_PlayAudio_Update()
 {
 	int *ptrFlag;
 	struct ChannelStats *curr, *backupNext;
-	u_char statFlags;
+	u8 statFlags;
 
 	if (sdata->boolAudioEnabled != 0)
 	{

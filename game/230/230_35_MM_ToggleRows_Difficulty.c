@@ -5,9 +5,9 @@ void DECOMP_MM_ToggleRows_Difficulty(void)
 	char bVar1;
 	struct GameTracker *gGT;
 	int iVar3;
-	short bitIndex;
-	u_short uVar5;
-	u_int uVar6;
+	s16 bitIndex;
+	u16 uVar5;
+	u32 uVar6;
 	int iVar7;
 
 	gGT = sdata->gGT;

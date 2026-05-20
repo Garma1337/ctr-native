@@ -160,7 +160,7 @@ int DECOMP_MEMCARD_HandleEvent(void)
 
 	case MC_STAGE_SAVE_PART0_START:
 
-		int DECOMP_MEMCARD_ChecksumSave(unsigned char *saveBytes, int len);
+		int DECOMP_MEMCARD_ChecksumSave(u8 * saveBytes, int len);
 		event = DECOMP_MEMCARD_ChecksumSave(sdata->memcard_ptrStart, sdata->memcardFileSize);
 
 		if (event == MC_RETURN_PENDING)
@@ -270,7 +270,7 @@ int DECOMP_MEMCARD_HandleEvent(void)
 	};
 }
 
-int MEMCARD_NewFunc_AsyncCRC(unsigned char *saveBytes, int len)
+int MEMCARD_NewFunc_AsyncCRC(u8 *saveBytes, int len)
 {
 	int i;
 	int crc;

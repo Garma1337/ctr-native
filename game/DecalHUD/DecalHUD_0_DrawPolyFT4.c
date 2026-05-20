@@ -2,7 +2,7 @@
 
 #define EDUCATIONAL_BUG_IF 0
 
-void DECOMP_DecalHUD_DrawPolyFT4(struct Icon *icon, short posX, short posY, struct PrimMem *primMem, u_long *ot, char transparency, short scale)
+void DECOMP_DecalHUD_DrawPolyFT4(struct Icon *icon, s16 posX, s16 posY, struct PrimMem *primMem, u_long *ot, char transparency, s16 scale)
 {
 	if (!icon)
 		return;
@@ -10,10 +10,10 @@ void DECOMP_DecalHUD_DrawPolyFT4(struct Icon *icon, short posX, short posY, stru
 	POLY_FT4 *p = (POLY_FT4 *)primMem->curr;
 	addPolyFT4(ot, p);
 
-	unsigned int width = icon->texLayout.u1 - icon->texLayout.u0;
-	unsigned int height = icon->texLayout.v2 - icon->texLayout.v0;
-	unsigned int bottomY = posY + FP_Mult(height, scale);
-	unsigned int rightX = posX + FP_Mult(width, scale);
+	u32 width = icon->texLayout.u1 - icon->texLayout.u0;
+	u32 height = icon->texLayout.v2 - icon->texLayout.v0;
+	u32 bottomY = posY + FP_Mult(height, scale);
+	u32 rightX = posX + FP_Mult(width, scale);
 
 #if EDUCATIONAL_BUG_IF
 	// using custom-made macro that resembles the compiler optimization used in the original code
