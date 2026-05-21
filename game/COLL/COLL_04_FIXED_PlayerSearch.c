@@ -151,26 +151,22 @@ static void COLL_FIXED_PlayerSearch_NormalizeAxis3(struct ScratchpadStruct *sps,
 	s32 x = d->AxisAngle3_normalVec[0] * 5 + sps->Set2.normalVec[0] * 3;
 	s32 y = d->AxisAngle3_normalVec[1] * 5 + sps->Set2.normalVec[1] * 3;
 	s32 z = d->AxisAngle3_normalVec[2] * 5 + sps->Set2.normalVec[2] * 3;
-	u32 len = VehCalc_FastSqrt(x * x + y * y + z * z, 0x18) >> 12;
+	u32 sum = (u32)CollFixed_MulLo(x, x) + (u32)CollFixed_MulLo(y, y) + (u32)CollFixed_MulLo(z, z);
+	u32 len = VehCalc_FastSqrt(sum, 0x18) >> 12;
 
-	if (len == 0)
-		return;
-
-	d->AxisAngle3_normalVec[0] = (x * 0x1000) / (s32)len;
-	d->AxisAngle3_normalVec[1] = (y * 0x1000) / (s32)len;
-	d->AxisAngle3_normalVec[2] = (z * 0x1000) / (s32)len;
+	d->AxisAngle3_normalVec[0] = CollFixed_Sll32(x, 12) / (s32)len;
+	d->AxisAngle3_normalVec[1] = CollFixed_Sll32(y, 12) / (s32)len;
+	d->AxisAngle3_normalVec[2] = CollFixed_Sll32(z, 12) / (s32)len;
 }
 
 static void COLL_FIXED_PlayerSearch_NormalizeAxis2(struct Driver *d, s32 x, s32 y, s32 z)
 {
-	u32 len = VehCalc_FastSqrt(x * x + y * y + z * z, 0x18) >> 12;
+	u32 sum = (u32)CollFixed_MulLo(x, x) + (u32)CollFixed_MulLo(y, y) + (u32)CollFixed_MulLo(z, z);
+	u32 len = VehCalc_FastSqrt(sum, 0x18) >> 12;
 
-	if (len == 0)
-		return;
-
-	d->AxisAngle2_normalVec[0] = (x << 12) / (s32)len;
-	d->AxisAngle2_normalVec[1] = (y << 12) / (s32)len;
-	d->AxisAngle2_normalVec[2] = (z << 12) / (s32)len;
+	d->AxisAngle2_normalVec[0] = CollFixed_Sll32(x, 12) / (s32)len;
+	d->AxisAngle2_normalVec[1] = CollFixed_Sll32(y, 12) / (s32)len;
+	d->AxisAngle2_normalVec[2] = CollFixed_Sll32(z, 12) / (s32)len;
 }
 
 static int COLL_FIXED_PlayerSearch_CheckMaskGrabProgress(struct Driver *d, struct QuadBlock *quad)
@@ -203,7 +199,7 @@ static int COLL_FIXED_PlayerSearch_CheckMaskGrabProgress(struct Driver *d, struc
 
 	u16 trackLength = level->ptr_restart_points[0].distToFinish;
 
-	if ((node->distToFinish < ((trackLength * 0xf) >> 4)) && (d->lastValid != NULL) && (d->lastValid->checkpointIndex != -1) &&
+	if ((node->distToFinish < ((trackLength * 0xf) >> 4)) && (d->lastValid->checkpointIndex != -1) &&
 	    ((level->ptr_restart_points[(u8)d->lastValid->checkpointIndex].distToFinish + (trackLength >> 2)) < node->distToFinish))
 	{
 		return 1;
@@ -316,7 +312,7 @@ void COLL_FIXED_PlayerSearch(struct Thread *t, struct Driver *d)
 		d->terrainMeta2 = DECOMP_VehAfterColl_GetTerrain(TERRAIN_NONE);
 	}
 
-	if (d->posCurr.y < ((s32)((s16)level->ptr_mesh_info->bspRoot->box.min[2]) - 0x40) * 0x100)
+	if (d->posCurr.y < ((s32)level->ptr_mesh_info->bspRoot->box.min[1] - 0x40) * 0x100)
 	{
 		d->unkAA |= 1;
 	}
