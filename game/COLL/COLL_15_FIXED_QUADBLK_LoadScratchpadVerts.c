@@ -1,27 +1,31 @@
 #include <common.h>
 
-void DECOMP_COLL_FIXED_QUADBLK_LoadScratchpadVerts(struct ScratchpadStruct *sps)
-{
-	// rigged to $t8/$t9 by naughty dog
-	register int t8 asm("t8");
-	register int t9 asm("t9");
+static struct LevVertex *sCollFixedLoadScratchpadVertsVertexArray;
+static struct QuadBlock *sCollFixedLoadScratchpadVertsQuad;
 
-	struct LevVertex *ptrVert = t8;
-	struct QuadBlock *ptrQuad = t9;
+static void COLL_FIXED_QUADBLK_SetLoadScratchpadVertsContext(struct ScratchpadStruct *sps, struct QuadBlock *quad)
+{
+	// NOTE(aalhendi): Retail passes these through implicit MIPS registers t8/t9.
+	// Native records that register state explicitly before calling the loader.
+	sCollFixedLoadScratchpadVertsVertexArray = sps->ptr_mesh_info->ptrVertexArray;
+	sCollFixedLoadScratchpadVertsQuad = quad;
+}
+
+void COLL_FIXED_QUADBLK_LoadScratchpadVerts(struct ScratchpadStruct *sps)
+{
+	struct LevVertex *ptrVert = sCollFixedLoadScratchpadVertsVertexArray;
+	struct QuadBlock *ptrQuad = sCollFixedLoadScratchpadVertsQuad;
 	struct BspSearchVertex *bsv;
 	struct LevVertex *vertCurr;
-	s16 *index;
+	u16 *index;
 
 	bsv = &sps->bspSearchVert[0];
 
-	for (index = &ptrQuad->index[0]; index < &ptrQuad->index[9]; index++, bsv++)
+	for (index = (u16 *)&ptrQuad->index[0]; index < (u16 *)&ptrQuad->index[9]; index++, bsv++)
 	{
 		vertCurr = &ptrVert[*index];
 		bsv->pLevelVertex = vertCurr;
 		*(int *)&bsv->pos[0] = *(int *)&vertCurr->pos[0];
 		*(int *)&bsv->pos[2] = *(int *)&vertCurr->pos[2];
 	}
-
-	t8 = ptrVert;
-	t9 = ptrQuad;
 }

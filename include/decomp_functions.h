@@ -895,6 +895,13 @@ void DECOMP_BOTS_Killplane(struct Thread *botThread);
 void DECOMP_COLL_FIXED_BotsSearch(s16 *posCurr, s16 *posPrev, struct ScratchpadStruct *sps);
 void DECOMP_COLL_SearchBSP_CallbackPARAM(struct BSP *root, struct BoundingBox *bbox, void (*callback)(struct BSP *, struct ScratchpadStruct *),
                                          struct ScratchpadStruct *param);
+void COLL_FIXED_TRIANGL_Barycentrics(s16 *out, s16 *v1, s16 *v2, s16 *point);
+void COLL_FIXED_TRIANGL_UNUSED(void);
+void COLL_FIXED_TRIANGL_TestPoint(void *sps, void *v1, void *v2, void *v3);
+void COLL_FIXED_TRIANGL_GetNormVec(void *sps, void *v1, void *v2, void *v3);
+void COLL_FIXED_QUADBLK_LoadScratchpadVerts(struct ScratchpadStruct *sps);
+void COLL_FIXED_QUADBLK_GetNormVecs_LoLOD(struct ScratchpadStruct *sps, struct QuadBlock *quad);
+void COLL_FIXED_QUADBLK_GetNormVecs_HiLOD(struct ScratchpadStruct *sps, struct QuadBlock *quad);
 void COLL_FIXED_QUADBLK_TestTriangles(struct QuadBlock *qb, struct ScratchpadStruct *sps);
 void COLL_FIXED_BSPLEAF_TestQuadblocks(struct BSP *node, struct ScratchpadStruct *sps);
 void DECOMP_BOTS_LevInstColl(struct Thread *param_1);

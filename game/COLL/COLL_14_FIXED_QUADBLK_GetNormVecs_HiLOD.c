@@ -1,7 +1,8 @@
 #include <common.h>
 
-void DECOMP_COLL_FIXED_QUADBLK_GetNormVecs_HiLOD(struct ScratchpadStruct *sps, struct QuadBlock *quad)
+void COLL_FIXED_QUADBLK_GetNormVecs_HiLOD(struct ScratchpadStruct *sps, struct QuadBlock *quad)
 {
+	COLL_FIXED_QUADBLK_SetLoadScratchpadVertsContext(sps, quad);
 	COLL_FIXED_QUADBLK_LoadScratchpadVerts(sps);
 
 	// always 0 for high poly (small block)
@@ -17,7 +18,7 @@ void DECOMP_COLL_FIXED_QUADBLK_GetNormVecs_HiLOD(struct ScratchpadStruct *sps, s
 	// no collision detection here
 	struct BspSearchVertex *bsv = &sps->bspSearchVert[0];
 
-	if (sps->unkVecE8[2] != sps->unkVecE8[3])
+	if ((u16)sps->unkVecE8[2] != (u16)sps->unkVecE8[3])
 	{
 		*SPS_TNVD = QBL_TNVD[4];                                       // triangle 4
 		COLL_FIXED_TRIANGL_GetNormVec(sps, &bsv[8], &bsv[6], &bsv[7]); // 8, 6, 7

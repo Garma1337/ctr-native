@@ -95,6 +95,13 @@
 #include "game/COLL/COLL_00_LevModelMeta.c"
 #include "game/COLL/COLL_01_SearchBSP_CallbackQUADBLK.c"
 #include "game/COLL/COLL_06_SearchBSP_CallbackPARAM.c"
+#include "game/COLL/COLL_07_FIXED_TRIANGL_Barycentrics.c"
+#include "game/COLL/COLL_08_FIXED_TRIANGL_UNUSED.c"
+#include "game/COLL/COLL_09_FIXED_TRIANGL_TestPoint.c"
+#include "game/COLL/COLL_10_FIXED_TRIANGL_GetNormVec.c"
+#include "game/COLL/COLL_15_FIXED_QUADBLK_LoadScratchpadVerts.c"
+#include "game/COLL/COLL_13_FIXED_QUADBLK_GetNormVecs_LoLOD.c"
+#include "game/COLL/COLL_14_FIXED_QUADBLK_GetNormVecs_HiLOD.c"
 #include "game/COLL/COLL_11_FIXED_QUADBLK_TestTriangles.c"
 #include "game/COLL/COLL_12_FIXED_BSPLEAF_TestQuadblocks.c"
 
