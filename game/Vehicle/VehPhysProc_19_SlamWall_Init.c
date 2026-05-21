@@ -1,7 +1,7 @@
 #include <common.h>
 
 void COLL_FIXED_PlayerSearch();
-void DECOMP_VehPhysProc_SlamWall_Animate();
+void VehPhysProc_SlamWall_Animate();
 
 // budget, 0x120 bytes, 288 bytes
 
@@ -19,10 +19,9 @@ void *PlayerCrashingFuncTable[13] = {
     COLL_FIXED_PlayerSearch,
     VehPhysGeneral_JumpAndFriction,
     VehPhysForce_TranslateMatrix,
-    DECOMP_VehPhysProc_SlamWall_Animate,
+    VehPhysProc_SlamWall_Animate,
     VehEmitter_DriverMain,
 #else
-// TODO(aalhendi): Port slam-wall animation stage.
 #ifdef CTR_NATIVE
     COLL_MOVED_PlayerSearch,
     VehPhysForce_CollideDrivers,
@@ -33,7 +32,7 @@ void *PlayerCrashingFuncTable[13] = {
     COLL_FIXED_PlayerSearch,
     VehPhysGeneral_JumpAndFriction,
     VehPhysForce_TranslateMatrix,
-    NULL,
+    VehPhysProc_SlamWall_Animate,
     VehEmitter_DriverMain,
 #endif
 };

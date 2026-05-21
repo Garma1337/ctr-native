@@ -1,7 +1,7 @@
 #include <common.h>
 
 void COLL_FIXED_PlayerSearch();
-void DECOMP_VehPhysProc_SpinStop_Animate();
+void VehPhysProc_SpinStop_Animate();
 
 void *PlayerStopSpinFuncTable[0xD] = {0,
                                       0,
@@ -16,12 +16,11 @@ void *PlayerStopSpinFuncTable[0xD] = {0,
                                       COLL_FIXED_PlayerSearch,
                                       VehPhysGeneral_JumpAndFriction,
                                       VehPhysForce_TranslateMatrix,
-                                      DECOMP_VehPhysProc_SpinStop_Animate,
+                                      VehPhysProc_SpinStop_Animate,
 
                                       VehEmitter_DriverMain
 
 #else
-// TODO(aalhendi): Port spin-stop animation stage.
 #ifdef CTR_NATIVE
                                       COLL_MOVED_PlayerSearch,
                                       VehPhysForce_CollideDrivers,
@@ -32,7 +31,7 @@ void *PlayerStopSpinFuncTable[0xD] = {0,
                                       COLL_FIXED_PlayerSearch,
                                       VehPhysGeneral_JumpAndFriction,
                                       VehPhysForce_TranslateMatrix,
-                                      NULL,
+                                      VehPhysProc_SpinStop_Animate,
                                       VehEmitter_DriverMain
 #endif
 };

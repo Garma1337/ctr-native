@@ -1,6 +1,7 @@
 #include <common.h>
 
-void DECOMP_VehStuckProc_Tumble_PhysAngular(struct Thread *thread, struct Driver *driver)
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80068150-0x80068244
+void VehStuckProc_Tumble_PhysAngular(struct Thread *thread, struct Driver *driver)
 {
 	int elapsedTimeMS = sdata->gGT->elapsedTimeMS;
 
@@ -24,9 +25,10 @@ void DECOMP_VehStuckProc_Tumble_PhysAngular(struct Thread *thread, struct Driver
 
 	(driver->rotCurr).w = DECOMP_VehCalc_InterpBySpeed((int)(driver->rotCurr).w, (elapsedTimeMS << 5) >> 5, 0);
 
-#ifndef REBUILD_PS1
 	VehPhysForce_RotAxisAngle(&driver->matrixMovingDir, (s16 *)&driver->AxisAngle1_normalVec, driver->angle);
-#endif
+}
 
-	return;
+void DECOMP_VehStuckProc_Tumble_PhysAngular(struct Thread *thread, struct Driver *driver)
+{
+	VehStuckProc_Tumble_PhysAngular(thread, driver);
 }

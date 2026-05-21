@@ -1,6 +1,7 @@
 #include <common.h>
 
-void DECOMP_VehStuckProc_Tumble_Update(struct Thread *thread, struct Driver *driver)
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8006809c-0x800680d0
+void VehStuckProc_Tumble_Update(struct Thread *thread, struct Driver *driver)
 {
 	if (driver->NoInputTimer != 0)
 		return;
@@ -8,4 +9,9 @@ void DECOMP_VehStuckProc_Tumble_Update(struct Thread *thread, struct Driver *dri
 	driver->matrixArray = 0;
 	driver->matrixIndex = 0;
 	DECOMP_VehPhysProc_Driving_Init(thread, driver);
+}
+
+void DECOMP_VehStuckProc_Tumble_Update(struct Thread *thread, struct Driver *driver)
+{
+	VehStuckProc_Tumble_Update(thread, driver);
 }

@@ -1,10 +1,9 @@
 #include <common.h>
 
-void DECOMP_VehPhysProc_FreezeVShift_ReverseOneFrame(struct Thread *t, struct Driver *d)
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80062e04-0x80062e94
+void VehPhysProc_FreezeVShift_ReverseOneFrame(struct Thread *t, struct Driver *d)
 {
-#ifndef REBUILD_PS1
 	VehPhysGeneral_JumpAndFriction(t, d);
-#endif
 
 	int actionFlagSet = d->actionsFlagSet;
 
@@ -18,8 +17,8 @@ void DECOMP_VehPhysProc_FreezeVShift_ReverseOneFrame(struct Thread *t, struct Dr
 			d->ySpeed = 0;
 			d->zSpeed = 0;
 
-			// d->speed and d->speedApprox
-			*(int *)&d->speed = 0;
+			d->speed = 0;
+			d->speedApprox = 0;
 
 			// set position to previous position
 			d->posCurr.x = d->posPrev.x;
@@ -31,4 +30,9 @@ void DECOMP_VehPhysProc_FreezeVShift_ReverseOneFrame(struct Thread *t, struct Dr
 	}
 
 	DECOMP_VehPhysProc_Driving_Init(t, d);
+}
+
+void DECOMP_VehPhysProc_FreezeVShift_ReverseOneFrame(struct Thread *t, struct Driver *d)
+{
+	VehPhysProc_FreezeVShift_ReverseOneFrame(t, d);
 }

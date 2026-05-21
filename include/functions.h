@@ -1341,4 +1341,3 @@ void SelectProfile_Init(u16 flags);
 void Seal_CheckColl(struct Instance *sealInst, struct Thread *sealTh, int damage, int radius, int sound);
 void DotLights_AudioAndVideo(struct GameTracker *gGT);
 void EngineSound_NearestAIs(void);
-void VehStuckProc_Tumble_PhysLinear(struct Thread *t, struct Driver *d);

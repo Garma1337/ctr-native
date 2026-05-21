@@ -1,6 +1,7 @@
 #include <common.h>
 
-void DECOMP_VehStuckProc_Tumble_PhysLinear(struct Thread *thread, struct Driver *driver)
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800680d0-0x80068150
+void VehStuckProc_Tumble_PhysLinear(struct Thread *thread, struct Driver *driver)
 {
 	driver->NoInputTimer -= sdata->gGT->elapsedTimeMS;
 
@@ -14,6 +15,9 @@ void DECOMP_VehStuckProc_Tumble_PhysLinear(struct Thread *thread, struct Driver 
 	driver->fireSpeed = 0;
 	driver->actionsFlagSet |= 0x5808;
 	driver->jump_InitialVelY = driver->NoInputTimer * 2 + 6000;
+}
 
-	return;
+void DECOMP_VehStuckProc_Tumble_PhysLinear(struct Thread *thread, struct Driver *driver)
+{
+	VehStuckProc_Tumble_PhysLinear(thread, driver);
 }

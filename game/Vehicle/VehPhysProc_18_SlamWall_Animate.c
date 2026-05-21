@@ -1,50 +1,34 @@
 #include <common.h>
 
-void DECOMP_VehPhysProc_SlamWall_Animate(struct Thread *t, struct Driver *d)
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80063b2c-0x80063bd4
+void VehPhysProc_SlamWall_Animate(struct Thread *t, struct Driver *d)
 {
-	struct Instance *inst;
-	inst = t->inst;
+	struct Instance *inst = t->inst;
 
 	inst->animFrame++;
 
 	d->matrixIndex++;
 
-	// If crashing animation is not finished, quit function
-	if (
-	    // oxide has no animation
-	    (data.characterIDs[d->driverID] != NITROS_OXIDE) &&
+	int numFrames = VehFrameInst_GetNumAnimFrames(inst, inst->animIndex);
 
-	    // animation is not over
-	    ((inst->animFrame + 1) < 15)
-
-#if 0
-		// except for Oxide, who has zero frames
-		15 == VehFrameInst_GetNumAnimFrames(inst, inst->animIndex)
-#endif
-	)
+	if (inst->animFrame < (numFrames - 1))
 	{
 		return;
 	}
 
-	// == Initialize Driving ==
-
-	d->matrixArray = 0;
-	d->matrixIndex = 0;
-	inst->animIndex = 0;
-
-	// start halfway into steer animation
-	inst->animFrame = 10;
-#if 0 // 10 =
-		VehFrameInst_GetStartFrame(
-
-			0, // midpoint
-
-			VehFrameInst_GetNumAnimFrames(
-				inst, // driver instance
-				0	  // anim #0, steer
-			)
-		);
-#endif
+	numFrames = VehFrameInst_GetNumAnimFrames(inst, 0);
+	if (numFrames > 0)
+	{
+		inst->animIndex = 0;
+		inst->animFrame = VehFrameInst_GetStartFrame(0, numFrames);
+		d->matrixArray = 0;
+		d->matrixIndex = 0;
+	}
 
 	d->funcPtrs[0] = DECOMP_VehPhysProc_Driving_Init;
+}
+
+void DECOMP_VehPhysProc_SlamWall_Animate(struct Thread *t, struct Driver *d)
+{
+	VehPhysProc_SlamWall_Animate(t, d);
 }

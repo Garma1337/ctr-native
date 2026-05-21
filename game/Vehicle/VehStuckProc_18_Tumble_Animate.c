@@ -1,6 +1,7 @@
 #include <common.h>
 
-void DECOMP_VehStuckProc_Tumble_Animate(struct Thread *thread, struct Driver *driver)
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80068244-0x800682a4
+void VehStuckProc_Tumble_Animate(struct Thread *thread, struct Driver *driver)
 {
 	int matrixIndex;
 	int arrLength;
@@ -20,6 +21,9 @@ void DECOMP_VehStuckProc_Tumble_Animate(struct Thread *thread, struct Driver *dr
 	}
 
 	driver->matrixIndex = matrixIndex;
+}
 
-	return;
+void DECOMP_VehStuckProc_Tumble_Animate(struct Thread *thread, struct Driver *driver)
+{
+	VehStuckProc_Tumble_Animate(thread, driver);
 }

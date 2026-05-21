@@ -1,33 +1,23 @@
 #include <common.h>
 
 void *PlayerBlastedFuncTable[0xD] = {(void *)0x0,
-                                     DECOMP_VehStuckProc_Tumble_Update,
-#ifdef REBUILD_PC
-                                     DECOMP_VehStuckProc_Tumble_PhysLinear,
-#else
+                                     VehStuckProc_Tumble_Update,
                                      VehStuckProc_Tumble_PhysLinear,
-#endif
                                      DECOMP_VehPhysProc_Driving_Audio,
-                                     DECOMP_VehStuckProc_Tumble_PhysAngular,
+                                     VehStuckProc_Tumble_PhysAngular,
                                      DECOMP_VehPhysForce_OnApplyForces,
 
-#ifndef REBUILD_PS1
+#if !defined(REBUILD_PS1) || defined(CTR_NATIVE)
                                      COLL_MOVED_PlayerSearch,
                                      VehPhysForce_CollideDrivers,
                                      COLL_FIXED_PlayerSearch,
                                      VehPhysGeneral_JumpAndFriction,
                                      VehPhysForce_TranslateMatrix,
-                                     DECOMP_VehStuckProc_Tumble_Animate,
+                                     VehStuckProc_Tumble_Animate,
                                      VehEmitter_DriverMain
 #else
-// TODO(aalhendi): Port tumble animation stage.
-#ifdef CTR_NATIVE
-                                     COLL_MOVED_PlayerSearch,
-                                     VehPhysForce_CollideDrivers,
-#else
                                      NULL,
                                      NULL,
-#endif
                                      COLL_FIXED_PlayerSearch,
                                      VehPhysGeneral_JumpAndFriction,
                                      VehPhysForce_TranslateMatrix,
@@ -36,10 +26,10 @@ void *PlayerBlastedFuncTable[0xD] = {(void *)0x0,
 #endif
 };
 
-void DECOMP_VehStuckProc_Tumble_Init(struct Thread *thread, struct Driver *driver)
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800682a4-0x800683f4
+void VehStuckProc_Tumble_Init(struct Thread *thread, struct Driver *driver)
 {
 	int i;
-	u32 IsOpen_RacingOrBattle;
 	int iVar2;
 	char bVar3;
 	char simpTurnState;
@@ -54,18 +44,8 @@ void DECOMP_VehStuckProc_Tumble_Init(struct Thread *thread, struct Driver *drive
 
 	driver->instSelf->animIndex = 0;
 
-	iVar2 = 10;
-#if 0 // 10 =
-		VehFrameInst_GetStartFrame(
-			
-			0, // midpoint
-			
-			VehFrameInst_GetNumAnimFrames(
-				driver->instSelf, 	// driver instance
-				0					// anim #0, steer
-			)
-		);
-#endif
+	iVar2 = VehFrameInst_GetNumAnimFrames(driver->instSelf, 0);
+	iVar2 = VehFrameInst_GetStartFrame(0, iVar2);
 
 	driver->instSelf->animFrame = (s16)iVar2;
 
@@ -87,7 +67,10 @@ void DECOMP_VehStuckProc_Tumble_Init(struct Thread *thread, struct Driver *drive
 		driver->funcPtrs[i] = PlayerBlastedFuncTable[i];
 	}
 
-#ifndef REBUILD_PS1
-	GAMEPAD_JogCon1(driver, bVar3, 0x60);
-#endif
+	DECOMP_GAMEPAD_JogCon1(driver, bVar3, 0x60);
+}
+
+void DECOMP_VehStuckProc_Tumble_Init(struct Thread *thread, struct Driver *driver)
+{
+	VehStuckProc_Tumble_Init(thread, driver);
 }

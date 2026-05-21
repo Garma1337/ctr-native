@@ -495,6 +495,7 @@ void DECOMP_VehPhysProc_FreezeEndEvent_PhysLinear(struct Thread *t, struct Drive
 void DECOMP_VehPhysProc_FreezeEndEvent_Init(struct Thread *t, struct Driver *d);
 void DECOMP_VehStuckProc_RIP_Init(struct Thread *t, struct Driver *d);
 
+void VehPhysProc_FreezeVShift_ReverseOneFrame(struct Thread *t, struct Driver *d);
 void DECOMP_VehPhysProc_FreezeVShift_Update(struct Thread *t, struct Driver *d);
 void DECOMP_VehPhysProc_FreezeVShift_ReverseOneFrame(struct Thread *t, struct Driver *d);
 void DECOMP_VehPhysProc_FreezeVShift_Init(struct Thread *t, struct Driver *d);
@@ -512,6 +513,7 @@ void DECOMP_VehPhysProc_PowerSlide_PhysLinear(struct Thread *t, struct Driver *d
 void DECOMP_VehPhysProc_PowerSlide_InitSetUpdate(struct Thread *t, struct Driver *d);
 void DECOMP_VehPhysProc_PowerSlide_Init(struct Thread *t, struct Driver *d);
 
+void VehPhysProc_SlamWall_Animate(struct Thread *t, struct Driver *d);
 void DECOMP_VehPhysProc_SlamWall_PhysAngular(struct Thread *t, struct Driver *d);
 void DECOMP_VehPhysProc_SlamWall_Update(struct Thread *t, struct Driver *d);
 void DECOMP_VehPhysProc_SlamWall_PhysLinear(struct Thread *t, struct Driver *d);
@@ -529,6 +531,7 @@ void DECOMP_VehPhysProc_SpinLast_PhysLinear(struct Thread *t, struct Driver *d);
 void DECOMP_VehPhysProc_SpinLast_PhysAngular(struct Thread *t, struct Driver *d);
 void DECOMP_VehPhysProc_SpinLast_Init(struct Thread *t, struct Driver *d);
 
+void VehPhysProc_SpinStop_Animate(struct Thread *t, struct Driver *d);
 void DECOMP_VehPhysProc_SpinStop_Update(struct Thread *t, struct Driver *d);
 void DECOMP_VehPhysProc_SpinStop_PhysLinear(struct Thread *t, struct Driver *d);
 void DECOMP_VehPhysProc_SpinStop_PhysAngular(struct Thread *t, struct Driver *d);
@@ -552,10 +555,16 @@ void DECOMP_VehFire_Increment(struct Driver *driver, int reserves, u32 type, int
 void DECOMP_VehTurbo_ThTick(struct Thread *t);
 void DECOMP_VehTurbo_ThDestroy(struct Thread *t);
 
+void VehStuckProc_Tumble_Update(struct Thread *thread, struct Driver *driver);
+void VehStuckProc_Tumble_PhysLinear(struct Thread *thread, struct Driver *driver);
+void VehStuckProc_Tumble_PhysAngular(struct Thread *thread, struct Driver *driver);
+void VehStuckProc_Tumble_Animate(struct Thread *thread, struct Driver *driver);
+void VehStuckProc_Tumble_Init(struct Thread *thread, struct Driver *driver);
 void DECOMP_VehStuckProc_Tumble_Update(struct Thread *thread, struct Driver *driver);
 void DECOMP_VehStuckProc_Tumble_PhysLinear(struct Thread *thread, struct Driver *driver);
 void DECOMP_VehStuckProc_Tumble_PhysAngular(struct Thread *thread, struct Driver *driver);
 void DECOMP_VehStuckProc_Tumble_Animate(struct Thread *thread, struct Driver *driver);
+void DECOMP_VehStuckProc_Tumble_Init(struct Thread *thread, struct Driver *driver);
 
 // 230
 void DECOMP_MM_Battle_DrawIcon_Character(struct Icon *icon, int posX, int posY, struct PrimMem *primMem, u_long *ot, char transparency, s16 scale);

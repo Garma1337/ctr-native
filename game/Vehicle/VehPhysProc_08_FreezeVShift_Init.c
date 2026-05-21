@@ -19,7 +19,7 @@ void DECOMP_VehPhysProc_FreezeVShift_Init(struct Thread *t, struct Driver *d)
 }
 
 void DECOMP_VehPhysProc_FreezeVShift_Update(struct Thread *t, struct Driver *d);
-void DECOMP_VehPhysProc_FreezeVShift_ReverseOneFrame(struct Thread *t, struct Driver *d);
+void VehPhysProc_FreezeVShift_ReverseOneFrame(struct Thread *t, struct Driver *d);
 
 void *PlayerAntiVShiftFuncTable[13] = {NULL,
                                        DECOMP_VehPhysProc_FreezeVShift_Update,
@@ -32,12 +32,11 @@ void *PlayerAntiVShiftFuncTable[13] = {NULL,
                                        COLL_MOVED_PlayerSearch,
                                        VehPhysForce_CollideDrivers,
                                        COLL_FIXED_PlayerSearch,
-                                       DECOMP_VehPhysProc_FreezeVShift_ReverseOneFrame,
+                                       VehPhysProc_FreezeVShift_ReverseOneFrame,
                                        VehPhysForce_TranslateMatrix,
                                        VehFrameProc_Driving,
                                        VehEmitter_DriverMain
 #else
-// TODO(aalhendi): Port freeze-vshift one-frame stage.
 #ifdef CTR_NATIVE
                                        COLL_MOVED_PlayerSearch,
                                        VehPhysForce_CollideDrivers,
@@ -46,7 +45,7 @@ void *PlayerAntiVShiftFuncTable[13] = {NULL,
                                        NULL,
 #endif
                                        COLL_FIXED_PlayerSearch,
-                                       NULL,
+                                       VehPhysProc_FreezeVShift_ReverseOneFrame,
                                        VehPhysForce_TranslateMatrix,
                                        VehFrameProc_Driving,
                                        VehEmitter_DriverMain
