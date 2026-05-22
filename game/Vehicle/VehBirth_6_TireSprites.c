@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80058c4c-0x80058d2c
 void DECOMP_VehBirth_TireSprites(struct Thread *t)
 {
 	struct GameTracker *gGT = sdata->gGT;
@@ -38,9 +39,7 @@ void DECOMP_VehBirth_TireSprites(struct Thread *t)
 	d->unk412 = 0x600;
 	d->numFramesSpentSteering = 10000;
 
-#ifndef REBUILD_PS1
-	d->terrainMeta1 = VehAfterColl_GetTerrain(TERRAIN_NONE);
-#endif
+	d->terrainMeta1 = DECOMP_VehAfterColl_GetTerrain(TERRAIN_NONE);
 
 	d->BattleHUD.numLives = gGT->battleLifeLimit;
 

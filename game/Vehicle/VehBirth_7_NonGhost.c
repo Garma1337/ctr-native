@@ -73,6 +73,11 @@ void DECOMP_VehBirth_NonGhost(struct Thread *t, int index)
 	d->instSelf = inst;
 
 	DECOMP_VehBirth_TireSprites(t);
+#ifdef CTR_NATIVE
+	// NOTE(aalhendi): Retail leaves terrainMeta2 unset until COLL_FIXED;
+	// native cannot dereference the PS1 low-memory null-space before then.
+	d->terrainMeta2 = d->terrainMeta1;
+#endif
 	DECOMP_VehBirth_SetConsts(d);
 
 	// if you are in cutscene or in main menu

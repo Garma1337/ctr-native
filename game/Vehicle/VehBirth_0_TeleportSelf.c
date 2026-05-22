@@ -86,7 +86,16 @@ static void VehBirth_SetStartlinePosition(struct Driver *d, struct Level *level,
 	u8 spawnIndex = VehBirth_GetStartlineIndex(d);
 
 	d->actionsFlagSet |= 0x1000000;
-	d->distanceToFinish_checkpoint = level->ptr_restart_points[0].distToFinish << 3;
+#ifdef CTR_NATIVE
+	if ((level->ptr_restart_points == NULL) && ((sdata->gGT->gameMode1 & (GAME_CUTSCENE | MAIN_MENU)) != 0))
+	{
+		// NOTE(aalhendi): Retail does an unguarded low-address read here;
+		// native cannot dereference PS1 null-space for ND/menu-style scenes.
+		d->distanceToFinish_checkpoint = 0;
+	}
+	else
+#endif
+		d->distanceToFinish_checkpoint = level->ptr_restart_points[0].distToFinish << 3;
 	VehBirth_SetBottomFromPos(posBottom, level->DriverSpawn[spawnIndex].pos);
 }
 
