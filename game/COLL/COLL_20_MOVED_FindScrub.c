@@ -1,6 +1,6 @@
 #include <common.h>
 
-// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80020334-0x80020410
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80020334-0x80020410; scrub depth is SPS+0x0e.
 void COLL_MOVED_FindScrub(struct QuadBlock *qb, int triangleID, struct ScratchpadStruct *sps)
 {
 	struct ScratchpadStructExtended *ext = (struct ScratchpadStructExtended *)sps;
@@ -9,7 +9,7 @@ void COLL_MOVED_FindScrub(struct QuadBlock *qb, int triangleID, struct Scratchpa
 	if (qb == NULL)
 	{
 		sps->Union.QuadBlockColl.searchFlags = searchFlags & 0xffdf;
-		sps->Input1.hitRadius = 0;
+		CollFixed_WriteS16(sps, 0xe, 0);
 		ext->numTriangles = 0;
 		return;
 	}
@@ -31,7 +31,7 @@ void COLL_MOVED_FindScrub(struct QuadBlock *qb, int triangleID, struct Scratchpa
 			}
 
 			sps->Union.QuadBlockColl.searchFlags = searchFlags | 0x20;
-			sps->Input1.hitRadius = scrub;
+			CollFixed_WriteS16(sps, 0xe, scrub);
 			return;
 		}
 	}
@@ -45,6 +45,6 @@ void COLL_MOVED_FindScrub(struct QuadBlock *qb, int triangleID, struct Scratchpa
 	}
 
 	sps->Union.QuadBlockColl.searchFlags = searchFlags & 0xffdf;
-	sps->Input1.hitRadius = 0;
+	CollFixed_WriteS16(sps, 0xe, 0);
 	ext->numTriangles++;
 }

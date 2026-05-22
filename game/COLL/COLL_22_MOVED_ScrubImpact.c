@@ -79,7 +79,7 @@ static void CollMoved_ScrubImpact_ProjectWallVelocity(s16 normalX, s16 normalY, 
 	*outZ = MFC2_S(27);
 }
 
-// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80020c58-0x80021500
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80020c58-0x80021500; scrub depth is SPS+0x0e.
 u32 COLL_MOVED_ScrubImpact(struct Driver *d, struct Thread *t, struct ScratchpadStruct *sps, struct Scrub *scrub, int *velocity)
 {
 	s16 normalX = sps->Set2.normalVec[0];
@@ -115,7 +115,7 @@ u32 COLL_MOVED_ScrubImpact(struct Driver *d, struct Thread *t, struct Scratchpad
 		d->actionsFlagSet |= 0x80;
 	}
 
-	dot -= sps->Input1.hitRadius;
+	dot -= CollFixed_ReadS16(sps, 0xe);
 
 	ret = 0;
 	if (dot < 0)
