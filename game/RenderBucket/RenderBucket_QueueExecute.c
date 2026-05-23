@@ -14,6 +14,7 @@ enum
 	CTR_TIREDBG_REFLECT_PRIM = 1 << 4,
 	CTR_TIREDBG_RENDERBUCKET_PRIM = 1 << 5,
 	CTR_TIREDBG_RENDERBUCKET_REJECT = 1 << 6,
+	CTR_TIREDBG_RENDERBUCKET_UNHANDLED = 1 << 7,
 };
 
 static int CtrTireDebug_ShouldLog(int mask)
@@ -311,6 +312,8 @@ static const u32 sRenderBucketInstanceFunc3Table8008a470[4] = {
 #define RB_INSTANCE_CUSTOM_MATRIX        0x800U
 #define RB_INSTANCE_SPLIT_SPECIAL        0x1000U
 #define RB_INSTANCE_SPLIT_STATE_MASK     0x7000U
+#define RB_INSTANCE_DEPTH_FADE           0x1000000U
+#define RB_INSTANCE_OWNER_PB_GATE        0x4000000U
 #define RB_INSTANCE_REFLECTION_FUNC23    0x100000U
 #define RB_MODEL_ALWAYS_POINT_NORTH      0x1U
 
@@ -428,7 +431,8 @@ static void RenderBucket_SelectRetailHandlers(struct InstDrawPerPlayer *idpp, u3
 
 	// NOTE(aalhendi): Source-backs QueueDraw's retail selector writes at
 	// 0x800713b8-0x800714ac. Native now feeds the source-backed split/reflection
-	// producer subset, but Execute still needs table-backed handler dispatch.
+	// producer subset. Execute no-ops unsupported labels instead of masking them
+	// through the normal draw path.
 	idpp->unkEC = drawFunc;
 	idpp->unkF0 = uncompressFunc;
 }
@@ -449,6 +453,46 @@ static int RenderBucket_ClampOTByteOffset(int depthBin)
 static s32 RenderBucket_MipsSub(int lhs, int rhs)
 {
 	return (s32)((u32)lhs - (u32)rhs);
+}
+
+static int RenderBucket_WriteAlphaScale(struct Instance *inst, struct InstDrawPerPlayer *idpp, int viewDepth, u32 instFlags)
+{
+	int alpha = (u16)inst->alphaScale;
+
+	// NOTE(aalhendi): Source-backs QueueDraw's 0x80070a5c depth-fade alpha gate.
+	if ((instFlags & RB_INSTANCE_DEPTH_FADE) != 0)
+	{
+		int depthFade = RenderBucket_MipsSll(viewDepth, 1);
+
+		if (RenderBucket_MipsSub(depthFade, 0x1000) > 0)
+			return 0;
+
+		alpha = (int)(u32)((u32)alpha + (u32)depthFade);
+		if (RenderBucket_MipsSub(alpha, 0x1000) > 0)
+			return 0;
+	}
+
+	idpp->alphaScale = (s16)alpha;
+	return 1;
+}
+
+static void RenderBucket_ApplyOwnerPushBufferGate(struct Instance *inst, int playerIndex, u32 *instFlags)
+{
+	struct Thread *thread;
+	struct Driver *driver;
+
+	if ((*instFlags & RB_INSTANCE_OWNER_PB_GATE) == 0)
+		return;
+
+	thread = inst->thread;
+	if (thread == 0 || thread->object == 0)
+		return;
+
+	driver = (struct Driver *)thread->object;
+
+	// NOTE(aalhendi): Source-backs QueueDraw's 0x800709d4 owner PB clear gate.
+	if ((s8)driver->driverID == playerIndex)
+		*instFlags &= ~PUSHBUFFER_EXISTS;
 }
 
 static int RenderBucket_PackedSxyX(u32 sxy)
@@ -658,14 +702,12 @@ static void RenderBucket_AdjustViewPositionForMvp(struct Instance *inst, VECTOR 
 	}
 }
 
-static struct ModelHeader *RenderBucket_SelectModelHeader(struct Instance *inst, struct PushBuffer *pb, int *lodIndexOut, VECTOR *viewPosOut, int *viewDepthOut)
+static struct ModelHeader *RenderBucket_SelectModelHeader(struct Instance *inst, struct PushBuffer *pb, int *lodIndexOut, VECTOR *viewPos, int viewDepth)
 {
 	struct ModelHeader *mh;
-	int viewDepth;
 	int projectedDistance;
 
 	*lodIndexOut = 0;
-	*viewDepthOut = 0;
 
 	if (inst->model->numHeaders <= 0)
 		return 0;
@@ -673,9 +715,6 @@ static struct ModelHeader *RenderBucket_SelectModelHeader(struct Instance *inst,
 	if (pb->distanceToScreen_PREV == 0)
 		return 0;
 
-	RenderBucket_GetViewPosition(inst, pb, viewPosOut);
-	viewDepth = viewPosOut->vz;
-	*viewDepthOut = viewDepth;
 	// NOTE(aalhendi): Retail keeps the low 32 bits of this product before dividing by GTE H.
 	projectedDistance = (int)(u32)((s64)(pb->rect.w >> 1) * viewDepth) / pb->distanceToScreen_PREV;
 	mh = inst->model->headers;
@@ -690,7 +729,7 @@ static struct ModelHeader *RenderBucket_SelectModelHeader(struct Instance *inst,
 		if ((projectedDistance - (u16)mh->maxDistanceLOD) < 0)
 		{
 			*lodIndexOut = lodIndex;
-			RenderBucket_AdjustViewPositionForMvp(inst, viewPosOut);
+			RenderBucket_AdjustViewPositionForMvp(inst, viewPos);
 			return mh;
 		}
 	}
@@ -1410,7 +1449,15 @@ static struct RenderBucketEntry *RenderBucket_QueueDraw(struct Instance *inst, s
 	if (pb == 0)
 		return rbi;
 
-	mh = RenderBucket_SelectModelHeader(inst, pb, &lodIndex, &viewPos, &viewDepth);
+	queuedFlags = inst->flags;
+	RenderBucket_ApplyOwnerPushBufferGate(inst, playerIndex, &queuedFlags);
+	idpp->instFlags = queuedFlags & ~DRAW_SUCCESSFUL;
+	RenderBucket_GetViewPosition(inst, pb, &viewPos);
+	viewDepth = viewPos.vz;
+	if (RenderBucket_WriteAlphaScale(inst, idpp, viewDepth, queuedFlags) == 0)
+		return rbi;
+
+	mh = RenderBucket_SelectModelHeader(inst, pb, &lodIndex, &viewPos, viewDepth);
 	if (mh == 0)
 		return rbi;
 
@@ -1418,10 +1465,8 @@ static struct RenderBucketEntry *RenderBucket_QueueDraw(struct Instance *inst, s
 	if (frame == 0)
 		return rbi;
 
-	queuedFlags = inst->flags;
 	RenderBucket_AdvanceInstanceAnimWord(inst, gameMode1, playerIndex, lastFrameAdvance, &queuedFlags);
 	idpp->instFlags = queuedFlags & ~DRAW_SUCCESSFUL;
-	idpp->alphaScale = inst->alphaScale;
 	idpp->splitLine = 0;
 	idpp->ptrCurrFrame = frame;
 	idpp->ptrNextFrame = nextFrame;
@@ -1881,9 +1926,11 @@ static int RenderBucket_DrawInstPrim_NormalAtRange(struct RenderBucketDrawContex
 #ifdef CTR_INTERNAL
 		if (CtrTireDebug_ShouldLog(CTR_TIREDBG_RENDERBUCKET_PRIM) != 0)
 		{
-			fprintf(stderr, "[TIREDBG][rb-prim] kind=G3 frame=%d level=%d inst=%p flags=%08x cmd=%08x code=%02x rgb0=%02x,%02x,%02x ot=%p\n",
+			fprintf(stderr,
+			        "[TIREDBG][rb-prim] kind=G3 frame=%d level=%d inst=%p flags=%08x cmd=%08x code=%02x rgb0=%02x,%02x,%02x "
+			        "xy=(%d,%d)(%d,%d)(%d,%d) ot=%p\n",
 			        sdata->gGT != 0 ? sdata->gGT->framesInThisLEV : -1, sdata->gGT != 0 ? sdata->gGT->levelID : -1, (void *)ctx->inst, ctx->idpp->instFlags,
-			        command, p->code, p->r0, p->g0, p->b0, (void *)otEntry);
+			        command, p->code, p->r0, p->g0, p->b0, p->x0, p->y0, p->x1, p->y1, p->x2, p->y2, (void *)otEntry);
 		}
 #endif
 		RenderBucket_LinkPrimRaw(otEntry, p, 0x06000000);
@@ -1911,10 +1958,10 @@ static int RenderBucket_DrawInstPrim_NormalAtRange(struct RenderBucketDrawContex
 		{
 			fprintf(stderr,
 			        "[TIREDBG][rb-prim] kind=GT3 frame=%d level=%d inst=%p flags=%08x cmd=%08x code=%02x rgb0=%02x,%02x,%02x rgb1=%02x,%02x,%02x "
-			        "rgb2=%02x,%02x,%02x tpage=%04x blend=%d clut=%04x tex=%u ot=%p\n",
+			        "rgb2=%02x,%02x,%02x xy=(%d,%d)(%d,%d)(%d,%d) tpage=%04x blend=%d clut=%04x tex=%u ot=%p\n",
 			        sdata->gGT != 0 ? sdata->gGT->framesInThisLEV : -1, sdata->gGT != 0 ? sdata->gGT->levelID : -1, (void *)ctx->inst, ctx->idpp->instFlags,
-			        command, p->code, p->r0, p->g0, p->b0, p->r1, p->g1, p->b1, p->r2, p->g2, p->b2, p->tpage, (p->tpage >> 5) & 3, p->clut, texIndex,
-			        (void *)otEntry);
+			        command, p->code, p->r0, p->g0, p->b0, p->r1, p->g1, p->b1, p->r2, p->g2, p->b2, p->x0, p->y0, p->x1, p->y1, p->x2, p->y2, p->tpage,
+			        (p->tpage >> 5) & 3, p->clut, texIndex, (void *)otEntry);
 		}
 #endif
 		RenderBucket_LinkPrimRaw(otEntry, p, 0x09000000);
@@ -1948,9 +1995,15 @@ static int RenderBucket_DispatchDrawInstPrim(struct RenderBucketDrawContext *ctx
 
 	default:
 		// TODO(aalhendi): Port the remaining Instance+0x60 primitive writers.
-		// The sampled normal route uses 0x8006ad88; keep the old normal fallback
-		// for unported labels until their bodies are source-backed.
-		return RenderBucket_DrawInstPrim_Normal(ctx, command, tex, depthMac0);
+		// Do not draw through the normal writer here; that masks live retail rows.
+#ifdef CTR_INTERNAL
+		if (CtrTireDebug_ShouldLog(CTR_TIREDBG_RENDERBUCKET_UNHANDLED) != 0)
+		{
+			fprintf(stderr, "[TIREDBG][rb-unhandled-prim-writer] inst=%p func=%p handler=%08x cmd=%08x depth=%d\n", (void *)ctx->inst, ctx->inst->funcPtr[1],
+			        (u32)ctx->idpp->unkEC, command, depthMac0);
+		}
+#endif
+		return 0;
 	}
 }
 
@@ -2295,6 +2348,7 @@ static int RenderBucket_DrawSpecialPrimitive(struct RenderBucketDrawContext *ctx
 {
 	struct RenderBucketProjectedRegs originalRegs;
 	u32 mirrorFlag;
+	u32 originalFlag;
 	int depthMac0;
 
 	if (useRtps != 0)
@@ -2317,7 +2371,10 @@ static int RenderBucket_DrawSpecialPrimitive(struct RenderBucketDrawContext *ctx
 	}
 
 	RenderBucket_LoadProjectedRegs(&originalRegs);
-	if (RenderBucket_CheckProjectedPrim(ctx, command, mirrorFlag, 0, &depthMac0) != 0)
+	// NOTE(aalhendi): Retail reads CFC2(31) again after restoring the
+	// original FIFO at 0x8006bda8.
+	originalFlag = CFC2(31);
+	if (RenderBucket_CheckProjectedPrim(ctx, command, originalFlag, 0, &depthMac0) != 0)
 	{
 		if (RenderBucket_DrawInstPrim_NormalAtRange(ctx, command, tex, ctx->idpp->unkE4, depthMac0) < 0)
 			return -1;
@@ -2579,10 +2636,16 @@ static int RenderBucket_RunInstanceSetupCallback(struct RenderBucketDrawContext 
 
 	default:
 		// TODO(aalhendi): Port the remaining Instance+0x5c setup callbacks when
-		// their selector rows become live. Keep the old common-color fallback for
-		// native instances that were queued before callback labels were restored.
-		RenderBucket_SetFarColorFromInstance(ctx->inst);
-		return 1;
+		// their selector rows become live. Do not substitute the common-color path;
+		// that hides missing retail setup callbacks.
+#ifdef CTR_INTERNAL
+		if (CtrTireDebug_ShouldLog(CTR_TIREDBG_RENDERBUCKET_UNHANDLED) != 0)
+		{
+			fprintf(stderr, "[TIREDBG][rb-unhandled-setup] inst=%p func=%p handler=%08x prim=%p\n", (void *)ctx->inst, ctx->inst->funcPtr[0],
+			        (u32)ctx->idpp->unkEC, ctx->inst->funcPtr[1]);
+		}
+#endif
+		return 0;
 	}
 }
 
@@ -2607,9 +2670,14 @@ static void RenderBucket_DispatchDrawFunc(struct RenderBucketDrawContext *ctx)
 
 	default:
 		// TODO(aalhendi): Port the remaining split/reflection draw handlers.
-		// Native keeps the historical normal fallback until those IDs have
-		// source-backed bodies.
-		RenderBucket_DrawFunc_Normal(ctx);
+		// Do not fall through to normal draw; that masks live retail handler rows.
+#ifdef CTR_INTERNAL
+		if (CtrTireDebug_ShouldLog(CTR_TIREDBG_RENDERBUCKET_UNHANDLED) != 0)
+		{
+			fprintf(stderr, "[TIREDBG][rb-unhandled-drawfunc] inst=%p handler=%08x uncompress=%08x flags=%08x prim=%p\n", (void *)ctx->inst,
+			        (u32)ctx->idpp->unkEC, (u32)ctx->idpp->unkF0, ctx->idpp->instFlags, ctx->inst->funcPtr[1]);
+		}
+#endif
 		return;
 	}
 }

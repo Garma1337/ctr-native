@@ -600,8 +600,12 @@ void StateZero()
 	SetGeomOffset(0x100, 0x78); // width/2, height/2
 	SetGeomScreen(0x140);       // "distance" to screen, alters FOV
 
-#ifndef REBUILD_PS1
+	// NOTE(aalhendi): Retail calls 0x8006ae74 here; native also needs its
+	// ZSF3/ZSF4 depth scales even though it defines REBUILD_PS1.
+#if !defined(REBUILD_PS1) || defined(CTR_NATIVE)
 	RenderBucket_InitDepthGTE();
+#endif
+#ifndef REBUILD_PS1
 	Vector_BakeMatrixTable();
 #endif
 
