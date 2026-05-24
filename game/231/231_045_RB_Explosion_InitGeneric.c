@@ -1,7 +1,8 @@
 #include <common.h>
 
-void DECOMP_RB_Explosion_ThTick();
+void DECOMP_RB_Explosion_ThTick(struct Thread *t);
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b1630-0x800b1714.
 void DECOMP_RB_Explosion_InitGeneric(struct Instance *inst)
 {
 	struct Instance *explosion;
@@ -40,4 +41,9 @@ void DECOMP_RB_Explosion_InitGeneric(struct Instance *inst)
 	// set funcThDestroy to remove instance from instance pool
 	explosion->thread->funcThDestroy = DECOMP_PROC_DestroyInstance;
 	return;
+}
+
+void RB_Explosion_InitGeneric(struct Instance *inst)
+{
+	DECOMP_RB_Explosion_InitGeneric(inst);
 }

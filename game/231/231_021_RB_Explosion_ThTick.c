@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800ad92c-0x800ad9ac.
 void DECOMP_RB_Explosion_ThTick(struct Thread *t)
 {
 	struct Instance *inst = t->inst;
@@ -15,4 +16,9 @@ void DECOMP_RB_Explosion_ThTick(struct Thread *t)
 
 	// dead thread
 	t->flags |= 0x800;
+}
+
+void RB_Explosion_ThTick(struct Thread *t)
+{
+	DECOMP_RB_Explosion_ThTick(t);
 }
