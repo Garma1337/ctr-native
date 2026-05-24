@@ -21,7 +21,7 @@ void OVR_Region1(void)
 		DECOMP_RR_EndEvent_DrawMenu();
 		return;
 	case 3:
-		DECOMP_TT_EndEvent_DrawMenu();
+		TT_EndEvent_DrawMenu();
 		return;
 	case 4:
 		DECOMP_VB_EndEvent_DrawMenu();

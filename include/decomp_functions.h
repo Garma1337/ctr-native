@@ -831,8 +831,6 @@ void RR_EndEvent_UnlockAward(void);
 void DECOMP_RR_EndEvent_UnlockAward(void);
 void DECOMP_RR_EndEvent_DrawHighScore(s16 startX, int startY);
 int DECOMP_LOAD_IsOpen_RacingOrBattle(void);
-void DECOMP_TT_EndEvent_DisplayTime(int paramX, s16 paramY, u32 UI_DrawRaceClockFlags);
-void DECOMP_TT_EndEvent_DrawHighScore(s16 startX, int startY);
 void DECOMP_GAMEPROG_NewProfile_InsideAdv(struct AdvProgress *adv);
 int DECOMP_RaceFlag_MoveModels(int frameIndex, int numFrames);
 void DECOMP_MainKillGame_LaunchSpyro2(void);

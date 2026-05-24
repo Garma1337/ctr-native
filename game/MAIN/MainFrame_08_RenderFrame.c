@@ -33,7 +33,7 @@ void UI_CupStandings_InputAndDraw();
 void VB_EndEvent_DrawMenu();
 void RR_EndEvent_DrawMenu();
 void AA_EndEvent_DrawMenu();
-void TT_EndEvent_DrawMenu();
+void TT_EndEvent_DrawMenu(void);
 void CC_EndEvent_DrawMenu();
 void OVR_Region1(void);
 void CS_BoxScene_InstanceSplitLines();

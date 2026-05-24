@@ -4,10 +4,15 @@
 static int str_number224 = 0x20; // " \0"
 
 extern struct RectMenu menu224;
+extern struct RectMenu menu224NoSave;
 extern struct MenuRow rowsWithSave[6];
 extern struct MenuRow rowsNoSave[5];
 
-void DECOMP_TT_EndEvent_DrawMenu(void)
+void TT_EndEvent_DisplayTime(int paramX, s16 paramY, u32 UI_DrawRaceClockFlags);
+void TT_EndEvent_DrawHighScore(s16 startX, int startY, s16 scoreMode);
+
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8009fdc8-0x800a04d4.
+void TT_EndEvent_DrawMenu(void)
 {
 	int elapsedFrames;
 	int startX;
@@ -84,7 +89,7 @@ void DECOMP_TT_EndEvent_DrawMenu(void)
 		// race time
 		DECOMP_UI_Lerp2D_Linear(&pos[0], -0x64, 90, 0x100, 90, elapsedFrames, 0x14);
 
-		DECOMP_TT_EndEvent_DisplayTime((int)pos[0], pos[1], sdata->flags_timeTrialEndOfRace);
+		TT_EndEvent_DisplayTime((int)pos[0], pos[1], sdata->flags_timeTrialEndOfRace);
 
 
 		// Blink Orange/White
@@ -142,8 +147,9 @@ void DECOMP_TT_EndEvent_DrawMenu(void)
 			char *nTropyString;
 
 			// N Tropy Opened, or Beat
-			nTropyString = lngStrings[371];
-			if ((gameModeEnd & NTROPY_JUST_BEAT) != 0)
+			if ((gameModeEnd & NTROPY_JUST_OPENED) != 0)
+				nTropyString = lngStrings[371];
+			else
 				nTropyString = lngStrings[372];
 
 			// Draw the "N Tropy" related string
@@ -195,7 +201,7 @@ void DECOMP_TT_EndEvent_DrawMenu(void)
 
 			DECOMP_UI_Lerp2D_Linear(&pos[0], startX, 10, endX, 10, elapsedFrames, 0x14);
 
-			DECOMP_TT_EndEvent_DrawHighScore(pos[0], (int)pos[1]);
+			TT_EndEvent_DrawHighScore(pos[0], (int)pos[1], 0);
 
 
 			// ====== Draw Your Time ===========
@@ -218,7 +224,7 @@ void DECOMP_TT_EndEvent_DrawMenu(void)
 
 			DECOMP_UI_Lerp2D_Linear(&pos[0], startX, 0x82, endX, 0x82, elapsedFrames, 0x14);
 
-			DECOMP_TT_EndEvent_DisplayTime((int)pos[0], pos[1], sdata->flags_timeTrialEndOfRace);
+			TT_EndEvent_DisplayTime((int)pos[0], pos[1], sdata->flags_timeTrialEndOfRace);
 
 			// PRESS * TO CONTINUE
 			DECOMP_DecalFont_DrawLine(lngStrings[201], 0x100, 0xbe, 1, 0xffff8000);
@@ -246,20 +252,19 @@ void DECOMP_TT_EndEvent_DrawMenu(void)
 
 		sdata->flags_timeTrialEndOfRace = 0;
 
-		if (sdata->boolGhostTooBigToSave)
-			menu224.rows = rowsNoSave;
-
-		DECOMP_RECTMENU_Show(&menu224);
+		DECOMP_RECTMENU_Show(sdata->boolGhostTooBigToSave ? &menu224NoSave : &menu224);
 	}
 
 	return;
 }
 
-void DECOMP_TT_EndEvent_DisplayTime(int paramX, s16 paramY, u32 UI_DrawRaceClockFlags)
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8009f704-0x8009f8c0.
+void TT_EndEvent_DisplayTime(int paramX, s16 paramY, u32 UI_DrawRaceClockFlags)
 {
 	struct GameTracker *gGT;
 	struct Driver *d;
-	s16 textWidth;
+	s16 endTextWidth;
+	s16 startTextWidth;
 	s16 pos[2];
 	RECT rectangle;
 
@@ -267,35 +272,23 @@ void DECOMP_TT_EndEvent_DisplayTime(int paramX, s16 paramY, u32 UI_DrawRaceClock
 	d = gGT->drivers[0];
 
 	// "TOTAL"
-	textWidth = DECOMP_DecalFont_GetLineWidth(sdata->lngStrings[0xc4], 1);
+	startTextWidth = DECOMP_DecalFont_GetLineWidth(sdata->lngStrings[0xc4], 1);
+	endTextWidth = DECOMP_DecalFont_GetLineWidth(sdata->lngStrings[0xc4], 1);
 
 	// === Naughty Dog Bug ===
 	// Start and End is the same
-
-#if 0
-	
-	DECOMP_UI_Lerp2D_Linear(
-		&pos[0],
-		(paramX - (0x88 - textWidth) / 2), paramY,
-		(paramX - (0x88 - textWidth) / 2), paramY,
-		sdata->framesSinceRaceEnded, 0x14);
-
-#else
-
-	pos[0] = (paramX - (0x88 - textWidth) / 2);
-	pos[1] = paramY;
-
-#endif
+	DECOMP_UI_Lerp2D_Linear(&pos[0], (paramX - (0x88 - startTextWidth) / 2), paramY, (paramX - (0x88 - endTextWidth) / 2), paramY, sdata->framesSinceRaceEnded,
+	                        0x14);
 
 	// "YOUR TIME"
 	DECOMP_DecalFont_DrawLine(sdata->lngStrings[197], paramX, ((u32)pos[1] - 0x4c), FONT_BIG, (JUSTIFY_CENTER | ORANGE));
 
 	DECOMP_UI_DrawRaceClock(pos[0], pos[1], UI_DrawRaceClockFlags, d);
 
-	rectangle.x = (pos[0] - textWidth) - 6;
+	rectangle.x = (pos[0] - DECOMP_DecalFont_GetLineWidth(sdata->lngStrings[0xc4], 1)) - 6;
 	rectangle.y = pos[1] - 0x50;
 
-	rectangle.w = textWidth + 0x94;
+	rectangle.w = DECOMP_DecalFont_GetLineWidth(sdata->lngStrings[0xc4], 1) + 0x94;
 	rectangle.h = 99;
 
 	// Draw 2D Menu rectangle background
@@ -305,11 +298,13 @@ void DECOMP_TT_EndEvent_DisplayTime(int paramX, s16 paramY, u32 UI_DrawRaceClock
 }
 
 // same in TT and RR, but not the same in Main Menu
-void DECOMP_TT_EndEvent_DrawHighScore(s16 startX, int startY)
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8009f8c0-0x8009fdc8.
+void TT_EndEvent_DrawHighScore(s16 startX, int startY, s16 scoreMode)
 {
 	// This is different from High Score in Main Menu because Main Menu
 	// does not show the rank icons '1', '2', '3', '4', '5'
 	struct GameTracker *gGT;
+	struct Driver *d;
 	struct HighScoreEntry *scoreEntry;
 
 	char i;
@@ -323,30 +318,18 @@ void DECOMP_TT_EndEvent_DrawHighScore(s16 startX, int startY)
 	RECT box;
 
 	gGT = sdata->gGT;
+	d = gGT->drivers[0];
 	timebox_X = startX - 0x1f;
 	currRowY = 0;
 
 	// 12 entries per track, 6 for Time Trial and 6 for Relic Race
-	scoreEntry = &sdata->gameProgress.highScoreTracks[gGT->levelID].scoreEntry[0];
+	scoreEntry = &sdata->gameProgress.highScoreTracks[gGT->levelID].scoreEntry[6 * scoreMode];
 
 	// === Naughty Dog Bug ===
 	// Start and End is the same
 
-#if 0
-	
 	// interpolate fly-in
-	DECOMP_UI_Lerp2D_Linear(
-		&pos[0],
-		startX, startY,
-		startX, startY,
-		sdata->framesSinceRaceEnded, 0x14);
-
-#else
-
-	pos[0] = startX;
-	pos[1] = startY;
-
-#endif
+	DECOMP_UI_Lerp2D_Linear(&pos[0], startX, startY, startX, startY, sdata->framesSinceRaceEnded, 0x14);
 
 	// "BEST TIMES"
 	DECOMP_DecalFont_DrawLine(sdata->lngStrings[0x171], pos[0], pos[1], 1, 0xffff8000);
@@ -415,7 +398,7 @@ void DECOMP_TT_EndEvent_DrawHighScore(s16 startX, int startY)
 		currRowY += 0x1a;
 	}
 
-	// IF TT
+	if (scoreMode == 0)
 	{
 		// Change the way text flickers
 		timeColor = 0xffff8000;
@@ -430,6 +413,14 @@ void DECOMP_TT_EndEvent_DrawHighScore(s16 startX, int startY)
 		}
 		// make a string for best lap
 		timeString = DECOMP_RECTMENU_DrawTime(scoreEntry[0].time);
+	}
+	else
+	{
+		// "YOUR TIME"
+		DECOMP_DecalFont_DrawLine(sdata->lngStrings[0xc5], startX, startY + 0x95, 1, 0xffff8000);
+
+		timeString = DECOMP_RECTMENU_DrawTime(d->timeElapsedInRace);
+		timeColor = 0xffff8000;
 	}
 
 	// Print amount of time, for whichever purpose
@@ -554,6 +545,21 @@ struct RectMenu menu224 = {
 
     .state = 0xC83,
     .rows = rowsWithSave,
+    .funcPtr = DECOMP_UI_RaceEnd_MenuProc,
+    .drawStyle = 4,
+
+    // rest of variables all default zero
+};
+
+struct RectMenu menu224NoSave = {
+    .stringIndexTitle = 0xFFFF,
+    .posX_curr = 0x100,
+    .posY_curr = 0xA0,
+
+    .unk1 = 0,
+
+    .state = 0xC83,
+    .rows = rowsNoSave,
     .funcPtr = DECOMP_UI_RaceEnd_MenuProc,
     .drawStyle = 4,
 
