@@ -1,6 +1,7 @@
 #include <common.h>
 
 // function for moving bomb, shiledbomb, or missile
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800adb50-0x800ae478.
 void DECOMP_RB_MovingExplosive_ThTick(struct Thread *t)
 {
 	s16 sVar1;
@@ -120,7 +121,7 @@ LAB_800adc08:;
 			{
 				// Get X and Y differences between two instances
 				iVar6 = instTNT->matrix.t[0] - inst->matrix.t[0];
-				iVar8 = instTNT->matrix.t[1] - inst->matrix.t[2];
+				iVar8 = instTNT->matrix.t[2] - inst->matrix.t[2];
 				goto LAB_800add14;
 			}
 
@@ -245,7 +246,7 @@ LAB_800adc08:;
 	posB[1] = inst->matrix.t[1] + 0x100;
 	posB[2] = inst->matrix.t[2];
 
-#ifndef REBUILD_PC
+#if !defined(REBUILD_PC) || defined(CTR_NATIVE)
 	struct ScratchpadStruct *sps = (struct ScratchpadStruct *)0x1f800108;
 
 	sps->Union.QuadBlockColl.searchFlags = 0x41;
