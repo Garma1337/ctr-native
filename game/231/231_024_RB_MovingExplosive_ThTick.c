@@ -21,7 +21,7 @@ void DECOMP_RB_MovingExplosive_ThTick(struct Thread *t)
 	tw = t->object;
 	tw->timeAlive += gGT->elapsedTimeMS;
 
-#ifndef REBUILD_PS1
+	// NOTE(aalhendi): Retail starts/updates the bomb, missile, and shield loop SFX here.
 	if (modelID == DYNAMIC_ROCKET)
 	{
 		if ((t->flags & 0x800) == 0)
@@ -47,7 +47,6 @@ void DECOMP_RB_MovingExplosive_ThTick(struct Thread *t)
 	LAB_800adc00:
 		PlaySound3D_Flags(&tw->audioPtr, sound, inst);
 	}
-#endif
 
 LAB_800adc08:;
 
