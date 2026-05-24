@@ -699,16 +699,18 @@ static void DrawLevelOvr1P_PrepareDeepestMosaicUv(const struct DrawLevelOvr1PScr
 		return;
 
 	mosaicBase = *CTR_SCRATCHPAD_PTR(u32, 0x84);
-	reloadSpan = DrawLevelOvr1P_GetDeepestMosaicReloadSpan(*CTR_SCRATCHPAD_PTR(u32, 0x9c));
-
-	if (reloadSpan == 0)
-		return;
-
+	// NOTE(aalhendi): Retail 0x800a8714/0x800aa334 restores saved UV scratch
+	// before checking the default-helper mosaic reload gate.
 	if ((s32)mosaicBase > 0)
 	{
 		DrawLevelOvr1P_RestoreProjectedUvScratch();
 		return;
 	}
+
+	reloadSpan = DrawLevelOvr1P_GetDeepestMosaicReloadSpan(*CTR_SCRATCHPAD_PTR(u32, 0x9c));
+
+	if (reloadSpan == 0)
+		return;
 
 	sourceOffset = *CTR_SCRATCHPAD_PTR(u32, 0x320) << 1;
 	if ((s32)(*CTR_SCRATCHPAD_PTR(u32, 0x194) << 8) < 0)
