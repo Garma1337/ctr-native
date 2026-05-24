@@ -2,6 +2,7 @@
 
 extern void *PlayerRevEngineFuncTable[13];
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80067f4c-0x8006809c.
 void VehStuckProc_RevEngine_Init(struct Thread *t, struct Driver *d)
 {
 	// spawn function that waits for traffic lights
@@ -15,13 +16,13 @@ void VehStuckProc_RevEngine_Init(struct Thread *t, struct Driver *d)
 	d->KartStates.RevEngine.maskObj = NULL;
 	d->KartStates.RevEngine.fireLevel = 0;
 
-#ifndef REBUILD_PS1
+#if !defined(REBUILD_PS1) || defined(CTR_NATIVE)
 	// if this is a mask grab
 	if (d->quadBlockHeight + 0x1000 < d->posCurr.y)
 	{
 		// assume reason for revving is: mask grab
 		d->KartStates.RevEngine.boolMaskGrab = true;
-		d->KartStates.RevEngine.maskObj = VehPickupItem_MaskUseWeapon(d, 0);
+		d->KartStates.RevEngine.maskObj = DECOMP_VehPickupItem_MaskUseWeapon(d, 0);
 
 		// Driver flag
 		d->actionsFlagSet &= ~(1);

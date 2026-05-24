@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80067960-0x80067a74.
 void DECOMP_VehStuckProc_RevEngine_Update(struct Thread *t, struct Driver *d)
 {
 	int revFireLevel;

@@ -1,22 +1,23 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80067a74-0x80067b7c.
 void DECOMP_VehStuckProc_RevEngine_PhysLinear(struct Thread *t, struct Driver *d)
 {
-	int unkTimer;
+	u32 unkTimer;
 
 	struct GameTracker *gGT = sdata->gGT;
 
-	unkTimer = d->KartStates.RevEngine.unk58e;
-	unkTimer -= gGT->elapsedTimeMS;
-	if (unkTimer * 0x10000 < 0)
+	unkTimer = (u16)d->KartStates.RevEngine.unk58e;
+	unkTimer -= (u16)gGT->elapsedTimeMS;
+	if ((unkTimer & 0x8000) != 0)
 		unkTimer = 0;
-	d->KartStates.RevEngine.unk58e = unkTimer;
+	d->KartStates.RevEngine.unk58e = (s16)unkTimer;
 
-	unkTimer = d->KartStates.RevEngine.unk590;
-	unkTimer -= gGT->elapsedTimeMS;
-	if (unkTimer * 0x10000 < 0)
+	unkTimer = (u16)d->KartStates.RevEngine.unk590;
+	unkTimer -= (u16)gGT->elapsedTimeMS;
+	if ((unkTimer & 0x8000) != 0)
 		unkTimer = 0;
-	d->KartStates.RevEngine.unk590 = unkTimer;
+	d->KartStates.RevEngine.unk590 = (s16)unkTimer;
 
 	DECOMP_VehPhysProc_Driving_PhysLinear(t, d);
 
