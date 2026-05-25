@@ -134,12 +134,7 @@ void MM_Characters_DrawWindows(int boolShowDrivers)
 		iVar10->animFrame = 0;
 		iVar10->vertSplit = 0;
 
-#if 0
-    uVar4 = MM_Characters_GetModelByName(data.MetaDataCharacters[(int)*ptrCurr].name_Debug);
-#else
-		struct Model *MM_Characters_GetModelByID(int id);
-		uVar4 = MM_Characters_GetModelByID(*ptrCurr);
-#endif
+		uVar4 = MM_Characters_GetModelByName((int *)data.MetaDataCharacters[(int)*ptrCurr].name_Debug);
 
 		// set modelPtr in Instance
 		iVar10->model = uVar4;

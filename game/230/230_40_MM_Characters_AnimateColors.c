@@ -1,4 +1,6 @@
 #include <common.h>
+
+// NOTE(aalhendi): ASM-verified NTSC-U 926 overlay 230 0x800ad98c-0x800ada4c.
 void MM_Characters_AnimateColors(u8 *colorData, s16 playerID, s16 flag)
 {
 	u8 colorAdjustmentValue;
