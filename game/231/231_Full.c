@@ -56,6 +56,7 @@
 #include "231_051_RB_Burst_CollThBucket.c"
 #include "231_052_RB_Burst_CollLevInst.c"
 #include "231_053_RB_Burst_Init.c"
+#include "231_054_RB_Burst_DrawAll.c"
 #include "231_055_RB_GetThread_ClosestTracker.c"
 #include "231_056_RB_Baron_ThTick.c"
 #include "231_057_RB_Baron_LInB.c"

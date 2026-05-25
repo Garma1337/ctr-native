@@ -248,11 +248,11 @@ void MainFrame_GameLogic(struct GameTracker *gGT, struct GamepadSystem *gGamepad
 		{
 			RB_Bubbles_RoosTubes();
 		}
+#endif
 		if (gGT->threadBuckets[BURST].thread != 0)
 		{
 			RB_Burst_DrawAll(gGT);
 		}
-#endif
 	}
 
 	PROC_CheckAllForDead();
