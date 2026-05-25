@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800abdfc-0x800abf48.
 void AH_WarpPad_SpinRewards(struct Instance *prizeInst, struct WarpPad *warppadObj, int index, int x, int y, int z)
 {
 	s16 *specLight;
@@ -7,35 +8,27 @@ void AH_WarpPad_SpinRewards(struct Instance *prizeInst, struct WarpPad *warppadO
 	u32 trig;
 	u32 thirds;
 
-	// converted to TEST in rebuildPS1
 	ConvertRotToMatrix(&prizeInst->matrix, &warppadObj->spinRot_Prize[0]);
 
 	modelID = prizeInst->model->id;
 
-	// OG code had pointers to warppadObj->specLightXXX
-	// but that was replaced with pointers to globals,
-	// because the arrays didnt actually change per warppad
-
-	// this was re-rewritten because the original rewrite had incorrect behavior
 	if (modelID != STATIC_TROPHY) // if not trophy (no specLight on trophy)
 	{
 		if (modelID == STATIC_GEM) // gem
-			specLight = &D232.specLightGem[0];
+			specLight = &warppadObj->specLightGem[0];
 		else
 		{
 			if (modelID == STATIC_RELIC) // relic
-				specLight = &D232.specLightRelic[0];
+				specLight = &warppadObj->specLightRelic[0];
 			else
 			{
 				if (modelID == STATIC_TOKEN) // token
-					specLight = &D232.specLightToken[0];
+					specLight = &warppadObj->specLightToken[0];
 				else
 					goto SpinReward;
 			}
 		}
-#ifndef REBUILD_PS1
 		Vector_SpecLightSpin3D(prizeInst, &warppadObj->spinRot_Prize[0], specLight);
-#endif
 	}
 
 SpinReward:

@@ -252,19 +252,9 @@ void AH_WarpPad_LInB(struct Instance *inst)
 				// token color
 				newInst->colorRGBA = ((u32)data.AdvCups[i].color[0] << 0x14) | ((u32)data.AdvCups[i].color[1] << 0xc) | ((u32)data.AdvCups[i].color[2] << 0x4);
 
-// === Naughty Dog Bug ===
-// They made an array where every token color
-// could have it's own specular light, but they're
-// all the same specLight, so just use the first one
-
-// And because they're all identical, dont bother storing
-// it, just give a pointer to the global, instead of a
-// pointer to warppadObj->specLight (ThTick and SpinRewards)
-#if 0
 				warppadObj->specLightToken[0] = D232.specLightToken[0];
 				warppadObj->specLightToken[1] = D232.specLightToken[1];
 				warppadObj->specLightToken[2] = D232.specLightToken[2];
-#endif
 
 				warppadObj->inst[WPIS_OPEN_PRIZE2] = newInst;
 			}
@@ -373,12 +363,10 @@ void AH_WarpPad_LInB(struct Instance *inst)
 
 			warppadObj->inst[WPIS_OPEN_PRIZE1] = newInst;
 
-#if 0
 			// store in Gem array
 			warppadObj->specLightGem[0] = D232.specLightGem[0];
 			warppadObj->specLightGem[1] = D232.specLightGem[1];
 			warppadObj->specLightGem[2] = D232.specLightGem[2];
-#endif
 
 			// for matrix copy
 			goto SlideColTurboTrack;
@@ -432,11 +420,9 @@ void AH_WarpPad_LInB(struct Instance *inst)
 			// Relic blue color
 			newInst->colorRGBA = 0x20a5ff0;
 
-#if 0
 			warppadObj->specLightRelic[0] = D232.specLightRelic[0];
 			warppadObj->specLightRelic[1] = D232.specLightRelic[1];
 			warppadObj->specLightRelic[2] = D232.specLightRelic[2];
-#endif
 		}
 
 		// Key
@@ -445,12 +431,10 @@ void AH_WarpPad_LInB(struct Instance *inst)
 			// Key color
 			newInst->colorRGBA = 0xdca6000;
 
-#if 0
 			// store in Gem array (intended by ND, not a bug)
 			warppadObj->specLightGem[0] = D232.specLightGem[0];
 			warppadObj->specLightGem[1] = D232.specLightGem[1];
 			warppadObj->specLightGem[2] = D232.specLightGem[2];
-#endif
 		}
 
 		// Gem
@@ -458,12 +442,10 @@ void AH_WarpPad_LInB(struct Instance *inst)
 		{
 			// dont set color, that gets set in ThTick
 
-#if 0
 			// store in Gem array
 			warppadObj->specLightGem[0] = D232.specLightGem[0];
 			warppadObj->specLightGem[1] = D232.specLightGem[1];
 			warppadObj->specLightGem[2] = D232.specLightGem[2];
-#endif
 		}
 
 		// assume token
@@ -474,16 +456,9 @@ void AH_WarpPad_LInB(struct Instance *inst)
 			// token color
 			newInst->colorRGBA = ((u32)data.AdvCups[i].color[0] << 0x14) | ((u32)data.AdvCups[i].color[1] << 0xc) | ((u32)data.AdvCups[i].color[2] << 0x4);
 
-			// === Naughty Dog Bug ===
-			// They made an array where every token color
-			// could have it's own specular light, but they're
-			// all the same specLight, so just use the first one
-
-#if 0
 			warppadObj->specLightToken[0] = D232.specLightToken[0];
 			warppadObj->specLightToken[1] = D232.specLightToken[1];
 			warppadObj->specLightToken[2] = D232.specLightToken[2];
-#endif
 		}
 	}
 
