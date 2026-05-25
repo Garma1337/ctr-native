@@ -2,10 +2,64 @@
 
 s16 crystalLightDir[4] = {0x94F, 0x94F, 0x94F, 0};
 
+void RB_Fruit_GetScreenCoords(struct PushBuffer *pb, struct Instance *inst, s16 *output);
+
 static void RB_Crystal_RotateStep(struct Instance *crystalInst, struct Crystal *crystalObj)
 {
 	crystalObj->rot[1] += 0x40;
 	ConvertRotToMatrix(&crystalInst->matrix, &crystalObj->rot[0]);
+}
+
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b4c5c-0x800b4dd8.
+int DECOMP_RB_Crystal_ThCollide(struct Thread *crystalTh, struct Thread *driverTh, void *funcThCollide, struct ScratchpadStruct *sps)
+{
+	struct PushBuffer *pb;
+	s16 posScreen[2];
+	struct Driver *driver;
+	struct Instance *crystalInst;
+	int modelID;
+
+	modelID = sps->Input1.modelID;
+	crystalInst = crystalTh->inst;
+
+	// wumpa fruit or crystal can be grabbed
+	// by player, or robotcar, and there's no
+	// AIs in Crystal Challenge anyway
+	if (
+	    // not player model
+	    (modelID != DYNAMIC_PLAYER) &&
+
+	    // not bot model
+	    (modelID != DYNAMIC_ROBOT_CAR))
+	{
+		return 0;
+	}
+
+	// player gets pickup HUD feedback,
+	// bots only erase the crystal/fruit
+	if (modelID == DYNAMIC_PLAYER)
+	{
+		// get driver object, get screen coords
+		driver = driverTh->object;
+		pb = &sdata->gGT->pushBuffer[driver->driverID];
+		RB_Fruit_GetScreenCoords(pb, crystalInst, &posScreen[0]);
+
+		// lasts 5 frames, give start position, count numCollected
+		driver->PickupWumpaHUD.startX = pb->rect.x + posScreen[0];
+		driver->PickupWumpaHUD.startY = pb->rect.y + posScreen[1] - 0x14;
+		driver->PickupWumpaHUD.cooldown = 5;
+		driver->PickupWumpaHUD.numCollected++;
+	}
+
+	*(int *)&crystalInst->scale[0] = 0;
+	crystalInst->scale[2] = 0;
+	crystalInst->thread = 0;
+
+	// play sound
+	PlaySound3D(0x43, crystalInst);
+	crystalTh->flags |= 0x800;
+
+	return 1;
 }
 
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b4dd8-0x800b4e7c.
@@ -32,87 +86,76 @@ void DECOMP_RB_Crystal_ThTick(struct Thread *t)
 	Vector_SpecLightSpin3D(crystalInst, &crystalObj->rot[0], &crystalLightDir[0]);
 }
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b4e7c-0x800b4f48.
+int DECOMP_RB_Crystal_LInC(struct Instance *crystalInst, struct Thread *driverTh, struct ScratchpadStruct *sps)
+{
+	typedef int (*CrystalCollideFunc)(struct Thread *, struct Thread *, void *, struct ScratchpadStruct *);
+	struct Thread *crystalTh;
+
+	crystalTh = crystalInst->thread;
+	if (crystalTh == NULL)
+	{
+		crystalTh = DECOMP_PROC_BirthWithObject(
+		    // creation flags
+		    SIZE_RELATIVE_POOL_BUCKET(sizeof(struct Crystal), NONE, SMALL, STATIC),
+
+		    DECOMP_RB_Crystal_ThTick, // behavior
+		    "crystal",                // debug name
+		    0                         // thread relative
+		);
+
+		crystalInst->thread = crystalTh;
+		if (crystalTh == NULL)
+			return 0;
+
+		crystalTh->inst = crystalInst;
+		crystalTh->funcThCollide = (void (*)(struct Thread *))DECOMP_RB_Crystal_ThCollide;
+		crystalTh = crystalInst->thread;
+	}
+
+	if ((crystalTh == NULL) || (crystalTh->funcThCollide == NULL))
+		return 0;
+
+	if (crystalInst->scale[0] == 0)
+		return 0;
+
+	return ((CrystalCollideFunc)crystalTh->funcThCollide)(crystalTh, driverTh, crystalTh->funcThCollide, sps);
+}
+
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b4f48-0x800b4fe4.
 void DECOMP_RB_Crystal_LInB(struct Instance *inst)
 {
 	struct Crystal *crystalObj;
+	struct Thread *t;
 
-	struct Thread *t = DECOMP_PROC_BirthWithObject(
-	    // creation flags
-	    SIZE_RELATIVE_POOL_BUCKET(sizeof(struct Crystal), NONE, SMALL, STATIC),
+	if (inst->thread == NULL)
+	{
+		t = DECOMP_PROC_BirthWithObject(
+		    // creation flags
+		    SIZE_RELATIVE_POOL_BUCKET(sizeof(struct Crystal), NONE, SMALL, STATIC),
 
-	    DECOMP_RB_Crystal_ThTick, // behavior
-	    0,                        // debug name
-	    0                         // thread relative
-	);
+		    DECOMP_RB_Crystal_ThTick, // behavior
+		    "crystal",                // debug name
+		    0                         // thread relative
+		);
 
-	if (t == 0)
-		return;
-	inst->thread = t;
-	t->inst = inst;
+		inst->thread = t;
+		if (t == 0)
+			return;
 
-	crystalObj = ((struct Crystal *)t->object);
+		crystalObj = ((struct Crystal *)t->object);
+		t->inst = inst;
+		t->funcThCollide = (void (*)(struct Thread *))DECOMP_RB_Crystal_ThCollide;
 
-	// rotX, rotY, rotZ
-	*(int *)&crystalObj->rot[0] = 0;
-	crystalObj->rot[2] = 0;
+		// rotX, rotY, rotZ
+		*(int *)&crystalObj->rot[0] = 0;
+		crystalObj->rot[2] = 0;
 
-	inst->colorRGBA = 0xd22fff0;
+		inst->colorRGBA = 0xd22fff0;
 
-	// specular light
-	inst->flags |= 0x20000;
+		// specular light
+		inst->flags |= 0x20000;
+	}
 
 	DECOMP_RB_Default_LInB(inst);
-}
-
-int DECOMP_RB_Crystal_LInC(struct Instance *LevInst, struct Thread *driverTh, struct ScratchpadStruct *sps)
-{
-	struct PushBuffer *pb;
-	s16 posScreen[2];
-	struct Driver *driver;
-	int modelID;
-
-	modelID = sps->Input1.modelID;
-
-	// wumpa fruit or crystal can be grabbed
-	// by player, or robotcar, and there's no
-	// AIs in Crystal Challenge anyway
-	if (
-	    // not player model
-	    (modelID != DYNAMIC_PLAYER) &&
-
-	    // not bot model
-	    (modelID != DYNAMIC_ROBOT_CAR))
-	{
-		return 0;
-	}
-
-	// kill crystal thread
-	if (LevInst->thread != 0)
-	{
-		// kill thread
-		LevInst->thread->flags |= 0x800;
-		LevInst->thread = 0;
-	}
-
-	// check scale, and erase
-	if (LevInst->scale[0] == 0)
-		return 0;
-	*(int *)&LevInst->scale[0] = 0;
-	LevInst->scale[2] = 0;
-
-	// play sound
-	PlaySound3D(0x43, LevInst);
-
-	// get driver object, get screen coords
-	driver = driverTh->object;
-	pb = &sdata->gGT->pushBuffer[driver->driverID];
-	RB_Fruit_GetScreenCoords(pb, LevInst, &posScreen[0]);
-
-	// lasts 5 frames, give start position, count numCollected
-	driver->PickupWumpaHUD.startX = pb->rect.x + posScreen[0];
-	driver->PickupWumpaHUD.startY = pb->rect.y + posScreen[1] - 0x14;
-	driver->PickupWumpaHUD.cooldown = 5;
-	driver->PickupWumpaHUD.numCollected++;
-
-	return 1;
 }
