@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b3f98-0x800b42b4.
 void AH_MaskHint_SetAnim(int scale)
 {
 	MATRIX *m;
@@ -47,8 +48,8 @@ void AH_MaskHint_SetAnim(int scale)
 	int cos = MATH_Cos(angle);
 
 	struct Instance *mhInst = sdata->instMaskHints3D;
-	mhInst->matrix.t[0] = posCurr[0] + (s16)((sin * rot) >> 0xc);
-	mhInst->matrix.t[2] = posCurr[2] + (s16)((cos * rot) >> 0xc);
+	posCurr[0] += (s16)((sin * rot) >> 0xc);
+	posCurr[2] += (s16)((cos * rot) >> 0xc);
 
 	rotCurr[1] += angle;
 	ConvertRotToMatrix(&mhInst->matrix, rotCurr);
@@ -57,5 +58,9 @@ void AH_MaskHint_SetAnim(int scale)
 
 	angle = (sdata->frameCounter + gGT->timer) * 0x20;
 	sin = MATH_Sin(angle);
-	mhInst->matrix.t[1] = posCurr[1] + (s16)(((sin << 4) >> 0xc) * scale >> 0xc);
+	posCurr[1] += (s16)(((sin << 4) >> 0xc) * scale >> 0xc);
+
+	mhInst->matrix.t[0] = posCurr[0];
+	mhInst->matrix.t[1] = posCurr[1];
+	mhInst->matrix.t[2] = posCurr[2];
 }
