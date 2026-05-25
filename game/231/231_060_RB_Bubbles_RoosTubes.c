@@ -2,6 +2,7 @@
 
 extern struct ParticleEmitter emSet_TubeBubbles[7];
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b39dc-0x800b3bc0.
 void RB_Bubbles_RoosTubes()
 {
 	struct GameTracker *gGT;
@@ -41,7 +42,7 @@ void RB_Bubbles_RoosTubes()
 	    numSpawnPosCoords = spawnType2->numCoords - 1, ptrSpawnPosCoords = &spawnType2->posCoords[3], numFreeParticles = gGT->JitPools.particle.free.count;
 
 	    // end condition
-	    (numSpawnPosCoords > 0) && (numFreeParticles > 0x14);
+	    (numSpawnPosCoords > 0) && (numFreeParticles >= 0x14);
 
 	    // iterative condition
 	    numSpawnPosCoords--, ptrSpawnPosCoords += 3)

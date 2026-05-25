@@ -1,6 +1,6 @@
 #include <common.h>
 
-#ifndef REBUILD_PS1
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b95fc-0x800b9848.
 void RB_Spider_DrawWebs(struct Thread *t, struct PushBuffer *pb)
 {
 	typedef struct
@@ -10,24 +10,28 @@ void RB_Spider_DrawWebs(struct Thread *t, struct PushBuffer *pb)
 		LINE_F2 f2;
 	} multiCmdPacket;
 
+	typedef struct
+	{
+		u32 topXY;
+		u32 bottomXY;
+		s32 z;
+	} WebLine;
+
+	_Static_assert(sizeof(multiCmdPacket) == 0x18);
+	_Static_assert(sizeof(WebLine) == 0xc);
+
 	struct GameTracker *gGT;
 	struct PrimMem *primMem;
 	MATRIX *m;
 	multiCmdPacket *p;
+	multiCmdPacket *nextPrim;
 
-	s16 sVar1;
-	u16 uVar2;
-	int iVar3;
 	u32 lineColor;
 	u32 *ot;
 	int depth;
-	u32 *puVar8;
-	s16 *scratchpad;
-	int iVar11;
+	WebLine *scratchpad;
+	WebLine *line;
 	int numSpiders;
-	int iVar13;
-	int iVar16;
-	u32 uVar17;
 
 	gGT = sdata->gGT;
 	primMem = &gGT->backBuffer->primMem;
@@ -36,28 +40,21 @@ void RB_Spider_DrawWebs(struct Thread *t, struct PushBuffer *pb)
 	if (t == NULL)
 		return;
 
-	scratchpad = (s16 *)0x1f800000;
+	scratchpad = CTR_SCRATCHPAD_PTR(WebLine, 0);
+	line = scratchpad;
 
 	// all threads
 	for (numSpiders = 0; t != NULL; numSpiders++)
 	{
 		struct Instance *inst = t->inst;
 		struct InstDef *instDef = inst->instDef;
+		u16 x = (u16)instDef->pos[0];
+		s32 z = instDef->pos[2];
 
-		uVar2 = instDef->pos[0];
-		sVar1 = instDef->pos[2];
-
-		scratchpad[0] = uVar2;
-		scratchpad[1] = instDef->pos[1] + 0x540;
-		scratchpad[2] = sVar1;
-		scratchpad[3] = 0;
-
-		scratchpad[4] = uVar2;
-		scratchpad[5] = t->inst->matrix.t[1] + 0x60;
-		scratchpad[6] = sVar1;
-		scratchpad[7] = 0;
-
-		scratchpad += 8;
+		line->topXY = (u32)x | ((u32)(u16)(instDef->pos[1] + 0x540) << 16);
+		line->bottomXY = (u32)x | ((u32)(u16)(inst->matrix.t[1] + 0x60) << 16);
+		line->z = z;
+		line++;
 
 		t = t->siblingThread;
 	}
@@ -67,73 +64,40 @@ void RB_Spider_DrawWebs(struct Thread *t, struct PushBuffer *pb)
 	numPlyr = gGT->numPlyrCurrGame;
 
 	p = primMem->curr;
-	p = p + (numSpiders * numPlyr);
-	if ((u32)p >= (u32)primMem->endMin100) // these casts may need to be (int) instead of (u32)
+	nextPrim = p + (numSpiders * numPlyr);
+	if (nextPrim >= (multiCmdPacket *)primMem->endMin100)
 		return;
 
 	// loop through all players
 	for (i = 0; i < numPlyr; i++)
 	{
-		pb = &gGT->pushBuffer[i];
 		m = &pb->matrix_ViewProj;
 
 		// store on GTE
 		gte_SetRotMatrix(m);
 		gte_SetTransMatrix(m);
 
-		scratchpad = (s16 *)0x1f800000;
-
-		// 0x10 * numSpiders
-		s16 *output = (s16 *)0x1F800050;
+		line = scratchpad;
 
 		// loop through spiders
 		for (j = 0; j < numSpiders; j++)
 		{
-			// optimal code, but invalid depth,
-			// makes the web look darker
-#if 0
-			// depth of each vertex
-			//__asm__ ("swc2 $17, 0( %0 );" : : "r"(ptr)); SZ1
-			//__asm__ ("swc2 $18, 0( %0 );" : : "r"(ptr)); SZ2
-			//__asm__ ("swc2 $19, 0( %0 );" : : "r"(ptr)); SZ3
-			
-			// Need this in Level/Model code,
-			// rtps is "single", rtpt is "triple"
-            gte_ldv01(&scratchpad[0], &scratchpad[4]);
-            gte_rtpt();
-            gte_stsxy01(&output[0], &output[2]);
-			
-			// depth of 2nd vertex
-			__asm__ ("swc2 $18, 0( %0 );" : : "r"(&depth));
-#else
-
-			gte_ldv0(&scratchpad[0]);
-			gte_rtps();
-			gte_stsxy(&output[0]);
-
-			gte_ldv0(&scratchpad[4]);
-			gte_rtps();
-			gte_stsxy(&output[2]);
-
-			// rtps (single) writes depth to stsz,
-			// no need for averaging with avsz3 or stotz
-			gte_stsz(&depth);
-#endif
-			scratchpad += 8;
-
+			MTC2(line->topXY, 0);
+			MTC2((u32)line->z, 1);
+			MTC2(line->bottomXY, 2);
+			MTC2((u32)line->z, 3);
+			gte_rtpt_b();
+			depth = (s32)MFC2(17);
 
 			// if line is close enough to the screen
 			// to be seen, then generate primitives
 			if ((u32)(depth - 1) < (0x1200 - 1))
 			{
-				p = primMem->curr;
-				primMem->curr = p + 1;
-
 				p->tpage = 0xe1000a20;
 				p->f2.tag = 0;
 
-				*(int *)&p->f2.x0 = *(int *)&output[0];
-				*(int *)&p->f2.x1 = *(int *)&output[2];
+				*(u32 *)&p->f2.x0 = MFC2(12);
+				*(u32 *)&p->f2.x1 = MFC2(13);
 
 				lineColor = 0x3f;
 				if (depth > 0xa00)
@@ -156,11 +120,17 @@ void RB_Spider_DrawWebs(struct Thread *t, struct PushBuffer *pb)
 				// prim header, OT and prim len
 				*(int *)p = *ot | 0x5000000;
 				*ot = (u32)p & 0xffffff;
+				p++;
 			}
+
+			line++;
 		}
+
+		pb++;
 	}
+
+	primMem->curr = p;
 }
-#endif
 
 s16 spiderArr[] = {
     // first 13

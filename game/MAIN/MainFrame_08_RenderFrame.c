@@ -121,7 +121,7 @@ void MainFrame_RenderFrame(struct GameTracker *gGT, struct GamepadSystem *gGamep
 	RenderDispEnv_World(gGT); // == RenderDispEnv_World ==
 #endif
 
-#ifndef REBUILD_PS1
+#if !defined(REBUILD_PS1) || defined(CTR_NATIVE)
 	RenderAllFlag0x40(gGT); // I need a better name
 	RenderAllTitleDPP(gGT);
 #endif
@@ -769,7 +769,7 @@ void RenderDispEnv_World(struct GameTracker *gGT)
 	}
 }
 
-#ifndef REBUILD_PS1
+#if !defined(REBUILD_PS1) || defined(CTR_NATIVE)
 // I need a better name
 void RenderAllFlag0x40(struct GameTracker *gGT)
 {
@@ -803,8 +803,14 @@ void RenderAllFlag0x40(struct GameTracker *gGT)
 	for (i = 0; i < gGT->numPlyrCurrGame; i++)
 	{
 		pb = &gGT->pushBuffer[i];
+#ifndef CTR_NATIVE
 		VehGroundSkids_Main(gGT->threadBuckets[PLAYER].thread, pb);
 		VehGroundSkids_Main(gGT->threadBuckets[ROBOT].thread, pb);
+#else
+		// NOTE(aalhendi): Keep the verified flag-0x40 effects live on native;
+		// VehGroundSkids_Main is still unported and remains the only skipped call here.
+		(void)pb;
+#endif
 	}
 }
 
