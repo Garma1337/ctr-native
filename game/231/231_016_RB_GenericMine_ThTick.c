@@ -3,6 +3,7 @@
 void DECOMP_RB_TNT_ThTick_ThrowOffHead(struct Thread *t);
 void DECOMP_RB_TNT_ThTick_ThrowOnHead(struct Thread *t);
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800acb60-0x800ad250.
 void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 {
 	struct GameTracker *gGT;
@@ -29,17 +30,7 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 	// if weapon is "thrown" like Komodo Joe
 	if ((mw->extraFlags & 2) != 0)
 	{
-		// Potion
-		if (boolPotion != 0)
-		{
-			// cooldown of 0.24s
-			mw->cooldown = 0xf0;
-
-			func = DECOMP_RB_Potion_ThTick_InAir;
-		}
-
-		// TNT
-		else
+		if (model == STATIC_CRATE_TNT)
 		{
 			func = DECOMP_RB_TNT_ThTick_ThrowOffHead;
 
@@ -47,6 +38,13 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 			inst->scale[0] = 0x800;
 			inst->scale[1] = 0x800;
 			inst->scale[2] = 0x800;
+		}
+		else
+		{
+			// cooldown of 0.24s
+			mw->cooldown = 0xf0;
+
+			func = DECOMP_RB_Potion_ThTick_InAir;
 		}
 
 		// this also quits the function
@@ -100,6 +98,12 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 		inst->scale[0] += 0x200;
 		inst->scale[1] += 0x200;
 		inst->scale[2] += 0x200;
+	}
+	else
+	{
+		inst->scale[0] = 0x1000;
+		inst->scale[1] = 0x1000;
+		inst->scale[2] = 0x1000;
 	}
 
 	param = 0x3840;
@@ -283,21 +287,9 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 				// "tnt1"
 
 				// create thread for TNT, get an Instance
-				instCrate = DECOMP_INSTANCE_BirthWithThread(0x27, 0, SMALL, MINE, DECOMP_RB_TNT_ThTick_ThrowOnHead, sizeof(struct MineWeapon), 0);
+				instCrate = DECOMP_INSTANCE_BirthWithThread(0x27, sdata->s_tnt1, SMALL, MINE, DECOMP_RB_GenericMine_ThTick, sizeof(struct MineWeapon), 0);
 
-				// get rotation of player and assign to tnt
-				instCrate->matrix.m[0][0] = inst->matrix.m[0][0];
-				instCrate->matrix.m[0][2] = inst->matrix.m[0][2];
-				instCrate->matrix.m[1][1] = inst->matrix.m[1][1];
-				instCrate->matrix.m[2][0] = inst->matrix.m[2][0];
-
-				// finish last rotation variable
-				instCrate->matrix.m[2][1] = inst->matrix.m[2][1];
-
-				// X, Y, Z positions of TNT instanece
-				instCrate->matrix.t[0] = inst->matrix.t[0];
-				instCrate->matrix.t[1] = inst->matrix.t[1];
-				instCrate->matrix.t[2] = inst->matrix.t[2];
+				instCrate->matrix = inst->matrix;
 
 				instCrate->thread->funcThDestroy = DECOMP_PROC_DestroyInstance;
 
@@ -334,6 +326,7 @@ void DECOMP_RB_GenericMine_ThTick(struct Thread *t)
 				tnt->deltaPos[0] = 0;
 				tnt->deltaPos[1] = 0;
 				tnt->deltaPos[2] = 0;
+				instCrate->thread->funcThTick = DECOMP_RB_TNT_ThTick_ThrowOnHead;
 
 				DECOMP_RB_MinePool_Remove(mw);
 
@@ -373,32 +366,26 @@ LAB_800ad17c:
 	// instance -> model -> modelID
 	model = inst->model->id;
 
-	// if model is green or red beaker
-	if (boolPotion != 0)
+	if (model == PU_EXPLOSIVE_CRATE)
+	{
+		// glass shatter sound
+		PlaySound3D(0x3f, inst);
+
+		DECOMP_RB_Blowup_Init(inst);
+	}
+	else if (model == STATIC_CRATE_TNT)
+	{
+		// tnt explosion sound
+		PlaySound3D(0x3d, inst);
+
+		DECOMP_RB_Blowup_Init(inst);
+	}
+	else if (boolPotion != 0)
 	{
 		// glass shatter sound
 		PlaySound3D(0x3f, inst);
 
 		DECOMP_RB_Explosion_InitPotion(inst);
-	}
-
-	else
-	{
-		// if model is TNT
-		// tnt explosion sound
-		param = 0x3d;
-
-		// if model is Nitro
-		if (model == PU_EXPLOSIVE_CRATE)
-		{
-			// glass shatter
-			param = 0x3f;
-		}
-
-		// play sound
-		PlaySound3D(param, inst);
-
-		DECOMP_RB_Blowup_Init(inst);
 	}
 
 	// this thread is now dead
