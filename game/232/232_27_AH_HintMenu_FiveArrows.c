@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b344c-0x800b351c.
 void AH_HintMenu_FiveArrows(int param_1, s16 rotation)
 {
 	int *ptrColor;
