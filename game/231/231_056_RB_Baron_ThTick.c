@@ -1,13 +1,37 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800b3120-0x800b37d4.
+
+static void RB_Baron_SetPathFrame(struct Instance *inst, struct SpawnType2 *spawn, int pointIndex, int offsetX, int offsetZ, int flipRotX)
+{
+	s16 *coord;
+	s16 rot[3];
+
+	coord = &spawn->posCoords[pointIndex * 6];
+
+	rot[0] = coord[3];
+	rot[1] = coord[4];
+	rot[2] = coord[5];
+
+	if (flipRotX)
+		rot[0] = -rot[0];
+
+	ConvertRotToMatrix(&inst->matrix, rot);
+
+	inst->matrix.t[0] = coord[0] + offsetX;
+	inst->matrix.t[1] = coord[1];
+	inst->matrix.t[2] = coord[2] + offsetZ;
+}
+
 void DECOMP_RB_Baron_ThTick(struct Thread *t)
 {
 	struct Instance *baronInst;
 	struct Baron *baronObj;
 	struct Level *level;
 	struct GameTracker *gGT;
-	struct SpawnType2 *ptrSpawnType2;
-	int baseShort;
+	struct SpawnType2 *spawn;
+	int pointIndex;
+	int modelID;
 
 	struct Driver *hitDriver;
 	struct Instance *hitInst;
@@ -17,84 +41,49 @@ void DECOMP_RB_Baron_ThTick(struct Thread *t)
 	gGT = sdata->gGT;
 	level = gGT->level1;
 
-// Unused, this was for the Baron (Crash 3 airplane)
-// that would be on Hot Air Skyway. Sewer Speedway
-// barrel has zero animation frames, so it's removed
-#if 0
-	// if animation is not over
-	if(
-		(baronInst->animFrame+1) < 
-		DECOMP_INSTANCE_GetNumAnimFrames(baronInst, 0)
-	)
-	{
-		// increment frame
-		baronInst->animFrame = baronInst->animFrame+1;
-	}
-	
-	// if animation is done
+	if ((baronInst->animFrame + 1) < DECOMP_INSTANCE_GetNumAnimFrames(baronInst, 0))
+		baronInst->animFrame++;
 	else
-	{
-		// reset animation
 		baronInst->animFrame = 0;
-	}
-#endif
 
 	if (level->numSpawnType2_PosRot == 0)
 		return;
-	ptrSpawnType2 = &level->ptrSpawnType2_PosRot[0];
 
-// 3D audio not in PC port yet
-#ifndef REBUILD_PS1
-	// 16th frame
-	if (baronObj->pointIndex == 0x10)
+	spawn = &level->ptrSpawnType2_PosRot[0];
+	pointIndex = (baronObj->pointIndex + 1) % spawn->numCoords;
+	baronObj->pointIndex = pointIndex;
+	modelID = baronInst->model->id;
+
+	if (modelID == DYNAMIC_DRUM)
 	{
-		// sound of barrel hitting the ground
-		PlaySound3D(0xC, baronInst);
-	}
+		if (pointIndex == 0x10)
+			PlaySound3D(0xc, baronInst);
 
-	// frame 0-16
-	if (baronObj->pointIndex < 0x11)
-	{
-		OtherFX_RecycleMute(&baronObj->soundID_flags);
-	}
+		if (pointIndex < 0x11)
+			OtherFX_RecycleMute(&baronObj->soundID_flags);
+		else
+			PlaySound3D_Flags(&baronObj->soundID_flags, 0x74, baronInst);
 
-	// frame 17+
+		RB_Baron_SetPathFrame(baronInst, spawn, pointIndex, 0x111, -0x110, 0);
+	}
 	else
 	{
-		// sound of barrel moving
-		PlaySound3D_Flags(&baronObj->soundID_flags, 0x74, baronInst);
+		RB_Baron_SetPathFrame(baronInst, spawn, pointIndex, 0, 0, 1);
 	}
-#endif
 
-	baseShort = baronObj->pointIndex;
-	baseShort *= 6;
-
-	// converted to TEST in rebuildPS1
-	ConvertRotToMatrix(&baronInst->matrix, &ptrSpawnType2->posCoords[baseShort + 3]);
-
-	baronInst->matrix.t[0] = ptrSpawnType2->posCoords[baseShort + 0] + 0x111;
-	baronInst->matrix.t[1] = ptrSpawnType2->posCoords[baseShort + 1];
-	baronInst->matrix.t[2] = ptrSpawnType2->posCoords[baseShort + 2] - 0x110;
-
-	baronObj->pointIndex = (baronObj->pointIndex + 1) % (ptrSpawnType2->numCoords);
-
-#if 0
-	// skip code for Baron plane
-	// skip code for secondary instance (VonLabAss)
-	// ...
-	// skip check for modelID, that would happen before collision
-#endif
-
-// not needed in PC port yet
-#ifndef REBUILD_PS1
-	hitInst = DECOMP_RB_Hazard_CollideWithDrivers(baronInst, 0, 0x19000, 0);
-	if (hitInst != 0)
+	if (baronObj->otherInst != 0)
 	{
-		// get driver from instance
-		hitDriver = (struct Driver *)hitInst->thread->object;
-
-		// attempt to harm driver (squish)
-		DECOMP_RB_Hazard_HurtDriver(hitDriver, 3, 0, 0);
+		pointIndex = (baronObj->pointIndex + 0x78) % spawn->numCoords;
+		RB_Baron_SetPathFrame(baronObj->otherInst, spawn, pointIndex, 0x21f, -0x21f, 1);
 	}
-#endif
+
+	if (modelID == DYNAMIC_DRUM)
+	{
+		hitInst = DECOMP_RB_Hazard_CollideWithDrivers(baronInst, 0, 0x19000, 0);
+		if (hitInst != 0)
+		{
+			hitDriver = (struct Driver *)hitInst->thread->object;
+			DECOMP_RB_Hazard_HurtDriver(hitDriver, 3, 0, 0);
+		}
+	}
 }
