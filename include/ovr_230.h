@@ -418,7 +418,7 @@ struct OverlayDATA_230
 #endif
 		int numButtons;
 		int buttons[10];
-		void *funcPtr;
+		void (*funcPtr)(void);
 	}
 #if BUILD == JpnRetail
 	cheats[0x15];

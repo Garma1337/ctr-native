@@ -13,6 +13,40 @@ void MM_Battle_MenuProc();
 void MM_HighScore_MenuProc();
 void MM_Scrapbook_PlayMovie();
 void MM_Battle_CloseSubMenu();
+void MainKillGame_LaunchSpyro2(void);
+void MM_Cheat_MaxWumpa(void);
+void MM_Cheat_UnlockRoo(void);
+void MM_Cheat_UnlockPapu(void);
+void MM_Cheat_UnlockJoe(void);
+void MM_Cheat_UnlockPinstripe(void);
+void MM_Cheat_UnlockFakeCrash(void);
+void MM_Cheat_UnlockPenta(void);
+void MM_Cheat_UnlockTropy(void);
+void MM_Cheat_UnlockScrapbook(void);
+void MM_Cheat_UnlockTracks(void);
+void MM_Cheat_InfiniteMasks(void);
+void MM_Cheat_MaxTurbos(void);
+void MM_Cheat_MaxInvisibility(void);
+void MM_Cheat_MaxEngine(void);
+void MM_Cheat_MaxBombs(void);
+void MM_Cheat_AdvDifficulty(void);
+void MM_Cheat_SuperHard(void);
+void MM_Cheat_IcyTracks(void);
+void MM_Cheat_SuperTurboPads(void);
+void MM_Cheat_OneLap(void);
+void MM_Cheat_TurboCounter(void);
+
+#define CHEAT_N BTN_UP
+#define CHEAT_U BTN_UP
+#define CHEAT_S BTN_DOWN
+#define CHEAT_D BTN_DOWN
+#define CHEAT_W BTN_LEFT
+#define CHEAT_L BTN_LEFT
+#define CHEAT_E BTN_RIGHT
+#define CHEAT_R BTN_RIGHT
+#define CHEAT_A BTN_TRIANGLE
+#define CHEAT_O BTN_CIRCLE
+#define CHEAT_X BTN_CROSS_one
 
 struct OverlayDATA_230 D230 = {
     // MAIN MENU CONSTS
@@ -261,7 +295,38 @@ struct OverlayDATA_230 D230 = {
             {0xC8, 0xA2},
         },
 
-    // these are rewritten in MM_CheatCodes
+    .cheats =
+        {
+            {4,
+             {CHEAT_S, CHEAT_O, CHEAT_A, CHEAT_R},
+#if defined(USE_PCDRV)
+             NULL},
+#else
+             MainKillGame_LaunchSpyro2},
+#endif
+            {5, {CHEAT_S, CHEAT_E, CHEAT_E, CHEAT_D, CHEAT_S}, MM_Cheat_MaxWumpa},
+            {7, {CHEAT_R, CHEAT_O, CHEAT_O, CHEAT_D, CHEAT_U, CHEAT_D, CHEAT_E}, MM_Cheat_UnlockRoo},
+            {9, {CHEAT_L, CHEAT_A, CHEAT_R, CHEAT_D, CHEAT_R, CHEAT_O, CHEAT_L, CHEAT_L, CHEAT_S}, MM_Cheat_UnlockPapu},
+            {7, {CHEAT_D, CHEAT_O, CHEAT_L, CHEAT_L, CHEAT_A, CHEAT_R, CHEAT_S}, MM_Cheat_UnlockJoe},
+            {6, {CHEAT_L, CHEAT_E, CHEAT_A, CHEAT_D, CHEAT_E, CHEAT_D}, MM_Cheat_UnlockPinstripe},
+            {9, {CHEAT_O, CHEAT_D, CHEAT_D, CHEAT_N, CHEAT_O, CHEAT_O, CHEAT_D, CHEAT_L, CHEAT_E}, MM_Cheat_UnlockFakeCrash},
+            {7, {CHEAT_S, CHEAT_E, CHEAT_A, CHEAT_S, CHEAT_W, CHEAT_A, CHEAT_N}, MM_Cheat_UnlockPenta},
+            {7, {CHEAT_S, CHEAT_L, CHEAT_E, CHEAT_N, CHEAT_D, CHEAT_E, CHEAT_R}, MM_Cheat_UnlockTropy},
+            {9, {CHEAT_U, CHEAT_N, CHEAT_D, CHEAT_E, CHEAT_R, CHEAT_W, CHEAT_E, CHEAT_A, CHEAT_R}, MM_Cheat_UnlockScrapbook},
+            {7, {CHEAT_R, CHEAT_E, CHEAT_W, CHEAT_A, CHEAT_R, CHEAT_D, CHEAT_S}, MM_Cheat_UnlockTracks},
+            {8, {CHEAT_W, CHEAT_A, CHEAT_R, CHEAT_L, CHEAT_O, CHEAT_R, CHEAT_D, CHEAT_S}, MM_Cheat_InfiniteMasks},
+            {7, {CHEAT_A, CHEAT_X, CHEAT_E, CHEAT_L, CHEAT_W, CHEAT_A, CHEAT_X}, MM_Cheat_MaxTurbos},
+            {7, {CHEAT_U, CHEAT_N, CHEAT_S, CHEAT_E, CHEAT_E, CHEAT_N}, MM_Cheat_MaxInvisibility},
+            {8, {CHEAT_U, CHEAT_N, CHEAT_L, CHEAT_E, CHEAT_A, CHEAT_D, CHEAT_E, CHEAT_D}, MM_Cheat_MaxEngine},
+            {7, {CHEAT_A, CHEAT_R, CHEAT_S, CHEAT_E, CHEAT_N, CHEAT_A, CHEAT_L}, MM_Cheat_MaxBombs},
+            {6, {CHEAT_E, CHEAT_N, CHEAT_D, CHEAT_N, CHEAT_E, CHEAT_O}, MM_Cheat_AdvDifficulty},
+            {6, {CHEAT_D, CHEAT_E, CHEAT_L, CHEAT_U, CHEAT_X, CHEAT_E}, MM_Cheat_SuperHard},
+            {8, {CHEAT_S, CHEAT_L, CHEAT_E, CHEAT_D, CHEAT_R, CHEAT_O, CHEAT_A, CHEAT_D}, MM_Cheat_IcyTracks},
+            {5, {CHEAT_A, CHEAT_R, CHEAT_R, CHEAT_O, CHEAT_W}, MM_Cheat_SuperTurboPads},
+            {10, {CHEAT_S, CHEAT_U, CHEAT_D, CHEAT_D, CHEAT_E, CHEAT_N, CHEAT_D, CHEAT_E, CHEAT_A, CHEAT_D}, MM_Cheat_OneLap},
+            {5, {CHEAT_A, CHEAT_D, CHEAT_D, CHEAT_O, CHEAT_N}, MM_Cheat_TurboCounter},
+        },
+
     .cheatButtonEntry = {0},
 
     .cupDifficultyUnlockFlags = {-1, 0xC, 0x10, 0},
@@ -822,3 +887,15 @@ struct OverlayDATA_230 D230 = {
     .s_VlcBuf = "VlcBuf",
     .s_RingBuf = "RingBuf",
 };
+
+#undef CHEAT_N
+#undef CHEAT_U
+#undef CHEAT_S
+#undef CHEAT_D
+#undef CHEAT_W
+#undef CHEAT_L
+#undef CHEAT_E
+#undef CHEAT_R
+#undef CHEAT_A
+#undef CHEAT_O
+#undef CHEAT_X
