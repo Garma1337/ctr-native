@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800ac6dc-0x800ac92c.
 void MM_Title_Init(void)
 {
 	struct GameTracker *gGT = sdata->gGT;

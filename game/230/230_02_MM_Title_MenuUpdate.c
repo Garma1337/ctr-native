@@ -1,10 +1,12 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800abcac-0x800ac178.
 void MM_Title_MenuUpdate(void)
 {
 	struct GameTracker *gGT = sdata->gGT;
 	u16 seenDemo;
 	s16 cutsceneLev;
+	int i;
 
 	// 0 - watching Crash + C-T-R letters animation
 	// 1 - in the main menu
@@ -139,9 +141,7 @@ void MM_Title_MenuUpdate(void)
 		// Go to save/load
 		sdata->ptrDesiredMenu = &data.menuFourAdvProfiles;
 
-#ifndef REBUILD_PS1
 		SelectProfile_ToggleMode(0x10);
-#endif
 		break;
 
 	// regular character selection screen
@@ -197,15 +197,17 @@ void MM_Title_MenuUpdate(void)
 			// number of times you've seen Demo Mode,
 			seenDemo = sdata->demoModeIndex;
 
-			// set character ID
-			data.characterIDs[0] = seenDemo;
+			for (i = 0; i < 8; i++)
+			{
+				data.characterIDs[i] = (seenDemo + i) & 7;
+			}
 
 			// get trackID from demo mode index,
 			// in order of Single Race track selection
-			cutsceneLev = D230.arcadeTracks[seenDemo].levID;
+			cutsceneLev = D230.arcadeTracks[seenDemo & 7].levID;
 
 			// increment counter
-			sdata->demoModeIndex = (seenDemo + 1) & 7;
+			sdata->demoModeIndex = seenDemo + 1;
 		}
 		goto LAB_800abfc0;
 
