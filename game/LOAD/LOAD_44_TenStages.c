@@ -310,7 +310,9 @@ int LOAD_TenStages(struct GameTracker *gGT, int loadingStage, struct BigHeader *
 			ptrArray[i] = 0;
 		}
 
-		LOAD_DriverMPK((u32)bigfile, sdata->levelLOD);
+		// NOTE(aalhendi): Retail gates stage advancement until the driver MPK callback sets ptrMPK.
+		sdata->load_inProgress = 1;
+		LOAD_DriverMPK(bigfile, sdata->levelLOD, LOAD_Callback_DriverModels);
 		break;
 	}
 	case 5:

@@ -1,8 +1,8 @@
 #include <common.h>
 
-static int cbDRAM = LOAD_DramFileCallback;
+static void (*const LOAD_DriverMPK_SetPointer)(struct LoadQueueSlot *) = (void (*)(struct LoadQueueSlot *))-2;
 
-void LOAD_DriverMPK(u32 param_1, int levelLOD)
+void LOAD_DriverMPK(struct BigHeader *bigfile, int levelLOD, void (*callback)(struct LoadQueueSlot *))
 {
 	int i;
 	int gameMode1;
@@ -18,7 +18,7 @@ void LOAD_DriverMPK(u32 param_1, int levelLOD)
 		for (i = 0; i < levelLOD - 1; i++)
 		{
 			// low lod CTR model
-			LOAD_AppendQueue(0, LT_GETADDR, BI_RACERMODELLOW + data.characterIDs[i], &data.driverModelExtras[i], cbDRAM);
+			LOAD_AppendQueue(bigfile, LT_GETADDR, BI_RACERMODELLOW + data.characterIDs[i], &data.driverModelExtras[i], LOAD_DriverMPK_SetPointer);
 		}
 
 		// load 4P MPK of fourth player
@@ -43,7 +43,7 @@ void LOAD_DriverMPK(u32 param_1, int levelLOD)
 		// on Hot Air Skyway (except Crash Bandicoot)
 
 		// Load Player 1 [0]
-		LOAD_AppendQueue(0, LT_GETADDR, BI_RACERMODELHI + data.characterIDs[0], &data.driverModelExtras[0], cbDRAM);
+		LOAD_AppendQueue(bigfile, LT_GETADDR, BI_RACERMODELHI + data.characterIDs[0], &data.driverModelExtras[0], LOAD_DriverMPK_SetPointer);
 
 		// Load boss or ghost [1]
 		lastFileIndexMPK = BI_TIMETRIALPACK + data.characterIDs[1];
@@ -62,7 +62,7 @@ void LOAD_DriverMPK(u32 param_1, int levelLOD)
 		data.characterIDs[4] = PINSTRIPE;
 
 		// high lod model
-		LOAD_AppendQueue(0, LT_GETADDR, BI_RACERMODELHI + data.characterIDs[0], &data.driverModelExtras[0], cbDRAM);
+		LOAD_AppendQueue(bigfile, LT_GETADDR, BI_RACERMODELHI + data.characterIDs[0], &data.driverModelExtras[0], LOAD_DriverMPK_SetPointer);
 
 		// pack of four AIs with bosses
 		lastFileIndexMPK = BI_2PARCADEPACK + 7;
@@ -86,16 +86,12 @@ void LOAD_DriverMPK(u32 param_1, int levelLOD)
 		for (i = 0; i < 2; i++)
 		{
 			// med lod CTR model
-			LOAD_AppendQueue(0, LT_GETADDR, BI_RACERMODELMED + data.characterIDs[i], &data.driverModelExtras[i], cbDRAM);
+			LOAD_AppendQueue(bigfile, LT_GETADDR, BI_RACERMODELMED + data.characterIDs[i], &data.driverModelExtras[i], LOAD_DriverMPK_SetPointer);
 		}
 
-		i = LOAD_Robots2P(data.characterIDs[0], data.characterIDs[1]);
-
-		// 2p arcade mpk
-		lastFileIndexMPK = BI_2PARCADEPACK + i;
+		LOAD_Robots2P(bigfile, data.characterIDs[0], data.characterIDs[1], callback);
+		return;
 	}
 
-	LOAD_AppendQueue(0, LT_GETADDR, lastFileIndexMPK, &sdata->ptrMPK, cbDRAM);
-
-	return;
+	LOAD_AppendQueue(bigfile, LT_GETADDR, lastFileIndexMPK, NULL, callback);
 }

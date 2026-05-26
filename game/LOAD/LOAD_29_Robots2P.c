@@ -1,6 +1,7 @@
 #include <common.h>
 
-int LOAD_Robots2P(int p1, int p2)
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80032700-0x800327dc.
+void LOAD_Robots2P(struct BigHeader *bigfile, int p1, int p2, void (*callback)(struct LoadQueueSlot *))
 {
 	int i;
 	char *robotSet;
@@ -28,31 +29,13 @@ int LOAD_Robots2P(int p1, int p2)
 
 	if (i > 6)
 	{
-		// Aug 5
-		// FUN_8006fbac("ERROR: Didn\'t find a suitable Robot4 Packet for Player1 = %d Player2 = %d!\n",
-		//             param_2,param_3);
-
-		return -1;
+		return;
 	}
-
-
-#if 1
 
 	data.characterIDs[2] = robotSet[0];
 	data.characterIDs[3] = robotSet[1];
 	data.characterIDs[4] = robotSet[2];
 	data.characterIDs[5] = robotSet[3];
 
-// just for fun
-#else
-
-	i = 7;
-	data.characterIDs[2] = RIPPER_ROO;
-	data.characterIDs[3] = PAPU_PAPU;
-	data.characterIDs[4] = KOMODO_JOE;
-	data.characterIDs[5] = PINSTRIPE;
-
-#endif
-
-	return i;
+	LOAD_AppendQueue(bigfile, LT_GETADDR, BI_2PARCADEPACK + i, NULL, callback);
 }
