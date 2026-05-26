@@ -1,9 +1,9 @@
 #include <common.h>
 
-void VehPhysProc_SlamWall_PhysAngular(struct Thread *t, struct Driver *d);
-
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800640a4-0x80064254.
 void VehPhysProc_SpinLast_PhysAngular(struct Thread *t, struct Driver *d)
 {
+	int elapsedTimeMS = sdata->gGT->elapsedTimeMS;
 	int driftAngleCurr;
 	driftAngleCurr = d->turnAngleCurr;
 
@@ -56,5 +56,12 @@ void VehPhysProc_SpinLast_PhysAngular(struct Thread *t, struct Driver *d)
 		}
 	}
 
-	VehPhysProc_SlamWall_PhysAngular(t, d);
+	d->angle += (s16)((d->ampTurnState * elapsedTimeMS) >> 0xd);
+	d->angle &= 0xfff;
+
+	d->rotCurr.y = d->unk3D4[0] + d->angle + d->turnAngleCurr;
+
+	d->rotCurr.w = VehCalc_InterpBySpeed(d->rotCurr.w, (elapsedTimeMS << 5) >> 5, 0);
+
+	VehPhysForce_RotAxisAngle(&d->matrixMovingDir, &d->AxisAngle1_normalVec.x, d->angle);
 }

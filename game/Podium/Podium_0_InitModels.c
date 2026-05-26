@@ -1,6 +1,6 @@
 #include <common.h>
 
-// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80041c84-0x80041dc0
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80041c84-0x80041dc0.
 void Podium_InitModels(struct GameTracker *gGT)
 {
 	gGT->podium_modelIndex_First = 0;
