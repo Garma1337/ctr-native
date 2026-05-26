@@ -3,6 +3,7 @@
 extern int mainFreezeFlags[5];
 extern struct RectMenu *mainFreezeMenuArr[5];
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80039dcc-0x80039e98.
 struct RectMenu *MainFreeze_GetMenuPtr(void)
 {
 	struct GameTracker *gGT = sdata->gGT;
