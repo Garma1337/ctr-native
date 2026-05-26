@@ -45,7 +45,6 @@ void AH_WarpPad_ThTick(struct Thread *t)
 	warppadInst = t->inst;
 	visInstSrc = gGT->cameraDC[0].visInstSrc;
 
-#ifndef REBUILD_PS1
 	while (visInstSrc[0] != 0)
 	{
 		if (visInstSrc[0] == warppadInst)
@@ -56,9 +55,6 @@ void AH_WarpPad_ThTick(struct Thread *t)
 
 		visInstSrc++;
 	}
-#else
-	boolOpen = 1;
-#endif
 
 	// array of instances in warppad object
 	instArr = &warppadObj->inst[0];
@@ -241,7 +237,6 @@ void AH_WarpPad_ThTick(struct Thread *t)
 
 		modelID = InstArr0->model->id;
 
-#ifndef REBUILD_PS1
 		// Trophy has no specular light
 		if (modelID == STATIC_TROPHY)
 			return;
@@ -274,7 +269,6 @@ void AH_WarpPad_ThTick(struct Thread *t)
 
 		// for Key or Gem
 		Vector_SpecLightSpin3D(InstArr0, &warppadObj->spinRot_Prize[0], &D232.specLightGem[0]);
-#endif
 		return;
 	}
 
@@ -505,11 +499,7 @@ void AH_WarpPad_ThTick(struct Thread *t)
 
 				for (i = 0; i < 7; i++)
 				{
-#ifndef REBUILD_PS1
 					rng1 = RngDeadCoed(&sdata->const_0x30215400);
-#else
-					rng1 = 0;
-#endif
 
 					rng2 = 7 - i;
 
