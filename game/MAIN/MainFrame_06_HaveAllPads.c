@@ -1,6 +1,6 @@
 #include <common.h>
 
-// NOTE(aalhendi): ASM-verified against NTSC-U 926 exe 0x80035d70-0x80035e20.
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80035d70-0x80035e20.
 int MainFrame_HaveAllPads(s16 numPlyrNextGame)
 {
 	// if game is not loading
