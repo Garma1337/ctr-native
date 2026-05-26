@@ -1,6 +1,7 @@
 #include <common.h>
 
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
+// NOTE(aalhendi): Native uses host GTE/scratch shims; PS1 path is retail.
 static char buf[0x400];
 #endif
 
@@ -19,21 +20,21 @@ void PushBuffer_SetMatrixVP(struct PushBuffer *pb)
 	u32 view8;
 	u32 viewC;
 
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
 	char *scratchpad;
 	scratchpad = &buf[0];
 #endif
 
 	// originally used 556 bytes
 
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
 	MATRIX *matrixDST = (MATRIX *)&scratchpad[0x3d4];
 #else
 	// ordinary PlayStation 1, use scratchpad
 	MATRIX *matrixDST = (MATRIX *)0x1f8003d4;
 #endif
 
-#ifndef REBUILD_PC
+#ifndef CTR_NATIVE
 	*(s16 *)0x1f8003f4 = pb->rot[0];
 	*(s16 *)0x1f8003f6 = pb->rot[1];
 	*(s16 *)0x1f8003f8 = pb->rot[2];
@@ -56,7 +57,7 @@ void PushBuffer_SetMatrixVP(struct PushBuffer *pb)
 	negPos[2] = -pb->pos[2];
 
 	// load inverted camera position
-#ifndef REBUILD_PC
+#ifndef CTR_NATIVE
 #define gte_ldVXY0(r0) __asm__ volatile("mtc2   %0, $0" : : "r"(r0))
 #define gte_ldVZ0(r0)  __asm__ volatile("mtc2   %0, $1" : : "r"(r0))
 	gte_ldVXY0(*(int *)&negPos[0]);
@@ -65,7 +66,7 @@ void PushBuffer_SetMatrixVP(struct PushBuffer *pb)
 	gte_ldv0(&negPos[0]);
 #endif
 
-#ifndef REBUILD_PC
+#ifndef CTR_NATIVE
 
 // gte_SetLightMatrix
 #define gte_r8(r0)  __asm__ volatile("ctc2   %0, $8" : : "r"(r0))
@@ -105,7 +106,7 @@ void PushBuffer_SetMatrixVP(struct PushBuffer *pb)
 
 	// load transpose camera matrix
 	// similar to gte_SetLightMatrix
-#ifndef REBUILD_PC
+#ifndef CTR_NATIVE
 	gte_r8(view0);
 	gte_r9(view4);
 	gte_r10(view8);
@@ -167,7 +168,7 @@ void PushBuffer_SetMatrixVP(struct PushBuffer *pb)
 	// otherwise oxide intro cutscene bugs out,
 	// when crash is sleeping on the grassy hill
 
-#ifndef REBUILD_PC
+#ifndef CTR_NATIVE
 	gte_r8(uVar3);
 	gte_r9(uVar4);
 	gte_r10(uVar5);
