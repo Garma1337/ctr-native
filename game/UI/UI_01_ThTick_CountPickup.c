@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8004c718-0x8004c850.
 void UI_ThTick_CountPickup(struct Thread *bucket)
 {
 	struct GameTracker *gGT;
@@ -62,12 +63,9 @@ LAB_8004c7d4:
 	obj->rot[1] = rotSpd;
 	mat = &inst->matrix;
 
-	// converted to TEST in rebuildPS1
 	ConvertRotToMatrix(mat, (s16 *)obj->rot);
 
-#ifndef REBUILD_PS1
 	MatrixRotate(mat, &obj->m, mat);
-#endif
 
 	// if hud is enabled, and this is not demo mode
 	if ((*(int *)&gGT->bool_DrawOTag_InProgress & 0xff0100) == 0x100)

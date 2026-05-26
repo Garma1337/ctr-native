@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8004ca04-0x8004caa8.
 void UI_ThTick_big1(struct Thread *bucket)
 
 {
@@ -21,10 +22,7 @@ void UI_ThTick_big1(struct Thread *bucket)
 	*(int *)&inst->matrix.m[2][0] = 0;
 	inst->matrix.m[2][2] = uVar1;
 
-#ifndef REBUILD_PS1
-	// MatrixRotate (param_1 = param_2 matrix rotated by param_3 matrix)
 	MatrixRotate(&inst->matrix, &obj->m, &inst->matrix);
-#endif
 
 	// if hud is enabled, and this is not demo mode
 	if ((*(int *)&sdata->gGT->bool_DrawOTag_InProgress & 0xff0100) == 0x100)
