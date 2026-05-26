@@ -2,19 +2,12 @@
 
 extern void *PlayerDrivingFuncTable[13];
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80062b74-0x80062ca8.
 void VehPhysProc_Driving_Init(struct Thread *t, struct Driver *d)
 {
 	struct GameTracker *gGT = sdata->gGT;
 
-	if ((gGT->levelID < GEM_STONE_VALLEY)
-
-
-	    // can I use gGT->podiumID==0 instead?
-	    // (levelID >= GEMSTONE && gGT->podium!=0) guarantees fail?
-
-
-	    // AdvHub + 232, so 233 podium wont work
-	    || LOAD_IsOpen_AdvHub())
+	if (((u32)(gGT->levelID - GEM_STONE_VALLEY) >= 5) || (LOAD_IsOpen_AdvHub() != 0))
 	{
 		// Turbo meter = full
 		d->turbo_MeterRoomLeft = 0;
@@ -40,35 +33,18 @@ void VehPhysProc_Driving_Init(struct Thread *t, struct Driver *d)
 	}
 }
 
-void *PlayerDrivingFuncTable[13] = {NULL,
-                                    VehPhysProc_Driving_Update,
-                                    VehPhysProc_Driving_PhysLinear,
-                                    VehPhysProc_Driving_Audio,
-                                    VehPhysGeneral_PhysAngular,
-                                    VehPhysForce_OnApplyForces,
-
-#ifndef REBUILD_PS1
-                                    COLL_MOVED_PlayerSearch,
-                                    VehPhysForce_CollideDrivers,
-                                    COLL_FIXED_PlayerSearch,
-                                    VehPhysGeneral_JumpAndFriction,
-                                    VehPhysForce_TranslateMatrix,
-                                    VehFrameProc_Driving,
-
-                                    VehEmitter_DriverMain
-
-#else
-#ifdef CTR_NATIVE
-                                    COLL_MOVED_PlayerSearch,
-                                    VehPhysForce_CollideDrivers,
-#else
-                                    NULL,
-                                    NULL,
-#endif
-                                    COLL_FIXED_PlayerSearch,
-                                    VehPhysGeneral_JumpAndFriction,
-                                    VehPhysForce_TranslateMatrix,
-                                    VehFrameProc_Driving,
-                                    VehEmitter_DriverMain
-#endif
+void *PlayerDrivingFuncTable[13] = {
+    NULL,
+    VehPhysProc_Driving_Update,
+    VehPhysProc_Driving_PhysLinear,
+    VehPhysProc_Driving_Audio,
+    VehPhysGeneral_PhysAngular,
+    VehPhysForce_OnApplyForces,
+    COLL_MOVED_PlayerSearch,
+    VehPhysForce_CollideDrivers,
+    COLL_FIXED_PlayerSearch,
+    VehPhysGeneral_JumpAndFriction,
+    VehPhysForce_TranslateMatrix,
+    VehFrameProc_Driving,
+    VehEmitter_DriverMain,
 };

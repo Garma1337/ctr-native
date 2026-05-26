@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80062a4c-0x80062b74.
 void VehPhysProc_Driving_Update(struct Thread *t, struct Driver *d)
 {
 	// if racer touched the ground in this frame

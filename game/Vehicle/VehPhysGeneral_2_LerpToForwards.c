@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80060488-0x800605a0.
 int VehPhysGeneral_LerpToForwards(struct Driver *d, int param_2, int param_3, int param_4)
 {
 	bool bVar1;

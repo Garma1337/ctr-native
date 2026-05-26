@@ -1,10 +1,8 @@
 #include <common.h>
 
-// Budget 200 / 272 bytes
-
 extern void *PlayerDriftingFuncTable[13];
 
-// seems to handle start of drifts
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80063934-0x80063a44.
 void VehPhysProc_PowerSlide_Init(struct Thread *t, struct Driver *d)
 {
 	d->kartState = KS_DRIFTING;
@@ -41,35 +39,18 @@ void VehPhysProc_PowerSlide_Init(struct Thread *t, struct Driver *d)
 	}
 }
 
-void *PlayerDriftingFuncTable[13] = {VehPhysProc_PowerSlide_InitSetUpdate,
-                                     NULL,
-                                     VehPhysProc_PowerSlide_PhysLinear,
-                                     VehPhysProc_Driving_Audio,
-                                     VehPhysProc_PowerSlide_PhysAngular,
-                                     VehPhysForce_OnApplyForces,
-
-#ifndef REBUILD_PS1
-                                     COLL_MOVED_PlayerSearch,
-                                     VehPhysForce_CollideDrivers,
-                                     COLL_FIXED_PlayerSearch,
-                                     VehPhysGeneral_JumpAndFriction,
-                                     VehPhysForce_TranslateMatrix,
-                                     VehFrameProc_Driving,
-
-                                     VehEmitter_DriverMain
-
-#else
-#ifdef CTR_NATIVE
-                                     COLL_MOVED_PlayerSearch,
-                                     VehPhysForce_CollideDrivers,
-#else
-                                     NULL,
-                                     NULL,
-#endif
-                                     COLL_FIXED_PlayerSearch,
-                                     VehPhysGeneral_JumpAndFriction,
-                                     VehPhysForce_TranslateMatrix,
-                                     VehFrameProc_Driving,
-                                     VehEmitter_DriverMain
-#endif
+void *PlayerDriftingFuncTable[13] = {
+    VehPhysProc_PowerSlide_InitSetUpdate,
+    NULL,
+    VehPhysProc_PowerSlide_PhysLinear,
+    VehPhysProc_Driving_Audio,
+    VehPhysProc_PowerSlide_PhysAngular,
+    VehPhysForce_OnApplyForces,
+    COLL_MOVED_PlayerSearch,
+    VehPhysForce_CollideDrivers,
+    COLL_FIXED_PlayerSearch,
+    VehPhysGeneral_JumpAndFriction,
+    VehPhysForce_TranslateMatrix,
+    VehFrameProc_Driving,
+    VehEmitter_DriverMain,
 };
