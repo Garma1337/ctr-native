@@ -1,5 +1,6 @@
 #include <common.h>
 
+#include "MainInit_00_VisMem.c"
 #include "MainInit_01_RainBuffer.c"
 #include "MainInit_02_PrimMem.c"
 #include "MainInit_03_JitPoolsReset.c"

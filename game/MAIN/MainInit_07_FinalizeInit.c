@@ -183,8 +183,9 @@ void MainInit_FinalizeInit(struct GameTracker *gGT)
 		if (lev1->ptr_mesh_info != NULL)
 			LevInstDef_UnPack(lev1->ptr_mesh_info);
 
-#ifndef REBUILD_PS1
 	MainInit_VisMem(gGT);
+
+#ifndef REBUILD_PS1
 	MainInit_RainBuffer(gGT);
 
 	// animates water, 1P mode
