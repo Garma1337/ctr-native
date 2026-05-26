@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8003b6d0-0x8003b934; CTR_NATIVE gates host-only model repairs.
 void MainInit_Drivers(struct GameTracker *gGT)
 {
 	char i;
@@ -14,12 +15,10 @@ void MainInit_Drivers(struct GameTracker *gGT)
 
 	gGT->numBotsNextGame = 0;
 
-#if defined(CTR_NATIVE) || !defined(REBUILD_PS1)
 	if ((gameMode & (GAME_CUTSCENE | ADVENTURE_ARENA | MAIN_MENU)) == 0)
 	{
 		BOTS_Adv_AdjustDifficulty();
 	}
-#endif
 
 	GhostReplay_Init1();
 
@@ -36,7 +35,6 @@ void MainInit_Drivers(struct GameTracker *gGT)
 		gGT->drivers[i] = VehBirth_Player(i);
 	}
 
-#ifndef REBUILD_PS1
 	// spawn all AIs
 	if ((
 	        // exclude cutscene, relic, Time Trial,
@@ -94,7 +92,6 @@ void MainInit_Drivers(struct GameTracker *gGT)
 		EngineAudio_InitOnce(0x10, 0x8080);
 		EngineAudio_InitOnce(0x11, 0x8080);
 	}
-#endif
 
 	// if this is main menu
 	if ((gameMode & MAIN_MENU) != 0)
@@ -106,7 +103,7 @@ void MainInit_Drivers(struct GameTracker *gGT)
 		}
 	}
 
-#ifdef REBUILD_PS1
+#if defined(CTR_NATIVE)
 	i = 0;
 	int driverID = 0;
 	struct Model *m;
@@ -178,7 +175,7 @@ void MainInit_Drivers(struct GameTracker *gGT)
 
 		GhostTape_Start();
 
-#ifdef REBUILD_PS1
+#if defined(CTR_NATIVE)
 
 		// 0: human ghost
 		// 1: n tropy / oxide

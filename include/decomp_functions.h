@@ -1025,6 +1025,7 @@ u32 BOTS_ChangeState(struct Driver *driverVictim, int damageType, struct Driver 
 void BOTS_LevInstColl(struct Thread *param_1);
 void BOTS_Killplane(struct Thread *botThread);
 void BOTS_MaskGrab(struct Thread *botThread);
+struct Driver *BOTS_Driver_Init(int driverID);
 void BOTS_Driver_Convert(struct Driver *driver);
 void UI_RaceEnd_GetDriverClock(struct Driver *d);
 void GAMEPAD_JogCon2(struct Driver *d, char val, s16 timeMS);

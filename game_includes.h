@@ -66,6 +66,7 @@
 #include "game/BOTS/BOTS_12_ChangeState.c"
 #include "game/BOTS/BOTS_13_CollideWithOtherAI.c"
 #include "game/BOTS/BOTS_14_GotoStartingLine.c"
+#include "game/BOTS/BOTS_15_Driver_Init.c"
 #include "game/BOTS/BOTS_16_Driver_Convert.c"
 #include "game/CDSYS/CDSYS_00_Init.c"
 #include "game/CDSYS/CDSYS_01_GetFilePosInt.c"
