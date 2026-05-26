@@ -99,33 +99,10 @@ void *PlayerMaskGrabFuncTable[13] = {NULL,
                                      VehPhysProc_Driving_Audio,
                                      VehPhysGeneral_PhysAngular,
                                      VehPhysForce_OnApplyForces,
-
-#ifndef REBUILD_PS1
                                      COLL_MOVED_PlayerSearch,
                                      VehPhysForce_CollideDrivers,
                                      COLL_FIXED_PlayerSearch,
                                      VehPhysGeneral_JumpAndFriction,
                                      VehPhysForce_TranslateMatrix,
-#else
-#ifdef CTR_NATIVE
-                                     COLL_MOVED_PlayerSearch,
-                                     VehPhysForce_CollideDrivers,
-#else
-                                     NULL,
-                                     NULL,
-#endif
-                                     COLL_FIXED_PlayerSearch,
-                                     VehPhysGeneral_JumpAndFriction,
-                                     VehPhysForce_TranslateMatrix,
-#endif
                                      VehStuckProc_MaskGrab_Animate,
-#ifndef REBUILD_PS1
-                                     VehEmitter_DriverMain
-#else
-#ifdef CTR_NATIVE
-                                     VehEmitter_DriverMain
-#else
-                                     NULL
-#endif
-#endif
-};
+                                     VehEmitter_DriverMain};
