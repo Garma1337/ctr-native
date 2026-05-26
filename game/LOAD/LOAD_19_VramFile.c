@@ -1,7 +1,6 @@
 #include <common.h>
 
-// NOTE(aalhendi): ASM-audited NTSC-U 926 0x80031fdc-0x80032110; this preserves
-// the retail -1 startup VRAM slot path over native LOAD_ReadFile.
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80031fdc-0x80032110.
 void *LOAD_VramFile(void *bigfilePtr, int subfileIndex, void *ptrDestination, int *sizePtr, int callbackOrFlags)
 {
 	struct LoadQueueSlot lqs;
@@ -10,27 +9,16 @@ void *LOAD_VramFile(void *bigfilePtr, int subfileIndex, void *ptrDestination, in
 	if (ptrDestination == NULL)
 		MEMPACK_PushState();
 
-	if (sizePtr != NULL)
-		*sizePtr = 0;
-
-	if (callbackOrFlags == -2)
-	{
-		loadedFile = LOAD_ReadFile(bigfilePtr, LT_SETVRAM | LT_SYNC, subfileIndex, NULL);
-		if (ptrDestination != NULL)
-			*(void **)ptrDestination = loadedFile;
-		return loadedFile;
-	}
-
-	loadedFile = LOAD_ReadFile(bigfilePtr, LT_SETVRAM | LT_SYNC, subfileIndex, ptrDestination);
-
 	if (callbackOrFlags == -1)
 	{
+		loadedFile = LOAD_ReadFile_ex(bigfilePtr, LT_VRAM, subfileIndex, ptrDestination, sizePtr, NULL);
+
 		lqs.ptrBigfileCdPos_UNUSED = bigfilePtr;
 		lqs.flags = 0;
 		lqs.type_UNUSED = LT_VRAM;
 		lqs.subfileIndex = subfileIndex;
 		lqs.ptrDestination = loadedFile;
-		lqs.size_UNUSED = sizePtr != NULL ? *sizePtr : 0;
+		lqs.size_UNUSED = *sizePtr;
 		lqs.callbackFuncPtr = NULL;
 
 		LOAD_VramFileCallback(&lqs);
@@ -40,7 +28,17 @@ void *LOAD_VramFile(void *bigfilePtr, int subfileIndex, void *ptrDestination, in
 
 		if (ptrDestination == NULL)
 			MEMPACK_PopState();
+
+		return loadedFile;
 	}
 
-	return loadedFile;
+	if (callbackOrFlags == -2)
+	{
+		loadedFile = LOAD_ReadFile_ex(bigfilePtr, LT_VRAM, subfileIndex, NULL, sizePtr, LOAD_VramFileCallback);
+		data.currSlot.ptrDestination = loadedFile;
+		*(void **)ptrDestination = loadedFile;
+		return loadedFile;
+	}
+
+	return LOAD_ReadFile_ex(bigfilePtr, LT_VRAM, subfileIndex, ptrDestination, sizePtr, LOAD_VramFileCallback);
 }
