@@ -16,7 +16,7 @@ static const int s_advHubConnectedLevID[5][3] = {
 #endif
 
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x80033318-0x80033474.
-void LOAD_Hub_Main(int bigfilePtr)
+void LOAD_Hub_Main(struct BigHeader *bigfilePtr)
 {
 	struct GameTracker *gGT;
 

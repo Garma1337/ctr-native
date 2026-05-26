@@ -303,14 +303,7 @@ void LOAD_RunPtrMap(char *origin, int *patchArr, int numPtrs); // 1st param migh
 void LOAD_LangFile(int bigfilePtr, int lang);
 
 
-// This is a wonderful hack that removes an unused parameter,
-// which saves bytes everywhere, without needing to alter the game code,
-// We need the 'bigfile' parameter to stay in the C code, just to keep
-// the front-end looking similar to ghidra, for easy comparison purposes
-#define LOAD_AppendQueue(a, b, c, d, e) LOAD_AppendQueue_ex(b, c, d, e)
-void LOAD_AppendQueue_ex(/*int bigfile,*/ int type, int fileIndex, void *destinationPtr, void (*callback)(struct LoadQueueSlot *));
-// void LOAD_AppendQueue(int bigfile, int type, int fileIndex, void* destinationPtr, void (*callback)(struct LoadQueueSlot*));
-
+void LOAD_AppendQueue(struct BigHeader *bigfile, int type, int fileIndex, void *destinationPtr, void (*callback)(struct LoadQueueSlot *));
 
 void LOAD_NextQueuedFile(void);
 

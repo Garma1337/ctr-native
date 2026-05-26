@@ -1,29 +1,21 @@
 #include <common.h>
 
-// This is a wonderful hack that removes an unused parameter,
-// which saves bytes everywhere, without needing to alter the game code,
-// We need the 'bigfile' parameter to stay in the C code, just to keep
-// the front-end looking similar to ghidra, for easy comparison purposes
-#define LOAD_AppendQueue(a, b, c, d, e) LOAD_AppendQueue_ex(b, c, d, e)
-
-void LOAD_AppendQueue_ex(/*int bigfile,*/ int flags, int fileIndex, void *destinationPtr, void (*callback)(struct LoadQueueSlot *))
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80032d30-0x80032d8c.
+void LOAD_AppendQueue(struct BigHeader *bigfile, int type, int fileIndex, void *destinationPtr, void (*callback)(struct LoadQueueSlot *))
 {
 	struct LoadQueueSlot *lqs;
 
 	if (sdata->queueLength >= 8)
 		return;
 
-	// NOTE(aalhendi): Native loading uses bit flags, but retail overlay code
-	// can still pass legacy type `3` for VRAM queue entries.
-	if (flags == LT_VRAM)
-		flags = LT_SETVRAM;
-
 	lqs = &sdata->queueSlots[sdata->queueLength];
-	lqs->flags = flags;
+	lqs->ptrBigfileCdPos_UNUSED = bigfile;
+	lqs->flags = 0;
+	lqs->type_UNUSED = type;
 	lqs->subfileIndex = fileIndex;
 	lqs->ptrDestination = destinationPtr;
+	lqs->size_UNUSED = 0;
 	lqs->callbackFuncPtr = callback;
 
 	sdata->queueLength++;
-	sdata->load_inProgress = 1;
 }

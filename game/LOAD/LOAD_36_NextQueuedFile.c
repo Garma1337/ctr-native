@@ -38,17 +38,26 @@ void LOAD_NextQueuedFile()
 
 	sdata->queueLength--;
 
+	u32 loadType = curr->flags;
+	if (curr->type_UNUSED == LT_RAW)
+		loadType = LT_SETADDR;
+	else if (curr->type_UNUSED == LT_DRAM)
+		loadType = LT_GETADDR;
+	else if (curr->type_UNUSED == LT_VRAM)
+		loadType = LT_SETVRAM;
+	curr->flags = loadType;
+
 	// get value originally passed
 	// BEFORE calling ReadFile, which may change it
 	void **prevValue = curr->ptrDestination;
 
 	void *forceSetAddr = NULL;
-	if ((curr->flags & LT_SETADDR) != 0)
+	if ((loadType & LT_SETADDR) != 0)
 		forceSetAddr = prevValue;
 
-	void *rawDestination = LOAD_ReadFile(0, curr->flags | LT_ASYNC, curr->subfileIndex, forceSetAddr);
+	void *rawDestination = LOAD_ReadFile(curr->ptrBigfileCdPos_UNUSED, loadType | LT_ASYNC, curr->subfileIndex, forceSetAddr);
 
-	if (((curr->flags & LT_GETADDR) != 0) && (prevValue != NULL))
+	if (((loadType & LT_GETADDR) != 0) && (prevValue != NULL))
 	{
 		if (curr->callbackFuncPtr == (void (*)(struct LoadQueueSlot *))-2)
 		{
