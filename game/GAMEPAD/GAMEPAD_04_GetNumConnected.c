@@ -1,9 +1,10 @@
 #include <common.h>
 
+// NOTE(aalhendi): PSX path ASM-verified NTSC-U 926 0x800255b4-0x80025718.
 int GAMEPAD_GetNumConnected(struct GamepadSystem *gGamepads)
 {
+	int padIndex;
 	int bitwiseConnected;
-	int numConnected;
 
 	int numSlots;
 	int numPortsPerSlot;
@@ -24,13 +25,16 @@ int GAMEPAD_GetNumConnected(struct GamepadSystem *gGamepads)
 		numPortsPerSlot = 4;
 	}
 
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
+	// NOTE(aalhendi): Native keeps four local pad packets addressable without
+	// requiring a retail multitap packet in slot 0.
 	numSlots = 1;
 	numPortsPerSlot = 4;
 #endif
 
-	numConnected = 0;
+	padIndex = 0;
 	bitwiseConnected = 0;
+	gGamepads->numGamepadsConnected = 0;
 	padCurr = &gGamepads->gamepad[0];
 
 	// TODO: Rename to match PollVsync
@@ -52,19 +56,17 @@ int GAMEPAD_GetNumConnected(struct GamepadSystem *gGamepads)
 				if (ptrControllerPacket->plugged == PLUGGED)
 				{
 					bitwiseConnected |= 1 << (Slot * 4 + Port);
+					gGamepads->numGamepadsConnected = padIndex + 1;
 
 					padCurr->ptrControllerPacket = (struct ControllerPacket *)ptrControllerPacket;
 					padCurr->gamepadID = Slot * 0x10 + Port;
 				}
 			}
 
-			numConnected++;
+			padIndex++;
 			padCurr++;
 		}
 	}
-
-
-	gGamepads->numGamepadsConnected = numConnected;
 
 	while (padCurr < &gGamepads->gamepad[8])
 	{

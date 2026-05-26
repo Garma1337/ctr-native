@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80025410-0x800255b4.
 void GAMEPAD_PollVsync(struct GamepadSystem *gGamepads)
 {
 	u32 uVar2;

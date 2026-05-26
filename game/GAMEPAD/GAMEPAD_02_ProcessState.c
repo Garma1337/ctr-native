@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800252a0-0x80025410.
 void GAMEPAD_ProcessState(struct GamepadBuffer *pad, int padState, s16 id)
 {
 	char uVar1;
