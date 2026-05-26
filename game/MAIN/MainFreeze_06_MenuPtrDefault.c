@@ -81,9 +81,6 @@ void MainFreeze_MenuPtrDefault(struct RectMenu *menu)
 	// hide Menu
 	RECTMENU_Hide(menu);
 
-	// get rid of pause flag
-	gGT->gameMode1 &= ~PAUSE_1;
-
 	MainFreeze_SafeAdvDestroy();
 
 	// careful, it's stringID MINUS one
@@ -95,14 +92,17 @@ void MainFreeze_MenuPtrDefault(struct RectMenu *menu)
 	// stringID 4: "RETRY"
 	case 4:
 
-		// restart race
-		sdata->Loading.stage = -5;
+		// get rid of pause flag
+		gGT->gameMode1 &= ~PAUSE_1;
 
 		if (RaceFlag_IsFullyOffScreen() == 1)
 		{
 			// checkered flag, begin transition on-screen
 			RaceFlag_BeginTransition(1);
 		}
+
+		// restart race
+		sdata->Loading.stage = -5;
 
 		// if you are not showing a ghost during a race
 		if (sdata->boolReplayHumanGhost == 0)
@@ -122,6 +122,9 @@ void MainFreeze_MenuPtrDefault(struct RectMenu *menu)
 
 		// unpause game
 		ElimBG_Deactivate(gGT);
+
+		// get rid of pause flag
+		gGT->gameMode1 &= ~PAUSE_1;
 
 		// unpause audio
 		MainFrame_TogglePauseAudio(0);
@@ -144,6 +147,9 @@ void MainFreeze_MenuPtrDefault(struct RectMenu *menu)
 
 		// when loading is done, add bit for "in mb"
 		sdata->Loading.OnBegin.AddBitsConfig0 |= 0x2000;
+
+		// get rid of pause flag
+		gGT->gameMode1 &= ~PAUSE_1;
 		break;
 
 	// stringID 6: "CHANGE LEVEL"
@@ -161,6 +167,9 @@ void MainFreeze_MenuPtrDefault(struct RectMenu *menu)
 		// when loading is done
 		// add bit for "in mb"
 		sdata->Loading.OnBegin.AddBitsConfig0 |= 0x2000;
+
+		// get rid of pause flag
+		gGT->gameMode1 &= ~PAUSE_1;
 		break;
 
 	// stringID 10: "CHANGE SETUP"
@@ -175,6 +184,9 @@ void MainFreeze_MenuPtrDefault(struct RectMenu *menu)
 		// when loading is done
 		// add bit for "in mb"
 		sdata->Loading.OnBegin.AddBitsConfig0 |= 0x2000;
+
+		// get rid of pause flag
+		gGT->gameMode1 &= ~PAUSE_1;
 		break;
 
 	// stringID 13: "EXIT TO MAP"
@@ -191,6 +203,9 @@ void MainFreeze_MenuPtrDefault(struct RectMenu *menu)
 		// when loading is done
 		// remove bit for CTR Token Challenge
 		sdata->Loading.OnBegin.RemBitsConfig8 |= 8;
+
+		// get rid of pause flag
+		gGT->gameMode1 &= ~PAUSE_1;
 
 		// If you are not in Adventure cup
 		if ((gameMode & ADVENTURE_CUP) == 0)
@@ -222,7 +237,7 @@ void MainFreeze_MenuPtrDefault(struct RectMenu *menu)
 			gGT->levelID = gGT->cup.cupID + ADV_CUP;
 		}
 	default:
-		break;
+		return;
 	}
 
 	MainRaceTrack_RequestLoad(levID);
