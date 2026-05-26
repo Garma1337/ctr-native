@@ -1,6 +1,6 @@
 #include <common.h>
 
-// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80058c4c-0x80058d2c
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80058c4c-0x80058d2c.
 void VehBirth_TireSprites(struct Thread *t)
 {
 	struct GameTracker *gGT = sdata->gGT;

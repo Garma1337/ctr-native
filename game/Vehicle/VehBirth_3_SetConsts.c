@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80058a60-0x80058ba4.
 void VehBirth_SetConsts(struct Driver *driver)
 {
 	u32 metaPhysSize;
