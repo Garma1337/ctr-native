@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80026c24-0x80026cb8.
 void GAMEPROG_InitFullMemcard(struct MemcardProfile *mcp)
 {
 	int i;

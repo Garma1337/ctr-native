@@ -212,7 +212,7 @@ int GAMEPROG_CheckGhostsBeaten(int ghostID);
 void GAMEPROG_NewProfile_OutsideAdv(struct GameProgress *gameProg);
 void GAMEPROG_InitFullMemcard(struct MemcardProfile *mcp);
 void GAMEPROG_NewProfile_InsideAdv(struct AdvProgress *adv);
-void GAMEPROG_SaveCupProgress();
+void GAMEPROG_SaveCupProgress(void);
 void GAMEPROG_SyncGameAndCard(struct GameProgress *memcardProg, struct GameProgress *currentProg);
 void GAMEPROG_NewGame_OnBoot();
 void GAMEPROG_GetPtrHighScoreTrack();

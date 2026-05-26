@@ -1,14 +1,8 @@
 #include <common.h>
 
-// Not present in Sep3
-// If a new memory card is plugged in with progress
-// that differs from the game, this combines the progress
-// of both. However, this bugs unlocking N Tropy, maybe more
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80026d7c-0x80026e48.
 void GAMEPROG_SyncGameAndCard(struct GameProgress *memcardProg, struct GameProgress *currentProg)
 {
-	// memcardProg is the memcard buffer
-	// currentProg is sdata gameProgress
-
 	int i;
 	int memcardFlags;
 	int currentFlags;
@@ -28,7 +22,7 @@ void GAMEPROG_SyncGameAndCard(struct GameProgress *memcardProg, struct GameProgr
 	}
 
 	// combine progress of beaten ghosts
-	for (i = 0; i < 2; i++)
+	for (i = 0; i < 18; i++)
 	{
 		memcardFlags = memcardProg->highScoreTracks[i].timeTrialFlags;
 		currentFlags = currentProg->highScoreTracks[i].timeTrialFlags;

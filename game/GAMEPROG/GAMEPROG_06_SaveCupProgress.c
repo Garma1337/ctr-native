@@ -3,7 +3,8 @@
 // same as the one in GAMEPROG_AdvPercent
 #define CHECK_PROG_BIT(rewards, bitIndex) ((rewards[bitIndex >> 5] >> (bitIndex & 0x1f)) & 1) != 0
 
-void GAMEPROG_SaveCupProgress()
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80026cf4-0x80026d7c.
+void GAMEPROG_SaveCupProgress(void)
 {
 	int i;
 	int *prog;
