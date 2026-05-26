@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800309a4-0x80030a50.
 struct Instance *INSTANCE_BirthWithThread(int modelID, char *name, int poolType, int bucket, void *funcThTick, int objSize, struct Thread *parent)
 {
 	struct GameTracker *gGT;
@@ -24,7 +25,7 @@ struct Instance *INSTANCE_BirthWithThread(int modelID, char *name, int poolType,
 	{
 		// align down, then add 4 to align up,
 		// no object will exceed 0x670 bytes
-		objSize = (objSize & 0xffc) + 4;
+		objSize = (objSize & 0xfffc) + 4;
 	}
 
 	t = PROC_BirthWithObject(

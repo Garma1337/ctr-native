@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80030778-0x8003086c.
 void INSTANCE_Birth(struct Instance *inst, struct Model *model, char *name, struct Thread *th, int flags)
 {
 	int i;
@@ -7,13 +8,12 @@ void INSTANCE_Birth(struct Instance *inst, struct Model *model, char *name, stru
 
 	gGT = sdata->gGT;
 
-#ifndef REBUILD_PS1
 	// copy name
-	for (i = 0; i < 16; i++)
+	for (i = 0; i < 15; i++)
 	{
 		inst->name[i] = name[i];
 	}
-#endif
+	inst->name[15] = '\0';
 
 	inst->unk50 = 0xfe;
 	inst->unk51 = 0xc;
