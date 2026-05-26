@@ -1,6 +1,6 @@
 #include <common.h>
 
-// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8003a2b4-0x8003a3fc
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8003a2b4-0x8003a3fc.
 void MainGameEnd_SoloRaceSaveHighScore(void)
 {
 	struct GameTracker *gGT = sdata->gGT;
@@ -21,7 +21,7 @@ void MainGameEnd_SoloRaceSaveHighScore(void)
 	{
 		entry[0].time = gGT->bestLapTime;
 		entry[0].name[0] = 0;
-		entry[0].characterID = data.characterIDs[player->driverID];
+		entry[0].characterID = data.characterIDs[(u8)player->driverID];
 		memmove(entry[0].name, gGT->prevNameEntered, 0x11);
 	}
 
@@ -39,6 +39,6 @@ void MainGameEnd_SoloRaceSaveHighScore(void)
 
 	entry->time = player->timeElapsedInRace;
 	entry->name[0] = 0;
-	entry->characterID = data.characterIDs[player->driverID];
+	entry->characterID = data.characterIDs[(u8)player->driverID];
 	memmove(entry->name, gGT->prevNameEntered, 0x11);
 }
