@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80037bc0-0x80037da0.
 void MainFreeze_ConfigDrawArrows(s16 offsetX, s16 offsetY, char *str)
 {
 	int lineWidth;
