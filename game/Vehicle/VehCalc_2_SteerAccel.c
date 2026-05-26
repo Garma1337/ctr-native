@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8005900c-0x80059070.
 int VehCalc_SteerAccel(int param_1, int param_2, int param_3, int param_4, int param_5, int param_6)
 {
 	// Crash Bandicoot:
