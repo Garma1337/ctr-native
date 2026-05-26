@@ -18,7 +18,8 @@ void MainKillGame_LaunchSpyro2(void)
 
 	MainKillGame_StopCTR();
 
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
+	// NOTE(aalhendi): Native cannot chain-load the Spyro executable.
 
 	while (1)
 	{

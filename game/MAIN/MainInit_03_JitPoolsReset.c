@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8003b2d4-0x8003b334.
 void MainInit_JitPoolsReset(struct GameTracker *gGT)
 {
 	JitPool_Clear(&gGT->JitPools.thread);

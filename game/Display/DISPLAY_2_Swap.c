@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80023ffc-0x8002406c.
 void DISPLAY_Swap(void)
 {
 	struct GameTracker *gGT;

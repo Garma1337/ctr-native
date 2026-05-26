@@ -3,6 +3,7 @@
 /// @brief Obtain number of actual animation data frames in the first lod entry of the passed model.
 /// @param pInstance - pointer to Instance
 /// @param animIndex - animation index to check
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80030f58-0x80030fdc.
 u16 INSTANCE_GetNumAnimFrames(struct Instance *pInstance, int animIndex)
 {
 	struct Model *pModel;
