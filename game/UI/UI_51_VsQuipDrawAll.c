@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800550f4-0x800552a4.
 void UI_VsQuipDrawAll(void)
 {
 	char *print;
@@ -10,13 +11,14 @@ void UI_VsQuipDrawAll(void)
 	struct Thread *thread;
 
 	// loop through player threads
-	for (thread = gGT->threadBuckets[0].thread; thread != 0; thread = thread->siblingThread)
+	int playerIndex = 0;
+	for (thread = gGT->threadBuckets[0].thread; thread != 0; thread = thread->siblingThread, playerIndex++)
 	{
 		// get player struct from thread
 		d = (struct Driver *)thread->object;
 
 		// If driver already pressed X to continue
-		if ((sdata->Battle_EndOfRace.boolPressX[d->driverID] & 2) != 0)
+		if ((sdata->Battle_EndOfRace.boolPressX[playerIndex] & 2) != 0)
 			continue;
 
 		// This is secretly a s16[2], to hold a config bit
@@ -55,7 +57,7 @@ void UI_VsQuipDrawAll(void)
 		}
 
 		// get current player's pushBuffer
-		RECT *r = &gGT->pushBuffer[d->driverID].rect;
+		RECT *r = &gGT->pushBuffer[playerIndex].rect;
 
 		// Draw the string with a box around it
 		RECTMENU_DrawQuip(print,
