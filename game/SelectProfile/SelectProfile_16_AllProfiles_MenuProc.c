@@ -22,6 +22,16 @@ static s16 *SelectProfile_AllProfiles_OverwritePrompt(void)
 	return (s16 *)&sdata->data10_bbb[8];
 }
 
+static void SelectProfile_CloseGhostMenu(struct RectMenu *menu)
+{
+	RECTMENU_Hide(menu);
+	SelectProfile_Destroy();
+	RefreshCard_StopMemcardAction();
+	*SelectProfile_AllProfiles_MemcardBusy() = 0;
+	*SelectProfile_AllProfiles_ExitToPrevious() = 0;
+	*SelectProfile_AllProfiles_OverwritePrompt() = 0;
+}
+
 static int SelectProfile_GhostRowCount(void)
 {
 	int count = sdata->numGhostProfilesSaved;
@@ -47,12 +57,15 @@ static void SelectProfile_DrawGhostRows(struct RectMenu *menu, int rowCount)
 {
 	struct GameTracker *gGT = sdata->gGT;
 	RECT box;
+	char *title;
+	char *subtitle;
 	int i;
 	int x;
 	int y;
 	int pair;
 	int rowHeight;
 	int isLoading;
+	int titleIndex;
 
 	box.x = 0x50;
 	box.y = 0x32;
@@ -60,10 +73,14 @@ static void SelectProfile_DrawGhostRows(struct RectMenu *menu, int rowCount)
 	box.h = 0x84;
 	RECTMENU_DrawInnerRect(&box, 4, gGT->backBuffer->otMem.startPlusFour);
 
-	DecalFont_DrawLine("SAVE GHOST", 0x100, 0x3d, FONT_BIG, JUSTIFY_CENTER | ORANGE);
-
 	rowHeight = (rowCount > 6) ? 0x2c : 0x30;
 	isLoading = sdata->memcardAction != 1;
+	titleIndex = (sdata->memcardAction == 1) ? 2 : 0;
+	title = sdata->lngStrings[data.lngIndex_LoadSave[titleIndex]];
+	subtitle = sdata->lngStrings[data.lngIndex_LoadSave[titleIndex + 1]];
+
+	DecalFont_DrawLine(title, 0x100, 0x3a, FONT_BIG, JUSTIFY_CENTER | ORANGE);
+	DecalFont_DrawLine(subtitle, 0x100, 0x4a, FONT_SMALL, JUSTIFY_CENTER | ORANGE);
 
 	for (i = 0; i < rowCount; i++)
 	{
@@ -86,8 +103,6 @@ static void SelectProfile_DrawGhostRows(struct RectMenu *menu, int rowCount)
 
 		SelectProfile_DrawGhostProfile(profile, x, y, i == menu->rowSelected, 0, menu->drawStyle, isLoading, unavailable);
 	}
-
-	DecalFont_DrawLine("X: SAVE   TRIANGLE: BACK", 0x100, 0xa8, FONT_SMALL, JUSTIFY_CENTER | ORANGE);
 }
 
 static void SelectProfile_SaveGhostFromRow(struct RectMenu *menu)
@@ -161,18 +176,28 @@ static void SelectProfile_DrawOverwriteGhost(struct RectMenu *menu)
 
 static void SelectProfile_ExitGhostMenu(struct RectMenu *menu)
 {
-	RECTMENU_Hide(menu);
-
 	if (sdata->memcardAction == 1)
 	{
+		SelectProfile_CloseGhostMenu(menu);
 		*SelectProfile_AllProfiles_ExitToPrevious() = 1;
 		sdata->ptrDesiredMenu = &menu224;
 		return;
 	}
 
 	GhostTape_Destroy();
+	SelectProfile_CloseGhostMenu(menu);
 	sdata->ptrDesiredMenu = MM_TrackSelect_GetMenuPtr();
 	MM_TrackSelect_Init();
+}
+
+static void SelectProfile_QueueLoadTrackFromGhostMenu(struct RectMenu *menu)
+{
+	if (sdata->ptrGhostTapePlaying != NULL)
+		memset(sdata->ptrGhostTapePlaying, 0, 0x28);
+
+	sdata->boolReplayHumanGhost = 0;
+	SelectProfile_CloseGhostMenu(menu);
+	sdata->ptrDesiredMenu = QueueLoadTrack_GetMenuPtr();
 }
 
 static void SelectProfile_HandleGhostSelection(struct RectMenu *menu, int rowCount)
@@ -199,9 +224,8 @@ static void SelectProfile_HandleGhostSelection(struct RectMenu *menu, int rowCou
 
 	if (menu->rowSelected >= rowCount - 1)
 	{
-		*SelectProfile_AllProfiles_MemcardBusy() = 1;
-		*SelectProfile_AllProfiles_ExitToPrevious() = 1;
-		memset(sdata->ptrGhostTapePlaying, 0, 0x28);
+		// NOTE(aalhendi): Preserve the no-ghost row without using the busy memcard path.
+		SelectProfile_QueueLoadTrackFromGhostMenu(menu);
 		return;
 	}
 
