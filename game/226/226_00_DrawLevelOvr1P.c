@@ -1273,7 +1273,10 @@ static int DrawLevelOvr1P_EmitPreparedProjectedQuadRawAtOt(struct PushBuffer *pb
 	uv2 = *CTR_SCRATCHPAD_PTR(u32, 0x1a8);
 
 	otIndex = DrawLevelOvr1P_ResolveProjectedOtIndex(block, projected, maxDepth, faceIndex, otIndexOverride);
-	code = texture != NULL ? DrawLevelOvr1P_SelectRawPrimitiveCode(uv1, 0x3e, 0x3c) : 0x3e;
+	// NOTE(aalhendi): Retail raw GT4 writers select the primitive code from
+	// scratch UV1/tpage, even when native bounded the active texture pointer.
+	(void)texture;
+	code = DrawLevelOvr1P_SelectRawPrimitiveCode(uv1, 0x3e, 0x3c);
 
 	prim[1] = DrawLevelOvr1P_GetProjectedColorCode(&projected[indices[0]], code);
 	prim[2] = DrawLevelOvr1P_PackProjectedSxy(&projected[indices[0]]);
@@ -1321,7 +1324,10 @@ static int DrawLevelOvr1P_EmitPreparedProjectedTriRawAtOt(struct PushBuffer *pb,
 	uv2 = *CTR_SCRATCHPAD_PTR(u32, 0x1a8);
 
 	otIndex = DrawLevelOvr1P_ResolveProjectedOtIndex(block, projected, maxDepth, faceIndex, otIndexOverride);
-	code = texture != NULL ? DrawLevelOvr1P_SelectRawPrimitiveCode(uv1, 0x36, 0x34) : 0x36;
+	// NOTE(aalhendi): Retail raw GT3 writers use scratch UV1/tpage for this
+	// code select; the source texture pointer is not part of the terminal test.
+	(void)texture;
+	code = DrawLevelOvr1P_SelectRawPrimitiveCode(uv1, 0x36, 0x34);
 
 	prim[1] = DrawLevelOvr1P_GetProjectedColorCode(&projected[indices[0]], code);
 	prim[2] = DrawLevelOvr1P_PackProjectedSxy(&projected[indices[0]]);
