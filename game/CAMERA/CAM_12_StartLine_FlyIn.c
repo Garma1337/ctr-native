@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x800194c8-0x800198f8.
 void CAM_StartLine_FlyIn(struct FlyInData *flyInData, s16 maxFrames, int frame, s16 *desiredPos, s16 *desiredRot)
 {
 	struct Level *lev = sdata->gGT->level1;
