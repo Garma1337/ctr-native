@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x80026ed8-0x80027838.
 void GhostReplay_ThTick(struct Thread *t)
 {
 	struct GhostTape *tape;
@@ -46,7 +47,7 @@ void GhostReplay_ThTick(struct Thread *t)
 
 	gGT = sdata->gGT;
 
-	if ((sdata->boolGhostsDrawing == 0) || ((gGT->gameMode1 & DEBUG_MENU) != 0) || (d == 0) || (tape->ptrEnd == tape->ptrStart) || (d->ghostBoolInit == 0))
+	if ((sdata->boolGhostsDrawing == 0) || ((gGT->gameMode1 & DEBUG_MENU) != 0) || (tape->ptrEnd == tape->ptrStart) || (d->ghostBoolInit == 0))
 	{
 		inst->flags |= HIDE_MODEL;
 		return;
@@ -99,15 +100,6 @@ void GhostReplay_ThTick(struct Thread *t)
 				d->actionsFlagSet &= 0xffefffff; // driver is not AI anymore
 				d->speedApprox = gh->speedApprox;
 
-// TODO: Remove for LEVEL when redhot makes 3 NavHeader with numPoints=0
-#if defined(REBUILD_PS1)
-
-				// kill thread, no AI yet
-				t->flags |= 0x800;
-				return;
-
-#else
-
 				BOTS_Driver_Convert(d);
 				BOTS_ThTick_Drive(t);
 
@@ -117,8 +109,6 @@ void GhostReplay_ThTick(struct Thread *t)
 				// allow this thread to ignore all collisions
 				t->flags |= 0x1000;
 				return;
-
-#endif
 			}
 
 			// if opcode is seen
@@ -137,11 +127,11 @@ void GhostReplay_ThTick(struct Thread *t)
 						packet->pos[i] = tmpPos[i];
 					}
 
-					packet->time = 0;
+					packet->rot[0] = 0;
 
 					// yes, this is correct
 					packet->rot[1] = (u16)packetPtr[9] << 4;
-					packet->rot[0] = (u16)packetPtr[10] << 4;
+					packet->rot[2] = (u16)packetPtr[10] << 4;
 
 					// if 2nd position opcode
 					if (opcodePos == 1)
@@ -190,9 +180,10 @@ void GhostReplay_ThTick(struct Thread *t)
 						packet->pos[i] = tmpPos[i];
 					}
 
-					packet[0].time = packet[-1].time;
-					packet[0].rot[0] = packet[-1].rot[0];
-					packet[0].rot[1] = packet[-1].rot[1];
+					for (int i = 0; i < 3; ++i)
+					{
+						packet[0].rot[i] = packet[-1].rot[i];
+					}
 
 					packet->bufferPacket = packetEndChain;
 					packetPtr += 1;
@@ -212,11 +203,11 @@ void GhostReplay_ThTick(struct Thread *t)
 					packet->pos[i] = tmpPos[i];
 				}
 
-				packet->time = 0;
+				packet->rot[0] = 0;
 
 				// yes, this is right
 				packet->rot[1] = packetPtr[3] << 4;
-				packet->rot[0] = packetPtr[4] << 4;
+				packet->rot[2] = packetPtr[4] << 4;
 
 				packet->bufferPacket = packetEndChain;
 				packetPtr += 5;
@@ -289,14 +280,12 @@ void GhostReplay_ThTick(struct Thread *t)
 		delta -= 0x1000;
 	local_rot[1] = currPacket->rot[1] + ((delta * lerp4096) >> 0xC) & 0xFFF;
 
-#if 0
-  delta = ((int)nextPacket->rot[2] - (int)currPacket->rot[2]) & 0xFFF;
-  if (delta > 0x7FF) delta -= 0x1000;
-  local_rot[2] = currPacket->rot[2] + ((delta * lerp4096) >> 0xC) & 0xFFF;
-#endif
-	local_rot[2] = 0;
+	delta = ((int)nextPacket->rot[2] - (int)currPacket->rot[2]) & 0xFFF;
+	if (delta > 0x7FF)
+		delta -= 0x1000;
+	local_rot[2] = currPacket->rot[2] + ((delta * lerp4096) >> 0xC) & 0xFFF;
 
-	// converted to TEST in rebuildPS1
+	// Retail converts the interpolated rotation into the instance matrix.
 	ConvertRotToMatrix(&inst->matrix, local_rot);
 
 	d->posCurr.x = inst->matrix.t[0] << 8;
@@ -334,21 +323,25 @@ void GhostReplay_ThTick(struct Thread *t)
 			case 0x81:
 			{ // Animation
 
-				// What's with the safety checks in the original game?
-				// Did the animation format of ghosts not match retail?
-				// I dont remember seeing different animation patterns
-				// in the Aug5/Aug14/Sep3 builds, was their recording bugged?
-
-				// Ghosts always have the same animation index as Human drivers
-				// But for some reason an invalid index is here anyway?
 				int numAnimFrames = INSTANCE_GetNumAnimFrames(inst, buffer[1]);
 				inst->animIndex = (numAnimFrames < 1) ? 0 : buffer[1];
 
-				// LEV ntropy/oxide ghost can use frame[0x11 or 0x14], doesnt
-				// exist, must be from an old CTR build, so check for that
-				inst->animFrame = buffer[2];
-				if (inst->animFrame > 0x10)
-					inst->animFrame = 0x10;
+				int maxFrame = INSTANCE_GetNumAnimFrames(inst, inst->animIndex) - 1;
+				if (buffer[2] != 0)
+				{
+					if (buffer[2] < maxFrame)
+						inst->animFrame = buffer[2];
+					else
+						inst->animFrame = maxFrame;
+				}
+				else if (maxFrame > 0)
+				{
+					inst->animFrame = maxFrame;
+				}
+				else
+				{
+					inst->animFrame = 0;
+				}
 
 				buffer += 3;
 			}

@@ -3,12 +3,8 @@
 
 struct GhostPacket
 {
-	// just position,
-	// or union for several packets?
-
 	s16 pos[3];
-	s16 time;
-	s16 rot[2];
+	s16 rot[3];
 
 	void *bufferPacket;
 
