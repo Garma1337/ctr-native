@@ -4350,6 +4350,9 @@ static int RenderBucket_PrepareDrawContext(struct RenderBucketDrawContext *ctx, 
 		ctx->splitPlane = ((s32)CFC2(26) << 1) - (s32)CFC2(7);
 	}
 
+	// NOTE(aalhendi): Retail 0x8006ac94 clears scratch 0x58 before setup/draw.
+	*CTR_SCRATCHPAD_PTR(u32, 0x58) = 0;
+
 	ctx->inst = inst;
 	ctx->idpp = idpp;
 	ctx->pb = pb;
