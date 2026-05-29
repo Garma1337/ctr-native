@@ -3417,11 +3417,9 @@ static int RenderBucket_DrawWaterSplitClipped(struct RenderBucketDrawContext *ct
 	if (c->splitDist < 0)
 		signMask |= 4;
 
-	// NOTE(aalhendi): Source-backs retail helper 0x8006d094's candidate
-	// topology. Retail builds fixed split-plane intersections, emits up to
-	// three candidate triangles, and lets Instance+0x64 decide draw/color side.
-	// This preserves those branch-specific edge directions instead of generic
-	// polygon clipping; final scratch/register choreography remains pending.
+	// NOTE(aalhendi): ASM-verified retail 0x8006d094-0x8006d258 candidate
+	// topology. Native uses explicit split vertices instead of scratch/GTE
+	// tail-call ABI, matching the accepted helper boundary in the audit.
 	switch (signMask)
 	{
 	case 0:
@@ -4339,8 +4337,9 @@ void RenderBucket_Execute(void *param_1, struct PrimMem *param_2)
 {
 	struct RenderBucketEntry *entry = (struct RenderBucketEntry *)param_1;
 
-	// NOTE(aalhendi): Native C implementation of the RenderBucket execution
-	// contract. Full scratchpad/register ASM audit is still pending.
+	// NOTE(aalhendi): Source-backed partial for NTSC-U 926
+	// 0x8006aaa8-0x8006ad6c. Full scratchpad/register ABI audit is still
+	// pending before this can be ASM-verified.
 	for (; entry->inst != 0; entry++)
 	{
 		struct RenderBucketDrawContext ctx = {0};

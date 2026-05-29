@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8001a0bc-0x8001b254.
 void CAM_FollowDriver_Normal(struct CameraDC *cDC, struct Driver *d, s16 *pushBuffer, int scratchpad, struct ZoomData *zoom)
 {
 	struct PushBuffer *pb = (struct PushBuffer *)pushBuffer;
@@ -52,10 +53,10 @@ void CAM_FollowDriver_Normal(struct CameraDC *cDC, struct Driver *d, s16 *pushBu
 
 	// 0 = forwards
 	// 0x800 = backwards
-	sVar10 = ((backupFlags & 0x10000) != 0) * 0x800;
+	sVar10 = ((cDC->flags & 0x10000) != 0) * 0x800;
 
 	// if camera angle was not just changed
-	if ((backupFlags & 8) == 0)
+	if ((cDC->flags & 8) == 0)
 	{
 		// absolute value driver speed
 		x = (int)d->speedApprox;
@@ -527,21 +528,13 @@ LAB_8001ab04:
 			struct SpawnType1 *st1 = gGT->level1->ptrSpawnType1;
 			void **pointers = ST1_GETPOINTERS(st1);
 			x = pointers[ST1_CAMERA_PATH];
+			int flyInDone = 0;
 
-			// Conditions to skip:
-			if (
-
-
-			    // No camera + No ghosts (battle maps)
-			    (st1->count < 4) ||
-
-			    // prevent advhub from playing startline
-			    (cDC->unk8E == 0) ||
-
-			    // Press Triangle
-			    ((pad->buttonsTapped & BTN_TRIANGLE) != 0))
+			// No camera + No ghosts (battle maps)
+			if (st1->count < 4)
 			{
 				// startline fly-in is done
+				flyInDone = 1;
 				x = 0x1000;
 			}
 
@@ -554,9 +547,9 @@ LAB_8001ab04:
 				flyInData.frameCount2 = 0x8e;
 
 				// which frame of fly-in you are in
-				x = 0xa5 - (u32)cDC->unk8E;
+				x = 0xa5 - (u16)cDC->unk8E;
 
-				if (x > 0x96)
+				if ((s16)x > 0x96)
 					x = 0x96;
 
 				CAM_StartLine_FlyIn(&flyInData, 0x96, x, &local_40[0], &local_38[0]);
@@ -565,10 +558,21 @@ LAB_8001ab04:
 				x = (int)cDC->unk8C;
 			}
 
-			// if startline fly-in is done
-			if (x == 0x1000)
+			if (cDC->unk8E < 1)
+			{
+				flyInDone = 1;
+			}
+
+			// Press Triangle
+			if ((pad->buttonsTapped & BTN_TRIANGLE) != 0)
 			{
 				cDC->flags |= 9;
+				flyInDone = 1;
+			}
+
+			// if startline fly-in is done
+			if (flyInDone)
+			{
 				gGT->hudFlags |= 0x21;
 				gGT->gameMode1 &= ~(START_OF_RACE);
 			}

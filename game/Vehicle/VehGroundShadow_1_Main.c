@@ -246,7 +246,7 @@ static void VehGroundShadow_EmitQuad(u32 **primCursor, u_long *otBase, const str
 	*primCursor = prim + 10;
 }
 
-// NOTE(aalhendi): ASM-audited NTSC-U 926 0x8005b720-0x8005c120; not stamped until exact scratchpad layout is restored.
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8005b720-0x8005c120.
 void VehGroundShadow_Main(void)
 {
 	struct GameTracker *gGT = sdata->gGT;
@@ -306,6 +306,9 @@ void VehGroundShadow_Main(void)
 			s32 diffX;
 			s32 diffY;
 			s32 diffZ;
+			s32 scaledX;
+			s32 scaledY;
+			s32 scaledZ;
 			s16 scaled[4];
 			s32 groundDistance;
 			u32 color;
@@ -314,7 +317,7 @@ void VehGroundShadow_Main(void)
 			s32 depth[VEH_GROUND_SHADOW_NUM_POINTS];
 
 			if (entry->driver == NULL)
-				continue;
+				break;
 
 			if (entry->state == -1)
 				continue;
@@ -331,16 +334,19 @@ void VehGroundShadow_Main(void)
 			diffX = VehGroundShadow_DiffS16(entry->pos[0], camX);
 			diffY = VehGroundShadow_DiffS16(entry->pos[1], camY);
 			diffZ = VehGroundShadow_DiffS16(entry->pos[2], camZ);
+			scaledX = (s16)(diffX * 4);
+			scaledY = (s16)(diffY * 4);
+			scaledZ = (s16)(diffZ * 4);
 
 			if (!isLargeGeomScreen)
 			{
-				if (diffX >= 0x1771 || diffY >= 0x1771 || diffZ >= 0x1771 || diffX < -0x1770 || diffY < -0x1770 || diffZ < -0x1770)
+				if (scaledX >= 0x1771 || scaledY >= 0x1771 || scaledZ >= 0x1771 || scaledX < -0x1770 || scaledY < -0x1770 || scaledZ < -0x1770)
 					continue;
 			}
 
-			scaled[0] = (s16)(diffX * 4);
-			scaled[1] = (s16)(diffY * 4);
-			scaled[2] = (s16)(diffZ * 4);
+			scaled[0] = (s16)scaledX;
+			scaled[1] = (s16)scaledY;
+			scaled[2] = (s16)scaledZ;
 			scaled[3] = 0;
 			gte_ldv0(scaled);
 			gte_rtv0_b();
@@ -385,7 +391,7 @@ void VehGroundShadow_Main(void)
 					continue;
 			}
 
-			VehGroundShadow_BuildProjectionPoints(entry, diffX, diffY, diffZ, points);
+			VehGroundShadow_BuildProjectionPoints(entry, scaledX, scaledY, scaledZ, points);
 			VehGroundShadow_ProjectPoints(points, sxy, depth);
 
 			for (int quadIndex = 0; quadIndex < VEH_GROUND_SHADOW_NUM_QUADS; quadIndex++)

@@ -1,5 +1,6 @@
 #include <common.h>
 
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8001b334-0x8001c360.
 void CAM_ThTick(struct Thread *t)
 {
 	s16 sVar1;
@@ -111,18 +112,6 @@ void CAM_ThTick(struct Thread *t)
 			psVar20 = (s16 *)((int)psVar19 + data.EndOfRace_Camera_Size[iVar7] + 2);
 
 			psVar15 = &gGT->level1->ptr_restart_points[uVar16];
-
-// If this printf happens, the code works,
-// but without printf, it ignores the nextIndex IFs
-#if 0
-			printf("%d %d %d %d %d %d\n",
-			uVar22,
-			uVar16,
-			psVar15->nextIndex_forward,
-			psVar15->nextIndex_left,
-			psVar15->nextIndex_backward,
-			psVar15->nextIndex_right);
-#endif
 
 			if ((uVar22 == uVar16) || (uVar22 == psVar15->nextIndex_forward) || (uVar22 == psVar15->nextIndex_left) ||
 			    (uVar22 == psVar15->nextIndex_backward) || (uVar22 == psVar15->nextIndex_right))
@@ -394,7 +383,10 @@ SkipNewCameraEOR:
 						pb->pos[2] = sdata->FirstPersonCamera.posOffset[2] + (s16)((u32)d->posCurr.z >> 8);
 
 						pb->rot[0] = sdata->FirstPersonCamera.rotOffset[0] + (d->rotCurr).x;
-						pb->rot[1] = sdata->FirstPersonCamera.rotOffset[1] + (d->rotCurr).y;
+						if (cDC->cameraMode == 0x10)
+							pb->rot[1] = sdata->FirstPersonCamera.rotOffset[1] + d->angle;
+						else
+							pb->rot[1] = sdata->FirstPersonCamera.rotOffset[1] + (d->rotCurr).y;
 						pb->rot[2] = sdata->FirstPersonCamera.rotOffset[2] + (d->rotCurr).z;
 					}
 					else
@@ -434,13 +426,9 @@ SkipNewCameraEOR:
 
 								// interpolate two rotations
 
-								// ERROR: 0x1f800316 is bugged, we set to zero
-								// to prevent the camera from flying away, but it should not be zero,
-								// see Demo Mode on Crash Cove and Roo's Tubes
-
 								iVar8 = ((int)(((uVar10 - uVar9) + 0x800U & 0xfff) - 0x800) >> 1);
 								*(s16 *)0x1f800314 = 0x800;
-								*(s16 *)0x1f800316 = 0; //(s16)uVar9 + (s16)iVar8;
+								*(s16 *)0x1f800316 = (s16)uVar9 + (s16)iVar8;
 								*(s16 *)0x1f800318 = 0;
 
 								// interpolate two positions
