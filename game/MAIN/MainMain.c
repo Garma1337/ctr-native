@@ -25,7 +25,9 @@ u32 main(void)
 	struct GamepadSystem *gGS;
 	gGS = sdata->gGamepads;
 
-#ifndef REBUILD_PS1
+	// NOTE(aalhendi): Retail main calls __main before the state loop. Native has
+	// no linked __main body, so keep this as a CTR_NATIVE-only divergence.
+#ifndef CTR_NATIVE
 	__main();
 #endif
 
