@@ -56,6 +56,22 @@ static void MATH_Matrix_LoadRotWords(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4)
 	CTC2(r4, 4);
 }
 
+void MATRIX_SET_r11r12r13r14r15(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4)
+{
+	// NOTE(aalhendi): Retail inputs are t3/t4/t5/t6/t7 and writes GTE regs 0-4.
+	MATH_Matrix_LoadRotWords(r0, r1, r2, r3, r4);
+}
+
+void Unknown_8006c600(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4)
+{
+	// NOTE(aalhendi): Retail inputs are t3/t4/t5/t6/t7 and writes GTE regs 8-12.
+	CTC2(r0, 8);
+	CTC2(r1, 9);
+	CTC2(r2, 10);
+	CTC2(r3, 11);
+	CTC2(r4, 12);
+}
+
 static void MATH_Matrix_MulRotWords(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
 {
 	u32 t3 = *r0;
@@ -108,6 +124,64 @@ static void MATH_Matrix_MulRotWords(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
 	*r4 = t7;
 
 	MATH_Matrix_LoadRotWords(t3, t4, t5, t6, t7);
+}
+
+void Unknown_8006c49c(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
+{
+	// NOTE(aalhendi): Retail transforms and reloads caller-owned t3/t4/t5/t6/t7.
+	MATH_Matrix_MulRotWords(r0, r1, r2, r3, r4);
+}
+
+void Unknown_8006c558(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4)
+{
+	u32 t3 = *r0;
+	u32 t4 = *r1;
+	u32 t5 = *r2;
+	u32 t6 = *r3;
+	u32 t7 = *r4;
+
+	u32 v0 = (t3 & 0xffff) | (t4 & 0xffff0000);
+	MTC2(v0, 0);
+	MTC2(t6, 1);
+
+	v0 = (t3 >> 0x10) | (t5 << 0x10);
+	gte_llv0_b();
+	MTC2(v0, 2);
+	MTC2(t6 >> 0x10, 3);
+
+	v0 = (t4 & 0xffff) | (t5 & 0xffff0000);
+	t3 = MFC2(9);
+	t4 = MFC2(10);
+	t6 = MFC2(11);
+	gte_llv1_b();
+	MTC2(v0, 4);
+	MTC2(t7, 5);
+
+	t3 &= 0xffff;
+	t4 <<= 0x10;
+	t6 &= 0xffff;
+
+	v0 = MFC2(9);
+	t5 = MFC2(10);
+	u32 nextT6 = MFC2(11);
+	gte_llv2_b();
+
+	t3 |= v0 << 0x10;
+	t5 &= 0xffff;
+	t6 |= nextT6 << 0x10;
+
+	v0 = MFC2(9) & 0xffff;
+	u32 nextT5 = MFC2(10);
+	t7 = MFC2(11);
+
+	t4 |= v0;
+	t5 |= nextT5 << 0x10;
+
+	*r0 = t3;
+	*r1 = t4;
+	*r2 = t5;
+	*r3 = t6;
+	*r4 = t7;
 }
 
 static void MATH_Matrix_StoreWords(MATRIX *m, u32 r0, u32 r1, u32 r2, u32 r3, u32 r4)
@@ -328,4 +402,13 @@ VECTOR *ApplyMatrixLV_stub(VECTOR *input, VECTOR *output)
 	output->vz = (s32)(MFC2(27) + highZ);
 
 	return output;
+}
+
+// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8006c6c8-0x8006c6f0.
+VECTOR *Unknown_8006c6c8(VECTOR *input, VECTOR *output, MATRIX *matrix)
+{
+	MATH_Matrix_LoadRotWords(MATH_Matrix_ReadWord(matrix, 0x0), MATH_Matrix_ReadWord(matrix, 0x4), MATH_Matrix_ReadWord(matrix, 0x8),
+	                         MATH_Matrix_ReadWord(matrix, 0xc), MATH_Matrix_ReadWord(matrix, 0x10));
+
+	return ApplyMatrixLV_stub(input, output);
 }

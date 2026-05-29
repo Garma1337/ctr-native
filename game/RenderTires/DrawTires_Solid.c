@@ -151,43 +151,11 @@ static u32 DrawTiresSolid_PackXY(int x, int y)
 	return ((u32)(u16)x) | ((u32)(u16)y << 16);
 }
 
-static u32 DrawTiresSolid_LoadTrigPacked(int angle)
-{
-	struct TrigTable trigApprox = data.trigApprox[angle & 0x3ff];
-
-	return (u16)trigApprox.sin | ((u32)(u16)trigApprox.cos << 16);
-}
-
 static struct DrawTiresSolidTrigPair DrawTiresSolid_TrigAngleSinCos(int angle)
 {
-	u32 packed = DrawTiresSolid_LoadTrigPacked(angle);
 	struct DrawTiresSolidTrigPair pair;
 
-	// NOTE(aalhendi): PSX-backfeed blocker: retail TRIG_AngleSinCos_r9r8r10
-	// receives angle in t1 and returns sine/cosine through t0/t2. Native C uses
-	// an explicit parameter and struct return; restore the register ABI before
-	// PSX backfeed.
-	if ((angle & 0x400) == 0)
-	{
-		pair.sin = (s16)packed;
-		pair.cos = (s16)(packed >> 16);
-
-		if ((angle & 0x800) != 0)
-		{
-			pair.sin = -pair.sin;
-			pair.cos = -pair.cos;
-		}
-	}
-	else
-	{
-		pair.sin = (s16)(packed >> 16);
-		pair.cos = (s16)packed;
-
-		if ((angle & 0x800) != 0)
-			pair.sin = -pair.sin;
-		else
-			pair.cos = -pair.cos;
-	}
+	TRIG_AngleSinCos_r9r8r10(angle, &pair.sin, &pair.cos);
 
 	return pair;
 }
@@ -225,17 +193,14 @@ static void DrawTiresSolid_AddHazardOffset(struct DrawTiresSolidScratch *scratch
 	DrawTiresSolid_WriteS16(scratch, offsetZ, DrawTiresSolid_ReadS16(scratch, offsetZ) + (spin.sin >> shift));
 }
 
-static int DrawTiresSolid_IntSqrt(int radicand)
+s32 Unknown_8006ef98(s32 radicand)
 {
 	int root = 0;
 	int remainder = 0;
 	int bitCount;
 	u32 work;
 
-	// NOTE(aalhendi): PSX-backfeed blocker: retail Unknown_8006ef98 receives
-	// the radicand in s5 and returns the integer square root through s6. Native
-	// C uses an explicit parameter and return value; restore the register ABI
-	// before PSX backfeed.
+	// NOTE(aalhendi): Retail input is s5 and output is s6.
 	if (radicand == 0)
 		return 0;
 
@@ -397,7 +362,7 @@ static void DrawTiresSolid_BuildWheelAxes(struct DrawTiresSolidScratch *scratch)
 		gte_sqr0_b();
 		DrawTiresSolid_WriteS16(scratch, inputOffset + 0, centerX);
 		DrawTiresSolid_WriteS16(scratch, inputOffset + 2, centerY);
-		len = DrawTiresSolid_IntSqrt(MFC2_S(25) + MFC2_S(26) + MFC2_S(27));
+		len = Unknown_8006ef98(MFC2_S(25) + MFC2_S(26) + MFC2_S(27));
 
 		gte_lcv1_b();
 		DrawTiresSolid_WriteS32(scratch, inputOffset + 4, centerZ);
@@ -429,7 +394,7 @@ static void DrawTiresSolid_BuildWheelAxes(struct DrawTiresSolidScratch *scratch)
 		axisZ = MFC2_S(27);
 
 		gte_sqr0_b();
-		len = DrawTiresSolid_IntSqrt(MFC2_S(25) + MFC2_S(26) + MFC2_S(27));
+		len = Unknown_8006ef98(MFC2_S(25) + MFC2_S(26) + MFC2_S(27));
 		invLen = 0x10000 / len;
 
 		axisX = (axisX * invLen) >> 4;
@@ -451,7 +416,7 @@ static void DrawTiresSolid_BuildWheelAxes(struct DrawTiresSolidScratch *scratch)
 		axisZ = MFC2_S(27);
 
 		gte_sqr0_b();
-		len = DrawTiresSolid_IntSqrt(MFC2_S(25) + MFC2_S(26) + MFC2_S(27));
+		len = Unknown_8006ef98(MFC2_S(25) + MFC2_S(26) + MFC2_S(27));
 		invLen = (wheelSize * -(0x10000 / len)) >> 12;
 
 		DrawTiresSolid_WriteS16(scratch, outputBase + 0xf8, (axisX * invLen) >> 10);
@@ -787,7 +752,7 @@ static int DrawTiresSolid_StagePlayer(struct DrawTiresSolidScratch *scratch, str
 
 void DrawTires_Solid(struct Thread *thread, struct PrimMem *primMem, char numPlyr)
 {
-	// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8006e588-0x8006ef30.
+	// NOTE(aalhendi): Source-backed partial audit for NTSC-U 926 0x8006e588-0x8006ef30.
 	struct DrawTiresSolidScratch scratch = {0};
 	int primCount;
 

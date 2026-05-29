@@ -42,7 +42,11 @@ void CTR_CycleTex_AllModels(u32 numModels, struct Model **pModelArray, int timer
 void CTR_CycleTex_LEV(struct AnimTex *animtex, int timer);
 void CTR_ErrorScreen(char r, char g, char b);
 void CTR_CycleTex_Model(struct AnimTex *animtex, int timer);
+void CTR_CycleTex_2p3p4pWumpaHUD(u32 *ptrActiveTex, u32 *ptrArray, int numFrames);
 void CTR_ScrambleGhostString(char *dst, const char *src);
+void CTR_unknownMaybeThunk1(void *dst, void *src);
+void CTR_unknownMaybeThunk2(void *dst, void *src);
+void CTR_unknownMaybeThunk3(void *dst, void *src, int byteCount);
 
 void CTR_Box_DrawWireBox(RECT *r, const Color *color, void *ot, struct PrimMem *primMem);
 void CTR_Box_DrawClearBox(RECT *r, Color *color, int transparency, u_long *ot);
@@ -357,15 +361,26 @@ void MainRaceTrack_RequestLoad(s16 levelID);
 
 int MATH_Sin(u32 angle);
 int MATH_Cos(u32 angle);
+void TRIG_AngleSinCos_r19r17r18(u32 angle, s32 *sine, s32 *cosine);
+void TRIG_AngleSinCos_r15r16r17(u32 angle, s32 *sine, s32 *cosine);
+void TRIG_AngleSinCos_r16r17r18_duplicate(u32 angle, u32 *sine, u32 *cosine);
+void TRIG_AngleSinCos_r9r8r10(u32 angle, s32 *sine, s32 *cosine);
+void TRIG_AngleSinCos_r16r17r18(u32 angle, s32 *sine, s32 *cosine);
 MATRIX *MATH_HitboxMatrix(MATRIX *output, MATRIX *input);
 void ConvertRotToMatrix_InverseTranspose_NoRotY(MATRIX *m, s16 *rot);
 void ConvertRotToMatrix_InverseTranspose(MATRIX *m, s16 *rot);
 void ConvertRotToMatrix(MATRIX *m, s16 *rot);
 void ConvertRotToMatrix_Transpose(MATRIX *m, s16 *rot);
 void MatrixRotate(MATRIX *dst, MATRIX *src, MATRIX *rot);
+void Unknown_8006c49c(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4);
+void MATRIX_SET_r11r12r13r14r15(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4);
+void Unknown_8006c558(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4);
+void Unknown_8006c600(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4);
 int SquareRoot0_stub(int param_1);
+VECTOR *Unknown_8006c6c8(VECTOR *input, VECTOR *output, MATRIX *matrix);
 VECTOR *ApplyMatrixLV_stub(VECTOR *input, VECTOR *output);
 void MATH_MatrixMul(MATRIX *output, MATRIX *input, VECTOR *rotate);
+s32 Unknown_8006ef98(s32 radicand);
 
 void MEMCARD_InitCard(void);
 void MEMCARD_SetIcon(int iconID);
@@ -546,6 +561,7 @@ void UI_DrawRankedDrivers(void);
 void UI_DrawDriverIcon(struct Icon *icon, s16 posX, s16 posY, struct PrimMem *primMem, u_long *ot, char transparency, s16 scale, u32 color);
 void UI_RenderFrame_AdvHub(void);
 void UI_RenderFrame_Racing(void);
+void UI_RenderFrame_Wumpa3D_2P3P4P(struct GameTracker *gGT);
 void UI_CupStandings_FinalizeCupRanks(void);
 void UI_CupStandings_UpdateCupRanks(void);
 void UI_CupStandings_InputAndDraw(void);

@@ -1051,10 +1051,10 @@
 
 8006c430 TRIG_AngleSinCos_r16r17r18_duplicate
 
-// unknown 8006c49c
+8006c49c Unknown_8006c49c
 8006c540 MATRIX_SET_r11r12r13r14r15 // only stubbed in 926
-// unknown 8006c558
-// unknown 8006c600
+8006c558 Unknown_8006c558
+8006c600 Unknown_8006c600
 
 // everything above ^^ is matrix math
 
@@ -1100,7 +1100,7 @@
 8006e588 DrawTires_Solid
 
 8006ef30 TRIG_AngleSinCos_r9r8r10
-// unknown 8006ef98
+8006ef98 Unknown_8006ef98
 8006f004 DrawTires_Reflection
 
 8006f9a8 RenderWeather

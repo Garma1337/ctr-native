@@ -106,11 +106,14 @@ void CTR_Box_DrawSolidBox(RECT *r, Color color, u_long *ot);
 void CTR_CycleTex_LEV(struct AnimTex *animtex, int timer);
 void CTR_CycleTex_Model(struct AnimTex *pAnimTexArray, int timer);
 void CTR_CycleTex_AllModels(u32 numModels, struct Model **pModelArray, int timer);
-// CTR_CycleTex_2p3p4pWumpaHUD();
+void CTR_CycleTex_2p3p4pWumpaHUD(u32 *ptrActiveTex, u32 *ptrArray, int numFrames);
 void CTR_ClearRenderLists_1P2P(struct GameTracker *gGT, int numPlyrCurrGame);
 void CTR_ClearRenderLists_3P4P(struct GameTracker *gGT, int numPlyrCurrGame);
 void CTR_EmptyFunc_MainFrame_ResetDB();
 void CTR_ErrorScreen(char r, char g, char b);
+void CTR_unknownMaybeThunk1(void *dst, void *src);
+void CTR_unknownMaybeThunk2(void *dst, void *src);
+void CTR_unknownMaybeThunk3(void *dst, void *src, int byteCount);
 void CTR_MatrixToRot(SVECTOR *rot, MATRIX *matrix, u32 flags);
 void CTR_ScrambleGhostString(char *dst, const char *src);
 
@@ -1111,9 +1114,9 @@ void DrawSky_Full(void *skybox, struct PushBuffer *pb, struct PrimMem *primMem);
 
 void AnimateQuad(int timer, int numSCVert, void *ptrSCVert, int *visSCVertList);
 void AnimateQuadVertex(int timer, struct SCVert *scVert, u32 *visBits);
-// TRIG_AngleSinCos_r19r17r18()
+void TRIG_AngleSinCos_r19r17r18(u32 angle, s32 *sine, s32 *cosine);
 void DrawConfetti(struct PushBuffer *pb, struct PrimMem *primMem, void *confetti, int frameTimer, int gameMode1);
-// TRIG_AngleSinCos_r15r16r17()
+void TRIG_AngleSinCos_r15r16r17(u32 angle, s32 *sine, s32 *cosine);
 
 // RenderBucket (?)
 
@@ -1135,9 +1138,14 @@ void ConvertRotToMatrix_InverseTranspose(MATRIX *m, s16 *rot);
 void ConvertRotToMatrix(MATRIX *m, s16 *rot);
 void ConvertRotToMatrix_Transpose(MATRIX *m, s16 *rot);
 void MatrixRotate(MATRIX *dst, MATRIX *src, MATRIX *rot);
-// TRIG_AngleSinCos_r16r17r18_duplicate()
+void TRIG_AngleSinCos_r16r17r18_duplicate(u32 angle, u32 *sine, u32 *cosine);
+void Unknown_8006c49c(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4);
+void MATRIX_SET_r11r12r13r14r15(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4);
+void Unknown_8006c558(u32 *r0, u32 *r1, u32 *r2, u32 *r3, u32 *r4);
+void Unknown_8006c600(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4);
 int SquareRoot0_stub(int param_1);
 // RngDeadCoed()
+VECTOR *Unknown_8006c6c8(VECTOR *input, VECTOR *output, MATRIX *matrix);
 VECTOR *ApplyMatrixLV_stub(VECTOR *input, VECTOR *output);
 // Draw_KartGhost()
 // Draw_KartBodyReflection()
@@ -1150,10 +1158,11 @@ void AnimateWaterVertex(struct WaterVert *waterVert, u16 colorOffset, int firstO
 void RedBeaker_RenderRain(struct PushBuffer *pb, struct PrimMem *primMem, struct JitPool *rain, char numPlyr, int gameMode1);
 void RenderStars(struct PushBuffer *pb, struct PrimMem *primMem, void *stars, char numPlyr);
 void DrawTires_Solid(struct Thread *thread, struct PrimMem *primMem, char numPlyr);
-// TRIG_AngleSinCos_r9r8r10()
+void TRIG_AngleSinCos_r9r8r10(u32 angle, s32 *sine, s32 *cosine);
+s32 Unknown_8006ef98(s32 radicand);
 void DrawTires_Reflection(struct Thread *thread, struct PrimMem *primMem, char numPlyr);
 void RenderWeather(struct PushBuffer *pb, struct PrimMem *primMem, struct RainBuffer *rainBuffer, char numPlyr, int gameMode1);
-// TRIG_AngleSinCos_r16r17r18()
+void TRIG_AngleSinCos_r16r17r18(u32 angle, s32 *sine, s32 *cosine);
 int RenderLists_Init1P2P(struct BSP *bspRoot, int *visLeafList, struct PushBuffer *pb, u32 LevRenderList, void *bspList, char numPlyr);
 void RenderLists_PreInit();
 int RenderLists_Init3P4P(struct BSP *bspRoot, int *visLeafList, struct PushBuffer *pb, u32 LevRenderList, void *bspList);

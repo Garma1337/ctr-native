@@ -288,7 +288,7 @@ static void DrawTiresReflection_BuildWheelAxes(struct DrawTiresReflectionScratch
 		gte_sqr0_b();
 		DrawTiresReflection_WriteS16(scratch, inputOffset + 0, centerX);
 		DrawTiresReflection_WriteS16(scratch, inputOffset + 2, centerY);
-		len = DrawTiresSolid_IntSqrt(MFC2_S(25) + MFC2_S(26) + MFC2_S(27));
+		len = Unknown_8006ef98(MFC2_S(25) + MFC2_S(26) + MFC2_S(27));
 
 		gte_lcv1_b();
 		DrawTiresReflection_WriteS32(scratch, inputOffset + 4, centerZ);
@@ -320,7 +320,7 @@ static void DrawTiresReflection_BuildWheelAxes(struct DrawTiresReflectionScratch
 		axisZ = MFC2_S(27);
 
 		gte_sqr0_b();
-		len = DrawTiresSolid_IntSqrt(MFC2_S(25) + MFC2_S(26) + MFC2_S(27));
+		len = Unknown_8006ef98(MFC2_S(25) + MFC2_S(26) + MFC2_S(27));
 		invLen = 0x10000 / len;
 
 		axisX = (axisX * invLen) >> 4;
@@ -342,7 +342,7 @@ static void DrawTiresReflection_BuildWheelAxes(struct DrawTiresReflectionScratch
 		axisZ = MFC2_S(27);
 
 		gte_sqr0_b();
-		len = DrawTiresSolid_IntSqrt(MFC2_S(25) + MFC2_S(26) + MFC2_S(27));
+		len = Unknown_8006ef98(MFC2_S(25) + MFC2_S(26) + MFC2_S(27));
 		invLen = (wheelSize * -(0x10000 / len)) >> 12;
 
 		DrawTiresReflection_WriteS16(scratch, outputBase + 0xf8, (axisX * invLen) >> 10);
@@ -653,7 +653,7 @@ static int DrawTiresReflection_StagePlayer(struct DrawTiresReflectionScratch *sc
 
 void DrawTires_Reflection(struct Thread *thread, struct PrimMem *primMem, char numPlyr)
 {
-	// NOTE(aalhendi): ASM-verified NTSC-U 926 0x8006f004-0x8006f9a8.
+	// NOTE(aalhendi): Source-backed partial audit for NTSC-U 926 0x8006f004-0x8006f9a8.
 	struct DrawTiresReflectionScratch scratch = {0};
 	int primCount;
 
