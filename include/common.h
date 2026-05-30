@@ -1,16 +1,18 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-// Not PC
-#ifndef REBUILD_PC
+// Not native host
+#ifndef CTR_NATIVE
 #include <gccHeaders.h>
 #include <ctr_gte.h>
 #endif
 
 
-// PC-only, always use this
-#ifdef REBUILD_PC
+// Native host file IO
+#ifdef CTR_NATIVE
+#ifndef USE_PCDRV
 #define USE_PCDRV
+#endif
 #endif
 
 
@@ -79,7 +81,7 @@
 #include <ovr_233.h>
 #include <regionsEXE.h>
 
-#ifndef REBUILD_PC
+#ifndef CTR_NATIVE
 #include <functions.h>
 #endif
 

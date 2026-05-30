@@ -31,7 +31,7 @@ int pcCdIntToPos(int val, const CdlLOC *p)
 
 CdlFILE *pcCdSearchFile(CdlFILE *loc, const char *filename)
 {
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
 	int v1;
 	char *ownedFilename;
 	int fileSize;
@@ -42,7 +42,7 @@ CdlFILE *pcCdSearchFile(CdlFILE *loc, const char *filename)
 
 	// Turn "\\BIGFILE.BIG;1" into "BIGFILE.BIG"
 
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
 	// NOTE(aalhendi): Native PCDRV normalizes the path in-place below.
 	ownedFilename = malloc(strlen(filename) + 1);
 	if (ownedFilename == NULL)
@@ -57,7 +57,7 @@ CdlFILE *pcCdSearchFile(CdlFILE *loc, const char *filename)
 	{
 		if (*str == ';')
 			*str = '\0';
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
 #ifndef _WIN32
 		else if (*str == '\\')
 			*str = '/';
@@ -66,7 +66,7 @@ CdlFILE *pcCdSearchFile(CdlFILE *loc, const char *filename)
 		str++;
 	}
 
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
 	{
 		char assetPath[256];
 		snprintf(assetPath, sizeof(assetPath), "assets/%s", &filename[1]);
@@ -94,7 +94,7 @@ CdlFILE *pcCdSearchFile(CdlFILE *loc, const char *filename)
 	v1 = PCopen(&filename[1], PCDRV_MODE_READ);
 #endif
 
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
 	fileFD[fileCount] = v1;
 	loc->size = fileSize;
 #else
@@ -107,7 +107,7 @@ CdlFILE *pcCdSearchFile(CdlFILE *loc, const char *filename)
 	// bottom 3 bytes is sectorIndex
 	*(int *)&loc->pos = fileCount << 24;
 
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
 	memset(loc->name, 0, sizeof(loc->name));
 	strncpy(loc->name, filename[0] == '/' ? &filename[1] : filename, sizeof(loc->name) - 1);
 	free(ownedFilename);
@@ -123,7 +123,7 @@ int boolDecodeXaDuringVsyncCallback = 0;
 
 int pcCdControl(u8 com, u_long *buf, u8 *result)
 {
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
 	int v1;
 #else
 	// because this API is STRANGE
@@ -148,7 +148,7 @@ int pcCdControl(u8 com, u_long *buf, u8 *result)
 		v1 = PClseek(fileFD[currFD], sector * 0x800, PCDRV_SEEK_SET);
 	}
 
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
 
 	// Step 1: CdlSetmode XA Stream (ignore)
 	// Step 2: CdlSetfilter Goto Sector (ignore)
@@ -190,7 +190,7 @@ int pcCdControl(u8 com, u_long *buf, u8 *result)
 
 int pcCdRead(int sectors, u_long *buf, int mode)
 {
-#ifdef REBUILD_PC
+#ifdef CTR_NATIVE
 	int v1;
 #else
 	// because this API is STRANGE
@@ -217,7 +217,7 @@ int pcCdReadSync(int mode, u8 *result)
 }
 
 // PS1
-#ifndef REBUILD_PC
+#ifndef CTR_NATIVE
 
 // Copied from here:
 // https://github.com/Lameguy64/PSn00bSDK/blob/master/libpsn00b/psxapi/_syscalls.s
