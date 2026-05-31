@@ -479,6 +479,7 @@ typedef struct
 	GLint bilinearFilterLoc;
 	GLint texelSizeLoc;
 	GLint psxSemiTransPassLoc;
+	GLint psxDrawMaskSetLoc;
 #endif
 } GTEShader;
 
@@ -494,6 +495,7 @@ GLint u_projection3DLoc;
 GLint u_bilinearFilterLoc;
 GLint u_texelSizeLoc;
 GLint u_psxSemiTransPassLoc;
+GLint u_psxDrawMaskSetLoc;
 
 #define GPU_PACK_RG\
 	"		float color_16 = (color_rg.y * 256.0 + color_rg.x) * 255.0;\n"
@@ -664,6 +666,7 @@ GLint u_psxSemiTransPassLoc;
 	GPU_PACK_RG_FUNC\
 	GPU_DECODE_RG_FUNC\
 	"	uniform int psxSemiTransPass;\n"\
+	"	uniform int psxDrawMaskSet;\n"\
 	GPU_STP_PASS_FUNC\
 	GPU_FETCH_VRAM_FUNC\
 	"	const vec2 c_VRAMTexel = vec2(1.0 / 1024.0, 1.0 / 512.0);\n"\
@@ -679,6 +682,7 @@ GLint u_psxSemiTransPassLoc;
 	"			fragColor = NearestTextureSample(v_texcoord.xy);\n"\
 	"		\n"\
 	GPU_DITHERING\
+	"		fragColor.a = float(psxDrawMaskSet);\n"\
 	"	}\n"
 
 const char* gte_shader_4 =
@@ -724,11 +728,13 @@ const char* gte_shader_32_rgba =
 	"#else\n"
 	"	uniform sampler2D s_texture;\n"\
 	"	uniform int bilinearFilter;\n"\
+	"	uniform int psxDrawMaskSet;\n"\
 	"	uniform vec2 texelSize;\n"\
 	"	void main() {\n"\
 	"		vec2 tc = v_texcoord.xy * texelSize + texelSize * 0.5;\n"\
 	"		fragColor = texture2D(s_texture, tc);\n"\
 	GPU_DITHERING\
+	"		fragColor.a = float(psxDrawMaskSet);\n"\
 	"	}\n"
 	"#endif\n";
 
@@ -931,6 +937,7 @@ void GR_CompilePSXShader(GTEShader* sh, const char* source)
 	sh->projectionLoc = glGetUniformLocation(sh->shader, "Projection");
 	sh->texelSizeLoc = glGetUniformLocation(sh->shader, "texelSize");
 	sh->psxSemiTransPassLoc = glGetUniformLocation(sh->shader, "psxSemiTransPass");
+	sh->psxDrawMaskSetLoc = glGetUniformLocation(sh->shader, "psxDrawMaskSet");
 #if USE_PGXP
 	sh->projection3DLoc = glGetUniformLocation(sh->shader, "Projection3D");
 #endif
@@ -1232,6 +1239,7 @@ void GR_SetTexture(TextureID texture, TexFormat texFormat)
 		u_projection3DLoc = g_gte_shader_4.projection3DLoc;
 		u_texelSizeLoc = -1;
 		u_psxSemiTransPassLoc = g_gte_shader_4.psxSemiTransPassLoc;
+		u_psxDrawMaskSetLoc = g_gte_shader_4.psxDrawMaskSetLoc;
 		break;
 	case TF_8_BIT:
 		GR_SetShader(g_gte_shader_8.shader);
@@ -1240,6 +1248,7 @@ void GR_SetTexture(TextureID texture, TexFormat texFormat)
 		u_projection3DLoc = g_gte_shader_8.projection3DLoc;
 		u_texelSizeLoc = -1;
 		u_psxSemiTransPassLoc = g_gte_shader_8.psxSemiTransPassLoc;
+		u_psxDrawMaskSetLoc = g_gte_shader_8.psxDrawMaskSetLoc;
 		break;
 	case TF_16_BIT:
 		GR_SetShader(g_gte_shader_16.shader);
@@ -1248,6 +1257,7 @@ void GR_SetTexture(TextureID texture, TexFormat texFormat)
 		u_projection3DLoc = g_gte_shader_16.projection3DLoc;
 		u_texelSizeLoc = -1;
 		u_psxSemiTransPassLoc = g_gte_shader_16.psxSemiTransPassLoc;
+		u_psxDrawMaskSetLoc = g_gte_shader_16.psxDrawMaskSetLoc;
 		break;
 	case TF_32_BIT_RGBA:
 		GR_SetShader(g_gte_shader_32_rgba.shader);
@@ -1256,6 +1266,7 @@ void GR_SetTexture(TextureID texture, TexFormat texFormat)
 		u_projection3DLoc = g_gte_shader_32_rgba.projection3DLoc;
 		u_texelSizeLoc = g_gte_shader_32_rgba.texelSizeLoc;
 		u_psxSemiTransPassLoc = g_gte_shader_32_rgba.psxSemiTransPassLoc;
+		u_psxDrawMaskSetLoc = g_gte_shader_32_rgba.psxDrawMaskSetLoc;
 		break;
 	}
 
@@ -1286,6 +1297,14 @@ void GR_SetPSXTextureSemiTransPass(int pass)
 #if USE_OPENGL
 	if (u_psxSemiTransPassLoc >= 0)
 		glUniform1i(u_psxSemiTransPassLoc, pass);
+#endif
+}
+
+void GR_SetPSXDrawMaskSet(int maskSet)
+{
+#if USE_OPENGL
+	if (u_psxDrawMaskSetLoc >= 0)
+		glUniform1i(u_psxDrawMaskSetLoc, maskSet);
 #endif
 }
 
@@ -1330,7 +1349,7 @@ void GR_Clear(int x, int y, int w, int h, unsigned char r, unsigned char g, unsi
 	framebuffer_need_update = 1;
 
 #if USE_OPENGL
-	glClearColor(r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
+	glClearColor(r / 255.0f, g / 255.0f, b / 255.0f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 #endif
 }
@@ -1392,9 +1411,8 @@ void GR_CopyRGBAFramebufferToVRAM(u_int* src, int x, int y, int w, int h, int up
 			u_char b = ((c >> 3) & 0x1F);
 			u_char g = ((c >> 11) & 0x1F);
 			u_char r = ((c >> 19) & 0x1F);
-			//u_char a = ((c >> 24) & 0x1F);
-
-			int a = r == g == b == 0 ? 0 : 1;
+			// NOTE(aalhendi): framebuffer alpha carries the PS1 E6 mask/STP bit.
+			u_char a = (c >> 31) & 1;
 
 			*data_dst++ = r | (g << 5) | (b << 10) | (a << 15);
 		}
@@ -1441,7 +1459,10 @@ void GR_ReadFramebufferDataToVRAM()
 		glBindTexture(GL_TEXTURE_2D, g_fbTexture);
 		PBO_Download(&g_glFramebufferPBO);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		GR_CopyRGBAFramebufferToVRAM((u_int*)g_glFramebufferPBO.pixels, x, y, w, h, 0, 0);
+		// NOTE(aalhendi): screen-copy effects sample g_vramTexture as packed
+		// PS1 VRAM. The fast framebuffer blit writes host RGBA into that
+		// texture, so force the next frame to upload the packed readback.
+		GR_CopyRGBAFramebufferToVRAM((u_int*)g_glFramebufferPBO.pixels, x, y, w, h, 1, 0);
 	}
 #endif
 }
@@ -1780,6 +1801,7 @@ void GR_PresentVRAMDisplay()
 	GR_EnableDepth(0);
 	GR_SetBlendMode(BM_NONE);
 	GR_SetTexture(displayTexture, TF_32_BIT_RGBA);
+	GR_SetPSXDrawMaskSet(0);
 	GR_Ortho2D(0, displayW, displayH, 0, -1.0f, 1.0f);
 
 	for (int y = 0; y < displayH; y += maxChunkH)
@@ -1883,14 +1905,15 @@ void GR_SetBlendMode(BlendMode blendMode)
 	glBlendEquationSeparate(blendMode == BM_SUBTRACT ? GL_FUNC_REVERSE_SUBTRACT : GL_FUNC_ADD, GL_FUNC_ADD);
 	switch (blendMode) {
 	case BM_AVERAGE:
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		// NOTE(aalhendi): keep RGB blend weight constant so alpha can carry the PS1 mask bit.
+		glBlendFuncSeparate(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA, GL_ONE, GL_ZERO);
 		break;
 	case BM_ADD:
 	case BM_SUBTRACT:
-		glBlendFunc(GL_ONE, GL_ONE);
+		glBlendFuncSeparate(GL_ONE, GL_ONE, GL_ONE, GL_ZERO);
 		break;
 	case BM_ADD_QUATER_SOURCE:
-		glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE); 
+		glBlendFuncSeparate(GL_CONSTANT_ALPHA, GL_ONE, GL_ONE, GL_ZERO);
 		break;
 	}
 #endif

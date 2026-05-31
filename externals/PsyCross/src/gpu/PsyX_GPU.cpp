@@ -50,6 +50,7 @@ int overrideTextureHeight = 0;
 
 int g_GPUDisabledState = 0;
 int g_DrawPrimMode = 0;
+static bool g_psxDrawMaskSet = false;
 
 struct GPUDrawSplit
 {
@@ -63,6 +64,7 @@ struct GPUDrawSplit
 
 	int				drawPrimMode;
 	bool			psxTexturedSemiTrans;
+	bool			psxDrawMaskSet;
 
 	u_short			startVertex;
 	u_short			numVerts;
@@ -85,6 +87,7 @@ void ClearSplits()
 	g_splitIndex = 0;
 	g_splits[0].texFormat = (TexFormat)0xFFFF;
 	g_splits[0].psxTexturedSemiTrans = false;
+	g_splits[0].psxDrawMaskSet = false;
 }
 
 template<class T>
@@ -722,6 +725,7 @@ static void AddSplit(bool semiTrans, bool textured)
 		curSplit.textureId == textureId &&
 		curSplit.drawPrimMode == g_DrawPrimMode &&
 		curSplit.psxTexturedSemiTrans == psxTexturedSemiTrans &&
+		curSplit.psxDrawMaskSet == g_psxDrawMaskSet &&
 		curSplit.drawenv.clip.x == activeDrawEnv.clip.x &&
 		curSplit.drawenv.clip.y == activeDrawEnv.clip.y &&
 		curSplit.drawenv.clip.w == activeDrawEnv.clip.w &&
@@ -746,6 +750,7 @@ static void AddSplit(bool semiTrans, bool textured)
 	split.textureId = textureId;
 	split.drawPrimMode = g_DrawPrimMode;
 	split.psxTexturedSemiTrans = psxTexturedSemiTrans;
+	split.psxDrawMaskSet = g_psxDrawMaskSet;
 	split.drawenv = activeDrawEnv;
 	split.dispenv = activeDispEnv;
 	split.debugText = currentSplitDebugText;
@@ -768,6 +773,8 @@ void DrawSplit(const GPUDrawSplit& split)
 
 	if (split.texFormat == TF_32_BIT_RGBA)
 		GR_SetOverrideTextureSize(split.drawenv.tw.w, split.drawenv.tw.h);
+
+	GR_SetPSXDrawMaskSet(split.psxDrawMaskSet);
 
 	const bool drawOnScreen = split.drawenv.dfe;
 	GR_SetupClipMode(&split.drawenv.clip, drawOnScreen);
@@ -798,6 +805,11 @@ void DrawSplit(const GPUDrawSplit& split)
 
 	if (split.debugText)
 		GR_PopDebugLabel();
+}
+
+static void SetPSXMaskState(u_int code)
+{
+	g_psxDrawMaskSet = (code & 1) != 0;
 }
 
 extern int g_dbg_polygonSelected;
@@ -1497,7 +1509,14 @@ static int ProcessDrawEnv(P_TAG* polyTag)
 	for (int i = 0; i < polyTag->len; ++i)
 	{
 		const u_int code = codePtr[i];
+		const int primType = code >> 24 & 0xF0;
 		const int primSubType = code >> 24 & 0x0F;
+
+		// NOTE(aalhendi): CTR can pack draw-env commands, tagless geometry,
+		// and more draw-env commands into one OT entry. Stop at the first
+		// non-E command so ParseTaglessPrimitive owns the geometry payload.
+		if (primType != 0xE0)
+			return processedLongs;
 
 		switch (primSubType)
 		{
@@ -1548,9 +1567,7 @@ static int ProcessDrawEnv(P_TAG* polyTag)
 		}
 		case 0x6:
 		{
-			eprintf("Mask setting: %08x\n", code);
-			//MaskSetOR = (*cb & 1) ? 0x8000 : 0x0000;
-			//MaskEvalAND = (*cb & 2) ? 0x8000 : 0x0000;
+			SetPSXMaskState(code);
 			break;
 		}
 		case 0:
@@ -1599,7 +1616,7 @@ static void ProcessDrawEnvCommand(u_int code)
 		activeDrawEnv.ofs[1] = (code >> 11) & 2047;
 		break;
 	case 0x6:
-		eprintf("Mask setting: %08x\n", code);
+		SetPSXMaskState(code);
 		break;
 	}
 }

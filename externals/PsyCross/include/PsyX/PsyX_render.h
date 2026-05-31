@@ -198,6 +198,7 @@ extern void			GR_SetViewPort(int x, int y, int width, int height);
 extern void			GR_SetTexture(TextureID texture, TexFormat texFormat);
 extern void			GR_SetOverrideTextureSize(int width, int height);
 extern void			GR_SetPSXTextureSemiTransPass(int pass);
+extern void			GR_SetPSXDrawMaskSet(int maskSet);
 extern void			GR_SetWireframe(int enable);
 
 extern void			GR_DestroyTexture(TextureID texture);
