@@ -399,6 +399,68 @@ static int DrawLevelOvr1P_IsPlausibleTextureLayout(const struct TextureLayout *t
 	return (texture->tpage & 0xfe00) == 0;
 }
 
+#ifdef CTR_NATIVE
+// NOTE(aalhendi): Temporary native 226 shim. The partial port sees host-rebased
+// texture pointers while retail only sees PSX pointer words; a fully
+// ASM-faithful 226 path should remove this owner lookup.
+static int DrawLevelOvr1P_MempackContains(const struct Mempack *pack, uintptr_t ptr, uintptr_t *span)
+{
+	uintptr_t start = (uintptr_t)pack->start;
+	uintptr_t end = (uintptr_t)pack->endOfAllocator;
+
+	if ((start == 0) || (start >= end) || (ptr < start) || (ptr >= end))
+		return 0;
+
+	if (span != NULL)
+		*span = end - start;
+
+	return 1;
+}
+
+static const struct Mempack *DrawLevelOvr1P_FindMempackContaining(uintptr_t ptr)
+{
+	const struct Mempack *bestPack = NULL;
+	uintptr_t bestSpan = UINTPTR_MAX;
+	struct GameTracker *gGT = sdata->gGT;
+
+	// PtrMempack can point at inactive mask/podium loads while level1 renders.
+	if ((gGT == NULL) || ((gGT->gameMode2 & LEV_SWAP) == 0))
+	{
+		const struct Mempack *mainPack = &sdata->mempack[0];
+
+		return DrawLevelOvr1P_MempackContains(mainPack, ptr, NULL) ? mainPack : NULL;
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		const struct Mempack *pack = &sdata->mempack[i];
+		uintptr_t span;
+
+		if (DrawLevelOvr1P_MempackContains(pack, ptr, &span))
+		{
+			if (span < bestSpan)
+			{
+				bestPack = pack;
+				bestSpan = span;
+			}
+		}
+	}
+
+	return bestPack;
+}
+
+static const struct Mempack *DrawLevelOvr1P_GetLevelMempack(void)
+{
+	struct GameTracker *gGT = sdata->gGT;
+	uintptr_t levelPtr = gGT != NULL ? (uintptr_t)gGT->level1 : 0;
+
+	if (levelPtr == 0)
+		levelPtr = (uintptr_t)sdata->ptrLevelFile;
+
+	return DrawLevelOvr1P_FindMempackContaining(levelPtr);
+}
+#endif
+
 static int DrawLevelOvr1P_IsNativeLevelTexturePointer(u32 value)
 {
 #ifdef CTR_NATIVE
@@ -406,12 +468,18 @@ static int DrawLevelOvr1P_IsNativeLevelTexturePointer(u32 value)
 	uintptr_t ptr = (uintptr_t)value;
 	uintptr_t levelStart;
 	uintptr_t levelEnd;
+	const struct Mempack *levelPack;
+	struct Level *level;
 
-	if (sdata->PtrMempack == NULL || sdata->ptrLevelFile == NULL)
+	level = sdata->gGT != NULL ? sdata->gGT->level1 : sdata->ptrLevelFile;
+	levelPack = DrawLevelOvr1P_GetLevelMempack();
+	if (levelPack == NULL || level == NULL)
 		return 0;
 
-	levelStart = (uintptr_t)sdata->ptrLevelFile;
-	levelEnd = (uintptr_t)sdata->PtrMempack->lastFreeByte;
+	levelStart = (uintptr_t)level;
+	levelEnd = (uintptr_t)levelPack->firstFreeByte;
+	if ((levelEnd <= levelStart) || (levelEnd > (uintptr_t)levelPack->endOfAllocator))
+		levelEnd = (uintptr_t)levelPack->endOfAllocator;
 
 	if (ptr < levelStart || ptr >= levelEnd || levelEnd - ptr < sizeof(struct TextureLayout))
 		return 0;
@@ -453,19 +521,21 @@ static int DrawLevelOvr1P_TryConvertNativeMempackPointerToPsxWord(u32 hostWord, 
 {
 	const u32 psxRamBase = 0x80000000u;
 	const uintptr_t psxRamSize = 0x200000u;
+	const struct Mempack *pack;
 	uintptr_t hostEnd;
 	uintptr_t hostBase;
 	uintptr_t hostPtr;
 
-	if (sdata->PtrMempack == NULL || sdata->PtrMempack->endOfMemory == NULL)
+	hostPtr = (uintptr_t)hostWord;
+	pack = DrawLevelOvr1P_FindMempackContaining(hostPtr);
+	if (pack == NULL || pack->endOfMemory == NULL)
 		return 0;
 
-	hostEnd = (uintptr_t)sdata->PtrMempack->endOfMemory;
+	hostEnd = (uintptr_t)pack->endOfMemory;
 	if (hostEnd < psxRamSize)
 		return 0;
 
 	hostBase = hostEnd - psxRamSize;
-	hostPtr = (uintptr_t)hostWord;
 	if (hostPtr < hostBase || hostPtr >= hostEnd)
 		return 0;
 
