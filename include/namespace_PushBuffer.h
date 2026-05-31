@@ -106,11 +106,8 @@ struct PushBuffer
 	struct BoundingBox bbox;
 
 	// 0xF4
-	// u_long* is the type in the psn00b header
-	// NOTE(aalhendi): PSX-backfeed blocker: retail RenderBucket_QueueDraw can
-	// reuse this offset as PUSHBUFFER_EXISTS OT range-start metadata. Native
-	// keeps it as the persistent camera OT pointer until the exact
-	// RenderBucket/PushBuffer ownership handoff is restored.
+	// NOTE(aalhendi): Retail RenderBucket_QueueDraw reuses this field as
+	// PUSHBUFFER_EXISTS OT range-start metadata after DecalMP seeds ptrOT.
 	u_long *ptrOT;
 
 	// 0xF8
@@ -136,3 +133,14 @@ struct PushBuffer
 };
 
 _Static_assert(sizeof(struct PushBuffer) == 0x110);
+_Static_assert(offsetof(struct PushBuffer, distanceToScreen_PREV) == 0x18);
+_Static_assert(offsetof(struct PushBuffer, rect) == 0x1c);
+_Static_assert(offsetof(RECT, w) == 0x4);
+_Static_assert(offsetof(RECT, h) == 0x6);
+_Static_assert(offsetof(struct PushBuffer, matrix_ViewProj) == 0x28);
+_Static_assert(offsetof(struct PushBuffer, matrix_Camera) == 0x68);
+_Static_assert(offsetof(struct PushBuffer, ptrOT) == 0xf4);
+_Static_assert(offsetof(struct PushBuffer, renderBucketOTRangeEnd) == 0xf8);
+_Static_assert(offsetof(struct PushBuffer, renderBucketOTByteOffset) == 0xfc);
+_Static_assert(offsetof(struct PushBuffer, renderBucketScreenPos) == 0x100);
+_Static_assert(offsetof(struct PushBuffer, renderBucketScreenSize) == 0x104);
