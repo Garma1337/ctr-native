@@ -1696,3 +1696,7 @@ _Static_assert(sizeof(struct MetaPhys) == 0x1C);
 #if 1 // idk this might be version dependant
 _Static_assert(sizeof(struct BotData) == 0x94);
 #endif
+
+_Static_assert(offsetof(struct Driver, rotCurr.x) == 0x2ec);
+_Static_assert(offsetof(struct Driver, rotCurr.y) == 0x2ee);
+_Static_assert(offsetof(struct Driver, AxisAngle3_normalVec) == 0x370);

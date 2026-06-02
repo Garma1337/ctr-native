@@ -130,7 +130,7 @@ static void VehGroundShadow_TransformLocalAxes(struct VehGroundShadowEntry *entr
 	if (height > 0x100)
 		height = 0x100;
 
-	VehPhysForce_RotAxisAngle(&axisMatrix, &driver->AxisAngle3_normalVec[0], driver->rotCurr.x);
+	VehPhysForce_RotAxisAngle(&axisMatrix, &driver->AxisAngle3_normalVec[0], driver->rotCurr.y);
 	VehGroundShadow_LoadGteLightMatrix(&axisMatrix);
 
 	localX = (height * 0x28) >> 6;
