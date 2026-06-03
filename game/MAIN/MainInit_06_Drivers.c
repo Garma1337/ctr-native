@@ -1,29 +1,5 @@
 #include <common.h>
 
-#if defined(CTR_NATIVE)
-static void MainInit_RebindNativeTimeTrialGhostModels(struct GameTracker *gGT)
-{
-	struct Thread *thread;
-
-	for (thread = gGT->threadBuckets[GHOST].thread; thread != NULL; thread = thread->siblingThread)
-	{
-		struct Driver *driver = thread->object;
-		if ((driver == NULL) || (driver->instSelf == NULL) || (driver->ghostID != 1))
-			continue;
-
-		int characterIndex = 2;
-		int timeTrialFlags = sdata->gameProgress.highScoreTracks[gGT->levelID].timeTrialFlags;
-		if ((timeTrialFlags & 2) != 0)
-			characterIndex = 3;
-
-		int characterID = data.characterIDs[characterIndex];
-		struct Model *model = VehBirth_GetModelByName(data.MetaDataCharacters[characterID].name_Debug);
-		if (model != NULL)
-			driver->instSelf->model = model;
-	}
-}
-#endif
-
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x8003b6d0-0x8003b934; CTR_NATIVE gates TT ghost model publication.
 void MainInit_Drivers(struct GameTracker *gGT)
 {
@@ -136,11 +112,6 @@ void MainInit_Drivers(struct GameTracker *gGT)
 		GhostTape_Start();
 
 #if defined(CTR_NATIVE)
-		// NOTE(aalhendi): Retail GhostReplay_Init2 chooses the N. Tropy/Oxide
-		// ghost by character name. Native TT MPKs also contain the human ghost
-		// model after `token`, so ordinal post-token slots are not stable.
-		MainInit_RebindNativeTimeTrialGhostModels(gGT);
-
 		struct Model **humanPlyrDriverModel = &gGT->threadBuckets[PLAYER].thread->inst->model;
 
 		// that's characterIDs[1] from the MPK
