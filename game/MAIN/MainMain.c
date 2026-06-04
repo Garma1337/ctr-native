@@ -6,6 +6,27 @@
 
 void StateZero();
 
+#if defined(CTR_NATIVE) && defined(CTR_INTERNAL)
+static struct NativeReplaySchedulerFrameInfo MainReplayScheduler_FrameInfo(struct GameTracker *gGT)
+{
+	struct NativeReplaySchedulerFrameInfo info;
+
+	info.frameTimer = gGT->frameTimer_VsyncCallback;
+	info.frameCounter = sdata->frameCounter;
+	info.mainGameState = sdata->mainGameState;
+	info.loadingStage = sdata->Loading.stage;
+	info.levelID = gGT->levelID;
+	info.mixRandomNumber = (u32)sdata->randomNumber;
+	info.audioRNG = sdata->audioRNG;
+	info.deadcoed0 = (u32)gGT->deadcoed_struct.unk1;
+	info.deadcoed1 = (u32)gGT->deadcoed_struct.unk2;
+	info.advRng0 = (u32)sdata->const_0x30215400;
+	info.advRng1 = (u32)sdata->const_0x493583fe;
+
+	return info;
+}
+#endif
+
 // #define FastBoot
 
 // NOTE(aalhendi): PSX path ASM-verified NTSC-U 926 0x8003c58c-0x8003cf7c.
@@ -269,7 +290,12 @@ u32 main(void)
 
 			// Process all gamepad input
 #if defined(CTR_NATIVE) && defined(CTR_INTERNAL)
-			NativeReplayScheduler_BeginFrame(gGT->frameTimer_VsyncCallback, sdata->frameCounter, sdata->mainGameState, sdata->Loading.stage, gGT->levelID);
+			{
+				struct NativeReplaySchedulerFrameInfo replayFrameInfo = MainReplayScheduler_FrameInfo(gGT);
+
+				if (NativeReplayScheduler_BeginFrame(&replayFrameInfo) != 0)
+					return 0;
+			}
 #endif
 			GAMEPAD_ProcessAnyoneVars(gGS);
 
@@ -414,8 +440,12 @@ u32 main(void)
 				AH_MaskHint_Update();
 			}
 #if defined(CTR_NATIVE) && defined(CTR_INTERNAL)
-			if (NativeReplayScheduler_EndFrame(gGT->frameTimer_VsyncCallback, sdata->frameCounter, sdata->mainGameState, sdata->Loading.stage, gGT->levelID))
-				return 0;
+			{
+				struct NativeReplaySchedulerFrameInfo replayFrameInfo = MainReplayScheduler_FrameInfo(gGT);
+
+				if (NativeReplayScheduler_EndFrame(&replayFrameInfo) != 0)
+					return 0;
+			}
 #endif
 			break;
 

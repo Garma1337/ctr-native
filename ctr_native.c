@@ -663,7 +663,12 @@ int main(int argc, char *argv[])
 	Platform_RepairResidentPointers(0);
 
 #if defined(CTR_INTERNAL)
-	NativeReplayScheduler_ConfigureFromArgs(argc, argv);
+	if (NativeReplayScheduler_ConfigureFromArgs(argc, argv) != 0)
+	{
+		Platform_LogFlush();
+		Platform_Shutdown();
+		return 1;
+	}
 #else
 	(void)argc;
 	(void)argv;
@@ -718,6 +723,9 @@ void Platform_Shutdown(void)
 		return;
 
 	s_platformInitialized = 0;
+#if defined(CTR_INTERNAL)
+	NativeReplayScheduler_Shutdown();
+#endif
 	Platform_InputShutdown();
 
 	if (g_window != NULL)
