@@ -44,44 +44,10 @@ __declspec(dllimport) unsigned long __stdcall GetLastError(void);
 #include "platform/native_input.h"
 #include "platform/native_renderer.h"
 
-#define CTR_NATIVE_RCNT1_HZ 15720u
-
-static Uint64 s_rootCounterBase = 0;
 static int s_hostAltKeyState = 0;
 
-static int Native_GetRCnt(int spec)
-{
-	const Uint64 freq = SDL_GetPerformanceFrequency();
-	const Uint64 now = SDL_GetPerformanceCounter();
-	Uint64 elapsed;
-	Uint64 counts;
-
-	(void)spec;
-
-	if (s_rootCounterBase == 0)
-		s_rootCounterBase = now;
-
-	elapsed = now - s_rootCounterBase;
-	counts = ((elapsed / freq) * CTR_NATIVE_RCNT1_HZ) + (((elapsed % freq) * CTR_NATIVE_RCNT1_HZ) / freq);
-	if (counts > 0x7fffffff)
-		return 0x7fffffff;
-
-	return (int)counts;
-}
-
-static int Native_ResetRCnt(int spec)
-{
-	(void)spec;
-
-	s_rootCounterBase = SDL_GetPerformanceCounter();
-	return 0;
-}
-
-#define ResetRCnt(x) Native_ResetRCnt(x)
-#define GetRCnt(x)   Native_GetRCnt(x)
-
-#define BUILD        926
-#define u_long       u32
+#define BUILD  926
+#define u_long u32
 
 #ifndef __GNUC__
 #define _Static_assert(x)
