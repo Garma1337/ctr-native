@@ -40,9 +40,9 @@ __declspec(dllimport) unsigned long __stdcall GetLastError(void);
 #include "psx/inline_c.h"
 #include "PsyX/PsyX_public.h"
 #include "PsyX/PsyX_globals.h"
-#include "PsyX/PsyX_render.h"
 #include "ctr_scratchpad.h"
 #include "platform/native_input.h"
+#include "platform/native_renderer.h"
 
 #define CTR_NATIVE_RCNT1_HZ 15720u
 
@@ -331,7 +331,7 @@ void Platform_EndFrame(void)
 void Platform_PresentVRAMDisplay(void)
 {
 	PsyX_BeginScene();
-	GR_PresentVRAMDisplay();
+	NativeRenderer_PresentVRAMDisplay();
 	Platform_EndFrame();
 }
 

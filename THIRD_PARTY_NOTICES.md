@@ -12,6 +12,24 @@ CTR Native, including compatible GPU, GTE, SPU, CD, and controller library
 interfaces. CTR Native also ports some host-side behavior into its own native
 platform layer while preserving Psy-Q-shaped APIs.
 
+CTR Native contains project-owned derivatives of these PsyCross source files:
+
+- `include/platform/native_gpu.h` from `externals/PsyCross/src/gpu/PsyX_GPU.h`
+- `include/platform/native_psyx_shell.h` from
+  `externals/PsyCross/src/PsyX_main.h`
+- `include/platform/native_renderer_backend.h` and
+  `include/platform/native_renderer_types.h` from
+  `externals/PsyCross/include/PsyX/PsyX_render.h`
+- `platform/native_gpu.c` from `externals/PsyCross/src/gpu/PsyX_GPU.cpp`
+- `platform/native_libgpu.c` from `externals/PsyCross/src/psx/LIBGPU.C`
+- `platform/native_psyx_shell.c` from
+  `externals/PsyCross/src/PsyX_main.cpp`
+- `platform/native_renderer_backend.c` from
+  `externals/PsyCross/src/render/PsyX_render.cpp`
+- `include/platform/native_glad.h` from
+  `externals/PsyCross/include/PsyX/common/glad.h`
+- `platform/native_glad.c` from `externals/PsyCross/src/render/glad.c`
+
 License: MIT
 
 Copyright (c) 2020 REDRIVER2 Project

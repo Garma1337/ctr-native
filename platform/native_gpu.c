@@ -1,16 +1,24 @@
-#include "PsyX_GPU.h"
+/*
+ * Derived from REDRIVER2/PsyCross MIT source:
+ * externals/PsyCross/src/gpu/PsyX_GPU.cpp
+ * See THIRD_PARTY_NOTICES.md for copyright and license details.
+ */
+
+#include "platform/native_gpu.h"
 
 #include "PsyX/PsyX_public.h"
 #include "PsyX/PsyX_globals.h"
-#include "PsyX/PsyX_render.h"
+#include "platform/native_renderer.h"
 
-#include "../PsyX_main.h"
+#include "../externals/PsyCross/src/platform.h"
 
 #include <assert.h>
 #include <math.h>
+#include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 
-extern "C" void Platform_PollHostEvents(void);
+void Platform_PollHostEvents(void);
 
 #define GET_TPAGE_BLEND(tpage)  ((BlendMode)(((tpage >> 5) & 3) + 1))
 
@@ -43,7 +51,7 @@ OT_TAG prim_terminator = { -1, 0 }; // P_TAG with zero primLength
 DISPENV activeDispEnv;
 DRAWENV activeDrawEnv;
 
-static const char* currentSplitDebugText = nullptr;
+static const char* currentSplitDebugText = NULL;
 TextureID overrideTexture = 0;
 int overrideTextureWidth = 0;
 int overrideTextureHeight = 0;
@@ -52,7 +60,7 @@ int g_GPUDisabledState = 0;
 int g_DrawPrimMode = 0;
 static bool g_psxDrawMaskSet = false;
 
-struct GPUDrawSplit
+typedef struct
 {
 	DRAWENV			drawenv;
 	DISPENV			dispenv;
@@ -70,7 +78,7 @@ struct GPUDrawSplit
 	u_short			numVerts;
 
 	const char*		debugText;
-};
+} GPUDrawSplit;
 
 #define MAX_DRAW_SPLITS	 4096
 
@@ -82,7 +90,7 @@ int g_splitIndex = 0;
 
 void ClearSplits()
 {
-	currentSplitDebugText = nullptr;
+	currentSplitDebugText = NULL;
 	g_vertexIndex = 0;
 	g_splitIndex = 0;
 	g_splits[0].texFormat = (TexFormat)0xFFFF;
@@ -90,49 +98,58 @@ void ClearSplits()
 	g_splits[0].psxDrawMaskSet = false;
 }
 
-template<class T>
-void DrawEnvDimensions(T& width, T& height)
+static void DrawEnvDimensionsInt(int* width, int* height)
 {
 	if (activeDrawEnv.dfe)
 	{
-		width = activeDispEnv.disp.w;
-		height = activeDispEnv.disp.h;
+		*width = activeDispEnv.disp.w;
+		*height = activeDispEnv.disp.h;
 	}
 	else
 	{
-		width = activeDrawEnv.clip.w;
-		height = activeDrawEnv.clip.h;
+		*width = activeDrawEnv.clip.w;
+		*height = activeDrawEnv.clip.h;
 	}
 }
 
-void DrawEnvOffset(float& ofsX, float& ofsY)
+static void DrawEnvDimensionsFloat(float* width, float* height)
+{
+	int intWidth;
+	int intHeight;
+
+	DrawEnvDimensionsInt(&intWidth, &intHeight);
+	*width = (float)intWidth;
+	*height = (float)intHeight;
+}
+
+void DrawEnvOffset(float* ofsX, float* ofsY)
 {
 	if (activeDrawEnv.dfe)
 	{
 		int w, h;
-		DrawEnvDimensions(w, h);
+		DrawEnvDimensionsInt(&w, &h);
 
 		if (w <= 0) w = 1;
 
-		// NOTE(aalhendi): Convert PS1 VRAM-page draw offsets into display-relative host-screen offsets. 
+		// NOTE(aalhendi): Convert PS1 VRAM-page draw offsets into display-relative host-screen offsets.
 		// CTR alternates draw pages at y=0 and y=0x128; using raw modulo VRAM offsets shifts every other native frame vertically.
-		ofsX = activeDrawEnv.ofs[0] - activeDispEnv.disp.x;
-		ofsY = activeDrawEnv.ofs[1] - activeDispEnv.disp.y;
+		*ofsX = activeDrawEnv.ofs[0] - activeDispEnv.disp.x;
+		*ofsY = activeDrawEnv.ofs[1] - activeDispEnv.disp.y;
 	}
 	else
 	{
-		ofsX = 0.0f;
-		ofsY = 0.0f;
+		*ofsX = 0.0f;
+		*ofsY = 0.0f;
 	}
 }
 
 // remaps screen coordinates to [0..1]
 // without clamping
-inline void ScreenCoordsToEmulator(GrVertex* vertex, int count)
+static inline void ScreenCoordsToEmulator(GrVertex* vertex, int count)
 {
 #if USE_PGXP
 	float w, h;
-	DrawEnvDimensions(w, h);
+	DrawEnvDimensionsFloat(&w, &h);
 
 	while (count--)
 	{
@@ -142,19 +159,19 @@ inline void ScreenCoordsToEmulator(GrVertex* vertex, int count)
 #endif
 }
 
-void LineSwapSourceVerts(VERTTYPE*& p0, VERTTYPE*& p1, unsigned char*& c0, unsigned char*& c1)
+void LineSwapSourceVerts(VERTTYPE** p0, VERTTYPE** p1, unsigned char** c0, unsigned char** c1)
 {
 	// swap line coordinates for left-to-right and up-to-bottom direction
-	if ((p0[0] > p1[0]) ||
-		(p0[1] > p1[1] && p0[0] == p1[0]))
+	if (((*p0)[0] > (*p1)[0]) ||
+		((*p0)[1] > (*p1)[1] && (*p0)[0] == (*p1)[0]))
 	{
-		VERTTYPE* tmp = p0;
-		p0 = p1;
-		p1 = tmp;
+		VERTTYPE* tmp = *p0;
+		*p0 = *p1;
+		*p1 = tmp;
 
-		unsigned char* tmpCol = c0;
-		c0 = c1;
-		c1 = tmpCol;
+		unsigned char* tmpCol = *c0;
+		*c0 = *c1;
+		*c1 = tmpCol;
 	}
 }
 
@@ -164,11 +181,11 @@ void MakeLineArray(GrVertex* vertex, VERTTYPE* p0, VERTTYPE* p1, ushort gteidx)
 	const VERTTYPE dy = p1[1] - p0[1];
 
 	float ofsX, ofsY;
-	DrawEnvOffset(ofsX, ofsY);
+	DrawEnvOffset(&ofsX, &ofsY);
 
 	memset(vertex, 0, sizeof(GrVertex) * 4);
 
-	if (dx > abs((short)dy)) 
+	if (dx > abs((short)dy))
 	{ // horizontal
 		vertex[0].x = p0[0] + ofsX;
 		vertex[0].y = p0[1] + ofsY;
@@ -182,7 +199,7 @@ void MakeLineArray(GrVertex* vertex, VERTTYPE* p0, VERTTYPE* p1, ushort gteidx)
 		vertex[3].x = vertex[0].x;
 		vertex[3].y = vertex[0].y + 1;
 	}
-	else 
+	else
 	{ // vertical
 		vertex[0].x = p0[0] + ofsX;
 		vertex[0].y = p0[1] + ofsY;
@@ -204,14 +221,14 @@ void MakeLineArray(GrVertex* vertex, VERTTYPE* p0, VERTTYPE* p1, ushort gteidx)
 	ScreenCoordsToEmulator(vertex, 4);
 }
 
-inline void ApplyVertexPGXP(GrVertex* v, VERTTYPE* p, float ofsX, float ofsY, ushort gteidx, int lookupOfs)
+static inline void ApplyVertexPGXP(GrVertex* v, VERTTYPE* p, float ofsX, float ofsY, ushort gteidx, int lookupOfs)
 {
 #if USE_PGXP
 	uint lookup = PGXP_LOOKUP_VALUE(p[0], p[1]);
 
 	PGXPVData vd;
 	if (gteidx != 0xffff &&
-		g_cfg_pgxpTextureCorrection && 
+		g_cfg_pgxpTextureCorrection &&
 		PGXP_GetCacheData(&vd, lookup, gteidx + lookupOfs))
 	{
 		v->x = vd.px;
@@ -220,7 +237,7 @@ inline void ApplyVertexPGXP(GrVertex* v, VERTTYPE* p, float ofsX, float ofsY, us
 
 		// calculate offset for our perspective matrix based on supposed GTE transformed geometry offset
 		float dispW, dispH;
-		DrawEnvDimensions(dispW, dispH);
+		DrawEnvDimensionsFloat(&dispW, &dispH);
 
 		const float gteOfsX = fmodf(vd.ofx, dispW) - dispW * 0.5f;
 		const float gteOfsY = fmodf(vd.ofy, dispH) - dispH * 0.5f;
@@ -244,7 +261,7 @@ void MakeVertexTriangle(GrVertex* vertex, VERTTYPE* p0, VERTTYPE* p1, VERTTYPE* 
 	assert(p2);
 
 	float ofsX, ofsY;
-	DrawEnvOffset(ofsX, ofsY);
+	DrawEnvOffset(&ofsX, &ofsY);
 
 	memset(vertex, 0, sizeof(GrVertex) * 3);
 
@@ -272,7 +289,7 @@ void MakeVertexQuad(GrVertex* vertex, VERTTYPE* p0, VERTTYPE* p1, VERTTYPE* p2, 
 	assert(p3);
 
 	float ofsX, ofsY;
-	DrawEnvOffset(ofsX, ofsY);
+	DrawEnvOffset(&ofsX, &ofsY);
 
 	memset(vertex, 0, sizeof(GrVertex) * 4);
 
@@ -301,7 +318,7 @@ void MakeVertexRect(GrVertex* vertex, VERTTYPE* p0, short w, short h, ushort gte
 	assert(p0);
 
 	float ofsX, ofsY;
-	DrawEnvOffset(ofsX, ofsY);
+	DrawEnvOffset(&ofsX, &ofsY);
 
 	memset(vertex, 0, sizeof(GrVertex) * 4);
 
@@ -429,8 +446,8 @@ void MakeTexcoordRect(GrVertex* vertex, unsigned char* uv, short page, short clu
 	assert(uv);
 
 	// sim overflow
-	if (int(uv[0]) + w > 255) w = 255 - uv[0];
-	if (int(uv[1]) + h > 255) h = 255 - uv[1];
+	if ((int)uv[0] + w > 255) w = 255 - uv[0];
+	if ((int)uv[1] + h > 255) h = 255 - uv[1];
 
 	const unsigned char bright = 2;
 	const unsigned char dither = 0;
@@ -703,11 +720,11 @@ void TriangulateQuad()
 static void AddSplit(bool semiTrans, bool textured)
 {
 	int tpage = activeDrawEnv.tpage;
-	GPUDrawSplit& curSplit = g_splits[g_splitIndex];
+	GPUDrawSplit* curSplit = &g_splits[g_splitIndex];
 
 	BlendMode blendMode = semiTrans ? GET_TPAGE_BLEND(tpage) : BM_NONE;
 	TexFormat texFormat = GetTPageFormat(tpage);
-	TextureID textureId = textured ? g_vramTexture : g_whiteTexture;
+	TextureID textureId = textured ? NativeRenderer_GetVRAMTexture() : NativeRenderer_GetWhiteTexture();
 	bool psxTexturedSemiTrans = semiTrans && textured && overrideTexture == 0;
 
 	if (textured && overrideTexture != 0)
@@ -720,23 +737,23 @@ static void AddSplit(bool semiTrans, bool textured)
 
 	// FIXME: compare drawing environment too?
 	if (!psxTexturedSemiTrans &&
-		curSplit.blendMode == blendMode &&
-		curSplit.texFormat == texFormat &&
-		curSplit.textureId == textureId &&
-		curSplit.drawPrimMode == g_DrawPrimMode &&
-		curSplit.psxTexturedSemiTrans == psxTexturedSemiTrans &&
-		curSplit.psxDrawMaskSet == g_psxDrawMaskSet &&
-		curSplit.drawenv.clip.x == activeDrawEnv.clip.x &&
-		curSplit.drawenv.clip.y == activeDrawEnv.clip.y &&
-		curSplit.drawenv.clip.w == activeDrawEnv.clip.w &&
-		curSplit.drawenv.clip.h == activeDrawEnv.clip.h &&
-		curSplit.drawenv.dfe == activeDrawEnv.dfe &&
-		curSplit.debugText == currentSplitDebugText)
+		curSplit->blendMode == blendMode &&
+		curSplit->texFormat == texFormat &&
+		curSplit->textureId == textureId &&
+		curSplit->drawPrimMode == g_DrawPrimMode &&
+		curSplit->psxTexturedSemiTrans == psxTexturedSemiTrans &&
+		curSplit->psxDrawMaskSet == g_psxDrawMaskSet &&
+		curSplit->drawenv.clip.x == activeDrawEnv.clip.x &&
+		curSplit->drawenv.clip.y == activeDrawEnv.clip.y &&
+		curSplit->drawenv.clip.w == activeDrawEnv.clip.w &&
+		curSplit->drawenv.clip.h == activeDrawEnv.clip.h &&
+		curSplit->drawenv.dfe == activeDrawEnv.dfe &&
+		curSplit->debugText == currentSplitDebugText)
 	{
 		return;
 	}
 
-	curSplit.numVerts = g_vertexIndex - curSplit.startVertex;
+	curSplit->numVerts = g_vertexIndex - curSplit->startVertex;
 
 	if (g_splitIndex + 1 >= MAX_DRAW_SPLITS)
 	{
@@ -744,67 +761,67 @@ static void AddSplit(bool semiTrans, bool textured)
 		return;
 	}
 
-	GPUDrawSplit& split = g_splits[++g_splitIndex];
-	split.blendMode = blendMode;
-	split.texFormat = texFormat;
-	split.textureId = textureId;
-	split.drawPrimMode = g_DrawPrimMode;
-	split.psxTexturedSemiTrans = psxTexturedSemiTrans;
-	split.psxDrawMaskSet = g_psxDrawMaskSet;
-	split.drawenv = activeDrawEnv;
-	split.dispenv = activeDispEnv;
-	split.debugText = currentSplitDebugText;
+	GPUDrawSplit* split = &g_splits[++g_splitIndex];
+	split->blendMode = blendMode;
+	split->texFormat = texFormat;
+	split->textureId = textureId;
+	split->drawPrimMode = g_DrawPrimMode;
+	split->psxTexturedSemiTrans = psxTexturedSemiTrans;
+	split->psxDrawMaskSet = g_psxDrawMaskSet;
+	split->drawenv = activeDrawEnv;
+	split->dispenv = activeDispEnv;
+	split->debugText = currentSplitDebugText;
 
-	split.drawenv.tw.w = overrideTextureWidth;
-	split.drawenv.tw.h = overrideTextureHeight;
+	split->drawenv.tw.w = overrideTextureWidth;
+	split->drawenv.tw.h = overrideTextureHeight;
 
-	split.startVertex = g_vertexIndex;
-	split.numVerts = 0;
+	split->startVertex = g_vertexIndex;
+	split->numVerts = 0;
 }
 
-void DrawSplit(const GPUDrawSplit& split)
+void DrawSplit(const GPUDrawSplit* split)
 {
-	if(split.debugText)
-		GR_PushDebugLabel(split.debugText);
+	if(split->debugText)
+		NativeRenderer_PushDebugLabel(split->debugText);
 
-	GR_SetStencilMode(split.drawPrimMode);	// draw with mask 0x16
+	NativeRenderer_SetStencilMode(split->drawPrimMode);	// draw with mask 0x16
 
-	GR_SetTexture(split.textureId, split.texFormat);
+	NativeRenderer_SetTexture(split->textureId, split->texFormat);
 
-	if (split.texFormat == TF_32_BIT_RGBA)
-		GR_SetOverrideTextureSize(split.drawenv.tw.w, split.drawenv.tw.h);
+	if (split->texFormat == TF_32_BIT_RGBA)
+		NativeRenderer_SetOverrideTextureSize(split->drawenv.tw.w, split->drawenv.tw.h);
 
-	GR_SetPSXDrawMaskSet(split.psxDrawMaskSet);
+	NativeRenderer_SetPSXDrawMaskSet(split->psxDrawMaskSet);
 
-	const bool drawOnScreen = split.drawenv.dfe;
-	GR_SetupClipMode(&split.drawenv.clip, drawOnScreen);
-	GR_SetOffscreenState(&split.drawenv.clip, !drawOnScreen);
+	const bool drawOnScreen = split->drawenv.dfe;
+	NativeRenderer_SetupClipMode(&split->drawenv.clip, drawOnScreen);
+	NativeRenderer_SetOffscreenState(&split->drawenv.clip, !drawOnScreen);
 
-	if (split.psxTexturedSemiTrans)
+	if (split->psxTexturedSemiTrans)
 	{
 		// NOTE(aalhendi): CTR native renderer divergence from upstream PsyCross.
 		// PS1 textured ABE only blends texels whose sampled 16-bit color has STP
-		// set; non-STP texels remain opaque. PsyCross split state is per draw,
+		// set; non-STP texels remain opaque. Native split state is per draw,
 		// so draw this primitive-sized split twice with shader-side STP masks.
-		GR_SetBlendMode(BM_NONE);
-		GR_SetPSXTextureSemiTransPass(1);
-		GR_DrawTriangles(split.startVertex, split.numVerts / 3);
+		NativeRenderer_SetBlendMode(BM_NONE);
+		NativeRenderer_SetPSXTextureSemiTransPass(1);
+		NativeRenderer_DrawTriangles(split->startVertex, split->numVerts / 3);
 
-		GR_SetBlendMode(split.blendMode);
-		GR_SetPSXTextureSemiTransPass(2);
-		GR_DrawTriangles(split.startVertex, split.numVerts / 3);
+		NativeRenderer_SetBlendMode(split->blendMode);
+		NativeRenderer_SetPSXTextureSemiTransPass(2);
+		NativeRenderer_DrawTriangles(split->startVertex, split->numVerts / 3);
 
-		GR_SetPSXTextureSemiTransPass(0);
+		NativeRenderer_SetPSXTextureSemiTransPass(0);
 	}
 	else
 	{
-		GR_SetBlendMode(split.blendMode);
-		GR_SetPSXTextureSemiTransPass(0);
-		GR_DrawTriangles(split.startVertex, split.numVerts / 3);
+		NativeRenderer_SetBlendMode(split->blendMode);
+		NativeRenderer_SetPSXTextureSemiTransPass(0);
+		NativeRenderer_DrawTriangles(split->startVertex, split->numVerts / 3);
 	}
 
-	if (split.debugText)
-		GR_PopDebugLabel();
+	if (split->debugText)
+		NativeRenderer_PopDebugLabel();
 }
 
 static void SetPSXMaskState(u_int code)
@@ -840,7 +857,7 @@ void DrawAllSplits()
 			eprintf("U: %d V: %d\n", vert->u, vert->v);
 			eprintf("TP: %d CLT: %d\n", vert->page, vert->clut);
 #endif
-			
+
 			eprintf("==========================================\n");
 		}
 
@@ -849,10 +866,10 @@ void DrawAllSplits()
 #endif // _DEBUG
 
 	// next code ideally should be called before EndScene
-	GR_UpdateVertexBuffer(g_vertexBuffer, g_vertexIndex);
+	NativeRenderer_UpdateVertexBuffer(g_vertexBuffer, g_vertexIndex);
 
 	for (int i = 1; i <= g_splitIndex; i++)
-		DrawSplit(g_splits[i]);
+		DrawSplit(&g_splits[i]);
 
 	ClearSplits();
 }
@@ -871,27 +888,27 @@ void ParsePrimitivesLinkedList(u_int* p, int singlePrimitive)
 
 	if (singlePrimitive)
 	{
-		P_TAG* polyTag = reinterpret_cast<P_TAG*>(p);
+		P_TAG* polyTag = (P_TAG*)p;
 #if USE_PGXP && USE_EXTENDED_PRIM_POINTERS
 		// force PGXP off
 		polyTag->pgxp_index = 0xFFFF;
 #endif
 		ParsePrimitive(polyTag);
 
-		GPUDrawSplit& lastSplit = g_splits[g_splitIndex];
-		lastSplit.numVerts = g_vertexIndex - lastSplit.startVertex;
+		GPUDrawSplit* lastSplit = &g_splits[g_splitIndex];
+		lastSplit->numVerts = g_vertexIndex - lastSplit->startVertex;
 	}
 	else
 	{
 		// walk OT_TAG linked list
-		for (uintptr_t basePacket = reinterpret_cast<uintptr_t>(p);; basePacket = reinterpret_cast<uintptr_t>(nextPrim(basePacket)))
+		for (uintptr_t basePacket = (uintptr_t)p;; basePacket = (uintptr_t)nextPrim(basePacket))
 		{
 			const int tagLength = getlen(basePacket);
 			if (tagLength > 0)
 			{
 				if (tagLength > 32)
 				{
-					eprinterr("got invalid tag length %d, code %d\n", tagLength, reinterpret_cast<P_TAG*>(basePacket)->code);
+					eprinterr("got invalid tag length %d, code %d\n", tagLength, ((P_TAG*)basePacket)->code);
 				}
 
 				uintptr_t currentPacket = basePacket;
@@ -899,13 +916,13 @@ void ParsePrimitivesLinkedList(u_int* p, int singlePrimitive)
 				int primLength = 0;
 				if (currentPacket < endPacket)
 				{
-					primLength = ParsePrimitive(reinterpret_cast<P_TAG*>(currentPacket));
+					primLength = ParsePrimitive((P_TAG*)currentPacket);
 					currentPacket += (primLength + P_LEN) * sizeof(u_int);
 				}
 
 				while (currentPacket < endPacket)
 				{
-					primLength = ParseTaglessPrimitive(reinterpret_cast<u_int*>(currentPacket));
+					primLength = ParseTaglessPrimitive((u_int*)currentPacket);
 					currentPacket += primLength * sizeof(u_int);
 				}
 
@@ -915,8 +932,8 @@ void ParsePrimitivesLinkedList(u_int* p, int singlePrimitive)
 				}
 			}
 
-			GPUDrawSplit& lastSplit = g_splits[g_splitIndex];
-			lastSplit.numVerts = g_vertexIndex - lastSplit.startVertex;
+			GPUDrawSplit* lastSplit = &g_splits[g_splitIndex];
+			lastSplit->numVerts = g_vertexIndex - lastSplit->startVertex;
 
 			if (isendprim(basePacket))
 				break;
@@ -924,7 +941,7 @@ void ParsePrimitivesLinkedList(u_int* p, int singlePrimitive)
 	}
 }
 
-inline int IsNull(POLY_FT3* poly)
+static inline int IsNull(POLY_FT3* poly)
 {
 	return  poly->x0 == -1 &&
 		poly->y0 == -1 &&
@@ -960,7 +977,7 @@ static int ProcessFlatLines(P_TAG* polyTag)
 		unsigned char* c1 = c0;
 
 		GrVertex* firstVertex = &g_vertexBuffer[g_vertexIndex];
-		LineSwapSourceVerts(p0, p1, c0, c1);
+		LineSwapSourceVerts(&p0, &p1, &c0, &c1);
 		MakeLineArray(firstVertex, p0, p1, gteIndex);
 		MakeTexcoordLineZero(firstVertex, 0);
 		MakeColourLine(firstVertex, shadeTexOn, c0, c1);
@@ -987,7 +1004,7 @@ static int ProcessFlatLines(P_TAG* polyTag)
 			unsigned char* c1 = c0;
 
 			GrVertex* firstVertex = &g_vertexBuffer[g_vertexIndex];
-			LineSwapSourceVerts(p0, p1, c0, c1);
+			LineSwapSourceVerts(&p0, &p1, &c0, &c1);
 			MakeLineArray(firstVertex, p0, p1, gteIndex);
 			MakeTexcoordLineZero(firstVertex, 0);
 			MakeColourLine(firstVertex, shadeTexOn, c0, c1);
@@ -1007,7 +1024,7 @@ static int ProcessFlatLines(P_TAG* polyTag)
 			unsigned char* c1 = c0;
 
 			GrVertex* firstVertex = &g_vertexBuffer[g_vertexIndex];
-			LineSwapSourceVerts(p0, p1, c0, c1);
+			LineSwapSourceVerts(&p0, &p1, &c0, &c1);
 			MakeLineArray(firstVertex, p0, p1, gteIndex);
 			MakeTexcoordLineZero(firstVertex, 0);
 			MakeColourLine(firstVertex, shadeTexOn, c0, c1);
@@ -1036,7 +1053,7 @@ static int ProcessFlatLines(P_TAG* polyTag)
 			unsigned char* c1 = c0;
 
 			GrVertex* firstVertex = &g_vertexBuffer[g_vertexIndex];
-			LineSwapSourceVerts(p0, p1, c0, c1);
+			LineSwapSourceVerts(&p0, &p1, &c0, &c1);
 			MakeLineArray(firstVertex, p0, p1, gteIndex);
 			MakeTexcoordLineZero(firstVertex, 0);
 			MakeColourLine(firstVertex, shadeTexOn, c0, c1);
@@ -1056,7 +1073,7 @@ static int ProcessFlatLines(P_TAG* polyTag)
 			unsigned char* c1 = c0;
 
 			GrVertex* firstVertex = &g_vertexBuffer[g_vertexIndex];
-			LineSwapSourceVerts(p0, p1, c0, c1);
+			LineSwapSourceVerts(&p0, &p1, &c0, &c1);
 			MakeLineArray(firstVertex, p0, p1, gteIndex);
 			MakeTexcoordLineZero(firstVertex, 0);
 			MakeColourLine(firstVertex, shadeTexOn, c0, c1);
@@ -1076,7 +1093,7 @@ static int ProcessFlatLines(P_TAG* polyTag)
 			unsigned char* c1 = c0;
 
 			GrVertex* firstVertex = &g_vertexBuffer[g_vertexIndex];
-			LineSwapSourceVerts(p0, p1, c0, c1);
+			LineSwapSourceVerts(&p0, &p1, &c0, &c1);
 			MakeLineArray(firstVertex, p0, p1, gteIndex);
 			MakeTexcoordLineZero(firstVertex, 0);
 			MakeColourLine(firstVertex, shadeTexOn, c0, c1);
@@ -1121,7 +1138,7 @@ static int ProcessGouraudLines(P_TAG* polyTag)
 		unsigned char* c1 = &poly->r1;
 
 		GrVertex* firstVertex = &g_vertexBuffer[g_vertexIndex];
-		LineSwapSourceVerts(p0, p1, c0, c1);
+		LineSwapSourceVerts(&p0, &p1, &c0, &c1);
 		MakeLineArray(firstVertex, p0, p1, gteIndex);
 		MakeTexcoordLineZero(firstVertex, 0);
 		MakeColourLine(firstVertex, shadeTexOn, c0, c1);
@@ -1526,7 +1543,7 @@ static int ProcessDrawEnv(P_TAG* polyTag)
 				activeDrawEnv.tpage = (code & 0x1FF);
 				activeDrawEnv.dtd = (code >> 9) & 1;
 					// NOTE(aalhendi): ctr-native local divergence. CTR uses
-					// DR_TPAGE packets for blend changes inside the OT; PsyCross
+					// DR_TPAGE packets for blend changes inside the OT; native
 					// target selection must stay owned by DRAWENV.
 					// activeDrawEnv.dfe = (code >> 10) & 1;
 					break;
@@ -1638,7 +1655,7 @@ static int ProcessPsyXPrims(P_TAG* polyTag)
 	}
 	case 0x02:
 	{
-		// [A] Psy-X custom texture packet
+		// [A] Psy-X custom debug marker packet
 		DR_PSYX_DBGMARKER* psydbg = (DR_PSYX_DBGMARKER*)polyTag;
 		currentSplitDebugText = psydbg->text;
 		return 2;
@@ -1666,7 +1683,7 @@ int ParsePrimitive(P_TAG* polyTag)
 			// NOTE(aalhendi): ctr-native local divergence. CTR RenderWeather can
 			// emit a retail length-2 zero packet when weather is enabled but the
 			// level has no fill-mode payload. The PSX consumes it by tag length;
-			// PsyCross must advance past it too.
+			// the native parser must advance past it too.
 			if (polyTag->len == 2 && codePtr[0] == 0 && codePtr[1] == 0)
 		{
 			primLength = 2;
@@ -1699,7 +1716,7 @@ int ParsePrimitive(P_TAG* polyTag)
 		else if (primSubType == 0x2)
 		{
 				// NOTE(aalhendi): ctr-native local divergence. CTR emits retail
-				// FILL packets in OTs; PsyCross did not consume them, which caused
+				// FILL packets in OTs; the old PsyCross parser did not consume them, which caused
 				// zero-length primitive spam.
 				TILE* fill = (TILE*)polyTag;
 			RECT16 rect;
@@ -1745,9 +1762,9 @@ int ParsePrimitive(P_TAG* polyTag)
 			*(uint*)&rect.w = *(uint*)&drload->code[2];
 
 			LoadImage(&rect, (u_long*)drload->p);
-			//Emulator_UpdateVRAM();			// FIXME: should it be updated immediately?
 
-			// FIXME: is there othercommands?
+			// TODO(aalhendi): Audit whether CTR ever appends additional GPU
+			// commands after a DR_LOAD payload in the same packet.
 		}
 		primLength = getlen(polyTag);
 		break;
@@ -1785,7 +1802,7 @@ int ParseTaglessPrimitive(u_int* command)
 		return 1;
 	}
 
-	P_TAG* polyTag = reinterpret_cast<P_TAG*>(command - P_LEN);
+	P_TAG* polyTag = (P_TAG*)(command - P_LEN);
 	int primLength = ParsePrimitive(polyTag);
 
 	if (primLength == 0)

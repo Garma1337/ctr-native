@@ -1,9 +1,17 @@
+/*
+ * Derived from REDRIVER2/PsyCross MIT source:
+ * externals/PsyCross/src/render/PsyX_render.cpp
+ * See THIRD_PARTY_NOTICES.md for copyright and license details.
+ */
+
+#include "platform/native_renderer_types.h"
 #include "PsyX/PsyX_public.h"
 
-#include "../platform.h"
-#include "../gpu/PsyX_GPU.h"
+#include "../externals/PsyCross/src/platform.h"
+#include "platform/native_gpu.h"
+#include "platform/native_glad.h"
+#include "platform/native_renderer_backend.h"
 
-#include "PsyX/PsyX_render.h"
 #include "PsyX/PsyX_globals.h"
 #include "PsyX/util/timer.h"
 
@@ -17,16 +25,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#if defined(_LANGUAGE_C_PLUS_PLUS)||defined(__cplusplus)||defined(c_plusplus)
-extern "C" {
-#endif
-
-	__declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
-
-#if defined(_LANGUAGE_C_PLUS_PLUS)||defined(__cplusplus)||defined(c_plusplus)
-}
-#endif
+__declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 
 #endif //def WIN32
 
@@ -35,6 +35,9 @@ extern "C" {
 #define USE_PBO					1
 #define USE_OFFSCREEN_BLIT		1
 #define USE_FRAMEBUFFER_BLIT	1
+#define TEXTURE_FORMAT			GL_UNSIGNED_SHORT_1_5_5_5_REV
+#define VRAM_FORMAT				GL_RG
+#define VRAM_INTERNAL_FORMAT	GL_RG32F
 
 #else
 
@@ -42,6 +45,9 @@ extern "C" {
 #define USE_PBO					0
 #define USE_OFFSCREEN_BLIT		0
 #define USE_FRAMEBUFFER_BLIT	0
+#define TEXTURE_FORMAT			GL_UNSIGNED_SHORT_5_5_5_1
+#define VRAM_FORMAT				GL_LUMINANCE_ALPHA
+#define VRAM_INTERNAL_FORMAT	GL_LUMINANCE_ALPHA
 
 #endif
 
@@ -51,26 +57,36 @@ extern SDL_Window* g_window;
 #define MAX_NUM_VERTEX_BUFFERS		(2)
 #define PSX_SCREEN_ASPECT	(240.0f / 320.0f)			// PSX screen is mapped always to this aspect
 
-int g_PreviousBlendMode = BM_NONE;
-int g_PreviousDepthMode = 0;
-int g_PreviousStencilMode = 0;
-int g_PreviousScissorState = 0;
-int g_PreviousOffscreenState = 0;
-RECT16 g_PreviousFramebuffer = { 0,0,0,0 };
-RECT16 g_PreviousOffscreen = { 0,0,0,0 };
+static int s_previousBlendMode = BM_NONE;
+static int s_previousDepthMode = 0;
+static int s_previousStencilMode = 0;
+static int s_previousScissorState = 0;
+static int s_previousOffscreenState = 0;
+static RECT16 s_previousFramebuffer = { 0,0,0,0 };
+static RECT16 s_previousOffscreen = { 0,0,0,0 };
 
-ShaderID g_PreviousShader = -1;
+static ShaderID s_previousShader = -1;
 
-TextureID g_vramTexturesDouble[2];
-TextureID g_vramTexture;
-TextureID g_rgLutTexture = -1;
-int g_vramTextureIdx = 0;
+static TextureID s_vramTexturesDouble[2];
+static TextureID s_vramTexture;
+static TextureID s_rgLutTexture = -1;
+static int s_vramTextureIndex = 0;
 
-TextureID g_fbTexture = -1;
-TextureID g_offscreenRTTexture = -1;
+static TextureID s_framebufferTexture = -1;
+static TextureID s_offscreenRenderTexture = -1;
 
-TextureID g_whiteTexture = -1;
-TextureID g_lastBoundTexture = -1;
+static TextureID s_whiteTexture = -1;
+static TextureID s_lastBoundTexture = -1;
+
+TextureID NativeRendererBackend_GetVRAMTexture(void)
+{
+	return s_vramTexture;
+}
+
+TextureID NativeRendererBackend_GetWhiteTexture(void)
+{
+	return s_whiteTexture;
+}
 
 int g_windowWidth = 0;
 int g_windowHeight = 0;
@@ -82,8 +98,8 @@ int g_cfg_pgxpTextureCorrection = 1;
 int g_cfg_pgxpZBuffer = 1;
 int g_cfg_bilinearFiltering = 0;
 
-int vram_need_update = 1;
-int framebuffer_need_update = 0;
+static int s_vramNeedsUpdate = 1;
+static int s_framebufferNeedsUpdate = 0;
 
 #if defined(__EMSCRIPTEN__) || defined(__RPI__) || defined(__ANDROID__)
 #if defined(RENDERER_OGL)
@@ -171,7 +187,7 @@ void PBO_Destroy(GrPBO* pbo)
 	if(pbo->pbos)
 	{
 		glDeleteBuffers(pbo->num_pbos, pbo->pbos);
-	
+
 		free(pbo->pbos);
 		pbo->num_pbos = 0;
 		pbo->pbos = NULL;
@@ -193,7 +209,7 @@ void PBO_Destroy(GrPBO* pbo)
 void PBO_Download(GrPBO* pbo)
 {
 	unsigned char* ptr;
-	
+
 #if USE_PBO
 	if (pbo->num_downloads < pbo->num_pbos)
 	{
@@ -241,30 +257,30 @@ void PBO_Download(GrPBO* pbo)
 
 	glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 #else
-	// FIXME: THIS is very slow
-	// Do not use at all
+	// TODO(aalhendi): If the PBO path is disabled, replace this with an
+	// explicitly paced fallback before enabling readback-heavy effects.
 
-	// glBindBuffer(GL_PIXEL_PACK_BUFFER, 0); /* just make sure we're not accidentilly using a PBO. */
+	// glBindBuffer(GL_PIXEL_PACK_BUFFER, 0); /* just make sure we're not accidentally using a PBO. */
 	// glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pbo->pixels);
 #endif
 }
 
-GLuint		g_glVertexArray[2];
-GLuint		g_glVertexBuffer[2];
-int			g_curVertexBuffer = 0;
+static GLuint s_glVertexArray[2];
+static GLuint s_glVertexBuffer[2];
+static int s_curVertexBuffer = 0;
 
-GLuint		g_glBlitFramebuffer;
-GrPBO		g_glFramebufferPBO;
+static GLuint s_glBlitFramebuffer;
+static GrPBO s_glFramebufferPBO;
 
-GLuint		g_glVRAMFramebuffer;
+static GLuint s_glVramFramebuffer;
 
-GLuint		g_glOffscreenFramebuffer;
-GrPBO		g_glOffscreenPBO;
+static GLuint s_glOffscreenFramebuffer;
+static GrPBO s_glOffscreenPBO;
 
 #endif
 
 #if defined(RENDERER_OGL) || defined(RENDERER_OGLES)
-int GR_InitialiseGLContext(char* windowName, int fullscreen)
+int NativeRendererBackend_InitialiseGLContext(char* windowName, int fullscreen)
 {
 	int windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 
@@ -282,7 +298,7 @@ int GR_InitialiseGLContext(char* windowName, int fullscreen)
 		eprinterr("Failed to initialise SDL window!\n");
 		return 0;
 	}
-	
+
 #if defined(RENDERER_OGLES)
 
 #if defined(__ANDROID__)
@@ -323,9 +339,9 @@ int GR_InitialiseGLContext(char* windowName, int fullscreen)
 
 		if (SDL_GL_CreateContext(g_window))
 			break;
-	
+
 		minor_version--;
-		
+
 	} while (minor_version >= 0);
 
 	if (minor_version == -1)
@@ -339,7 +355,7 @@ int GR_InitialiseGLContext(char* windowName, int fullscreen)
 }
 #endif
 
-int GR_InitialiseGLExt()
+int NativeRendererBackend_InitialiseGLExt()
 {
 #ifdef USE_GLAD
 	GLenum err = gladLoadGL();
@@ -347,7 +363,7 @@ int GR_InitialiseGLExt()
 	if (err == 0)
 		return 0;
 #endif
-	
+
 	const char* rend = (const char*)glGetString(GL_RENDERER);
 	const char* vendor = (const char*)glGetString(GL_VENDOR);
 	eprintf("*Video adapter: %s by %s\n", rend, vendor);
@@ -361,7 +377,7 @@ int GR_InitialiseGLExt()
 	return 1;
 }
 
-int GR_InitialiseRender(char* windowName, int width, int height, int fullscreen)
+int NativeRendererBackend_InitialiseRender(char* windowName, int width, int height, int fullscreen)
 {
 	g_windowWidth = width;
 	g_windowHeight = height;
@@ -374,56 +390,56 @@ int GR_InitialiseRender(char* windowName, int width, int height, int fullscreen)
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 1);
 
 #if defined(RENDERER_OGL) || defined(RENDERER_OGLES)
-	if (!GR_InitialiseGLContext(windowName, fullscreen))
+	if (!NativeRendererBackend_InitialiseGLContext(windowName, fullscreen))
 	{
 		eprinterr("Failed to Initialise GL Context!\n");
 		return 0;
 	}
 #endif
 
-	if (!GR_InitialiseGLExt())
+	if (!NativeRendererBackend_InitialiseGLExt())
 	{
 		eprinterr("Failed to Intialise GL extensions\n");
 		return 0;
 	}
 #endif
-	
+
 	return 1;
 }
 
-void GR_Shutdown()
+void NativeRendererBackend_Shutdown()
 {
 #if USE_OPENGL
-	glDeleteVertexArrays(2, g_glVertexArray);
-	glDeleteBuffers(2, g_glVertexBuffer);
+	glDeleteVertexArrays(2, s_glVertexArray);
+	glDeleteBuffers(2, s_glVertexBuffer);
 
-	PBO_Destroy(&g_glFramebufferPBO);
-	PBO_Destroy(&g_glOffscreenPBO);
+	PBO_Destroy(&s_glFramebufferPBO);
+	PBO_Destroy(&s_glOffscreenPBO);
 
-	glDeleteFramebuffers(1, &g_glBlitFramebuffer);
-	glDeleteFramebuffers(1, &g_glOffscreenFramebuffer);
-	glDeleteFramebuffers(1, &g_glVRAMFramebuffer);
+	glDeleteFramebuffers(1, &s_glBlitFramebuffer);
+	glDeleteFramebuffers(1, &s_glOffscreenFramebuffer);
+	glDeleteFramebuffers(1, &s_glVramFramebuffer);
 
-	GR_DestroyTexture(g_vramTexturesDouble[0]);
-	GR_DestroyTexture(g_vramTexturesDouble[1]);
+	NativeRendererBackend_DestroyTexture(s_vramTexturesDouble[0]);
+	NativeRendererBackend_DestroyTexture(s_vramTexturesDouble[1]);
 
-	GR_DestroyTexture(g_whiteTexture);
-	GR_DestroyTexture(g_rgLutTexture);
-	GR_DestroyTexture(g_fbTexture);
-	GR_DestroyTexture(g_offscreenRTTexture);
+	NativeRendererBackend_DestroyTexture(s_whiteTexture);
+	NativeRendererBackend_DestroyTexture(s_rgLutTexture);
+	NativeRendererBackend_DestroyTexture(s_framebufferTexture);
+	NativeRendererBackend_DestroyTexture(s_offscreenRenderTexture);
 #endif
 }
 
-void GR_UpdateSwapIntervalState(int swapInterval)
+void NativeRendererBackend_UpdateSwapIntervalState(int swapInterval)
 {
 #if defined(RENDERER_OGL)
 	SDL_GL_SetSwapInterval(swapInterval);
 #endif
 }
 
-void GR_BeginScene()
+void NativeRendererBackend_BeginScene()
 {
-	g_lastBoundTexture = 0;
+	s_lastBoundTexture = 0;
 
 #if USE_OPENGL
 	// NOTE(aalhendi): Depth is a PGXP host enhancement. The retail-faithful
@@ -439,12 +455,12 @@ void GR_BeginScene()
 	glClear(GL_STENCIL_BUFFER_BIT);
 #endif
 
-	GR_UpdateVRAM();
-	GR_SetViewPort(0, 0, g_windowWidth, g_windowHeight);
+	NativeRendererBackend_UpdateVRAM();
+	NativeRendererBackend_SetViewPort(0, 0, g_windowWidth, g_windowHeight);
 
 	if (g_dbg_wireframeMode)
 	{
-		GR_SetWireframe(1);
+		NativeRendererBackend_SetWireframe(1);
 
 #if USE_OPENGL
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -453,12 +469,12 @@ void GR_BeginScene()
 	}
 }
 
-void GR_EndScene()
+void NativeRendererBackend_EndScene()
 {
-	framebuffer_need_update = 1;
-	
+	s_framebufferNeedsUpdate = 1;
+
 	if (g_dbg_wireframeMode)
-		GR_SetWireframe(0);
+		NativeRendererBackend_SetWireframe(0);
 
 #if USE_OPENGL
 	glBindVertexArray(0);
@@ -470,9 +486,9 @@ void GR_EndScene()
 unsigned short vram[VRAM_WIDTH * VRAM_HEIGHT];
 static u_char rgLUT[LUT_WIDTH * LUT_HEIGHT * sizeof(u_int)];
 
-void GR_ResetDevice()
+void NativeRendererBackend_ResetDevice()
 {
-	GR_UpdateSwapIntervalState(0);
+	NativeRendererBackend_UpdateSwapIntervalState(0);
 }
 
 typedef struct
@@ -492,10 +508,10 @@ typedef struct
 #endif
 } GTEShader;
 
-GTEShader g_gte_shader_4;
-GTEShader g_gte_shader_8;
-GTEShader g_gte_shader_16;
-GTEShader g_gte_shader_32_rgba;
+static GTEShader s_gteShader4;
+static GTEShader s_gteShader8;
+static GTEShader s_gteShader16;
+static GTEShader s_gteShader32Rgba;
 
 #if USE_OPENGL
 
@@ -631,12 +647,11 @@ GLint u_psxDrawMaskSetLoc;
 	"		fragColor.a = float(psxDrawMaskSet);\n"\
 	"	}\n"
 
-static const char* gpu_shader_common = R"(
-	varying vec4 v_texcoord;
-	varying vec4 v_color;
-	varying vec4 v_page_clut;
-	varying float v_z;
-)";
+static const char* gpu_shader_common =
+	"	varying vec4 v_texcoord;\n"
+	"	varying vec4 v_color;\n"
+	"	varying vec4 v_page_clut;\n"
+	"	varying float v_z;\n";
 
 const char* gte_shader_4 = GPU_FRAGMENT_SAMPLE_SHADER(4);
 const char* gte_shader_8 = GPU_FRAGMENT_SAMPLE_SHADER(8);
@@ -691,7 +706,7 @@ const char* gte_shader_32_rgba =
 	"		v_z = (gl_Position.z - 40.0) * 0.005;\n"\
 	"	}\n"
 
-int GR_Shader_CheckShaderStatus(GLuint shader)
+int NativeRendererBackend_Shader_CheckShaderStatus(GLuint shader)
 {
 	char info[1024];
 	GLint result;
@@ -700,7 +715,7 @@ int GR_Shader_CheckShaderStatus(GLuint shader)
 
 	if (result == GL_TRUE)
 		return 1;
-	
+
 	glGetShaderInfoLog(shader, sizeof(info), NULL, info);
 	if (info[0] && strlen(info) > 8)
 	{
@@ -711,7 +726,7 @@ int GR_Shader_CheckShaderStatus(GLuint shader)
 	return 0;
 }
 
-int GR_Shader_CheckProgramStatus(GLuint program)
+int NativeRendererBackend_Shader_CheckProgramStatus(GLuint program)
 {
 	char info[1024];
 	GLint result;
@@ -731,57 +746,51 @@ int GR_Shader_CheckProgramStatus(GLuint program)
 	return 0;
 }
 
-ShaderID GR_Shader_Compile(const char* source, bool isPsxShader)
+ShaderID NativeRendererBackend_Shader_Compile(const char* source, bool isPsxShader)
 {
 #if defined(ES2_SHADERS)
-	const char* GLSL_HEADER_VERT = R"(
-		#version 100
-		precision lowp  int;
-		precision highp float;
-	)";
+	const char* GLSL_HEADER_VERT =
+		"	#version 100\n"
+		"	precision lowp  int;\n"
+		"	precision highp float;\n";
 
-	const char* GLSL_HEADER_FRAG = R"(
-		#version 100
-		precision lowp  int;
-		precision highp float;
-		#define fragColor gl_FragColor
-	)";
+	const char* GLSL_HEADER_FRAG =
+		"	#version 100\n"
+		"	precision lowp  int;\n"
+		"	precision highp float;\n"
+		"	#define fragColor gl_FragColor\n";
 #elif defined(ES3_SHADERS)
-	const char* GLSL_HEADER_VERT = R"(
-		#version 300 es
-		precision lowp  int;
-		precision highp float;
-		#define varying   out
-		#define attribute in
-		#define texture2D texture
-	)";
+	const char* GLSL_HEADER_VERT =
+		"	#version 300 es\n"
+		"	precision lowp  int;\n"
+		"	precision highp float;\n"
+		"	#define varying   out\n"
+		"	#define attribute in\n"
+		"	#define texture2D texture\n";
 
-	const char* GLSL_HEADER_FRAG = R"(
-		#version 300 es
-		precision lowp  int;
-		precision highp float;
-		#define varying     in
-		#define texture2D   texture
-		out vec4 fragColor;
-	)";
+	const char* GLSL_HEADER_FRAG =
+		"	#version 300 es\n"
+		"	precision lowp  int;\n"
+		"	precision highp float;\n"
+		"	#define varying     in\n"
+		"	#define texture2D   texture\n"
+		"	out vec4 fragColor;\n";
 #else
-	const char* GLSL_HEADER_VERT = R"(
-		#version 140
-		precision lowp  int;
-		precision highp float;
-		#define varying   out
-		#define attribute in
-		#define texture2D texture
-	)";
+	const char* GLSL_HEADER_VERT =
+		"	#version 140\n"
+		"	precision lowp  int;\n"
+		"	precision highp float;\n"
+		"	#define varying   out\n"
+		"	#define attribute in\n"
+		"	#define texture2D texture\n";
 
-	const char* GLSL_HEADER_FRAG = R"(
-		#version 140
-		precision lowp  int;
-		precision highp float;
-		#define varying     in
-		#define texture2D   texture
-		out vec4 fragColor;
-	)";
+	const char* GLSL_HEADER_FRAG =
+		"	#version 140\n"
+		"	precision lowp  int;\n"
+		"	precision highp float;\n"
+		"	#define varying     in\n"
+		"	#define texture2D   texture\n"
+		"	out vec4 fragColor;\n";
 #endif
 
 	char extra_vs_defines[1024];
@@ -832,9 +841,9 @@ ShaderID GR_Shader_Compile(const char* source, bool isPsxShader)
 		glShaderSource(vertexShader, vs_list_cnt, vs_list, NULL);
 		glCompileShader(vertexShader);
 
-		if( GR_Shader_CheckShaderStatus(vertexShader) == 0 )
+		if( NativeRendererBackend_Shader_CheckShaderStatus(vertexShader) == 0 )
 			eprinterr("Failed to compile Vertex Shader!\n");
-	
+
 		glAttachShader(program, vertexShader);
 		glDeleteShader(vertexShader);
 	}
@@ -844,9 +853,9 @@ ShaderID GR_Shader_Compile(const char* source, bool isPsxShader)
 		glShaderSource(fragmentShader, fs_list_cnt, fs_list, NULL);
 		glCompileShader(fragmentShader);
 
-		if(GR_Shader_CheckShaderStatus(fragmentShader) == 0)
+		if(NativeRendererBackend_Shader_CheckShaderStatus(fragmentShader) == 0)
 			eprinterr("Failed to compile Fragment Shader!\n");
-	
+
 		glAttachShader(program, fragmentShader);
 		glDeleteShader(fragmentShader);
 	}
@@ -860,7 +869,7 @@ ShaderID GR_Shader_Compile(const char* source, bool isPsxShader)
 #endif
 
 	glLinkProgram(program);
-	if(GR_Shader_CheckProgramStatus(program) == 0)
+	if(NativeRendererBackend_Shader_CheckProgramStatus(program) == 0)
 		eprinterr("Failed to link Shader!\n");
 
 	GLint textureSampler = 0;
@@ -878,14 +887,14 @@ ShaderID GR_Shader_Compile(const char* source, bool isPsxShader)
 
 //--------------------------------------------------------------------------------------------
 
-void GR_GenerateCommonTextures()
+void NativeRendererBackend_GenerateCommonTextures()
 {
 	unsigned int whitePixelData = 0xFFFFFFFF;
 
 #if USE_OPENGL
-	glGenTextures(1, &g_whiteTexture);
+	glGenTextures(1, &s_whiteTexture);
 	{
-		glBindTexture(GL_TEXTURE_2D, g_whiteTexture);
+		glBindTexture(GL_TEXTURE_2D, s_whiteTexture);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -894,9 +903,9 @@ void GR_GenerateCommonTextures()
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	glGenTextures(1, &g_rgLutTexture);
+	glGenTextures(1, &s_rgLutTexture);
 	{
-		glBindTexture(GL_TEXTURE_2D, g_rgLutTexture);
+		glBindTexture(GL_TEXTURE_2D, s_rgLutTexture);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -909,7 +918,7 @@ void GR_GenerateCommonTextures()
 #endif
 }
 
-TextureID GR_CreateRGBATexture(int width, int height, u_char* data /*= nullptr*/)
+TextureID NativeRendererBackend_CreateRGBATexture(int width, int height, u_char* data)
 {
 	TextureID newTexture;
 	glGenTextures(1, &newTexture);
@@ -926,9 +935,9 @@ TextureID GR_CreateRGBATexture(int width, int height, u_char* data /*= nullptr*/
 	return newTexture;
 }
 
-void GR_CompilePSXShader(GTEShader* sh, const char* source)
+void NativeRendererBackend_CompilePSXShader(GTEShader* sh, const char* source)
 {
-	sh->shader = GR_Shader_Compile(source, true);
+	sh->shader = NativeRendererBackend_Shader_Compile(source, true);
 
 #if USE_OPENGL
 	sh->bilinearFilterLoc = glGetUniformLocation(sh->shader, "bilinearFilter");
@@ -944,15 +953,15 @@ void GR_CompilePSXShader(GTEShader* sh, const char* source)
 #endif
 }
 
-void GR_InitialisePSXShaders()
+void NativeRendererBackend_InitialisePSXShaders()
 {
-	GR_CompilePSXShader(&g_gte_shader_4, gte_shader_4);
-	GR_CompilePSXShader(&g_gte_shader_8, gte_shader_8);
-	GR_CompilePSXShader(&g_gte_shader_16, gte_shader_16);
-	GR_CompilePSXShader(&g_gte_shader_32_rgba, gte_shader_32_rgba);
+	NativeRendererBackend_CompilePSXShader(&s_gteShader4, gte_shader_4);
+	NativeRendererBackend_CompilePSXShader(&s_gteShader8, gte_shader_8);
+	NativeRendererBackend_CompilePSXShader(&s_gteShader16, gte_shader_16);
+	NativeRendererBackend_CompilePSXShader(&s_gteShader32Rgba, gte_shader_32_rgba);
 }
 
-void GR_InitRG8LUT()
+void NativeRendererBackend_InitRG8LUT()
 {
 	for (u_short y = 0; y < LUT_HEIGHT; y++)
 	{
@@ -969,12 +978,12 @@ void GR_InitRG8LUT()
 	}
 }
 
-int GR_InitialisePSX()
+int NativeRendererBackend_InitialisePSX()
 {
 	SDL_memset(vram, 0, VRAM_WIDTH * VRAM_HEIGHT * sizeof(unsigned short));
-	GR_InitRG8LUT();
-	GR_GenerateCommonTextures();
-	GR_InitialisePSXShaders();
+	NativeRendererBackend_InitRG8LUT();
+	NativeRendererBackend_GenerateCommonTextures();
+	NativeRendererBackend_InitialisePSXShaders();
 
 #if USE_OPENGL
 	glDepthFunc(GL_LEQUAL);
@@ -983,14 +992,14 @@ int GR_InitialisePSX()
 
 	// gen framebuffer
 	{
-		memset(&g_glFramebufferPBO, 0, sizeof(g_glFramebufferPBO));
-		PBO_Init(&g_glFramebufferPBO, GL_RGBA, VRAM_WIDTH, VRAM_HEIGHT, 2);
-		
+		memset(&s_glFramebufferPBO, 0, sizeof(s_glFramebufferPBO));
+		PBO_Init(&s_glFramebufferPBO, GL_RGBA, VRAM_WIDTH, VRAM_HEIGHT, 2);
+
 		// make a special texture
 		// it will be resized later
-		glGenTextures(1, &g_fbTexture);
+		glGenTextures(1, &s_framebufferTexture);
 		{
-			glBindTexture(GL_TEXTURE_2D, g_fbTexture);
+			glBindTexture(GL_TEXTURE_2D, s_framebufferTexture);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -1001,11 +1010,11 @@ int GR_InitialisePSX()
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
-		glGenFramebuffers(1, &g_glBlitFramebuffer);
+		glGenFramebuffers(1, &s_glBlitFramebuffer);
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, g_glBlitFramebuffer);
+			glBindFramebuffer(GL_FRAMEBUFFER, s_glBlitFramebuffer);
 
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, g_fbTexture, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, s_framebufferTexture, 0);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 
@@ -1015,13 +1024,13 @@ int GR_InitialisePSX()
 
 	// gen offscreen RT
 	{
-		memset(&g_glOffscreenPBO, 0, sizeof(g_glOffscreenPBO));
-		PBO_Init(&g_glOffscreenPBO, GL_RGBA, VRAM_WIDTH, VRAM_HEIGHT, 2);
-		
+		memset(&s_glOffscreenPBO, 0, sizeof(s_glOffscreenPBO));
+		PBO_Init(&s_glOffscreenPBO, GL_RGBA, VRAM_WIDTH, VRAM_HEIGHT, 2);
+
 		// offscreen texture render target
-		glGenTextures(1, &g_offscreenRTTexture);
+		glGenTextures(1, &s_offscreenRenderTexture);
 		{
-			glBindTexture(GL_TEXTURE_2D, g_offscreenRTTexture);
+			glBindTexture(GL_TEXTURE_2D, s_offscreenRenderTexture);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -1032,11 +1041,11 @@ int GR_InitialisePSX()
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
-		glGenFramebuffers(1, &g_glOffscreenFramebuffer);
+		glGenFramebuffers(1, &s_glOffscreenFramebuffer);
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, g_glOffscreenFramebuffer);
+			glBindFramebuffer(GL_FRAMEBUFFER, s_glOffscreenFramebuffer);
 
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, g_offscreenRTTexture, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, s_offscreenRenderTexture, 0);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 
@@ -1049,11 +1058,11 @@ int GR_InitialisePSX()
 	{
 		int i;
 
-		glGenTextures(2, g_vramTexturesDouble);
+		glGenTextures(2, s_vramTexturesDouble);
 
 		for(i = 0; i < 2; i++)
 		{
-			glBindTexture(GL_TEXTURE_2D, g_vramTexturesDouble[i]);
+			glBindTexture(GL_TEXTURE_2D, s_vramTexturesDouble[i]);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -1062,16 +1071,16 @@ int GR_InitialisePSX()
 			glTexImage2D(GL_TEXTURE_2D, 0, VRAM_INTERNAL_FORMAT, VRAM_WIDTH, VRAM_HEIGHT, 0, VRAM_FORMAT, GL_UNSIGNED_BYTE, NULL);
 		}
 
-		g_vramTexture = g_vramTexturesDouble[0];
+		s_vramTexture = s_vramTexturesDouble[0];
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// VRAM framebuffer for offscreen blitting to VRAM
-		glGenFramebuffers(1, &g_glVRAMFramebuffer);
+		glGenFramebuffers(1, &s_glVramFramebuffer);
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, g_glVRAMFramebuffer);
+			glBindFramebuffer(GL_FRAMEBUFFER, s_glVramFramebuffer);
 
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, g_vramTexture, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, s_vramTexture, 0);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
 
@@ -1083,14 +1092,14 @@ int GR_InitialisePSX()
 	{
 		int i;
 
-		glGenBuffers(MAX_NUM_VERTEX_BUFFERS, g_glVertexBuffer);
-		glGenVertexArrays(MAX_NUM_VERTEX_BUFFERS, g_glVertexArray);
+		glGenBuffers(MAX_NUM_VERTEX_BUFFERS, s_glVertexBuffer);
+		glGenVertexArrays(MAX_NUM_VERTEX_BUFFERS, s_glVertexArray);
 
 		for (i = 0; i < MAX_NUM_VERTEX_BUFFERS; i++)
 		{
-			glBindVertexArray(g_glVertexArray[i]);
+			glBindVertexArray(s_glVertexArray[i]);
 
-			glBindBuffer(GL_ARRAY_BUFFER, g_glVertexBuffer[i]);
+			glBindBuffer(GL_ARRAY_BUFFER, s_glVertexBuffer[i]);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(GrVertex) * MAX_VERTEX_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW);
 		}
 
@@ -1100,12 +1109,12 @@ int GR_InitialisePSX()
 #error
 #endif
 
-	GR_ResetDevice();
+	NativeRendererBackend_ResetDevice();
 
 	return 1;
 }
 
-void GR_Ortho2D(float left, float right, float bottom, float top, float znear, float zfar)
+void NativeRendererBackend_Ortho2D(float left, float right, float bottom, float top, float znear, float zfar)
 {
 	float a = 2.0f / (right - left);
 	float b = 2.0f / (top - bottom);
@@ -1114,7 +1123,7 @@ void GR_Ortho2D(float left, float right, float bottom, float top, float znear, f
 	float x = (left + right) / (left - right);
 	float y = (bottom + top) / (bottom - top);
 
-#if USE_OPENGL 
+#if USE_OPENGL
 	// -1..1
 	float z = (znear + zfar) / (znear - zfar);
 #endif
@@ -1131,7 +1140,7 @@ void GR_Ortho2D(float left, float right, float bottom, float top, float znear, f
 #endif
 }
 
-void GR_Perspective3D(const float fov, const float width, const float height, const float zNear, const float zFar)
+void NativeRendererBackend_Perspective3D(const float fov, const float width, const float height, const float zNear, const float zFar)
 {
 	float sinF, cosF;
 	sinF = sinf(0.5f * fov);
@@ -1152,7 +1161,7 @@ void GR_Perspective3D(const float fov, const float width, const float height, co
 #endif
 }
 
-void GR_SetupClipMode(const RECT16* rect, int enable)
+void NativeRendererBackend_SetupClipMode(const RECT16* rect, int enable)
 {
 	// [A] isinterlaced dirty hack for widescreen
 	const bool scissorOn = enable && (activeDispEnv.isinter ||
@@ -1161,7 +1170,7 @@ void GR_SetupClipMode(const RECT16* rect, int enable)
 			rect->w < activeDispEnv.disp.w - 1 ||
 			rect->h < activeDispEnv.disp.h - 1));
 
-	GR_SetScissorState(scissorOn);
+	NativeRendererBackend_SetScissorState(scissorOn);
 
 	if (!scissorOn)
 		return;
@@ -1231,9 +1240,9 @@ void PsyX_GetPSXWidescreenMappedViewport(struct _RECT16* rect)
 #endif
 }
 
-void GR_SetShader(const ShaderID shader)
+void NativeRendererBackend_SetShader(const ShaderID shader)
 {
-	if (g_PreviousShader != shader)
+	if (s_previousShader != shader)
 	{
 #if USE_OPENGL
 		glUseProgram(shader);
@@ -1241,12 +1250,12 @@ void GR_SetShader(const ShaderID shader)
 #error
 #endif
 
-		g_PreviousShader = shader;
+		s_previousShader = shader;
 	}
 }
 
 
-void GR_SetTexture(TextureID texture, TexFormat texFormat)
+void NativeRendererBackend_SetTexture(TextureID texture, TexFormat texFormat)
 {
 	GLint texLoc = -1;
 	GLint lutLoc = -1;
@@ -1254,56 +1263,56 @@ void GR_SetTexture(TextureID texture, TexFormat texFormat)
 	switch (texFormat)
 	{
 	case TF_4_BIT:
-		GR_SetShader(g_gte_shader_4.shader);
-		u_bilinearFilterLoc = g_gte_shader_4.bilinearFilterLoc;
-		u_projectionLoc = g_gte_shader_4.projectionLoc;
-		u_projection3DLoc = g_gte_shader_4.projection3DLoc;
-		texLoc = g_gte_shader_4.texLoc;
-		lutLoc = g_gte_shader_4.lutLoc;
+		NativeRendererBackend_SetShader(s_gteShader4.shader);
+		u_bilinearFilterLoc = s_gteShader4.bilinearFilterLoc;
+		u_projectionLoc = s_gteShader4.projectionLoc;
+		u_projection3DLoc = s_gteShader4.projection3DLoc;
+		texLoc = s_gteShader4.texLoc;
+		lutLoc = s_gteShader4.lutLoc;
 		u_texelSizeLoc = -1;
-		u_psxSemiTransPassLoc = g_gte_shader_4.psxSemiTransPassLoc;
-		u_psxDrawMaskSetLoc = g_gte_shader_4.psxDrawMaskSetLoc;
+		u_psxSemiTransPassLoc = s_gteShader4.psxSemiTransPassLoc;
+		u_psxDrawMaskSetLoc = s_gteShader4.psxDrawMaskSetLoc;
 		break;
 	case TF_8_BIT:
-		GR_SetShader(g_gte_shader_8.shader);
-		u_bilinearFilterLoc = g_gte_shader_8.bilinearFilterLoc;
-		u_projectionLoc = g_gte_shader_8.projectionLoc;
-		u_projection3DLoc = g_gte_shader_8.projection3DLoc;
-		texLoc = g_gte_shader_8.texLoc;
-		lutLoc = g_gte_shader_8.lutLoc;
+		NativeRendererBackend_SetShader(s_gteShader8.shader);
+		u_bilinearFilterLoc = s_gteShader8.bilinearFilterLoc;
+		u_projectionLoc = s_gteShader8.projectionLoc;
+		u_projection3DLoc = s_gteShader8.projection3DLoc;
+		texLoc = s_gteShader8.texLoc;
+		lutLoc = s_gteShader8.lutLoc;
 		u_texelSizeLoc = -1;
-		u_psxSemiTransPassLoc = g_gte_shader_8.psxSemiTransPassLoc;
-		u_psxDrawMaskSetLoc = g_gte_shader_8.psxDrawMaskSetLoc;
+		u_psxSemiTransPassLoc = s_gteShader8.psxSemiTransPassLoc;
+		u_psxDrawMaskSetLoc = s_gteShader8.psxDrawMaskSetLoc;
 		break;
 	case TF_16_BIT:
-		GR_SetShader(g_gte_shader_16.shader);
-		u_bilinearFilterLoc = g_gte_shader_16.bilinearFilterLoc;
-		u_projectionLoc = g_gte_shader_16.projectionLoc;
-		u_projection3DLoc = g_gte_shader_16.projection3DLoc;
-		texLoc = g_gte_shader_16.texLoc;
-		lutLoc = g_gte_shader_16.lutLoc;
+		NativeRendererBackend_SetShader(s_gteShader16.shader);
+		u_bilinearFilterLoc = s_gteShader16.bilinearFilterLoc;
+		u_projectionLoc = s_gteShader16.projectionLoc;
+		u_projection3DLoc = s_gteShader16.projection3DLoc;
+		texLoc = s_gteShader16.texLoc;
+		lutLoc = s_gteShader16.lutLoc;
 		u_texelSizeLoc = -1;
-		u_psxSemiTransPassLoc = g_gte_shader_16.psxSemiTransPassLoc;
-		u_psxDrawMaskSetLoc = g_gte_shader_16.psxDrawMaskSetLoc;
+		u_psxSemiTransPassLoc = s_gteShader16.psxSemiTransPassLoc;
+		u_psxDrawMaskSetLoc = s_gteShader16.psxDrawMaskSetLoc;
 		break;
 	case TF_32_BIT_RGBA:
-		GR_SetShader(g_gte_shader_32_rgba.shader);
-		u_bilinearFilterLoc = g_gte_shader_32_rgba.bilinearFilterLoc;
-		u_projectionLoc = g_gte_shader_32_rgba.projectionLoc;
-		u_projection3DLoc = g_gte_shader_32_rgba.projection3DLoc;
-		texLoc = g_gte_shader_32_rgba.texLoc;
-		lutLoc = g_gte_shader_32_rgba.lutLoc;
-		u_texelSizeLoc = g_gte_shader_32_rgba.texelSizeLoc;
-		u_psxSemiTransPassLoc = g_gte_shader_32_rgba.psxSemiTransPassLoc;
-		u_psxDrawMaskSetLoc = g_gte_shader_32_rgba.psxDrawMaskSetLoc;
+		NativeRendererBackend_SetShader(s_gteShader32Rgba.shader);
+		u_bilinearFilterLoc = s_gteShader32Rgba.bilinearFilterLoc;
+		u_projectionLoc = s_gteShader32Rgba.projectionLoc;
+		u_projection3DLoc = s_gteShader32Rgba.projection3DLoc;
+		texLoc = s_gteShader32Rgba.texLoc;
+		lutLoc = s_gteShader32Rgba.lutLoc;
+		u_texelSizeLoc = s_gteShader32Rgba.texelSizeLoc;
+		u_psxSemiTransPassLoc = s_gteShader32Rgba.psxSemiTransPassLoc;
+		u_psxDrawMaskSetLoc = s_gteShader32Rgba.psxDrawMaskSetLoc;
 		break;
 	}
 
 	if (g_dbg_texturelessMode) {
-		texture = g_whiteTexture;
+		texture = s_whiteTexture;
 	}
 
-	if (g_lastBoundTexture == texture) {
+	if (s_lastBoundTexture == texture) {
 		return;
 	}
 
@@ -1317,19 +1326,19 @@ void GR_SetTexture(TextureID texture, TexFormat texFormat)
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, g_rgLutTexture);
+	glBindTexture(GL_TEXTURE_2D, s_rgLutTexture);
 
 	glActiveTexture(GL_TEXTURE0);
 
 	if (u_bilinearFilterLoc >= 0)
 		glUniform1i(u_bilinearFilterLoc, g_cfg_bilinearFiltering);
-	GR_SetPSXTextureSemiTransPass(0);
+	NativeRendererBackend_SetPSXTextureSemiTransPass(0);
 #endif
 
-	g_lastBoundTexture = texture;
+	s_lastBoundTexture = texture;
 }
 
-void GR_SetOverrideTextureSize(int width, int height)
+void NativeRendererBackend_SetOverrideTextureSize(int width, int height)
 {
 	if (u_texelSizeLoc == -1)
 		return;
@@ -1338,7 +1347,7 @@ void GR_SetOverrideTextureSize(int width, int height)
 	glUniform2fv(u_texelSizeLoc, 1, vec);
 }
 
-void GR_SetPSXTextureSemiTransPass(int pass)
+void NativeRendererBackend_SetPSXTextureSemiTransPass(int pass)
 {
 #if USE_OPENGL
 	if (u_psxSemiTransPassLoc >= 0)
@@ -1346,7 +1355,7 @@ void GR_SetPSXTextureSemiTransPass(int pass)
 #endif
 }
 
-void GR_SetPSXDrawMaskSet(int maskSet)
+void NativeRendererBackend_SetPSXDrawMaskSet(int maskSet)
 {
 #if USE_OPENGL
 	if (u_psxDrawMaskSetLoc >= 0)
@@ -1354,7 +1363,7 @@ void GR_SetPSXDrawMaskSet(int maskSet)
 #endif
 }
 
-void GR_DestroyTexture(TextureID texture)
+void NativeRendererBackend_DestroyTexture(TextureID texture)
 {
 	if (texture == -1)
 		return;
@@ -1366,9 +1375,9 @@ void GR_DestroyTexture(TextureID texture)
 #endif
 }
 
-void GR_ClearVRAM(int x, int y, int w, int h, unsigned char r, unsigned char g, unsigned char b)
+void NativeRendererBackend_ClearVRAM(int x, int y, int w, int h, unsigned char r, unsigned char g, unsigned char b)
 {
-	vram_need_update = 1;
+	s_vramNeedsUpdate = 1;
 
 	u_short* dst = vram + x + y * VRAM_WIDTH;
 
@@ -1390,9 +1399,9 @@ void GR_ClearVRAM(int x, int y, int w, int h, unsigned char r, unsigned char g, 
 	}
 }
 
-void GR_Clear(int x, int y, int w, int h, unsigned char r, unsigned char g, unsigned char b)
+void NativeRendererBackend_Clear(int x, int y, int w, int h, unsigned char r, unsigned char g, unsigned char b)
 {
-	framebuffer_need_update = 1;
+	s_framebufferNeedsUpdate = 1;
 
 #if USE_OPENGL
 	glClearColor(r / 255.0f, g / 255.0f, b / 255.0f, 0.0f);
@@ -1404,7 +1413,7 @@ void GR_Clear(int x, int y, int w, int h, unsigned char r, unsigned char g, unsi
 #endif
 }
 
-void GR_SaveVRAM(const char* outputFileName, int x, int y, int width, int height, int bReadFromFrameBuffer)
+void NativeRendererBackend_SaveVRAM(const char* outputFileName, int x, int y, int width, int height, int bReadFromFrameBuffer)
 {
 #if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__)
 
@@ -1441,7 +1450,7 @@ void GR_SaveVRAM(const char* outputFileName, int x, int y, int width, int height
 #endif
 }
 
-void GR_CopyRGBAFramebufferToVRAM(u_int* src, int x, int y, int w, int h, int update_vram, int flip_y)
+void NativeRendererBackend_CopyRGBAFramebufferToVRAM(u_int* src, int x, int y, int w, int h, int update_vram, int flip_y)
 {
 	assert(x >= 0);
 	assert(y >= 0);
@@ -1484,62 +1493,62 @@ void GR_CopyRGBAFramebufferToVRAM(u_int* src, int x, int y, int w, int h, int up
 	free(fb);
 
 	if (update_vram)
-		vram_need_update = 1;
+		s_vramNeedsUpdate = 1;
 }
 
-void GR_ReadFramebufferDataToVRAM()
+void NativeRendererBackend_ReadFramebufferDataToVRAM()
 {
 	int x, y, w, h;
-	if (!framebuffer_need_update)
+	if (!s_framebufferNeedsUpdate)
 		return;
 
-	framebuffer_need_update = 0;
+	s_framebufferNeedsUpdate = 0;
 
-	x = g_PreviousFramebuffer.x;
-	y = g_PreviousFramebuffer.y;
-	w = g_PreviousFramebuffer.w;
-	h = g_PreviousFramebuffer.h;
+	x = s_previousFramebuffer.x;
+	y = s_previousFramebuffer.y;
+	w = s_previousFramebuffer.w;
+	h = s_previousFramebuffer.h;
 
 	// now we can read it back to VRAM texture
 
 #if USE_OPENGL && defined(USE_PBO)
 	// read the texture
-	if(g_glFramebufferPBO.pixels)
+	if(s_glFramebufferPBO.pixels)
 	{
-		glBindTexture(GL_TEXTURE_2D, g_fbTexture);
-		PBO_Download(&g_glFramebufferPBO);
+		glBindTexture(GL_TEXTURE_2D, s_framebufferTexture);
+		PBO_Download(&s_glFramebufferPBO);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		// NOTE(aalhendi): screen-copy effects sample g_vramTexture as packed
+		// NOTE(aalhendi): screen-copy effects sample the active VRAM texture as packed
 		// PS1 VRAM. The fast framebuffer blit writes host RGBA into that
 		// texture, so force the next frame to upload the packed readback.
-		GR_CopyRGBAFramebufferToVRAM((u_int*)g_glFramebufferPBO.pixels, x, y, w, h, 1, 0);
+		NativeRendererBackend_CopyRGBAFramebufferToVRAM((u_int*)s_glFramebufferPBO.pixels, x, y, w, h, 1, 0);
 	}
 #endif
 }
 
-void GR_SetScissorState(int enable)
+void NativeRendererBackend_SetScissorState(int enable)
 {
-	if (g_PreviousScissorState == enable)
+	if (s_previousScissorState == enable)
 		return;
 
 #if USE_OPENGL
-	if (g_PreviousScissorState)
+	if (s_previousScissorState)
 		glDisable(GL_SCISSOR_TEST);
 	else
 		glEnable(GL_SCISSOR_TEST);
 #endif
-	g_PreviousScissorState = enable;
+	s_previousScissorState = enable;
 }
 
-void GR_SetOffscreenState(const RECT16* offscreenRect, int enable)
+void NativeRendererBackend_SetOffscreenState(const RECT16* offscreenRect, int enable)
 {
 	if (enable)
 	{
 		// setup render target viewport
 #if USE_PGXP
-		GR_Ortho2D(-0.5f, 0.5f, 0.5f, -0.5f, -1.0f, 1.0f);
+		NativeRendererBackend_Ortho2D(-0.5f, 0.5f, 0.5f, -0.5f, -1.0f, 1.0f);
 #else
-		GR_Ortho2D(0, offscreenRect->w, offscreenRect->h, 0, -1.0f, 1.0f);
+		NativeRendererBackend_Ortho2D(0, offscreenRect->w, offscreenRect->h, 0, -1.0f, 1.0f);
 #endif
 	}
 	else
@@ -1554,34 +1563,34 @@ void GR_SetOffscreenState(const RECT16* offscreenRect, int enable)
 
 		const float emuScreenAspect = (float)(g_windowWidth) / (float)(g_windowHeight);
 
-		GR_Ortho2D(-0.5f * emuScreenAspect * PSX_SCREEN_ASPECT, 0.5f * emuScreenAspect * PSX_SCREEN_ASPECT, 0.5f, -0.5f, -1.0f, 1.0f);
-		GR_Perspective3D(perspectiveFOV, 1.0f, 1.0f / (emuScreenAspect * PSX_SCREEN_ASPECT), perspectiveZNear, perspectiveZFar);
+		NativeRendererBackend_Ortho2D(-0.5f * emuScreenAspect * PSX_SCREEN_ASPECT, 0.5f * emuScreenAspect * PSX_SCREEN_ASPECT, 0.5f, -0.5f, -1.0f, 1.0f);
+		NativeRendererBackend_Perspective3D(perspectiveFOV, 1.0f, 1.0f / (emuScreenAspect * PSX_SCREEN_ASPECT), perspectiveZNear, perspectiveZFar);
 #else
-		GR_Ortho2D(0, activeDispEnv.disp.w, activeDispEnv.disp.h, 0, -1.0f, 1.0f);
+		NativeRendererBackend_Ortho2D(0, activeDispEnv.disp.w, activeDispEnv.disp.h, 0, -1.0f, 1.0f);
 #endif
 	}
 
-	if (g_PreviousOffscreenState == enable)
+	if (s_previousOffscreenState == enable)
 		return;
 
-	g_PreviousOffscreenState = enable;
+	s_previousOffscreenState = enable;
 
 #if USE_OPENGL
 	if (enable)
 	{
 		// set storage size first
-		if (g_PreviousOffscreen.w != offscreenRect->w &&
-			g_PreviousOffscreen.h != offscreenRect->h)
+		if (s_previousOffscreen.w != offscreenRect->w &&
+			s_previousOffscreen.h != offscreenRect->h)
 		{
-			glBindTexture(GL_TEXTURE_2D, g_offscreenRTTexture);
+			glBindTexture(GL_TEXTURE_2D, s_offscreenRenderTexture);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, offscreenRect->w, offscreenRect->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
-		g_PreviousOffscreen = *offscreenRect;
+		s_previousOffscreen = *offscreenRect;
 
-		GR_SetViewPort(0, 0, offscreenRect->w, offscreenRect->h);
-		glBindFramebuffer(GL_FRAMEBUFFER, g_glOffscreenFramebuffer);
+		NativeRendererBackend_SetViewPort(0, 0, offscreenRect->w, offscreenRect->h);
+		glBindFramebuffer(GL_FRAMEBUFFER, s_glOffscreenFramebuffer);
 
 		// clear it out
 		glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
@@ -1589,22 +1598,22 @@ void GR_SetOffscreenState(const RECT16* offscreenRect, int enable)
 	}
 	else
 	{
-		GR_SetViewPort(0, 0, g_windowWidth, g_windowHeight);
+		NativeRendererBackend_SetViewPort(0, 0, g_windowWidth, g_windowHeight);
 
 #if USE_OFFSCREEN_BLIT
 		// before drawing set source and target
 		{
-			glBindFramebuffer(GL_FRAMEBUFFER, g_glVRAMFramebuffer);
+			glBindFramebuffer(GL_FRAMEBUFFER, s_glVramFramebuffer);
 
 			// rebind texture
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, g_vramTexture, 0);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, s_vramTexture, 0);
 
 			// setup draw and read framebuffers
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, g_glOffscreenFramebuffer);					// source is backbuffer
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, g_glVRAMFramebuffer);
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, s_glOffscreenFramebuffer);					// source is backbuffer
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, s_glVramFramebuffer);
 
-			glBlitFramebuffer(0, 0, g_PreviousOffscreen.w, g_PreviousOffscreen.h, 
-								g_PreviousOffscreen.x, g_PreviousOffscreen.y + g_PreviousOffscreen.h, g_PreviousOffscreen.x + g_PreviousOffscreen.w, g_PreviousOffscreen.y,
+			glBlitFramebuffer(0, 0, s_previousOffscreen.w, s_previousOffscreen.h,
+								s_previousOffscreen.x, s_previousOffscreen.y + s_previousOffscreen.h, s_previousOffscreen.x + s_previousOffscreen.w, s_previousOffscreen.y,
 								GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 			// done, unbind
@@ -1612,19 +1621,19 @@ void GR_SetOffscreenState(const RECT16* offscreenRect, int enable)
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 		}
 #endif
-		
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		// copy rendering results to VRAM texture
 		{
-			// reat the texture
-			glBindTexture(GL_TEXTURE_2D, g_offscreenRTTexture);
+			// read the texture
+			glBindTexture(GL_TEXTURE_2D, s_offscreenRenderTexture);
 			//glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-			PBO_Download(&g_glOffscreenPBO);
-			glBindTexture(GL_TEXTURE_2D, g_lastBoundTexture);
+			PBO_Download(&s_glOffscreenPBO);
+			glBindTexture(GL_TEXTURE_2D, s_lastBoundTexture);
 
-			// Don't forcely update VRAM
-			GR_CopyRGBAFramebufferToVRAM((u_int*)g_glOffscreenPBO.pixels, 
-				g_PreviousOffscreen.x, g_PreviousOffscreen.y, g_PreviousOffscreen.w, g_PreviousOffscreen.h, 
+			// Do not force a VRAM texture upload unless the blit path is off.
+			NativeRendererBackend_CopyRGBAFramebufferToVRAM((u_int*)s_glOffscreenPBO.pixels,
+				s_previousOffscreen.x, s_previousOffscreen.y, s_previousOffscreen.w, s_previousOffscreen.h,
 				USE_OFFSCREEN_BLIT == 0, 1);
 		}
 
@@ -1632,51 +1641,51 @@ void GR_SetOffscreenState(const RECT16* offscreenRect, int enable)
 #endif
 }
 
-void GR_StoreFrameBuffer(int x, int y, int w, int h)
+void NativeRendererBackend_StoreFrameBuffer(int x, int y, int w, int h)
 {
 #if USE_OPENGL
 	// set storage size first
-	if (g_PreviousFramebuffer.w != w ||
-		g_PreviousFramebuffer.h != h)
+	if (s_previousFramebuffer.w != w ||
+		s_previousFramebuffer.h != h)
 	{
-		glBindTexture(GL_TEXTURE_2D, g_fbTexture);
+		glBindTexture(GL_TEXTURE_2D, s_framebufferTexture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	g_PreviousFramebuffer.x = x;
-	g_PreviousFramebuffer.y = y;
-	g_PreviousFramebuffer.w = w;
-	g_PreviousFramebuffer.h = h;
+	s_previousFramebuffer.x = x;
+	s_previousFramebuffer.y = y;
+	s_previousFramebuffer.w = w;
+	s_previousFramebuffer.h = h;
 
 #if USE_FRAMEBUFFER_BLIT
-	glBindFramebuffer(GL_FRAMEBUFFER, g_glBlitFramebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, s_glBlitFramebuffer);
 
 	// before drawing set source and target
 	{
 		// setup draw and read framebuffers
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);					// source is backbuffer
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, g_glBlitFramebuffer);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, s_glBlitFramebuffer);
 
 		glBlitFramebuffer(0, 0, g_windowWidth, g_windowHeight, x, y + h, x + w, y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 		// Blit framebuffer to VRAM screen area
 
 		// before drawing set source and target
-		glBindFramebuffer(GL_FRAMEBUFFER, g_glVRAMFramebuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, s_glVramFramebuffer);
 
 		// rebind vram texture
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, g_vramTexture, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, s_vramTexture, 0);
 
 		// setup draw and read framebuffers
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, g_glBlitFramebuffer);					// source is backbuffer
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, g_glVRAMFramebuffer);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, s_glBlitFramebuffer);					// source is backbuffer
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, s_glVramFramebuffer);
 
 		glBlitFramebuffer(0, 0, w, h,
 			x, y + h, x + w, y,
 			GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-		
+
 		// done, unbind
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -1687,19 +1696,19 @@ void GR_StoreFrameBuffer(int x, int y, int w, int h)
 	glFlush();
 #endif
 
-	GR_ReadFramebufferDataToVRAM();
+	NativeRendererBackend_ReadFramebufferDataToVRAM();
 #endif
 }
 
-void GR_CopyVRAM(unsigned short* src, int x, int y, int w, int h, int dst_x, int dst_y)
+void NativeRendererBackend_CopyVRAM(unsigned short* src, int x, int y, int w, int h, int dst_x, int dst_y)
 {
-	vram_need_update = 1;
+	s_vramNeedsUpdate = 1;
 
 	int stride = w;
 
 	if (!src)
 	{
-		framebuffer_need_update = 1;
+		s_framebufferNeedsUpdate = 1;
 
 		src = vram;
 		stride = VRAM_WIDTH;
@@ -1716,7 +1725,7 @@ void GR_CopyVRAM(unsigned short* src, int x, int y, int w, int h, int dst_x, int
 	}
 }
 
-void GR_ReadVRAM(unsigned short* dst, int x, int y, int dst_w, int dst_h)
+void NativeRendererBackend_ReadVRAM(unsigned short* dst, int x, int y, int dst_w, int dst_h)
 {
 	unsigned short* src = vram + x + VRAM_WIDTH * y;
 
@@ -1727,19 +1736,19 @@ void GR_ReadVRAM(unsigned short* dst, int x, int y, int dst_w, int dst_h)
 	}
 }
 
-void GR_UpdateVRAM()
+void NativeRendererBackend_UpdateVRAM()
 {
-	if (!vram_need_update)
+	if (!s_vramNeedsUpdate)
 		return;
 
-	vram_need_update = 0;
+	s_vramNeedsUpdate = 0;
 
 #if USE_OPENGL
-	g_vramTexture = g_vramTexturesDouble[g_vramTextureIdx];
-	g_vramTextureIdx++;
-	g_vramTextureIdx &= 1;
+	s_vramTexture = s_vramTexturesDouble[s_vramTextureIndex];
+	s_vramTextureIndex++;
+	s_vramTextureIndex &= 1;
 
-	glBindTexture(GL_TEXTURE_2D, g_vramTexture);
+	glBindTexture(GL_TEXTURE_2D, s_vramTexture);
 
 #if defined(RENDERER_OGL)
 	glTexImage2D(GL_TEXTURE_2D, 0, VRAM_INTERNAL_FORMAT, VRAM_WIDTH, VRAM_HEIGHT, 0, VRAM_FORMAT, GL_UNSIGNED_BYTE, vram);
@@ -1750,13 +1759,13 @@ void GR_UpdateVRAM()
 #endif
 }
 
-static u_char GR_Expand5To8(u_short value)
+static u_char NativeRendererBackend_Expand5To8(u_short value)
 {
 	value &= 0x1f;
 	return (u_char)((value << 3) | (value >> 2));
 }
 
-static void GR_BuildDisplayChunkRGBA(u_char* dst, int srcX, int srcY, int w, int h)
+static void NativeRendererBackend_BuildDisplayChunkRGBA(u_char* dst, int srcX, int srcY, int w, int h)
 {
 	for (int y = 0; y < h; y++)
 	{
@@ -1766,15 +1775,15 @@ static void GR_BuildDisplayChunkRGBA(u_char* dst, int srcX, int srcY, int w, int
 		{
 			u_short pixel = src[x];
 
-			*dst++ = GR_Expand5To8(pixel);
-			*dst++ = GR_Expand5To8(pixel >> 5);
-			*dst++ = GR_Expand5To8(pixel >> 10);
+			*dst++ = NativeRendererBackend_Expand5To8(pixel);
+			*dst++ = NativeRendererBackend_Expand5To8(pixel >> 5);
+			*dst++ = NativeRendererBackend_Expand5To8(pixel >> 10);
 			*dst++ = 0xff;
 		}
 	}
 }
 
-static void GR_FillDisplayChunkVerts(GrVertex* verts, int dstX, int dstY, int w, int h)
+static void NativeRendererBackend_FillDisplayChunkVerts(GrVertex* verts, int dstX, int dstY, int w, int h)
 {
 	const int maxU = w > 0 ? w - 1 : 0;
 	const int maxV = h > 0 ? h - 1 : 0;
@@ -1814,7 +1823,7 @@ static void GR_FillDisplayChunkVerts(GrVertex* verts, int dstX, int dstY, int w,
 	}
 }
 
-void GR_PresentVRAMDisplay()
+void NativeRendererBackend_PresentVRAMDisplay()
 {
 	// NOTE(aalhendi): ctr-native local divergence. Retail presents this boot
 	// splash path by displaying VRAM directly after DR_MOVE packets; the native
@@ -1842,17 +1851,17 @@ void GR_PresentVRAMDisplay()
 		return;
 
 	if (displayTexture == (TextureID)-1)
-		displayTexture = GR_CreateRGBATexture(maxChunkW, maxChunkH, NULL);
+		displayTexture = NativeRendererBackend_CreateRGBATexture(maxChunkW, maxChunkH, NULL);
 
-	GR_SetViewPort(0, 0, g_windowWidth, g_windowHeight);
+	NativeRendererBackend_SetViewPort(0, 0, g_windowWidth, g_windowHeight);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	GR_SetScissorState(0);
-	GR_EnableDepth(0);
-	GR_SetBlendMode(BM_NONE);
-	GR_SetTexture(displayTexture, TF_32_BIT_RGBA);
-	GR_SetPSXDrawMaskSet(0);
-	GR_Ortho2D(0, displayW, displayH, 0, -1.0f, 1.0f);
+	NativeRendererBackend_SetScissorState(0);
+	NativeRendererBackend_EnableDepth(0);
+	NativeRendererBackend_SetBlendMode(BM_NONE);
+	NativeRendererBackend_SetTexture(displayTexture, TF_32_BIT_RGBA);
+	NativeRendererBackend_SetPSXDrawMaskSet(0);
+	NativeRendererBackend_Ortho2D(0, displayW, displayH, 0, -1.0f, 1.0f);
 
 	for (int y = 0; y < displayH; y += maxChunkH)
 	{
@@ -1863,21 +1872,21 @@ void GR_PresentVRAMDisplay()
 			GrVertex verts[6];
 			const int chunkW = (displayW - x) > maxChunkW ? maxChunkW : displayW - x;
 
-			GR_BuildDisplayChunkRGBA(rgba, displayX + x, displayY + y, chunkW, chunkH);
+			NativeRendererBackend_BuildDisplayChunkRGBA(rgba, displayX + x, displayY + y, chunkW, chunkH);
 
 			glBindTexture(GL_TEXTURE_2D, displayTexture);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, chunkW, chunkH, GL_RGBA, GL_UNSIGNED_BYTE, rgba);
 
-			GR_SetOverrideTextureSize(maxChunkW, maxChunkH);
-			GR_FillDisplayChunkVerts(verts, x, y, chunkW, chunkH);
-			GR_UpdateVertexBuffer(verts, 6);
-			GR_DrawTriangles(0, 2);
+			NativeRendererBackend_SetOverrideTextureSize(maxChunkW, maxChunkH);
+			NativeRendererBackend_FillDisplayChunkVerts(verts, x, y, chunkW, chunkH);
+			NativeRendererBackend_UpdateVertexBuffer(verts, 6);
+			NativeRendererBackend_DrawTriangles(0, 2);
 		}
 	}
 #endif
 }
 
-void GR_SwapWindow()
+void NativeRendererBackend_SwapWindow()
 {
 #if defined(RENDERER_OGL) || defined(RENDERER_OGLES)
 	SDL_GL_SwapWindow(g_window);
@@ -1886,12 +1895,12 @@ void GR_SwapWindow()
 	//glFinish();
 }
 
-void GR_EnableDepth(int enable)
+void NativeRendererBackend_EnableDepth(int enable)
 {
-	if (g_PreviousDepthMode == enable)
+	if (s_previousDepthMode == enable)
 		return;
 
-	g_PreviousDepthMode = enable;
+	s_previousDepthMode = enable;
 
 #if USE_OPENGL
 #if USE_PGXP
@@ -1903,12 +1912,12 @@ void GR_EnableDepth(int enable)
 #endif
 }
 
-void GR_SetStencilMode(int drawPrim)
+void NativeRendererBackend_SetStencilMode(int drawPrim)
 {
-	if (g_PreviousStencilMode == drawPrim)
+	if (s_previousStencilMode == drawPrim)
 		return;
 
-	g_PreviousStencilMode = drawPrim;
+	s_previousStencilMode = drawPrim;
 
 #if USE_OPENGL
 	if (drawPrim)
@@ -1924,34 +1933,34 @@ void GR_SetStencilMode(int drawPrim)
 #endif
 }
 
-void GR_SetBlendMode(BlendMode blendMode)
+void NativeRendererBackend_SetBlendMode(BlendMode blendMode)
 {
-	if (g_PreviousBlendMode == blendMode)
+	if (s_previousBlendMode == blendMode)
 		return;
 
 #if USE_OPENGL
 	if (blendMode == BM_NONE)
 	{
-		if (g_PreviousBlendMode != BM_NONE)
+		if (s_previousBlendMode != BM_NONE)
 		{
 			glBlendColor(1.f, 1.f, 1.f, 1.f);
 			glDisable(GL_BLEND);
 		}
 
-		g_PreviousBlendMode = blendMode;
-		GR_EnableDepth(1);
+		s_previousBlendMode = blendMode;
+		NativeRendererBackend_EnableDepth(1);
 		return;
 	}
 	else
 	{
-		if(g_PreviousBlendMode == BM_NONE)
+		if(s_previousBlendMode == BM_NONE)
 		{
 			glBlendColor(0.25f, 0.25f, 0.25f, 0.5f);
 			glEnable(GL_BLEND);
 		}
 
-		g_PreviousBlendMode = blendMode;
-		GR_EnableDepth(0);
+		s_previousBlendMode = blendMode;
+		NativeRendererBackend_EnableDepth(0);
 	}
 
 	glBlendEquationSeparate(blendMode == BM_SUBTRACT ? GL_FUNC_REVERSE_SUBTRACT : GL_FUNC_ADD, GL_FUNC_ADD);
@@ -1970,10 +1979,10 @@ void GR_SetBlendMode(BlendMode blendMode)
 	}
 #endif
 
-	g_PreviousBlendMode = blendMode;
+	s_previousBlendMode = blendMode;
 }
 
-void GR_SetPolygonOffset(float ofs)
+void NativeRendererBackend_SetPolygonOffset(float ofs)
 {
 #if USE_OPENGL
 	if (ofs == 0.0f)
@@ -1988,24 +1997,24 @@ void GR_SetPolygonOffset(float ofs)
 #endif
 }
 
-void GR_SetViewPort(int x, int y, int width, int height)
+void NativeRendererBackend_SetViewPort(int x, int y, int width, int height)
 {
 #if USE_OPENGL
 	glViewport(x, y, width, height);
 #endif
 }
 
-void GR_SetWireframe(int enable)
+void NativeRendererBackend_SetWireframe(int enable)
 {
 #if defined(RENDERER_OGL)
 	glPolygonMode(GL_FRONT_AND_BACK, enable ? GL_LINE : GL_FILL);
 #endif
 }
 
-void GR_BindVertexBuffer()
+void NativeRendererBackend_BindVertexBuffer()
 {
 #if USE_OPENGL
-	glBindVertexArray(g_glVertexArray[g_curVertexBuffer]);
+	glBindVertexArray(s_glVertexArray[s_curVertexBuffer]);
 
 	glEnableVertexAttribArray(a_position);
 	glEnableVertexAttribArray(a_texcoord);
@@ -2024,14 +2033,14 @@ void GR_BindVertexBuffer()
 	glVertexAttribPointer(a_color, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(GrVertex), &((GrVertex*)NULL)->r);
 	glVertexAttribPointer(a_extra, 4, GL_BYTE, GL_FALSE, sizeof(GrVertex), &((GrVertex*)NULL)->tcx);
 
-	g_curVertexBuffer++;
-	g_curVertexBuffer &= 1;
+	s_curVertexBuffer++;
+	s_curVertexBuffer &= 1;
 #else
 #error
 #endif
 }
 
-void GR_UpdateVertexBuffer(const GrVertex* vertices, int num_vertices)
+void NativeRendererBackend_UpdateVertexBuffer(const GrVertex* vertices, int num_vertices)
 {
 	if (num_vertices >= MAX_VERTEX_BUFFER_SIZE)
 	{
@@ -2040,7 +2049,7 @@ void GR_UpdateVertexBuffer(const GrVertex* vertices, int num_vertices)
 	}
 
 	//assert(num_vertices <= MAX_VERTEX_BUFFER_SIZE);
-	GR_BindVertexBuffer();
+	NativeRendererBackend_BindVertexBuffer();
 
 #if USE_OPENGL
 	glBufferSubData(GL_ARRAY_BUFFER, 0, num_vertices * sizeof(GrVertex), vertices);
@@ -2049,7 +2058,7 @@ void GR_UpdateVertexBuffer(const GrVertex* vertices, int num_vertices)
 #endif
 }
 
-void GR_DrawTriangles(int start_vertex, int triangles)
+void NativeRendererBackend_DrawTriangles(int start_vertex, int triangles)
 {
 #if USE_OPENGL
 	glDrawArrays(GL_TRIANGLES, start_vertex, triangles * 3);
@@ -2058,7 +2067,7 @@ void GR_DrawTriangles(int start_vertex, int triangles)
 #endif
 }
 
-void GR_PushDebugLabel(const char* label)
+void NativeRendererBackend_PushDebugLabel(const char* label)
 {
 #if USE_OPENGL
 	if (!GLAD_GL_KHR_debug)
@@ -2067,7 +2076,7 @@ void GR_PushDebugLabel(const char* label)
 #endif
 }
 
-void GR_PopDebugLabel()
+void NativeRendererBackend_PopDebugLabel()
 {
 #if USE_OPENGL
 	if (!GLAD_GL_KHR_debug)

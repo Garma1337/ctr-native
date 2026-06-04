@@ -1,43 +1,49 @@
-#include "PsyX_main.h"
+/*
+ * Derived from REDRIVER2/PsyCross MIT source:
+ * externals/PsyCross/src/PsyX_main.cpp
+ * See THIRD_PARTY_NOTICES.md for copyright and license details.
+ */
 
-#include "PsyX/PsyX_version.h"
 #include "PsyX/PsyX_globals.h"
+#include "platform/native_renderer_types.h"
 #include "PsyX/PsyX_public.h"
+#include "PsyX/PsyX_version.h"
+#include "platform/native_psyx_shell.h"
+#include "platform/native_gpu.h"
+#include "platform/native_glad.h"
+#include "platform/native_renderer.h"
+#include "../externals/PsyCross/src/platform.h"
 
-#include "gpu/PsyX_GPU.h"
+#include <psx/libetc.h>
+#include <psx/libgte.h>
+#include <psx/libgpu.h>
 
-#include "platform.h"
-#include "util/crash_handler.h"
-
-#include "psx/libetc.h"
-#include "psx/libgte.h"
-#include "psx/libgpu.h"
-#include "psx/libspu.h"
-
+#include <SDL.h>
 #include <assert.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#include <stdio.h>
-#include <SDL.h>
-
-#include "PsyX/PsyX_render.h"
-
 #ifdef _WIN32
-#include <windows.h>
 #include <pla.h>
-#endif // _WIN32
+#include <windows.h>
+#endif
 
-SDL_Window* g_window = NULL;
+// NOTE(aalhendi): Native PsyX shell preserves the existing PsyX host behavior
+// while keeping window/log/frame-entry ownership outside the GL backend.
+
+SDL_Window *g_window = NULL;
 int g_swapInterval = 1;
 int g_enableSwapInterval = 1;
 int g_skipSwapInterval = 0;
 
-int							g_cfg_swapInterval = 0;
-GameOnTextInputHandler		g_cfg_gameOnTextInput = NULL;
+int g_cfg_swapInterval = 0;
+GameOnTextInputHandler g_cfg_gameOnTextInput = NULL;
 
-GameDebugKeysHandlerFunc	g_dbg_gameDebugKeys = NULL;
-GameDebugMouseHandlerFunc	g_dbg_gameDebugMouse = NULL;
-int							g_dbg_polygonSelected = 0;
+GameDebugKeysHandlerFunc g_dbg_gameDebugKeys = NULL;
+GameDebugMouseHandlerFunc g_dbg_gameDebugMouse = NULL;
+int g_dbg_polygonSelected = 0;
 
 enum EPsxCounters
 {
@@ -47,15 +53,6 @@ enum EPsxCounters
 };
 
 volatile int g_psxSysCounters[PsxCounter_Num];
-
-extern int	GR_InitialisePSX();
-extern int	GR_InitialiseRender(char* windowName, int width, int height, int fullscreen);
-
-extern void GR_ResetDevice();
-extern void GR_Shutdown();
-extern void GR_BeginScene();
-extern void GR_EndScene();
-extern void GR_UpdateSwapIntervalState(int swapInterval);
 
 int g_vmode = -1;
 int g_frameSkip = 0;
@@ -72,12 +69,10 @@ int PsyX_Sys_GetVBlankCount()
 {
 	if (g_skipSwapInterval)
 	{
-		// extra speedup.
-		// does not emit VBlank callbacks.
 		g_psxSysCounters[PsxCounter_VBLANK] += 1;
 		g_frameSkip++;
 	}
-	
+
 	return g_psxSysCounters[PsxCounter_VBLANK];
 }
 
@@ -86,9 +81,9 @@ static int PsyX_Sys_InitialiseCore()
 	return 1;
 }
 
-char* g_appNameStr = NULL;
+char *g_appNameStr = NULL;
 
-void PsyX_GetWindowName(char* buffer)
+void PsyX_GetWindowName(char *buffer)
 {
 #ifdef _DEBUG
 	sprintf(buffer, "%s | Debug", g_appNameStr);
@@ -97,9 +92,8 @@ void PsyX_GetWindowName(char* buffer)
 #endif
 }
 
-FILE* g_logStream = NULL;
+FILE *g_logStream = NULL;
 
-// intialise logging
 void PsyX_Log_Initialise()
 {
 	char appLogFilename[128];
@@ -127,7 +121,6 @@ void PsyX_Log_Flush()
 		fflush(g_logStream);
 }
 
-// spew types
 typedef enum
 {
 	SPEW_NORM,
@@ -135,7 +128,7 @@ typedef enum
 	SPEW_WARNING,
 	SPEW_ERROR,
 	SPEW_SUCCESS,
-}SpewType_t;
+} SpewType_t;
 
 #ifdef _WIN32
 static unsigned short g_InitialColor = 0xFFFF;
@@ -147,7 +140,6 @@ char g_bSpewCSInitted = 0;
 
 static void Spew_GetInitialColors()
 {
-	// Get the old background attributes.
 	CONSOLE_SCREEN_BUFFER_INFO oldInfo;
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &oldInfo);
 	g_InitialColor = g_LastColor = oldInfo.wAttributes & (FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
@@ -169,12 +161,15 @@ static WORD Spew_SetConsoleTextColor(int red, int green, int blue, int intensity
 	WORD ret = g_LastColor;
 
 	g_LastColor = 0;
-	if (red)	g_LastColor |= FOREGROUND_RED;
-	if (green) g_LastColor |= FOREGROUND_GREEN;
-	if (blue)  g_LastColor |= FOREGROUND_BLUE;
-	if (intensity) g_LastColor |= FOREGROUND_INTENSITY;
+	if (red)
+		g_LastColor |= FOREGROUND_RED;
+	if (green)
+		g_LastColor |= FOREGROUND_GREEN;
+	if (blue)
+		g_LastColor |= FOREGROUND_BLUE;
+	if (intensity)
+		g_LastColor |= FOREGROUND_INTENSITY;
 
-	// Just use the initial color if there's a match...
 	if (g_LastColor == g_BadColor)
 		g_LastColor = g_InitialColor;
 
@@ -188,9 +183,8 @@ static void Spew_RestoreConsoleTextColor(WORD color)
 	g_LastColor = color;
 }
 
-void Spew_ConDebugSpew(SpewType_t type, char* text)
+void Spew_ConDebugSpew(SpewType_t type, char *text)
 {
-	// Hopefully two threads won't call this simultaneously right at the start!
 	if (!g_bSpewCSInitted)
 	{
 		Spew_GetInitialColors();
@@ -235,7 +229,7 @@ void Spew_ConDebugSpew(SpewType_t type, char* text)
 }
 #endif
 
-void PrintMessageToOutput(SpewType_t spewtype, char const* pMsgFormat, va_list args)
+void PrintMessageToOutput(SpewType_t spewtype, char const *pMsgFormat, va_list args)
 {
 	static char pTempBuffer[4096];
 	int len = 0;
@@ -272,63 +266,60 @@ void PrintMessageToOutput(SpewType_t spewtype, char const* pMsgFormat, va_list a
 	printf(pTempBuffer);
 #endif
 
-	if(g_logStream)
+	if (g_logStream)
 		fprintf(g_logStream, pTempBuffer);
 }
 
-void PsyX_Log(const char* fmt, ...)
+void PsyX_Log(const char *fmt, ...)
 {
-	va_list		argptr;
+	va_list argptr;
 
 	va_start(argptr, fmt);
 	PrintMessageToOutput(SPEW_NORM, fmt, argptr);
 	va_end(argptr);
 }
 
-void PsyX_Log_Info(const char* fmt, ...)
+void PsyX_Log_Info(const char *fmt, ...)
 {
-	va_list		argptr;
+	va_list argptr;
 
 	va_start(argptr, fmt);
 	PrintMessageToOutput(SPEW_INFO, fmt, argptr);
 	va_end(argptr);
 }
 
-void PsyX_Log_Warning(const char* fmt, ...)
+void PsyX_Log_Warning(const char *fmt, ...)
 {
-	va_list		argptr;
+	va_list argptr;
 
 	va_start(argptr, fmt);
 	PrintMessageToOutput(SPEW_WARNING, fmt, argptr);
 	va_end(argptr);
 }
 
-void PsyX_Log_Error(const char* fmt, ...)
+void PsyX_Log_Error(const char *fmt, ...)
 {
-	va_list		argptr;
+	va_list argptr;
 
 	va_start(argptr, fmt);
 	PrintMessageToOutput(SPEW_ERROR, fmt, argptr);
 	va_end(argptr);
 }
 
-void PsyX_Log_Success(const char* fmt, ...)
+void PsyX_Log_Success(const char *fmt, ...)
 {
-	va_list		argptr;
+	va_list argptr;
 
 	va_start(argptr, fmt);
 	PrintMessageToOutput(SPEW_SUCCESS, fmt, argptr);
 	va_end(argptr);
 }
 
-
-void PsyX_Initialise(char* appName, int width, int height, int fullscreen)
+void PsyX_Initialise(char *appName, int width, int height, int fullscreen)
 {
 	char windowNameStr[128];
 
 	g_appNameStr = appName;
-
-	InstallExceptionHandler();
 
 	PsyX_Log_Initialise();
 	PsyX_GetWindowName(windowNameStr);
@@ -348,15 +339,15 @@ void PsyX_Initialise(char* appName, int width, int height, int fullscreen)
 #if defined(__EMSCRIPTEN__)
 	SDL_SetHint(SDL_HINT_EMSCRIPTEN_ASYNCIFY, "0");
 #endif
-	
+
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
 		eprinterr("Failed to initialise SDL\n");
 		PsyX_Shutdown();
 		return;
 	}
-	
-	if (!GR_InitialiseRender(windowNameStr, width, height, fullscreen))
+
+	if (!NativeRenderer_InitialiseRender(windowNameStr, width, height, fullscreen))
 	{
 		eprinterr("Failed to Intialise Window\n");
 		PsyX_Shutdown();
@@ -370,21 +361,18 @@ void PsyX_Initialise(char* appName, int width, int height, int fullscreen)
 		return;
 	}
 
-	if (!GR_InitialisePSX())
+	if (!NativeRenderer_InitialisePSX())
 	{
 		eprinterr("Failed to Intialise PSX.\n");
 		PsyX_Shutdown();
 		return;
 	}
 
-	// set shutdown function (PSX apps usualy don't exit)
 	atexit(PsyX_Shutdown);
-
-	// disable cursor visibility
 	SDL_ShowCursor(0);
 }
 
-void PsyX_GetScreenSize(int* screenWidth, int* screenHeight)
+void PsyX_GetScreenSize(int *screenWidth, int *screenHeight)
 {
 	SDL_GetWindowSize(g_window, screenWidth, screenHeight);
 }
@@ -403,7 +391,7 @@ void PsyX_HandleHostWindowResize(int width, int height)
 {
 	g_windowWidth = width;
 	g_windowHeight = height;
-	GR_ResetDevice();
+	NativeRenderer_ResetDevice();
 }
 
 void PsyX_HandleHostFullscreenToggle(void)
@@ -412,7 +400,7 @@ void PsyX_HandleHostFullscreenToggle(void)
 
 	SDL_SetWindowFullscreen(g_window, fullscreen ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP);
 	SDL_GetWindowSize(g_window, &g_windowWidth, &g_windowHeight);
-	GR_ResetDevice();
+	NativeRenderer_ResetDevice();
 }
 
 void PsyX_HandleHostMouseMotion(int x, int y)
@@ -439,13 +427,6 @@ char PsyX_BeginScene()
 	{
 		int swapInterval = (g_cfg_swapInterval && g_enableSwapInterval && !g_skipSwapInterval) ? g_swapInterval : 0;
 
-		// Maximum is (ScreenRefreshRate / 2). 
-		// If our screen refresh rate is lower than our PSX vmode refresh rate, 
-		// we reducing swap interval to maintain the framerate.
-		// Example:
-		//		target 60fps, 50hz screen = no interval (tearing)
-		//		target 30fps, 50hz screen = 60hz interval (less tearing)
-		//		target 30fps, 60hz screen = 30hz interval (no tearing)
 		SDL_DisplayMode curMode;
 		if (SDL_GetWindowDisplayMode(g_window, &curMode) == 0)
 		{
@@ -456,11 +437,11 @@ char PsyX_BeginScene()
 
 		if (swapInterval < 0)
 			swapInterval = 0;
-		
-		GR_UpdateSwapIntervalState(swapInterval);
+
+		NativeRenderer_UpdateSwapIntervalState(swapInterval);
 	}
 
-	GR_BeginScene();
+	NativeRenderer_BeginScene();
 
 	if (activeDrawEnv.isbg)
 	{
@@ -469,9 +450,7 @@ char PsyX_BeginScene()
 		const u_char g = activeDrawEnv.g0;
 		const u_char b = activeDrawEnv.b0;
 
-		// TODO: clear all affected backbuffers
-		//GR_ClearVRAM(clipenv.x, clipenv.y, clipenv.w, clipenv.h, r, g, b);
-		GR_Clear(clipenv.x, clipenv.y, clipenv.w, clipenv.h, r, g, b);
+		NativeRenderer_Clear(clipenv.x, clipenv.y, clipenv.w, clipenv.h, r, g, b);
 	}
 
 	begin_scene_flag = 1;
@@ -495,25 +474,25 @@ void PsyX_EndScene()
 	PGXP_ClearCache();
 #endif
 
-	GR_EndScene();
-	
-	GR_StoreFrameBuffer(activeDispEnv.disp.x, activeDispEnv.disp.y, activeDispEnv.disp.w, activeDispEnv.disp.h);
+	NativeRenderer_EndScene();
 
-	GR_SwapWindow();
+	NativeRenderer_StoreFrameBuffer(activeDispEnv.disp.x, activeDispEnv.disp.y, activeDispEnv.disp.w, activeDispEnv.disp.h);
+
+	NativeRenderer_SwapWindow();
 }
 
 #if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__)
 void PsyX_TakeScreenshot()
 {
-	u_char* pixels = (u_char*)malloc(g_windowWidth * g_windowHeight * 4);
-	
+	u_char *pixels = (u_char *)malloc(g_windowWidth * g_windowHeight * 4);
+
 #if defined(RENDERER_OGL)
 	glReadPixels(0, 0, g_windowWidth, g_windowHeight, GL_BGRA, GL_UNSIGNED_BYTE, pixels);
 #elif defined(RENDERER_OGLES)
-	glReadPixels(0, 0, g_windowWidth, g_windowHeight, GL_RGBA, GL_UNSIGNED_BYTE, pixels);	// FIXME: is that correct format?
+	glReadPixels(0, 0, g_windowWidth, g_windowHeight, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 #endif
 
-	SDL_Surface* surface = SDL_CreateRGBSurfaceFrom(pixels, g_windowWidth, g_windowHeight, 8 * 4, g_windowWidth * 4, 0, 0, 0, 0);
+	SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(pixels, g_windowWidth, g_windowHeight, 8 * 4, g_windowWidth * 4, 0, 0, 0, 0);
 
 	SDL_SaveBMP(surface, "SCREENSHOT.BMP");
 	SDL_FreeSurface(surface);
@@ -527,7 +506,6 @@ void PsyX_HandleHostKey(int nKey, char down)
 	if (g_dbg_gameDebugKeys)
 		g_dbg_gameDebugKeys(nKey, down);
 
-#if 1 //def _DEBUG
 	if (nKey == SDL_SCANCODE_BACKSPACE)
 	{
 		if (down)
@@ -535,7 +513,6 @@ void PsyX_HandleHostKey(int nKey, char down)
 		else
 			g_skipSwapInterval = 0;
 	}
-#endif
 
 	if (!down)
 	{
@@ -560,7 +537,7 @@ void PsyX_HandleHostKey(int nKey, char down)
 			break;
 		case SDL_SCANCODE_F10:
 			eprintwarn("saving VRAM.TGA\n");
-			GR_SaveVRAM("VRAM.TGA", 0, 0, VRAM_WIDTH, VRAM_HEIGHT, 1);
+			NativeRenderer_SaveVRAM("VRAM.TGA", 0, 0, VRAM_WIDTH, VRAM_HEIGHT, 1);
 			break;
 #endif
 #if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__)
@@ -616,13 +593,8 @@ void PsyX_EnableSwapInterval(int enable)
 
 void PsyX_WaitForTimestep(int count)
 {
-#if 0 // defined(RENDERER_OGL) || defined(RENDERER_OGLES)
-	glFinish(); // best time to complete GPU drawing
-#endif
-
-	// wait for vblank
 	if (!g_skipSwapInterval)
-	{	
+	{
 		static int swapLastVbl = 0;
 
 		int vbl;
@@ -632,8 +604,7 @@ void PsyX_WaitForTimestep(int count)
 			emscripten_sleep(0);
 #endif
 			vbl = PsyX_Sys_GetVBlankCount();
-		}
-		while (vbl - swapLastVbl < count);
+		} while (vbl - swapLastVbl < count);
 
 		swapLastVbl = PsyX_Sys_GetVBlankCount();
 	}
@@ -647,12 +618,10 @@ void PsyX_Shutdown()
 	SDL_DestroyWindow(g_window);
 	g_window = NULL;
 
-	GR_Shutdown();
+	NativeRenderer_Shutdown();
 	SDL_QuitSubSystem(SDL_INIT_GAMECONTROLLER);
 
 	SDL_Quit();
-
-	UnInstallExceptionHandler();
 
 	PsyX_Log_Finalise();
 }

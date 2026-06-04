@@ -118,7 +118,7 @@ Native keeps the PS1-visible VRAM contract at `1024x512x16`, but the platform la
 
 | Layer | Responsibility |
 |-------|----------------|
-| Platform/PsyCross | Owns the CPU VRAM mirror, OpenGL textures, uploads, and native presentation bridge |
+| Native renderer/platform | Owns the CPU VRAM mirror, OpenGL textures, uploads, and native presentation bridge |
 | Game/GPU compatibility layer | Keeps retail `LoadImage`, `MoveImage`, `StoreImage`, draw packets, asset rects, and upload timing |
 
 ## Scratchpad

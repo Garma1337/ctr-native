@@ -1,7 +1,7 @@
 #include "psx/libapi.h"
 
 #include <stdio.h>
-#include "../PsyX_main.h"
+#include "../platform.h"
 
 long sp = 0;
 

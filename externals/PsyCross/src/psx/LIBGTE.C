@@ -4,8 +4,6 @@
 #include "psx/gtereg.h"
 
 #include <stdio.h>
-#include "PsyX/PsyX_render.h"
-
 #include <assert.h>
 
 #include "../gte/PsyX_GTE.h"

@@ -20,10 +20,16 @@ set(GAME_SOURCES
     ctr_native.c
     platform/native_audio.c
     platform/native_cd.c
+    platform/native_gpu.c
+    platform/native_glad.c
     platform/native_input.c
+    platform/native_libgpu.c
     platform/native_libpad.c
     platform/native_libspu.c
     platform/native_memcard.c
+    platform/native_psyx_shell.c
+    platform/native_renderer.c
+    platform/native_renderer_backend.c
 )
 
 set(GAME_INCLUDES
@@ -48,16 +54,10 @@ set(PSYCROSS_C
     externals/PsyCross/src/psx/INLINE_C.C
     externals/PsyCross/src/psx/LIBAPI.C
     externals/PsyCross/src/psx/LIBETC.C
-    externals/PsyCross/src/psx/LIBGPU.C
     externals/PsyCross/src/psx/LIBGTE.C
-    externals/PsyCross/src/render/glad.c
 )
 set(PSYCROSS_CPP
-    externals/PsyCross/src/PsyX_main.cpp
-    externals/PsyCross/src/gpu/PsyX_GPU.cpp
     externals/PsyCross/src/gte/PsyX_GTE.cpp
-    externals/PsyCross/src/render/PsyX_render.cpp
-    externals/PsyCross/src/util/crash_handler.cpp
 )
 set_source_files_properties(${PSYCROSS_C} PROPERTIES LANGUAGE C)
 set_source_files_properties(${PSYCROSS_CPP} PROPERTIES LANGUAGE CXX)

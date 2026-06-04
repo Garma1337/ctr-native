@@ -19,10 +19,16 @@
         https://glad.dav1d.de/#profile=compatibility&language=c&specification=gl&loader=on&api=gl%3D3.1&api=gles2%3D2.0&extensions=GL_KHR_debug
 */
 
+/*
+ * Copied from REDRIVER2/PsyCross MIT source:
+ * externals/PsyCross/src/render/glad.c
+ * See THIRD_PARTY_NOTICES.md for copyright and license details.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "PsyX/common/glad.h"
+#include "platform/native_glad.h"
 
 static void* get_proc(const char *namez);
 
@@ -1933,4 +1939,3 @@ int gladLoadGLES2Loader(GLADloadproc load) {
 	load_GL_KHR_debug(load);
 	return GLVersion.major != 0 || GLVersion.minor != 0;
 }
-

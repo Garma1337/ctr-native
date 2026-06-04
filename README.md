@@ -5,10 +5,10 @@ A native PC port of Crash Team Racing (PS1, 1999), built on top of the [CTR-ModS
 ## Philosophy
 
 - **No byte budget.** Game source lives in `game/` as our own copies. Edit freely.
-- **No PSX toolchain.** Targets Windows and Linux with SDL2 + PsyCross. No MIPS compiler needed.
+- **No PSX toolchain.** Targets Windows and Linux with SDL2 plus a small remaining PsyCross compatibility tail. No MIPS compiler needed.
 - **Clean platform layer.** Host details stay in `ctr_native.c` and `platform/native_*`.
 - **No build system nonsense.** Just `build.bat` / `build.sh`.
-- **Fully static build.** Single executable, zero dependencies. SDL2 and PsyCross are compiled from vendored source and linked statically.
+- **Fully static build.** Single executable, zero dependencies. SDL2 and the remaining PsyCross compatibility code are compiled from vendored source and linked statically.
 
 ## Directory Layout
 
@@ -25,7 +25,7 @@ ctr_native/
   game/               Our copies of all decompiled game source (943 files)
   include/            Project headers (structs, globals, declarations)
   externals/
-    PsyCross/         Remaining PS1 GPU/GTE/render abstraction
+    PsyCross/         Remaining PS1 GTE/libetc compatibility tail
     SDL/              SDL2 source (static build)
 ```
 
@@ -57,7 +57,7 @@ chmod +x build.sh
 ./build.sh           # Linux
 ```
 
-First build compiles SDL2 and PsyCross from source. These are cached as static libraries in `build/` — subsequent builds only recompile touched native sources.
+First build compiles SDL2 and the remaining PsyCross compatibility code from source. These are cached as static libraries in `build/` — subsequent builds only recompile touched native sources.
 
 Output: `build/ctr_native.exe` (Windows) or `build/ctr_native` (Linux)
 
@@ -98,11 +98,9 @@ ctr_native/
 ```
 ctr_native.c (platform layer)
   |
-  +-- PsyCross (remaining PS1 GPU/GTE/render abstraction)
-  |     |
-  |     +-- SDL2 (window/render support)
+  +-- PsyCross (remaining PS1 GTE/libetc compatibility tail)
   |
-  +-- platform/native_* (audio, input, memcard, CD, PSX facade glue)
+  +-- platform/native_* (audio, input, memcard, CD, renderer, PSX facade glue)
   |
   +-- game_includes.h
         |
@@ -117,11 +115,11 @@ ctr_native.c (platform layer)
 ## Roadmap
 
 - Clean up `game/` copies strip byte budget hacks and route platform-specific code through `CTR_NATIVE`
-- Continue replacing the remaining PsyCross GPU/render dependency. Move toward SDL3, remove the 32-bit constraint, and own the full stack.
+- Replace the remaining PsyCross GTE/libetc compatibility tail. Move toward SDL3, remove the 32-bit constraint, and own the full stack.
 
 ## Credits
 
 - [CTR-ModSDK](https://github.com/CTR-tools/CTR-ModSDK) — the decompilation project this is built on
-- [PsyCross](https://github.com/OpenDriver2/PsyCross) — vendored PS1 GPU/GTE/render abstraction used as the remaining compatibility bridge
+- [PsyCross](https://github.com/OpenDriver2/PsyCross) — vendored PS1 compatibility code that CTR Native is progressively replacing with owned platform code
 - [SDL2](https://github.com/libsdl-org/SDL) — cross-platform multimedia
 - Crash Team Racing is a trademark of Sony Computer Entertainment / Naughty Dog
