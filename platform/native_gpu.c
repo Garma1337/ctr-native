@@ -88,6 +88,7 @@ typedef struct
 
 	int drawPrimMode;
 	bool psxDrawMaskSet;
+	bool framebufferFeedbackRunActive;
 
 	GrVertex vertexBuffer[MAX_VERTEX_BUFFER_SIZE];
 	GPUDrawSplit splits[MAX_DRAW_SPLITS];
@@ -122,6 +123,7 @@ void ClearSplits(void)
 	s_gpu.splits[0].texFormat = (TexFormat)0xFFFF;
 	s_gpu.splits[0].psxTexturedSemiTrans = false;
 	s_gpu.splits[0].psxDrawMaskSet = false;
+	s_gpu.framebufferFeedbackRunActive = false;
 }
 
 int NativeGpu_GetStateSize(void)
@@ -720,9 +722,55 @@ void TriangulateQuad()
 
 //------------------------------------------------------------------------------------------------------------------------
 
-static void AddSplit(bool semiTrans, bool textured)
+static bool NativeGpu_RectOverlaps(int ax, int ay, int aw, int ah, int bx, int by, int bw, int bh)
+{
+	return (aw > 0) && (ah > 0) && (bw > 0) && (bh > 0) && (ax < bx + bw) && (bx < ax + aw) && (ay < by + bh) && (by < ay + ah);
+}
+
+static bool NativeGpu_TPageOverlapsActiveDrawPage(int tpage)
+{
+	const int pageX = (tpage & 0xf) << 6;
+	const int pageY = (tpage & 0x10) ? 0x100 : 0;
+	const int pageW = 0x100;
+	const int pageH = 0x100;
+
+	if (!activeDrawEnv.dfe)
+		return false;
+
+	if (GetTPageFormat(tpage) != TF_16_BIT)
+		return false;
+
+	return NativeGpu_RectOverlaps(pageX, pageY, pageW, pageH, activeDrawEnv.clip.x, activeDrawEnv.clip.y, activeDrawEnv.clip.w, activeDrawEnv.clip.h);
+}
+
+static void NativeGpu_PrepareFramebufferFeedback(int tpage)
+{
+	if (!NativeGpu_TPageOverlapsActiveDrawPage(tpage))
+		return;
+
+	if (s_gpu.framebufferFeedbackRunActive)
+		return;
+
+	// NOTE(aalhendi): PS1 can draw into VRAM and immediately texture from that
+	// same draw page. Native batches primitives, so screen-feedback effects
+	// like heat warp need an explicit barrier before their framebuffer-sampling
+	// polygons consume the VRAM texture.
+	if (NativeGpu_HasPendingSplits())
+		DrawAllSplits();
+
+	NativeRenderer_StoreFrameBuffer(activeDrawEnv.clip.x, activeDrawEnv.clip.y, activeDrawEnv.clip.w, activeDrawEnv.clip.h);
+	s_gpu.framebufferFeedbackRunActive = true;
+}
+
+static void AddSplit(bool semiTrans, bool textured, bool framebufferFeedback)
 {
 	int tpage = activeDrawEnv.tpage;
+
+	if (framebufferFeedback)
+		NativeGpu_PrepareFramebufferFeedback(tpage);
+	else
+		s_gpu.framebufferFeedbackRunActive = false;
+
 	GPUDrawSplit *curSplit = &s_gpu.splits[s_gpu.splitIndex];
 
 	BlendMode blendMode = semiTrans ? GET_TPAGE_BLEND(tpage) : BM_NONE;
@@ -943,7 +991,7 @@ static int ProcessFlatLines(P_TAG *polyTag)
 	{
 		LINE_F2 *poly = (LINE_F2 *)polyTag;
 
-		AddSplit(semiTrans, false);
+		AddSplit(semiTrans, false, false);
 
 		VERTTYPE *p0 = &poly->x0;
 		VERTTYPE *p1 = &poly->x1;
@@ -969,7 +1017,7 @@ static int ProcessFlatLines(P_TAG *polyTag)
 	{
 		LINE_F3 *poly = (LINE_F3 *)polyTag;
 
-		AddSplit(semiTrans, false);
+		AddSplit(semiTrans, false, false);
 
 		{
 			VERTTYPE *p0 = &poly->x0;
@@ -1018,7 +1066,7 @@ static int ProcessFlatLines(P_TAG *polyTag)
 		int i;
 		LINE_F4 *poly = (LINE_F4 *)polyTag;
 
-		AddSplit(semiTrans, false);
+		AddSplit(semiTrans, false, false);
 
 		{
 			VERTTYPE *p0 = &poly->x0;
@@ -1098,7 +1146,7 @@ static int ProcessGouraudLines(P_TAG *polyTag)
 	{
 		LINE_G2 *poly = (LINE_G2 *)polyTag;
 
-		AddSplit(semiTrans, false);
+		AddSplit(semiTrans, false, false);
 
 		VERTTYPE *p0 = &poly->x0;
 		VERTTYPE *p1 = &poly->x1;
@@ -1146,7 +1194,7 @@ static int ProcessFlatPoly(P_TAG *polyTag)
 	{
 		POLY_F3 *poly = (POLY_F3 *)polyTag;
 
-		AddSplit(semiTrans, false);
+		AddSplit(semiTrans, false, false);
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexTriangle(firstVertex, &poly->x0, &poly->x1, &poly->x2);
@@ -1168,7 +1216,7 @@ static int ProcessFlatPoly(P_TAG *polyTag)
 		// It is an official hack from SCE devs to not use DR_TPAGE and instead use null polygon
 		if (!IsNull(poly))
 		{
-			AddSplit(semiTrans, true);
+			AddSplit(semiTrans, true, NativeGpu_TPageOverlapsActiveDrawPage(poly->tpage));
 
 			GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 			MakeVertexTriangle(firstVertex, &poly->x0, &poly->x1, &poly->x2);
@@ -1188,7 +1236,7 @@ static int ProcessFlatPoly(P_TAG *polyTag)
 	{
 		POLY_F4 *poly = (POLY_F4 *)polyTag;
 
-		AddSplit(semiTrans, false);
+		AddSplit(semiTrans, false, false);
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexQuad(firstVertex, &poly->x0, &poly->x1, &poly->x3, &poly->x2);
@@ -1208,7 +1256,7 @@ static int ProcessFlatPoly(P_TAG *polyTag)
 		POLY_FT4 *poly = (POLY_FT4 *)polyTag;
 		activeDrawEnv.tpage = poly->tpage;
 
-		AddSplit(semiTrans, true);
+		AddSplit(semiTrans, true, NativeGpu_TPageOverlapsActiveDrawPage(poly->tpage));
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexQuad(firstVertex, &poly->x0, &poly->x1, &poly->x3, &poly->x2);
@@ -1241,7 +1289,7 @@ static int ProcessGouraudPoly(P_TAG *polyTag)
 	{
 		POLY_G3 *poly = (POLY_G3 *)polyTag;
 
-		AddSplit(semiTrans, false);
+		AddSplit(semiTrans, false, false);
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexTriangle(firstVertex, &poly->x0, &poly->x1, &poly->x2);
@@ -1260,7 +1308,7 @@ static int ProcessGouraudPoly(P_TAG *polyTag)
 		POLY_GT3 *poly = (POLY_GT3 *)polyTag;
 		activeDrawEnv.tpage = poly->tpage;
 
-		AddSplit(semiTrans, true);
+		AddSplit(semiTrans, true, NativeGpu_TPageOverlapsActiveDrawPage(poly->tpage));
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexTriangle(firstVertex, &poly->x0, &poly->x1, &poly->x2);
@@ -1278,7 +1326,7 @@ static int ProcessGouraudPoly(P_TAG *polyTag)
 	{
 		POLY_G4 *poly = (POLY_G4 *)polyTag;
 
-		AddSplit(semiTrans, false);
+		AddSplit(semiTrans, false, false);
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexQuad(firstVertex, &poly->x0, &poly->x1, &poly->x3, &poly->x2);
@@ -1299,7 +1347,7 @@ static int ProcessGouraudPoly(P_TAG *polyTag)
 		POLY_GT4 *poly = (POLY_GT4 *)polyTag;
 		activeDrawEnv.tpage = poly->tpage;
 
-		AddSplit(semiTrans, true);
+		AddSplit(semiTrans, true, NativeGpu_TPageOverlapsActiveDrawPage(poly->tpage));
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexQuad(firstVertex, &poly->x0, &poly->x1, &poly->x3, &poly->x2);
@@ -1332,7 +1380,7 @@ static int ProcessTileAndSprt(P_TAG *polyTag)
 	{
 		TILE *poly = (TILE *)polyTag;
 
-		AddSplit(semiTrans, false);
+		AddSplit(semiTrans, false, false);
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexRect(firstVertex, &poly->x0, poly->w, poly->h);
@@ -1352,7 +1400,7 @@ static int ProcessTileAndSprt(P_TAG *polyTag)
 	{
 		SPRT *poly = (SPRT *)polyTag;
 
-		AddSplit(semiTrans, true);
+		AddSplit(semiTrans, true, NativeGpu_TPageOverlapsActiveDrawPage(activeDrawEnv.tpage));
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexRect(firstVertex, &poly->x0, poly->w, poly->h);
@@ -1372,7 +1420,7 @@ static int ProcessTileAndSprt(P_TAG *polyTag)
 	{
 		TILE_1 *poly = (TILE_1 *)polyTag;
 
-		AddSplit(semiTrans, false);
+		AddSplit(semiTrans, false, false);
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexRect(firstVertex, &poly->x0, 1, 1);
@@ -1392,7 +1440,7 @@ static int ProcessTileAndSprt(P_TAG *polyTag)
 	{
 		TILE_8 *poly = (TILE_8 *)polyTag;
 
-		AddSplit(semiTrans, false);
+		AddSplit(semiTrans, false, false);
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexRect(firstVertex, &poly->x0, 8, 8);
@@ -1412,7 +1460,7 @@ static int ProcessTileAndSprt(P_TAG *polyTag)
 	{
 		SPRT_8 *poly = (SPRT_8 *)polyTag;
 
-		AddSplit(semiTrans, true);
+		AddSplit(semiTrans, true, NativeGpu_TPageOverlapsActiveDrawPage(activeDrawEnv.tpage));
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexRect(firstVertex, &poly->x0, 8, 8);
@@ -1432,7 +1480,7 @@ static int ProcessTileAndSprt(P_TAG *polyTag)
 	{
 		TILE_16 *poly = (TILE_16 *)polyTag;
 
-		AddSplit(semiTrans, false);
+		AddSplit(semiTrans, false, false);
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexRect(firstVertex, &poly->x0, 16, 16);
@@ -1452,7 +1500,7 @@ static int ProcessTileAndSprt(P_TAG *polyTag)
 	{
 		SPRT_16 *poly = (SPRT_16 *)polyTag;
 
-		AddSplit(semiTrans, true);
+		AddSplit(semiTrans, true, NativeGpu_TPageOverlapsActiveDrawPage(activeDrawEnv.tpage));
 
 		GrVertex *firstVertex = &s_gpu.vertexBuffer[s_gpu.vertexIndex];
 		MakeVertexRect(firstVertex, &poly->x0, 16, 16);

@@ -1171,7 +1171,7 @@ static void NativeRenderer_CopyRGBAFramebufferToVRAM(u32 *src, int x, int y, int
 	assert(x >= 0);
 	assert(y >= 0);
 	assert(x + w <= VRAM_WIDTH);
-	assert(y + h <= VRAM_WIDTH);
+	assert(y + h <= VRAM_HEIGHT);
 
 	u16 *fb = (u16 *)malloc(w * h * sizeof(u16));
 	u32 *data_src = (u32 *)src;
@@ -1233,10 +1233,10 @@ void NativeRenderer_ReadFramebufferDataToVRAM(void)
 		glBindTexture(GL_TEXTURE_2D, s_framebufferTexture);
 		PBO_Download(&s_glFramebufferPBO);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		// NOTE(aalhendi): screen-copy effects sample the active VRAM texture as packed
-		// PS1 VRAM. The fast framebuffer blit writes host RGBA into that
-		// texture, so force the next frame to upload the packed readback.
+		// NOTE(aalhendi): Keep the CPU-side VRAM mirror packed like PS1 VRAM.
+		// Host texture bindings are invalid after this direct GL texture read.
 		NativeRenderer_CopyRGBAFramebufferToVRAM((u32 *)s_glFramebufferPBO.pixels, x, y, w, h, 1, 0);
+		s_lastBoundTexture = -1;
 	}
 }
 
@@ -1353,21 +1353,6 @@ void NativeRenderer_StoreFrameBuffer(int x, int y, int w, int h)
 
 		glBlitFramebuffer(0, 0, g_windowWidth, g_windowHeight, x, y + h, x + w, y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-		// Blit framebuffer to VRAM screen area
-
-		// before drawing set source and target
-		glBindFramebuffer(GL_FRAMEBUFFER, s_glVramFramebuffer);
-
-		// rebind vram texture
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, s_vramTexture, 0);
-
-		// setup draw and read framebuffers
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, s_glBlitFramebuffer); // source is backbuffer
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, s_glVramFramebuffer);
-
-		glBlitFramebuffer(0, 0, w, h, x, y + h, x + w, y, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-
 		// done, unbind
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -1377,7 +1362,23 @@ void NativeRenderer_StoreFrameBuffer(int x, int y, int w, int h)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glFlush();
 
-	NativeRenderer_ReadFramebufferDataToVRAM();
+	u32 *pixels = (u32 *)malloc((size_t)w * (size_t)h * sizeof(u32));
+	if (pixels != NULL)
+	{
+		// NOTE(aalhendi): Screen-feedback effects sample PS1 VRAM as packed
+		// 16-bit pixels. Do not leave the VRAM texture in host RGBA form here;
+		// pack the copied framebuffer synchronously before the next primitive
+		// can sample it.
+		glBindTexture(GL_TEXTURE_2D, s_framebufferTexture);
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		NativeRenderer_CopyRGBAFramebufferToVRAM(pixels, x, y, w, h, 1, 0);
+		NativeRenderer_UpdateVRAM();
+		s_lastBoundTexture = -1;
+
+		free(pixels);
+	}
 }
 
 void NativeRenderer_CopyVRAM(u16 *src, int x, int y, int w, int h, int dst_x, int dst_y)
