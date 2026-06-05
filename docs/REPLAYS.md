@@ -40,3 +40,9 @@ It looks like:
 ```sh
 build/ctr_native --replay "debug/reports/20260605/ctr-123456/input.ctrreplay"
 ```
+
+If a developer asks you to bypass header identity checks:
+
+```sh
+build/ctr_native --replay "debug/reports/20260605/ctr-123456/input.ctrreplay" --replay-bypass-header
+```

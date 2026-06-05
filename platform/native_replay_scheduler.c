@@ -261,18 +261,42 @@ static void NativeReplayScheduler_InitHeader(struct NativeReplayFileHeader *head
 	header->identityChecksum = NativeReplayScheduler_IdentityChecksum(header);
 }
 
-static s32 NativeReplayScheduler_HeaderValid(const struct NativeReplayFileHeader *header)
+static s32 NativeReplayScheduler_HeaderFormatValid(const struct NativeReplayFileHeader *header)
+{
+	if (header == NULL)
+		return 0;
+
+	return (header->magic == NATIVE_REPLAY_FILE_MAGIC) && (header->version == NATIVE_REPLAY_FILE_VERSION) &&
+	       (header->headerSize == sizeof(struct NativeReplayFileHeader)) && (header->frameRecordSize == sizeof(struct NativeReplayFrameRecord));
+}
+
+static s32 NativeReplayScheduler_HeaderIdentityValid(const struct NativeReplayFileHeader *header)
 {
 	struct NativeReplayFileHeader liveHeader;
 
-	if ((header == NULL) || (header->magic != NATIVE_REPLAY_FILE_MAGIC) || (header->version != NATIVE_REPLAY_FILE_VERSION) ||
-	    (header->headerSize != sizeof(struct NativeReplayFileHeader)) || (header->frameRecordSize != sizeof(struct NativeReplayFrameRecord)))
+	if (!NativeReplayScheduler_HeaderFormatValid(header))
 		return 0;
 
 	NativeReplayScheduler_InitHeader(&liveHeader);
 	return (header->checkpointSize == liveHeader.checkpointSize) && (header->nativeStateSize == liveHeader.nativeStateSize) &&
 	       (header->identityChecksum == liveHeader.identityChecksum) && (memcmp(header->buildId, liveHeader.buildId, sizeof(header->buildId)) == 0) &&
 	       (memcmp(header->platformId, liveHeader.platformId, sizeof(header->platformId)) == 0);
+}
+
+static void NativeReplayScheduler_LogHeaderIdentityMismatch(const struct NativeReplayFileHeader *header)
+{
+	struct NativeReplayFileHeader liveHeader;
+
+	if (header == NULL)
+		return;
+
+	NativeReplayScheduler_InitHeader(&liveHeader);
+	Platform_Log("[CTR Replay] replay header mismatch: replay(checkpoint=%u nativeState=%u identity=0x%08x build=%.*s platform=%.*s) "
+	             "live(checkpoint=%u nativeState=%u identity=0x%08x build=%.*s platform=%.*s)\n",
+	             (unsigned int)header->checkpointSize, (unsigned int)header->nativeStateSize, (unsigned int)header->identityChecksum,
+	             (int)sizeof(header->buildId), header->buildId, (int)sizeof(header->platformId), header->platformId, (unsigned int)liveHeader.checkpointSize,
+	             (unsigned int)liveHeader.nativeStateSize, (unsigned int)liveHeader.identityChecksum, (int)sizeof(liveHeader.buildId), liveHeader.buildId,
+	             (int)sizeof(liveHeader.platformId), liveHeader.platformId);
 }
 
 static const char *NativeReplayScheduler_ArgValue(int argc, char **argv, const char *arg)
@@ -931,7 +955,7 @@ static s32 NativeReplayScheduler_StartReportRecording(void)
 	return 1;
 }
 
-static s32 NativeReplayScheduler_OpenPlayback(const char *path)
+static s32 NativeReplayScheduler_OpenPlayback(const char *path, s32 bypassHeaderIdentity)
 {
 	s_file = fopen(path, "rb");
 	if (s_file == NULL)
@@ -947,11 +971,22 @@ static s32 NativeReplayScheduler_OpenPlayback(const char *path)
 		return 0;
 	}
 
-	if (!NativeReplayScheduler_HeaderValid(&s_header))
+	if (!NativeReplayScheduler_HeaderFormatValid(&s_header))
 	{
-		Platform_Log("[CTR Replay] invalid replay header: %s\n", path);
+		Platform_Log("[CTR Replay] invalid replay file header: %s\n", path);
 		NativeReplayScheduler_CloseFiles();
 		return 0;
+	}
+	if (!NativeReplayScheduler_HeaderIdentityValid(&s_header))
+	{
+		NativeReplayScheduler_LogHeaderIdentityMismatch(&s_header);
+		if (bypassHeaderIdentity == 0)
+		{
+			Platform_Log("[CTR Replay] invalid replay header: %s\n", path);
+			NativeReplayScheduler_CloseFiles();
+			return 0;
+		}
+		Platform_Log("[CTR Replay] bypassing replay header identity mismatch: %s\n", path);
 	}
 
 	if (!NativeReplayScheduler_PrepareBootstrapCheckpoint(path))
@@ -1010,6 +1045,7 @@ int NativeReplayScheduler_ConfigureFromArgs(int argc, char **argv)
 	const char *playbackPath = NativeReplayScheduler_ArgValue(argc, argv, "--replay");
 	const s32 recordReport = NativeReplayScheduler_ArgPresent(argc, argv, "--record");
 	const s32 playback = NativeReplayScheduler_ArgPresent(argc, argv, "--replay");
+	const s32 bypassHeaderIdentity = NativeReplayScheduler_ArgPresent(argc, argv, "--replay-bypass-header");
 	s32 toggle = NativeReplayScheduler_ArgPresent(argc, argv, "--toggle");
 	s32 detailed = NativeReplayScheduler_ArgPresent(argc, argv, "--detailed");
 
@@ -1027,6 +1063,11 @@ int NativeReplayScheduler_ConfigureFromArgs(int argc, char **argv)
 	if (((toggle != 0) || (detailed != 0)) && (recordReport == 0))
 	{
 		Platform_Log("[CTR Replay] --toggle and --detailed only apply to --record\n");
+		return 1;
+	}
+	if ((bypassHeaderIdentity != 0) && (playback == 0))
+	{
+		Platform_Log("[CTR Replay] --replay-bypass-header only applies to --replay\n");
 		return 1;
 	}
 
@@ -1053,7 +1094,7 @@ int NativeReplayScheduler_ConfigureFromArgs(int argc, char **argv)
 	}
 
 	if (playbackPath != NULL)
-		return NativeReplayScheduler_OpenPlayback(playbackPath) ? 0 : 1;
+		return NativeReplayScheduler_OpenPlayback(playbackPath, bypassHeaderIdentity) ? 0 : 1;
 
 	return 0;
 }
