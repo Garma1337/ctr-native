@@ -23,6 +23,7 @@
 #include "psx/libapi.h"
 #include "psx/strings.h"
 #include "psx/inline_c.h"
+#include "platform/native_assets.h"
 #include "platform/native_log.h"
 #include "platform/native_replay_scheduler.h"
 #include "platform/native_savestate.h"
@@ -57,6 +58,7 @@ typedef enum
 #include "game/zGlobal_DATA.c"
 #include "game/zGlobal_SDATA.c"
 
+#include "platform/native_assets.c"
 #include "platform/native_audio.c"
 #include "platform/native_memory.c"
 #include "platform/native_checkpoint.c"
@@ -139,6 +141,9 @@ int main(int argc, char *argv[])
 	fflush(stdout);
 
 	chdir(baseDir);
+
+	if (!NativeAssets_Validate())
+		return 1;
 
 #if defined(CTR_INTERNAL)
 	if (NativeReplayScheduler_PrepareReportFromArgs(argc, argv) != 0)

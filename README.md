@@ -73,10 +73,11 @@ build.bat            # Rebuild everything
 2. Extract the following from a CTR NTSC-U retail disc image:
    - `BIGFILE.BIG`
    - `SOUNDS/KART.HWL`
+   - `TEST.STR`
    - `XA/ENG.XNF`
    - `XA/ENG/EXTRA/S00.XA` through `S05.XA`
-   - `XA/ENG/GAME/S00.XA` through `S05.XA`
-   - `XA/MUSIC/S00.XA` through `S05.XA`
+   - `XA/ENG/GAME/S00.XA` through `S20.XA`
+   - `XA/MUSIC/S00.XA` through `S01.XA`
 3. Run `build/ctr_native.exe`
 
 Directory structure:
@@ -85,11 +86,12 @@ ctr_native/
   assets/
     BIGFILE.BIG
     SOUNDS/KART.HWL
+    TEST.STR
     XA/
       ENG.XNF
       ENG/EXTRA/S00.XA ... S05.XA
-      ENG/GAME/S00.XA ... S05.XA
-      MUSIC/S00.XA ... S05.XA
+      ENG/GAME/S00.XA ... S20.XA
+      MUSIC/S00.XA ... S01.XA
 ```
 
 ## Bug Replays
