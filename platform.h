@@ -20,6 +20,7 @@ int Platform_BeginScene(void);
 void Platform_EndScene(void);
 void Platform_EndFrame(void);
 void Platform_PresentVRAMDisplay(void);
+void Platform_PinVRAMDisplayFrames(int frameCount);
 void Platform_PollHostEvents(void);
 int Platform_PollInput(void);
 

@@ -48,6 +48,14 @@ int LOAD_TenStages(struct GameTracker *gGT, int loadingStage, struct BigHeader *
 			LOAD_VramFile(bigfile, 0x1fe, NULL, &vramSize, -1);
 			MainInit_VRAMDisplay();
 
+#ifdef CTR_NATIVE
+			// NOTE(aalhendi): Retail naturally keeps this TIM visible while disc
+			// and VRAM loading advances. Native can expose transient loading
+			// frames immediately, so pin the copied VRAM display briefly while
+			// the normal loader continues.
+			Platform_PinVRAMDisplayFrames(8);
+#endif
+
 			gGT->db[0].drawEnv.isbg = 0;
 			gGT->db[1].drawEnv.isbg = 0;
 		}

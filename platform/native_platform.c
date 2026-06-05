@@ -28,6 +28,7 @@ extern int g_windowWidth;
 static int s_hostAltKeyState = 0;
 static int s_platformInitialized = 0;
 static int s_platformBeginScene = 0;
+static int s_pinnedVramDisplayFrames = 0;
 static int s_frameGap = 2000;
 static int s_frameCount = 0;
 static int s_oldTicks = 0;
@@ -251,6 +252,14 @@ void Platform_EndScene(void)
 
 	NativeRenderer_EndScene();
 
+	if (s_pinnedVramDisplayFrames > 0)
+	{
+		NativeRenderer_PresentVRAMDisplay();
+		NativeRenderer_SwapWindow();
+		s_pinnedVramDisplayFrames--;
+		return;
+	}
+
 	NativeRenderer_StoreFrameBuffer(activeDispEnv.disp.x, activeDispEnv.disp.y, activeDispEnv.disp.w, activeDispEnv.disp.h);
 
 	NativeRenderer_SwapWindow();
@@ -269,6 +278,12 @@ void Platform_PresentVRAMDisplay(void)
 	Platform_BeginScene();
 	NativeRenderer_PresentVRAMDisplay();
 	Platform_EndFrame();
+}
+
+void Platform_PinVRAMDisplayFrames(int frameCount)
+{
+	if (frameCount > s_pinnedVramDisplayFrames)
+		s_pinnedVramDisplayFrames = frameCount;
 }
 
 void Platform_PollHostEvents(void)
