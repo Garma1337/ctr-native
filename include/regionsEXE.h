@@ -5116,7 +5116,10 @@ extern struct BSS bss;
 // optimal use for modding
 register struct sData *sdata asm("$gp");
 #else
-struct sData *sdata = &sdata_static;
+// Declaration only. The single definition lives in platform/native_globals.c
+// so that game/*.c can be compiled as separate translation units (needed for
+// isolated unit-test linking) without each one emitting its own `sdata`.
+extern struct sData *sdata;
 #endif
 
 // OVR1

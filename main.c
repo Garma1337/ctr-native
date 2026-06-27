@@ -63,6 +63,7 @@ typedef enum
 
 #undef RECT
 
+#include "platform/native_globals.c"
 #include "platform/native_assets.c"
 #include "platform/native_audio.c"
 #include "platform/native_memory.c"

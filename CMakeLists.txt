@@ -103,3 +103,55 @@ target_link_options(ctr_native PRIVATE -static-libgcc)
 if(WIN32)
     target_link_options(ctr_native PRIVATE -static)
 endif()
+
+option(CTR_NATIVE_BUILD_TESTS "Build CTR Native unit tests" OFF)
+if(CTR_NATIVE_BUILD_TESTS)
+    enable_testing()
+    add_executable(ctr_native_tests tests/ctr_test_main.c)
+    target_include_directories(ctr_native_tests PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/externals)
+    target_compile_definitions(ctr_native_tests PRIVATE
+        CTR_NATIVE
+        BUILD=926
+        CTR_INTERNAL
+        CTR_NATIVE_VERSION=\"${CTR_NATIVE_VERSION}\"
+        CTR_NATIVE_BUILD_ID=\"tests\"
+    )
+    target_compile_options(ctr_native_tests PRIVATE -O2)
+    target_link_libraries(ctr_native_tests SDL3::SDL3)
+    target_link_options(ctr_native_tests PRIVATE -static-libgcc)
+    if(WIN32)
+        target_link_options(ctr_native_tests PRIVATE -static)
+    endif()
+    add_test(NAME ctr_native_tests COMMAND ctr_native_tests)
+
+    function(ctr_native_add_slice_test target)
+        add_executable(${target} ${ARGN})
+        target_include_directories(${target} PRIVATE ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/externals)
+        target_compile_definitions(${target} PRIVATE
+            CTR_NATIVE
+            BUILD=926
+            CTR_INTERNAL
+            CTR_NATIVE_VERSION=\"${CTR_NATIVE_VERSION}\"
+            CTR_NATIVE_BUILD_ID=\"${target}\"
+        )
+        target_compile_options(${target} PRIVATE -O2)
+        target_link_options(${target} PRIVATE -static-libgcc)
+        if(WIN32)
+            target_link_options(${target} PRIVATE -static)
+        endif()
+        add_test(NAME ${target} COMMAND ${target})
+    endfunction()
+
+    file(GLOB CTR_MATH_SLICE_SOURCES ${CMAKE_SOURCE_DIR}/game/MATH/*.c)
+    ctr_native_add_slice_test(ctr_native_math_tests
+        tests/slice/ctr_math_slice.c
+        ${CTR_MATH_SLICE_SOURCES}
+        platform/native_inline_c.c
+        platform/native_gte_core.c
+    )
+
+    ctr_native_add_slice_test(ctr_native_list_tests
+        tests/slice/ctr_list_slice.c
+        game/LIST.c
+    )
+endif()
