@@ -1,4 +1,5 @@
 #include <common.h>
+#include <reference/reference_dump.h>
 
 enum
 {
@@ -126,6 +127,10 @@ void VehPhysGeneral_PhysAngular(struct Thread *thread, struct Driver *driver)
 	simpTurnState = driver->simpTurnState;
 	speedApprox = (int)driver->speedApprox;
 	rotCurrW_interp = CTR_MipsSll(simpTurnState, 8);
+#ifdef CTR_REFERENCE
+	s16 ref_hsForwardDirIn = (s16)forwardDir;
+	u32 ref_hsFlagsIn = actionsFlagSet;
+#endif
 	if (speedApprox < 1)
 	{
 		if (driver->baseSpeed < 0)
@@ -160,8 +165,17 @@ void VehPhysGeneral_PhysAngular(struct Thread *thread, struct Driver *driver)
 	{
 		rotCurrW_interp = VehCalc_MapToRange(speedApprox, VEH_PHYS_ANGULAR_STICK_MIN_SPEED, VEH_PHYS_ANGULAR_STEER_SPEED_THRESHOLD, 0, rotCurrW_interp);
 	}
+#ifdef CTR_REFERENCE
+	ReferenceDump_HeadingSpin(simpTurnState, ref_hsForwardDirIn, driver->baseSpeed, driver->speedApprox, ref_hsFlagsIn,
+	                          (actionsFlagSet & ACTION_TOUCH_GROUND) != 0, (driver->stepFlagSet & COLL_STEP_TRIGGER_TURBO_PAD_MASK) != 0, rotCurrW_interp,
+	                          driver->forwardDir, actionsFlagSet);
+#endif
 	terrain = driver->terrainMeta1;
 	rotCurrW_original = (int)driver->rotationSpinRate;
+#ifdef CTR_REFERENCE
+	int ref_ahsCurrent = rotCurrW_original;
+	int ref_ahsDesired = rotCurrW_interp;
+#endif
 	if (rotCurrW_interp == 0)
 	{
 		int rate = CTR_MipsSra(
@@ -216,6 +230,10 @@ void VehPhysGeneral_PhysAngular(struct Thread *thread, struct Driver *driver)
 
 	rotCurrW_original = (int)forwardDir;
 	driver->rotationSpinRate = forwardDir;
+#ifdef CTR_REFERENCE
+	ReferenceDump_ApproachHeadingSpin(ref_ahsDesired, ref_ahsCurrent, driver->const_TurnInputDelay, (s8)driver->turnConst, terrain->turnResponseScale,
+	                                  driver->rotationSpinRate);
+#endif
 
 	rotCurrW_interp = (int)driver->timeUntilDriftSpinout;
 	if (rotCurrW_interp != 0)
@@ -307,6 +325,9 @@ void VehPhysGeneral_PhysAngular(struct Thread *thread, struct Driver *driver)
 	driver->turnAngleLerpVel = VehPhysGeneral_LerpToForwards(driver, (int)driftAngleCurr_og, (int)forwardDir, classSpeed_halved);
 
 	classSpeed_halved = (int)(s16)driver->turnAngleLerpVel;
+#ifdef CTR_REFERENCE
+	int ref_ataLerpVel = classSpeed_halved;
+#endif
 
 	if (terrain->turnAngleScale != VEH_PHYS_ANGULAR_TERRAIN_SCALE_NEUTRAL)
 	{
@@ -315,6 +336,9 @@ void VehPhysGeneral_PhysAngular(struct Thread *thread, struct Driver *driver)
 	driftAngleCurr_Final =
 	    CTR_MipsAddLo(driftAngleCurr_og, CTR_MipsSra(CTR_MipsMulLo(classSpeed_halved, elapsedTimeMS), VEH_PHYS_ANGULAR_TURN_INTEGRATION_SHIFT));
 	driver->turnAngleCurr = (s16)driftAngleCurr_Final;
+#ifdef CTR_REFERENCE
+	ReferenceDump_AdvanceTurnAngle(driftAngleCurr_og, ref_ataLerpVel, terrain->turnAngleScale, elapsedTimeMS, driver->turnAngleCurr);
+#endif
 	turnResistMinBitshift = rotCurrW_original;
 	if ((VEH_PHYS_ANGULAR_STEER_ACCEL_COMPARE_SPEED < speedApprox) && ((actionsFlagSet & ACTION_TOUCH_GROUND) != 0))
 	{

@@ -146,6 +146,11 @@ internal void NativeReplayScheduler_ResetSessionState(void)
 	NativeReplayScheduler_ResetVSyncPackets();
 }
 
+u32 NativeReplayScheduler_ReplayFrame(void)
+{
+	return s_replayFrame;
+}
+
 internal u32 NativeReplayScheduler_Fnv1a(const void *data, u32 size)
 {
 	const u8 *bytes = (const u8 *)data;

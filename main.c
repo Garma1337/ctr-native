@@ -34,41 +34,44 @@
 
 #include "game/game_unity.h"
 
-#include "game/zGlobal_RDATA.c"
 #include "game/zGlobal_DATA.c"
+#include "game/zGlobal_RDATA.c"
 #include "game/zGlobal_SDATA.c"
 
 #undef RECT
 
-#include "platform/native_disc_image.c"
 #include "platform/native_assets.c"
 #include "platform/native_audio.c"
-#include "platform/native_memory.c"
+#include "platform/native_cd.c"
 #include "platform/native_checkpoint.c"
 #include "platform/native_checkpoint_file.c"
-#include "platform/native_cd.c"
-#include "platform/native_gpu_links.c"
-#include "platform/native_gpu.c"
-#include "platform/native_gte_core.c"
+#include "platform/native_disc_image.c"
 #include "platform/native_glad.c"
-#include "platform/native_input.c"
+#include "platform/native_gpu.c"
+#include "platform/native_gpu_links.c"
+#include "platform/native_gte_core.c"
 #include "platform/native_inline_c.c"
+#include "platform/native_input.c"
 #include "platform/native_libapi.c"
 #include "platform/native_libetc.c"
-#include "platform/native_libgte.c"
 #include "platform/native_libgpu.c"
+#include "platform/native_libgte.c"
 #include "platform/native_libpad.c"
 #include "platform/native_libspu.c"
 #include "platform/native_log.c"
 #include "platform/native_memcard.c"
 #include "platform/native_memcard_adapter.c"
+#include "platform/native_memory.c"
 #include "platform/native_perf.c"
 #include "platform/native_platform.c"
-#include "platform/native_replay_scheduler.c"
 #include "platform/native_renderer.c"
+#include "platform/native_replay_scheduler.c"
 #include "platform/native_savestate.c"
 #include "platform/native_state.c"
 #include "platform/native_str.c"
+#ifdef CTR_REFERENCE
+#include "platform/reference_dump.c"
+#endif
 
 #ifndef CC
 #if __GNUC__
@@ -181,6 +184,13 @@ int main(int argc, char *argv[])
 		return NativeConsole_Return(1);
 	}
 
+#ifdef CTR_REFERENCE
+	if (ReferenceDump_MaybeExportSession(argc, argv))
+	{
+		return NativeConsole_Return(0);
+	}
+#endif
+
 #if defined(CTR_INTERNAL)
 	if (NativeReplayScheduler_PrepareReportFromArgs(argc, argv) != 0)
 	{
@@ -215,6 +225,9 @@ int main(int argc, char *argv[])
 		Platform_Shutdown();
 		return NativeConsole_Return(1);
 	}
+#ifdef CTR_REFERENCE
+	ReferenceDump_ConfigureFromArgs(argc, argv);
+#endif
 #else
 	(void)argc;
 	(void)argv;

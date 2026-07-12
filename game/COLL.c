@@ -1,5 +1,6 @@
 #include <common.h>
 #include <ctr_scratchpad.h>
+#include <reference/reference_dump.h>
 
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x8001d094-0x8001d0c4
 struct MetaDataMODEL *COLL_LevModelMeta(u32 id)
@@ -324,6 +325,9 @@ void COLL_FIXED_TRIANGL_Barycentrics(SVec3 *out, const SVec3 *v1, const SVec3 *v
 	out->x = (s16)CollFixed_GteReadMAC1();
 	out->y = (s16)CollFixed_GteReadMAC2();
 	out->z = (s16)CollFixed_GteReadMAC3();
+#ifdef CTR_REFERENCE
+	ReferenceDump_Barycentrics(v1->x, v1->y, v1->z, v2->x, v2->y, v2->z, point->x, point->y, point->z, out->x, out->y, out->z);
+#endif
 }
 
 
@@ -898,6 +902,10 @@ void COLL_FIXED_TRIANGL_GetNormVec(struct ScratchpadStruct *sps, struct BspSearc
 	}
 
 	v1->normalAxis = dominantAxis;
+#ifdef CTR_REFERENCE
+	ReferenceDump_TriangleNormal(v1x, v1y, v1z, v2->pos.x, v2->pos.y, v2->pos.z, v3->pos.x, v3->pos.y, v3->pos.z, lodShift, scale, normalShift, nx, ny, nz,
+	                             v1->plane.halfDistance, dominantAxis);
+#endif
 }
 
 
@@ -2346,12 +2354,20 @@ void COLL_MOVED_PlayerSearch(struct Thread *t, struct Driver *d)
 			d->collisionFlags |= DRIVER_COLL_FLAG_TOUCHED_QUADBLOCK;
 		}
 
+#ifdef CTR_REFERENCE
+		Vec3 ref_msPre = d->posCurr;
+#endif
 		if (sps->hitFraction > 0)
 		{
 			d->posCurr.x = CTR_MipsAddLo(d->posCurr.x, CTR_MipsSra(CTR_MipsMulLo(velocity.x, sps->hitFraction), 12));
 			d->posCurr.y = CTR_MipsAddLo(d->posCurr.y, CTR_MipsSra(CTR_MipsMulLo(velocity.y, sps->hitFraction), 12));
 			d->posCurr.z = CTR_MipsAddLo(d->posCurr.z, CTR_MipsSra(CTR_MipsMulLo(velocity.z, sps->hitFraction), 12));
 		}
+#ifdef CTR_REFERENCE
+		ReferenceDump_MovedStep(d->driverID, 15 - iterations, multiplier, d->velocity.x, d->velocity.y, d->velocity.z, velocity.x, velocity.y, velocity.z,
+		                        sps->hitFraction, sps->boolDidTouchQuadblock, ref_msPre.x, ref_msPre.y, ref_msPre.z, d->posCurr.x, d->posCurr.y, d->posCurr.z,
+		                        sps->hit.plane.normal.x, sps->hit.plane.normal.y, sps->hit.plane.normal.z);
+#endif
 
 		if (sps->boolDidTouchHitbox != 0)
 		{
@@ -2519,6 +2535,12 @@ internal void CollMoved_ScrubImpact_ProjectWallVelocity(const SVec3 *normal, s32
 u32 COLL_MOVED_ScrubImpact(struct Driver *d, struct Thread *t, struct ScratchpadStruct *sps, struct Scrub *scrub, Vec3 *velocity)
 {
 	SVec3 normal = sps->hit.plane.normal;
+#ifdef CTR_REFERENCE
+	s32 ref_scrubVelInX = velocity->x, ref_scrubVelInY = velocity->y, ref_scrubVelInZ = velocity->z;
+#define REF_SCRUBIMPACT_EMIT()                                                                                                                              \
+	ReferenceDump_ScrubImpact(d, ref_scrubVelInX, ref_scrubVelInY, ref_scrubVelInZ, normal.x, normal.y, normal.z, sps->Input1.scrubDepth, dot, velocity->x, \
+	                          velocity->y, velocity->z)
+#endif
 
 	if ((d->vShiftCount != 0) && (sps->boolDidTouchQuadblock != 0) && ((sps->hit.ptrQuadblock->quadFlags & QUADBLOCK_FLAG_GROUND) != 0) &&
 	    (sps->hit.reorderResult != COLL_TRIANGLE_CLIP_FACE) && (sps->hit.ptrQuadblock != d->underDriver))
@@ -2644,6 +2666,9 @@ u32 COLL_MOVED_ScrubImpact(struct Driver *d, struct Thread *t, struct Scratchpad
 
 					if (angleLimit >= dotSq)
 					{
+#ifdef CTR_REFERENCE
+						REF_SCRUBIMPACT_EMIT();
+#endif
 						return 1;
 					}
 				}
@@ -2673,6 +2698,9 @@ u32 COLL_MOVED_ScrubImpact(struct Driver *d, struct Thread *t, struct Scratchpad
 					d->matrixIndex = 0;
 
 					VehPhysProc_SlamWall_Init(t, d);
+#ifdef CTR_REFERENCE
+					REF_SCRUBIMPACT_EMIT();
+#endif
 					return 2;
 				}
 			}
@@ -2681,5 +2709,9 @@ u32 COLL_MOVED_ScrubImpact(struct Driver *d, struct Thread *t, struct Scratchpad
 		}
 	}
 
+#ifdef CTR_REFERENCE
+	REF_SCRUBIMPACT_EMIT();
+#undef REF_SCRUBIMPACT_EMIT
+#endif
 	return ret;
 }

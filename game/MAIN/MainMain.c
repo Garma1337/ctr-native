@@ -5,6 +5,7 @@
 #include <platform/native_replay_scheduler.h>
 #include <platform/native_savestate.h>
 #endif
+#include <reference/reference_dump.h>
 
 #if defined(CTR_NATIVE) && defined(CTR_INTERNAL)
 static struct NativePerfFrameInfo MainPerf_FrameInfo(struct GameTracker *gGT)
@@ -407,6 +408,9 @@ u32 main(void)
 				MainFrame_GameLogic(gGT, gGS);
 #if defined(CTR_NATIVE) && defined(CTR_INTERNAL)
 				NativePerf_EndScope(NATIVE_PERF_BUCKET_GAME_LOGIC);
+#endif
+#ifdef CTR_REFERENCE
+				ReferenceDump_Tick(gGT);
 #endif
 			}
 

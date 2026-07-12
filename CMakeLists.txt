@@ -89,6 +89,10 @@ target_compile_definitions(ctr_native PRIVATE
     CTR_NATIVE_VERSION=\"${CTR_NATIVE_VERSION}\"
     CTR_NATIVE_BUILD_ID=\"${CTR_NATIVE_BUILD_ID}\"
 )
+option(CTR_REFERENCE "Build the reference-capture dump instrumentation" OFF)
+if(CTR_REFERENCE)
+    target_compile_definitions(ctr_native PRIVATE CTR_REFERENCE)
+endif()
 target_compile_options(ctr_native PRIVATE -O2)
 if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
     target_compile_options(ctr_native PRIVATE -Wenum-conversion -Wenum-compare -Wswitch-enum -Wformat -Wparentheses)

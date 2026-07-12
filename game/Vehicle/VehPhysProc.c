@@ -1,4 +1,5 @@
 #include <common.h>
+#include <reference/reference_dump.h>
 
 // budget: 4624
 // curr: 4380
@@ -852,6 +853,9 @@ CheckJumpButtons:
 	{
 		stickLY = ptrgamepad->stickLY;
 	}
+#ifdef CTR_REFERENCE
+	int ref_throttleFlagsIn = (int)actionsFlagSetCopy;
+#endif
 
 	if (((s8)driver->simpTurnState < 0) || (actionsFlagSetCopy &= ~ACTION_REVERSE_STEER_LEFT, (s8)driver->simpTurnState < 1))
 	{
@@ -1022,6 +1026,10 @@ CheckJumpButtons:
 		actionsFlagSetNext = actionsFlagSetCopy & ~(ACTION_REVERSE_STEER_LEFT | ACTION_REVERSE_STEER_RIGHT);
 		approximateSpeed2 = targetBaseSpeed;
 	}
+#ifdef CTR_REFERENCE
+	ReferenceDump_ResolveThrottle((s8)driver->simpTurnState, driver->speedApprox, driverBaseSpeed, driver->const_BackwardSpeed, (int)square, (int)cross,
+	                              stickRY, stickLY, ref_throttleFlagsIn, approximateSpeed2, (int)actionsFlagSetNext);
+#endif
 
 	// driving backwards
 	if ((actionsFlagSetNext & ACTION_REVERSING_ENGINE) != 0)
@@ -1070,6 +1078,11 @@ CheckJumpButtons:
 		}
 	}
 
+#ifdef CTR_REFERENCE
+	int ref_accelFireSpeedIn = driver->fireSpeed;
+	int ref_accelCountIn = driver->accelTapCount;
+	int ref_accelWindowIn = driver->accelTapWindowTimer;
+#endif
 	if ((driver->accelTapWindowTimer == 0) ||
 
 	    ((driver->kartState != KS_NORMAL) && (driver->kartState != KS_ANTIVSHIFT)))
@@ -1104,6 +1117,11 @@ CheckJumpButtons:
 		// Racer struct + 0x39E = Racer's Base Speed
 		driver->fireSpeed = (s16)approximateSpeed2;
 	}
+#ifdef CTR_REFERENCE
+	ReferenceDump_AccelTap(ref_accelFireSpeedIn, approximateSpeed2, ref_accelCountIn, ref_accelWindowIn, DRIVER_ACCEL_TAP_WINDOW_MS, (int)driver->kartState,
+	                       driver->fireSpeed, driver->accelTapCount, driver->accelTapWindowTimer);
+	int ref_terrainSpeedIn = approximateSpeed2;
+#endif
 
 	// brakes
 	if ((actionsFlagSetNext & (ACTION_MASK_WEAPON | ACTION_BRAKE_WITH_ACCEL)) == 0)
@@ -1119,6 +1137,11 @@ CheckJumpButtons:
 	}
 	driver->terrainScaledBaseSpeed = (s16)driverBaseSpeedUshort;
 	driver->baseSpeed = (s16)approximateSpeed2;
+#ifdef CTR_REFERENCE
+	ReferenceDump_TerrainSpeedScale(ref_terrainSpeedIn, driverBaseSpeed, driver->terrainMeta2->speedMultiplier,
+	                                (int)(actionsFlagSetNext & (ACTION_MASK_WEAPON | ACTION_BRAKE_WITH_ACCEL)), (int)driver->baseSpeed,
+	                                (int)driver->terrainScaledBaseSpeed);
+#endif
 
 
 	// === Steering Section ===
@@ -1133,6 +1156,12 @@ CheckJumpButtons:
 		// gamepadBuffer -> stickLX
 		scratchValue = (int)ptrgamepad->stickLX;
 	}
+#ifdef CTR_REFERENCE
+	int ref_rsStickX = scratchValue;
+	int ref_rsSimpTurnIn = (s8)driver->simpTurnState;
+	int ref_rsNumFramesIn = driver->numFramesSpentSteering;
+	u32 ref_rsFlagsIn = actionsFlagSetNext;
+#endif
 
 	// default steer strength from class stats
 	steerStrength = CTR_MipsAddLo(driver->const_TurnRate,
@@ -1225,6 +1254,13 @@ UseTurnRate:
 SkipSetSteer:
 
 	driver->simpTurnState = (s8)CTR_MipsNegLo(steerStrength);
+#ifdef CTR_REFERENCE
+	ReferenceDump_ResolveSteering(driver->const_TurnRate, (s8)driver->turnConst, driver->accelTapCount, DRIVER_ACCEL_TAP_STEER_COUNT, approximateSpeed,
+	                              driver->wallRubTimer, cross, driver->speed, driver->const_Speed_ClassStat, ref_rsStickX, (ptrgamepad->rwd != NULL),
+	                              ptrgamepad->rwd ? ptrgamepad->rwd->gamepadCenter : 0, ptrgamepad->rwd ? ptrgamepad->rwd->deadZone : 0,
+	                              ptrgamepad->rwd ? ptrgamepad->rwd->range : 0, ref_rsSimpTurnIn, ref_rsNumFramesIn, ref_rsFlagsIn, (s8)driver->simpTurnState,
+	                              actionsFlagSetNext, driver->numFramesSpentSteering);
+#endif
 
 	// Change wheel rotation based on StickLX
 	scratchValue = VehPhysJoystick_GetStrengthAbsolute(scratchValue, VEH_PHYS_PROC_WHEEL_ROTATION_STRENGTH, ptrgamepad->rwd);
@@ -1559,6 +1595,10 @@ void VehPhysProc_PowerSlide_PhysAngular(struct Thread *th, struct Driver *driver
 {
 	(void)th;
 	struct GameTracker *gGT = sdata->gGT;
+#ifdef CTR_REFERENCE
+	int ref_shtaAngleIn = driver->angle;
+	int ref_shtaAxisIn = driver->axisRotationX;
+#endif
 
 	int axisAngleDelta = CTR_MipsSubLo(ANG_MODULO_TWO_PI(CTR_MipsAddLo(CTR_MipsSubLo(driver->axisRotationX, driver->angle), ANG_PI)), ANG_PI);
 	if (axisAngleDelta != 0)
@@ -1590,6 +1630,9 @@ void VehPhysProc_PowerSlide_PhysAngular(struct Thread *th, struct Driver *driver
 
 		driver->axisRotationX = (s16)ANG_MODULO_TWO_PI(CTR_MipsSubLo((u16)driver->axisRotationX, axisAngleStep));
 	}
+#ifdef CTR_REFERENCE
+	ReferenceDump_StepHeadingTowardAxis(ref_shtaAngleIn, ref_shtaAxisIn, gGT->elapsedTimeMS, driver->angle, driver->axisRotationX);
+#endif
 
 	// positive cam spin rate
 	int cameraSpinRate = (int)driver->const_Drifting_CameraSpinRate;
@@ -1660,6 +1703,13 @@ void VehPhysProc_PowerSlide_PhysAngular(struct Thread *th, struct Driver *driver
 	                                                                             VEH_PHYS_PROC_STEER_TURN_CONST_DIVISOR),
 	                                   FRACTIONAL_BITS_8),
 	                       0, CTR_MipsSll(steerVelLimit, FRACTIONAL_BITS_8));
+#ifdef CTR_REFERENCE
+	ReferenceDump_DesiredSpinRate((s8)driver->simpTurnState, driver->multDrift, (s8)driver->const_SteerVel_DriftStandard,
+	                              (s8)driver->const_SteerVel_DriftSwitchWay, driver->const_TurnRate, (s8)driver->turnConst, desiredSpinRate);
+	int ref_adsrSpinIn = currentSpinRate;
+	int ref_adsrDesiredIn = desiredSpinRate;
+	int ref_adsrFramesIn = driver->KartStates.Drifting.numFramesDrifting;
+#endif
 
 	b32 clampSpinRate;
 	if (desiredSpinRate < 0)
@@ -1740,12 +1790,20 @@ void VehPhysProc_PowerSlide_PhysAngular(struct Thread *th, struct Driver *driver
 		currentSpinRate = CTR_MipsNegLo(currentSpinRate);
 		driftDirection = CTR_MipsNegLo(driftDirection);
 	}
+#ifdef CTR_REFERENCE
+	ReferenceDump_ApproachDriftSpinRate(ref_adsrSpinIn, ref_adsrDesiredIn, driver->multDrift, ref_adsrFramesIn, driver->const_DriftSpinRateAccel,
+	                                    driver->const_DriftSpinRateDecel, gGT->elapsedTimeMS, currentSpinRate, driver->KartStates.Drifting.numFramesDrifting);
+#endif
 
 	// Map value from [oldMin, oldMax] to [newMin, newMax]
 	// inverting newMin and newMax will give an inverse range mapping
 	int driftTurnInput = VehCalc_MapToRange(
 	    (int)driver->KartStates.Drifting.driftTotalTimeMS, 0, CTR_MipsSll((u8)driver->const_DriftTurnRampFrames, VEH_PHYS_PROC_FRAME_TIME_SHIFT),
 	    CTR_MipsSra(CTR_MipsMulLo((s8)driver->const_DriftTurnStartupScale, driver->multDrift), FRACTIONAL_BITS_8), driftDirection);
+#ifdef CTR_REFERENCE
+	int ref_taSpinIn = currentSpinRate;
+	int ref_taTurnAngleIn = driver->turnAngleCurr;
+#endif
 
 	int newSpinRate = (s16)currentSpinRate;
 	if (-1 < driftTurnInput)
@@ -1821,6 +1879,16 @@ void VehPhysProc_PowerSlide_PhysAngular(struct Thread *th, struct Driver *driver
 		}
 		driver->turnAngleCurr = (s16)CTR_MipsAddLo((u16)driver->turnAngleCurr, turnAngleStepSigned);
 	}
+#ifdef CTR_REFERENCE
+	ReferenceDump_TurnAngle(ref_taSpinIn, driver->KartStates.Drifting.driftTotalTimeMS, (u8)driver->const_DriftTurnRampFrames,
+	                        (s8)driver->const_DriftTurnStartupScale, driver->multDrift, driver->multDrift, ref_taTurnAngleIn, (s8)driver->const_DriftTurnBase,
+	                        (s8)driver->turnConst, driver->const_DriftTurnAngleScale, driver->const_DriftTurnSameDirectionAngle,
+	                        driver->const_DriftTurnOppositeDirectionAngle, (s8)driver->const_SteerVel_DriftStandard, (s8)driver->const_SteerVel_DriftSwitchWay,
+	                        signedSpinRate, driver->turnAngleCurr);
+	int ref_twAngleIn = driver->turnWobbleAngle;
+	int ref_twTimerIn = driver->turnWobbleTimer;
+	int ref_twVelIn = driver->turnWobbleVelocity;
+#endif
 
 	int numFramesDriftingAbs = driver->KartStates.Drifting.numFramesDrifting;
 
@@ -1915,11 +1983,20 @@ void VehPhysProc_PowerSlide_PhysAngular(struct Thread *th, struct Driver *driver
 
 	// near-spinout distortion SFX
 	driver->turnWobbleAngle = turnWobbleAngleNext;
+#ifdef CTR_REFERENCE
+	ReferenceDump_TurnWobble(ref_twAngleIn, ref_twTimerIn, ref_twVelIn, driver->KartStates.Drifting.numFramesDrifting,
+	                         (u8)driver->const_Drifting_FramesTillSpinout, driftTurnInput, driver->turnWobbleAngle, driver->turnWobbleTimer,
+	                         driver->turnWobbleVelocity);
+	int ref_attAngleIn = driver->angle;
+#endif
 
 	driver->ampTurnState = (s16)CTR_MipsAddLo(signedSpinRate, driftTurnInput);
 
 	driver->angle = (s16)ANG_MODULO_TWO_PI(
 	    CTR_MipsAddLo((u16)driver->angle, CTR_MipsSra(CTR_MipsMulLo(driver->ampTurnState, gGT->elapsedTimeMS), VEH_PHYS_PROC_ANGLE_INTEGRATION_SHIFT)));
+#ifdef CTR_REFERENCE
+	ReferenceDump_ApplyTurnToAngle(ref_attAngleIn, signedSpinRate, driftTurnInput, gGT->elapsedTimeMS, driver->ampTurnState, driver->angle);
+#endif
 
 	if (driver->KartStates.Drifting.driftBoostTimeMS != 0)
 	{

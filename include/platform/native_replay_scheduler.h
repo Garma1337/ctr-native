@@ -34,6 +34,8 @@ int NativeReplayScheduler_ConsumeVSyncPacket(int requestedVBlanks, int *emittedV
 int NativeReplayScheduler_ConsumeFrameElapsedTimeMS(int *elapsedTimeMS);
 int NativeReplayScheduler_EndFrame(const struct NativeReplaySchedulerFrameInfo *info);
 void NativeReplayScheduler_RecordVSyncPacket(int emittedVBlanks);
+/* Absolute record/replay frame counter, for reference-capture row tagging (CTR_REFERENCE). */
+u32 NativeReplayScheduler_ReplayFrame(void);
 #endif
 
 #endif

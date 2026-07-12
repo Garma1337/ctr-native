@@ -1,4 +1,5 @@
 #include <common.h>
+#include <reference/reference_dump.h>
 
 enum
 {
@@ -353,6 +354,9 @@ void VehFire_Increment(struct Driver *driver, int reserves, u32 type, int fireLe
 	newFireSpeedCap = CTR_MipsAddLo(
 	    CTR_MipsSra(CTR_MipsMulLo(fireLevel, CTR_MipsSubLo(driver->const_SacredFireSpeed, driver->const_SingleTurboSpeed)), VEH_FIRE_SPEED_CAP_SHIFT),
 	    driver->const_SingleTurboSpeed);
+#ifdef CTR_REFERENCE
+	ReferenceDump_FireSpeedCap(fireLevel, driver->const_SingleTurboSpeed, driver->const_SacredFireSpeed, newFireSpeedCap);
+#endif
 
 	if (
 	    // any gain in boost,
@@ -395,6 +399,10 @@ void VehFire_Increment(struct Driver *driver, int reserves, u32 type, int fireLe
 	}
 
 	// turbo pad, boost powerup
+#ifdef CTR_REFERENCE
+	int ref_reservesIn = driver->reserves;
+	int ref_outsideIn = driver->turbo_outsideTimer;
+#endif
 	if ((type & FREEZE_RESERVES_ON_TURBO_PAD) != 0)
 	{
 		// this adds reserves on the first frame you touch the turbo pad,
@@ -427,6 +435,9 @@ void VehFire_Increment(struct Driver *driver, int reserves, u32 type, int fireLe
 			driver->reserves = (s16)reserves;
 		}
 	}
+#ifdef CTR_REFERENCE
+	ReferenceDump_Reserves((int)type, reserves, ref_reservesIn, ref_outsideIn, driver->reserves, driver->turbo_outsideTimer);
+#endif
 
 	// player of any kind
 	if (driver->instSelf->thread->modelIndex == DYNAMIC_PLAYER)

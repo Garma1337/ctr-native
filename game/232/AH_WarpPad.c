@@ -1,4 +1,5 @@
 #include <common.h>
+#include <reference/reference_dump.h>
 
 // NOTE(aalhendi): WarpPad level IDs come from "warppad#NN" instance names
 // and use retail adventure numbering, not the native LevelID enum.
@@ -501,6 +502,11 @@ void AH_WarpPad_ThTick(struct Thread *t)
 	// default
 	champSlot = 0;
 
+#ifdef CTR_REFERENCE
+	unsigned int ref_advS0Pre = sdata->advRng.state0;
+	unsigned int ref_advS1Pre = sdata->advRng.state1;
+	int ref_advChampBranch = ((champID < AH_WP_RACER_SLOT_COUNT) && (champID != data.characterIDs[driver->driverID]));
+#endif
 	// If Speed Champion is on the track (Crash-Pura)
 	// and is not the same characterID as this driver
 	if ((champID < AH_WP_RACER_SLOT_COUNT) && (champID != data.characterIDs[driver->driverID]))
@@ -555,6 +561,9 @@ void AH_WarpPad_ThTick(struct Thread *t)
 
 	// spawn P1 in the back
 	sdata->kartSpawnOrderArray[0] = 7;
+#ifdef CTR_REFERENCE
+	ReferenceDump_AdvSpawnShuffle(ref_advS0Pre, ref_advS1Pre, ref_advChampBranch, sdata->kartSpawnOrderArray);
+#endif
 
 	// if flag is on-screen, loading has already been finalized
 	if (RaceFlag_IsTransitioning())

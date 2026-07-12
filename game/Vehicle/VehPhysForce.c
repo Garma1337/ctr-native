@@ -1,4 +1,5 @@
 #include <common.h>
+#include <reference/reference_dump.h>
 
 
 // NOTE(aalhendi): ASM-verified helper for NTSC-U 926 0x8005e104-0x8005e214.
@@ -16,6 +17,9 @@ void VehPhysForce_ConvertSpeedToVecOut(struct Driver *driver, Vec3 *vel)
 	vel->x = CTR_MipsSra(CTR_MipsMulLo(yComponent, xSine), FRACTIONAL_BITS);
 	vel->y = CTR_MipsSra(CTR_MipsMulLo(driver->speed, ySine), FRACTIONAL_BITS);
 	vel->z = CTR_MipsSra(CTR_MipsMulLo(yComponent, xCos), FRACTIONAL_BITS);
+#ifdef CTR_REFERENCE
+	ReferenceDump_ConvertSpeedToVec((int)driver->speed, (int)driver->axisRotationX, (int)driver->axisRotationY, vel->x, vel->y, vel->z);
+#endif
 }
 
 void VehPhysForce_ConvertSpeedToVec(struct Driver *driver)
@@ -171,6 +175,19 @@ static Vec3 VehPhysForce_OnGravity_RotateVector(const MATRIX *m, s16 vx, s16 vy,
 void VehPhysForce_OnGravity(struct Driver *driver, Vec3 *velocity)
 {
 	int elapsedTimeMS = sdata->gGT->elapsedTimeMS;
+#ifdef CTR_REFERENCE
+	int ref_velInX = velocity->x, ref_velInY = velocity->y, ref_velInZ = velocity->z;
+	int ref_actionsIn = (int)driver->actionsFlagSet;
+	int ref_timerIn = driver->terrainFrictionTimer;
+	int ref_vShiftCountIn = driver->vShiftCount;
+	int ref_vShiftWindowIn = driver->vShiftWindowTimer;
+	int ref_firstFrameIn = (int)driver->boolFirstFrameSinceRevEngine;
+	int ref_forwardDirIn = driver->forwardDir;
+	int ref_lowGravity = 0;
+#define REF_ONGRAVITY_EMIT()                                                                                                                          \
+	ReferenceDump_OnGravity(driver, elapsedTimeMS, ref_lowGravity, ref_velInX, ref_velInY, ref_velInZ, ref_actionsIn, ref_timerIn, ref_vShiftCountIn, \
+	                        ref_vShiftWindowIn, ref_firstFrameIn, ref_forwardDirIn, velocity->x, velocity->y, velocity->z)
+#endif
 
 	gte_SetRotMatrix(&driver->matrixMovingDir);
 	VehPhysForce_OnGravity_SetLightMatrixTranspose(&driver->matrixMovingDir);
@@ -186,6 +203,9 @@ void VehPhysForce_OnGravity(struct Driver *driver, Vec3 *velocity)
 	// flag, while host C would crash on a null dereference.
 	if ((underDriver != NULL) && ((underDriver->quadFlags & VEH_PHYS_FORCE_QUAD_LOW_GRAVITY) != 0))
 	{
+#ifdef CTR_REFERENCE
+		ref_lowGravity = 1;
+#endif
 		int scaledGravity = CTR_MipsAddLo(CTR_MipsSll(gravityY, 2), gravityY);
 		gravityY = CTR_MipsAddLo(CTR_MipsSll(scaledGravity, 3), gravityY) / VEH_PHYS_FORCE_LOW_GRAVITY_DIVISOR;
 	}
@@ -525,6 +545,9 @@ CHECK_ROLLBACK_FROM_PREVIOUS_DIRECTION:
 
 	if (localZ <= 0)
 	{
+#ifdef CTR_REFERENCE
+		REF_ONGRAVITY_EMIT();
+#endif
 		return;
 	}
 	goto START_ROLLBACK;
@@ -536,10 +559,16 @@ CHECK_ROLLBACK_FROM_FORWARD:
 	}
 	if (originalLocalZ > 0)
 	{
+#ifdef CTR_REFERENCE
+		REF_ONGRAVITY_EMIT();
+#endif
 		return;
 	}
 	if (localZ <= 0)
 	{
+#ifdef CTR_REFERENCE
+		REF_ONGRAVITY_EMIT();
+#endif
 		return;
 	}
 
@@ -549,6 +578,10 @@ START_ROLLBACK:
 		driver->vShiftCount = (s16)CTR_MipsAddLo((u16)driver->vShiftCount, 1);
 	}
 	driver->vShiftWindowTimer = VEH_PHYS_FORCE_ROLLBACK_WINDOW_TIMER;
+#ifdef CTR_REFERENCE
+	REF_ONGRAVITY_EMIT();
+#undef REF_ONGRAVITY_EMIT
+#endif
 }
 
 static Vec3 VehPhysForce_OnApplyForces_RotateVector(const MATRIX *m, s16 vx, s16 vy, s16 vz)
