@@ -492,6 +492,10 @@ void VehPhysProc_Driving_PhysLinear(struct Thread *thread, struct Driver *driver
 			// Select a random weapon for driver
 			VehPhysGeneral_SetHeldItem(driver);
 
+#ifdef CTR_REFERENCE
+			ReferenceDump_Event("crate", (int)driver->driverID, (int)driver->heldItemID, 0, 0);
+#endif
+
 			// if wumpa count is juiced
 			hasJuicedWumpa = driver->numWumpas >= DRIVER_WUMPA_JUICED_COUNT;
 

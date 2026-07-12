@@ -1,4 +1,5 @@
 #include <common.h>
+#include <reference/reference_dump.h>
 
 static inline void VehPickupItem_CopyMatrix(MATRIX *dst, const MATRIX *src)
 {
@@ -535,6 +536,10 @@ void VehPickupItem_ShootNow(struct Driver *d, s32 weaponID, s32 flags)
 	int modelID;
 	int mineHitModel = 0;
 	int mineShouldInitFollower = 0;
+
+#ifdef CTR_REFERENCE
+	ReferenceDump_Event("fire", (int)d->driverID, (int)weaponID, (int)flags, 0);
+#endif
 
 	switch (weaponID)
 	{

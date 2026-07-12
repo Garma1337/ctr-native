@@ -1,4 +1,5 @@
 #include <common.h>
+#include <reference/reference_dump.h>
 
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x8002843c-0x80028468
 int CountSounds(void)
@@ -42,6 +43,9 @@ void OtherFX_Play_Echo(u32 soundID, int flags, int echoFlag)
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x800284d0-0x80028690
 int OtherFX_Play_LowLevel(u32 soundID, u8 boolAntiSpam, u32 flags)
 {
+#ifdef CTR_REFERENCE
+	ReferenceDump_Event("cue", -1, (int)soundID, (int)boolAntiSpam, (int)flags);
+#endif
 	struct GameTracker *gGT = sdata->gGT;
 	struct ChannelStats *channel;
 	int count;

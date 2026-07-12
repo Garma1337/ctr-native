@@ -1,4 +1,5 @@
 #include <common.h>
+#include <reference/reference_dump.h>
 
 enum
 {
@@ -559,6 +560,10 @@ void VehStuckProc_MaskGrab_Init(struct Thread *t, struct Driver *d)
 {
 	struct GameTracker *gGT = sdata->gGT;
 	struct Instance *inst = t->inst;
+
+#ifdef CTR_REFERENCE
+	ReferenceDump_Event("respawn", (int)d->driverID, (int)d->kartState, 0, 0);
+#endif
 
 	d->kartState = KS_MASK_GRABBED;
 

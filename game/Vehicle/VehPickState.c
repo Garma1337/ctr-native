@@ -1,4 +1,5 @@
 #include <common.h>
+#include <reference/reference_dump.h>
 
 enum
 {
@@ -88,6 +89,10 @@ int VehPickState_NewState(struct Driver *victimDriver, int damageType, struct Dr
 	victimDriver->pendingDamageType = 0;
 
 	int victimCharacter = data.characterIDs[victimDriver->driverID];
+
+#ifdef CTR_REFERENCE
+	ReferenceDump_Event("hit", (int)victimDriver->driverID, (attackDriver != NULL) ? (int)attackDriver->driverID : -1, damageType, reason);
+#endif
 
 	if (victimState == KS_MASK_GRABBED)
 	{

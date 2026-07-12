@@ -537,9 +537,22 @@ static FILE *s_referenceFullFile;
 static FILE *s_referenceSessionFile;
 static FILE *s_referenceItemsFile;
 static FILE *s_referenceVisibilityFile;
+static FILE *s_referenceEventsFile;
 static int s_referenceSessionHeaderWritten;
 static int s_referenceRaceStarted;
 static unsigned int s_referenceRaceStartFrame;
+
+void ReferenceDump_Event(const char *type, int driverID, int a, int b, int c)
+{
+	static int rowCount;
+	if (s_referenceEventsFile == NULL || rowCount >= REFERENCE_DUMP_MAX_ROWS)
+	{
+		return;
+	}
+	fprintf(s_referenceEventsFile, "%u,%s,%d,%d,%d,%d\n", (unsigned int)NativeReplayScheduler_ReplayFrame(), type, driverID, a, b, c);
+	fflush(s_referenceEventsFile);
+	rowCount++;
+}
 
 static int ReferenceDump_MapPsxButtons(unsigned int psxActiveHigh)
 {
@@ -548,7 +561,8 @@ static int ReferenceDump_MapPsxButtons(unsigned int psxActiveHigh)
 		unsigned int psx;
 		int sharp;
 	} kMap[] = {
-	    {0x4000, 0x0201} {0x2000, 0x0208},
+	    {0x4000, 0x0201},
+	    {0x2000, 0x0208},
 	    {0x8000, 0x0402},
 	    {0x1000, 0x0400},
 	    {0x0400, 0x0804},
@@ -954,13 +968,14 @@ void ReferenceDump_ConfigureFromArgs(int argc, char **argv)
 	const char *sessionPath = ReferenceDump_ArgValue(argc, argv, "--dump-session");
 	const char *itemsPath = ReferenceDump_ArgValue(argc, argv, "--dump-items");
 	const char *visibilityPath = ReferenceDump_ArgValue(argc, argv, "--dump-visibility");
+	const char *eventsPath = ReferenceDump_ArgValue(argc, argv, "--dump-events");
 
 	if (statePath != NULL)
 	{
 		s_referenceStateFile = fopen(statePath, "w");
 		if (s_referenceStateFile != NULL)
 		{
-			fprintf(s_referenceStateFile, "tick,dtMs,rng,kart,posX,posY,posZ,velX,velY,velZ,angle,velYaw,velPitch,speed,state,lap\n");
+			fprintf(s_referenceStateFile, "tick,dtMs,rng,kart,posX,posY,posZ,velX,velY,velZ,angle,velYaw,velPitch,speed,state,lap,baseSpeed,ampTurnState,speedApprox\n");
 		}
 	}
 
@@ -1004,6 +1019,15 @@ void ReferenceDump_ConfigureFromArgs(int argc, char **argv)
 		if (s_referenceVisibilityFile != NULL)
 		{
 			fprintf(s_referenceVisibilityFile, "tick,dtMs,rng,player,camCellQuad,quadHit,visQuadCount,visLeafCount,bspLeafsDrawn,numQuad\n");
+		}
+	}
+
+	if (eventsPath != NULL)
+	{
+		s_referenceEventsFile = fopen(eventsPath, "w");
+		if (s_referenceEventsFile != NULL)
+		{
+			fprintf(s_referenceEventsFile, "frame,type,driverID,a,b,c\n");
 		}
 	}
 }
@@ -1192,9 +1216,9 @@ void ReferenceDump_Tick(const struct GameTracker *gGT)
 			{
 				continue;
 			}
-			fprintf(s_referenceStateFile, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", tick, dtMs, rng, (int)d->driverID, d->posCurr.x, d->posCurr.y,
+			fprintf(s_referenceStateFile, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", tick, dtMs, rng, (int)d->driverID, d->posCurr.x, d->posCurr.y,
 			        d->posCurr.z, d->velocity.x, d->velocity.y, d->velocity.z, (int)d->angle, (int)d->axisRotationX, (int)d->axisRotationY, (int)d->speed,
-			        (int)d->kartState, (int)d->lapIndex);
+			        (int)d->kartState, (int)d->lapIndex, (int)d->baseSpeed, (int)d->ampTurnState, (int)d->speedApprox);
 		}
 		fflush(s_referenceStateFile);
 	}

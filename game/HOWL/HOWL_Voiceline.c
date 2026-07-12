@@ -1,4 +1,5 @@
 #include <common.h>
+#include <reference/reference_dump.h>
 
 // does not really touch voiceline
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x8002c918-0x8002caa8
@@ -139,6 +140,10 @@ void Voiceline_RequestPlay(u32 voiceID, u32 characterID, u32 characterID2)
 	u32 elapsedFrames;
 	u32 canImmediate;
 	u32 canQueue;
+
+#ifdef CTR_REFERENCE
+	ReferenceDump_Event("voice", (int)characterID, (int)voiceID, (int)characterID2, 0);
+#endif
 
 	if (voiceID >= 0x18)
 	{

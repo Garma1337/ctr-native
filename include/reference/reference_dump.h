@@ -38,5 +38,7 @@ void ReferenceDump_ScrubImpact(const struct Driver *driver, int velInX, int velI
 void ReferenceDump_MovedStep(int driverID, int iter, int multiplier, int velX, int velY, int velZ, int stepX, int stepY, int stepZ, int hitFraction, int touched, int preX, int preY, int preZ, int postX, int postY, int postZ, int normalX, int normalY, int normalZ);
 void ReferenceDump_AdvSpawnShuffle(unsigned int s0Pre, unsigned int s1Pre, int champBranch, const char *spawnOrder8);
 
+void ReferenceDump_Event(const char *type, int driverID, int a, int b, int c);
+
 #endif /* CTR_REFERENCE */
 #endif /* CTR_NATIVE_REFERENCE_DUMP_H */
