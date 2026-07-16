@@ -36,6 +36,8 @@ void ReferenceDump_TriangleNormal(int v1x, int v1y, int v1z, int v2x, int v2y, i
 void ReferenceDump_ModelVertex(const char *lodName, int animFrame, int mode, int vertexIndex, int sx, int sy, int sz, int ax, int ay, int az);
 void ReferenceDump_ScrubImpact(const struct Driver *driver, int velInX, int velInY, int velInZ, int normalX, int normalY, int normalZ, int scrubDepth, int dot, int velOutX, int velOutY, int velOutZ);
 void ReferenceDump_MovedStep(int driverID, int iter, int multiplier, int velX, int velY, int velZ, int stepX, int stepY, int stepZ, int hitFraction, int touched, int preX, int preY, int preZ, int postX, int postY, int postZ, int normalX, int normalY, int normalZ);
+void ReferenceDump_MovedQuad(int driverID, int iter, int touched, int quadIdx, int flags, int i0, int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i8, int cX, int cY, int cZ);
+void ReferenceDump_MovedTri(int driverID, int iter, int nX, int nY, int nZ, int halfDist, int planeNear, int planeFar, int distance, int prevBest, int won);
 void ReferenceDump_AdvSpawnShuffle(unsigned int s0Pre, unsigned int s1Pre, int champBranch, const char *spawnOrder8);
 
 void ReferenceDump_Event(const char *type, int driverID, int a, int b, int c);

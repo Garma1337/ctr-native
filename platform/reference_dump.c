@@ -511,6 +511,47 @@ void ReferenceDump_MovedStep(int driverID, int iter, int multiplier, int velX, i
 	}
 }
 
+void ReferenceDump_MovedQuad(int driverID, int iter, int touched, int quadIdx, int flags, int i0, int i1, int i2, int i3, int i4, int i5, int i6, int i7,
+                             int i8, int cX, int cY, int cZ)
+{
+	static FILE *file;
+	static int rowCount;
+
+	if (rowCount >= REFERENCE_DUMP_MAX_ROWS)
+	{
+		return;
+	}
+
+	file = ReferenceDump_OpenOnce(&file, "movedquad.csv", "frame,driverID,iter,touched,quadIdx,flags,i0,i1,i2,i3,i4,i5,i6,i7,i8,cX,cY,cZ");
+	if (file != NULL)
+	{
+		fprintf(file, "%u,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", (unsigned int)NativeReplayScheduler_ReplayFrame(), driverID, iter, touched,
+		        quadIdx, flags, i0, i1, i2, i3, i4, i5, i6, i7, i8, cX, cY, cZ);
+		fflush(file);
+		rowCount++;
+	}
+}
+
+void ReferenceDump_MovedTri(int driverID, int iter, int nX, int nY, int nZ, int halfDist, int planeNear, int planeFar, int distance, int prevBest, int won)
+{
+	static FILE *file;
+	static int rowCount;
+
+	if (rowCount >= REFERENCE_DUMP_MAX_ROWS)
+	{
+		return;
+	}
+
+	file = ReferenceDump_OpenOnce(&file, "movedtri.csv", "frame,driverID,iter,nX,nY,nZ,halfDist,planeNear,planeFar,distance,prevBest,won");
+	if (file != NULL)
+	{
+		fprintf(file, "%u,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", (unsigned int)NativeReplayScheduler_ReplayFrame(), driverID, iter, nX, nY, nZ, halfDist,
+		        planeNear, planeFar, distance, prevBest, won);
+		fflush(file);
+		rowCount++;
+	}
+}
+
 void ReferenceDump_AdvSpawnShuffle(unsigned int s0Pre, unsigned int s1Pre, int champBranch, const char *spawnOrder8)
 {
 	static FILE *file;
@@ -975,7 +1016,7 @@ void ReferenceDump_ConfigureFromArgs(int argc, char **argv)
 		s_referenceStateFile = fopen(statePath, "w");
 		if (s_referenceStateFile != NULL)
 		{
-			fprintf(s_referenceStateFile, "tick,dtMs,rng,kart,posX,posY,posZ,velX,velY,velZ,angle,velYaw,velPitch,speed,state,lap,baseSpeed,ampTurnState,speedApprox\n");
+			fprintf(s_referenceStateFile, "tick,dtMs,rng,kart,posX,posY,posZ,velX,velY,velZ,angle,velYaw,velPitch,speed,state,lap,baseSpeed,ampTurnState,speedApprox,fireSpeedCap,numWumpas,reserves,turboConst,classStat,accelStat\n");
 		}
 	}
 
@@ -1216,9 +1257,10 @@ void ReferenceDump_Tick(const struct GameTracker *gGT)
 			{
 				continue;
 			}
-			fprintf(s_referenceStateFile, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", tick, dtMs, rng, (int)d->driverID, d->posCurr.x, d->posCurr.y,
+			fprintf(s_referenceStateFile, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", tick, dtMs, rng, (int)d->driverID, d->posCurr.x, d->posCurr.y,
 			        d->posCurr.z, d->velocity.x, d->velocity.y, d->velocity.z, (int)d->angle, (int)d->axisRotationX, (int)d->axisRotationY, (int)d->speed,
-			        (int)d->kartState, (int)d->lapIndex, (int)d->baseSpeed, (int)d->ampTurnState, (int)d->speedApprox);
+			        (int)d->kartState, (int)d->lapIndex, (int)d->baseSpeed, (int)d->ampTurnState, (int)d->speedApprox, (int)d->fireSpeedCap, (int)d->numWumpas, (int)d->reserves,
+			        (int)d->turboConst, (int)d->const_Speed_ClassStat, (int)d->const_AccelSpeed_ClassStat);
 		}
 		fflush(s_referenceStateFile);
 	}

@@ -1865,6 +1865,11 @@ s32 COLL_MOVED_TRIANGL_ReorderNormals(struct BspSearchResult *candidate, struct 
 }
 
 
+#ifdef CTR_REFERENCE
+global_variable int s_refMovedTriDriverID = -1;
+global_variable int s_refMovedTriIter = 0;
+#endif
+
 // NOTE(aalhendi): ASM-verified NTSC-U 926 0x8001fc40-0x80020064
 void COLL_MOVED_TRIANGL_TestPoint(struct ScratchpadStruct *sps, struct BspSearchVertex *v1, struct BspSearchVertex *v2, struct BspSearchVertex *v3)
 {
@@ -1999,6 +2004,15 @@ KeepNormal:;
 	{
 		distance = CTR_MipsSubLo(COLL_FRACTION_ONE, CTR_MipsDiv(CTR_MipsSll(CTR_MipsSubLo(sps->Input1.hitRadius, planeNear), 12), distance));
 	}
+
+#ifdef CTR_REFERENCE
+	if (s_refMovedTriDriverID == 0)
+	{
+		ReferenceDump_MovedTri(s_refMovedTriDriverID, s_refMovedTriIter, sps->candidate.plane.normal.x, sps->candidate.plane.normal.y,
+		                       sps->candidate.plane.normal.z, sps->candidate.plane.halfDistance, planeNear, planeFar, distance, sps->hitFraction,
+		                       (CTR_MipsSubLo(distance, sps->hitFraction) < 0) ? 1 : 0);
+	}
+#endif
 
 	if (CTR_MipsSubLo(distance, sps->hitFraction) >= 0)
 	{
@@ -2300,8 +2314,15 @@ void COLL_MOVED_PlayerSearch(struct Thread *t, struct Driver *d)
 
 	COLL_MOVED_FindScrub(NULL, 0, sps);
 
+#ifdef CTR_REFERENCE
+	s_refMovedTriDriverID = (int)d->driverID;
+#endif
+
 	for (s32 iterations = 15; iterations != 0; iterations--)
 	{
+#ifdef CTR_REFERENCE
+		s_refMovedTriIter = 15 - iterations;
+#endif
 		Vec3 velocity = {
 		    .x = CollMoved_PlayerSearch_StepVelocity(d->velocity.x, gGT->elapsedTimeMS, multiplier),
 		    .y = CollMoved_PlayerSearch_StepVelocity(d->velocity.y, gGT->elapsedTimeMS, multiplier),
@@ -2367,6 +2388,32 @@ void COLL_MOVED_PlayerSearch(struct Thread *t, struct Driver *d)
 		ReferenceDump_MovedStep(d->driverID, 15 - iterations, multiplier, d->velocity.x, d->velocity.y, d->velocity.z, velocity.x, velocity.y, velocity.z,
 		                        sps->hitFraction, sps->boolDidTouchQuadblock, ref_msPre.x, ref_msPre.y, ref_msPre.z, d->posCurr.x, d->posCurr.y, d->posCurr.z,
 		                        sps->hit.plane.normal.x, sps->hit.plane.normal.y, sps->hit.plane.normal.z);
+		{
+			struct QuadBlock *ref_hitQuad = sps->hit.ptrQuadblock;
+			struct mesh_info *ref_mi = (gGT->level1 != NULL) ? gGT->level1->ptr_mesh_info : NULL;
+			int ref_qIdx = -1;
+			int ref_flags = 0;
+			int ref_qi[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+			int ref_cX = 0, ref_cY = 0, ref_cZ = 0;
+			if ((sps->boolDidTouchQuadblock != 0) && (ref_hitQuad != NULL) && (ref_mi != NULL))
+			{
+				ref_qIdx = (int)(ref_hitQuad - ref_mi->ptrQuadBlockArray);
+				ref_flags = (int)ref_hitQuad->quadFlags;
+				for (int ref_k = 0; ref_k < 9; ref_k++)
+				{
+					ref_qi[ref_k] = (int)ref_hitQuad->index[ref_k];
+				}
+				if (ref_mi->ptrVertexArray != NULL)
+				{
+					struct LevVertex *ref_cv = &ref_mi->ptrVertexArray[ref_hitQuad->index[4]];
+					ref_cX = ref_cv->pos.x;
+					ref_cY = ref_cv->pos.y;
+					ref_cZ = ref_cv->pos.z;
+				}
+			}
+			ReferenceDump_MovedQuad(d->driverID, 15 - iterations, sps->boolDidTouchQuadblock, ref_qIdx, ref_flags, ref_qi[0], ref_qi[1], ref_qi[2], ref_qi[3],
+			                        ref_qi[4], ref_qi[5], ref_qi[6], ref_qi[7], ref_qi[8], ref_cX, ref_cY, ref_cZ);
+		}
 #endif
 
 		if (sps->boolDidTouchHitbox != 0)
