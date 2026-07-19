@@ -552,6 +552,27 @@ void ReferenceDump_MovedTri(int driverID, int iter, int nX, int nY, int nZ, int 
 	}
 }
 
+void ReferenceDump_FixedStep(int driverID, int underEntryIdx, int underHit, int selIdx, int selFlags, int grounded, int posY, int quadBlockHeight, int nX, int nY,
+                             int nZ)
+{
+	static FILE *file;
+	static int rowCount;
+
+	if (rowCount >= REFERENCE_DUMP_MAX_ROWS)
+	{
+		return;
+	}
+
+	file = ReferenceDump_OpenOnce(&file, "fixedstep.csv", "frame,driverID,underEntryIdx,underHit,selIdx,selFlags,grounded,posY,quadBlockHeight,nX,nY,nZ");
+	if (file != NULL)
+	{
+		fprintf(file, "%u,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", (unsigned int)NativeReplayScheduler_ReplayFrame(), driverID, underEntryIdx, underHit, selIdx,
+		        selFlags, grounded, posY, quadBlockHeight, nX, nY, nZ);
+		fflush(file);
+		rowCount++;
+	}
+}
+
 void ReferenceDump_AdvSpawnShuffle(unsigned int s0Pre, unsigned int s1Pre, int champBranch, const char *spawnOrder8)
 {
 	static FILE *file;
@@ -672,6 +693,9 @@ static void ReferenceDump_WriteSchema(const char *path)
 	REF_FIELD(terrainScaledBaseSpeed, "s16");
 	REF_FIELD(forwardDir, "s16");
 	REF_FIELD(forwardAccelImpulse, "s16");
+	REF_FIELD(forwardAccelVector.x, "s16");
+	REF_FIELD(forwardAccelVector.y, "s16");
+	REF_FIELD(forwardAccelVector.z, "s16");
 	REF_FIELD(turboConst, "s8");
 	REF_FIELD(accel.x, "s32");
 	REF_FIELD(accel.y, "s32");
@@ -684,12 +708,18 @@ static void ReferenceDump_WriteSchema(const char *path)
 	REF_FIELD(rotPrev.y, "s16");
 	REF_FIELD(rotPrev.z, "s16");
 	REF_FIELD(rotPrev.w, "s16");
+	REF_FIELD(AxisAngle1_normalVec.x, "s16");
+	REF_FIELD(AxisAngle1_normalVec.y, "s16");
+	REF_FIELD(AxisAngle1_normalVec.z, "s16");
 	REF_FIELD(AxisAngle2_normalVec.x, "s16");
 	REF_FIELD(AxisAngle2_normalVec.y, "s16");
 	REF_FIELD(AxisAngle2_normalVec.z, "s16");
 	REF_FIELD(AxisAngle3_normalVec.x, "s16");
 	REF_FIELD(AxisAngle3_normalVec.y, "s16");
 	REF_FIELD(AxisAngle3_normalVec.z, "s16");
+	REF_FIELD(AxisAngle4_normalVec.x, "s16");
+	REF_FIELD(AxisAngle4_normalVec.y, "s16");
+	REF_FIELD(AxisAngle4_normalVec.z, "s16");
 	REF_FIELD(turnWobbleAngle, "s16");
 	REF_FIELD(turnWobbleVelocity, "s16");
 	REF_FIELD(turnWobbleTimer, "s16");

@@ -39,6 +39,7 @@ void ReferenceDump_MovedStep(int driverID, int iter, int multiplier, int velX, i
 void ReferenceDump_MovedQuad(int driverID, int iter, int touched, int quadIdx, int flags, int i0, int i1, int i2, int i3, int i4, int i5, int i6, int i7, int i8, int cX, int cY, int cZ);
 void ReferenceDump_MovedTri(int driverID, int iter, int nX, int nY, int nZ, int halfDist, int planeNear, int planeFar, int distance, int prevBest, int won);
 void ReferenceDump_AdvSpawnShuffle(unsigned int s0Pre, unsigned int s1Pre, int champBranch, const char *spawnOrder8);
+void ReferenceDump_FixedStep(int driverID, int underEntryIdx, int underHit, int selIdx, int selFlags, int grounded, int posY, int quadBlockHeight, int nX, int nY, int nZ);
 
 void ReferenceDump_Event(const char *type, int driverID, int a, int b, int c);
 

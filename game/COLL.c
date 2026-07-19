@@ -1376,6 +1376,13 @@ void COLL_FIXED_PlayerSearch(struct Thread *t, struct Driver *d)
 		COLL_FIXED_QUADBLK_TestTriangles(d->underDriver, sps);
 	}
 
+#ifdef CTR_REFERENCE
+	int refUnderEntryIdx = (d->underDriver != NULL && sps->ptr_mesh_info != NULL && sps->ptr_mesh_info->ptrQuadBlockArray != NULL)
+	                           ? (int)(d->underDriver - sps->ptr_mesh_info->ptrQuadBlockArray)
+	                           : -1;
+	int refUnderHit = sps->boolDidTouchQuadblock;
+#endif
+
 	if ((sps->boolDidTouchQuadblock == 0) && (sps->ptr_mesh_info != NULL) && (sps->ptr_mesh_info->bspRoot != NULL))
 	{
 		COLL_SearchBSP_CallbackPARAM(sps->ptr_mesh_info->bspRoot, &sps->bbox, COLL_FIXED_BSPLEAF_TestQuadblocks, sps);
@@ -1452,6 +1459,25 @@ void COLL_FIXED_PlayerSearch(struct Thread *t, struct Driver *d)
 			COLL_FIXED_PlayerSearch_UpdateLighting(sps, d, inst);
 		}
 	}
+
+#ifdef CTR_REFERENCE
+	{
+		int refSelIdx = -1, refSelFlags = 0, refNx = 0, refNy = 0, refNz = 0;
+		if (sps->boolDidTouchQuadblock != 0)
+		{
+			if (sps->ptr_mesh_info != NULL && sps->ptr_mesh_info->ptrQuadBlockArray != NULL)
+			{
+				refSelIdx = (int)(sps->hit.ptrQuadblock - sps->ptr_mesh_info->ptrQuadBlockArray);
+			}
+			refSelFlags = (int)sps->hit.ptrQuadblock->quadFlags;
+			refNx = sps->hit.plane.normal.x;
+			refNy = sps->hit.plane.normal.y;
+			refNz = sps->hit.plane.normal.z;
+		}
+		ReferenceDump_FixedStep(d->driverID, refUnderEntryIdx, refUnderHit, refSelIdx, refSelFlags,
+		                        (d->collisionFlags & DRIVER_COLL_FLAG_GROUNDED) != 0 ? 1 : 0, d->posCurr.y, d->quadBlockHeight, refNx, refNy, refNz);
+	}
+#endif
 
 	if (d->quadBlockHeight + 0x8000 < d->posCurr.y)
 	{
