@@ -802,6 +802,13 @@ static void ReferenceDump_WriteSchema(const char *path)
 	REF_FIELD(botData.aiPhysics.fireLevel, "s16");
 	REF_FIELD(botData.aiPhysics.speedY, "s32");
 	REF_FIELD(botData.aiPhysics.speedLinear, "s32");
+	REF_FIELD(botData.positionBackup.x, "s32");
+	REF_FIELD(botData.positionBackup.y, "s32");
+	REF_FIELD(botData.positionBackup.z, "s32");
+	REF_FIELD(botData.aiPhysics.velocity.x, "s32");
+	REF_FIELD(botData.aiPhysics.velocity.y, "s32");
+	REF_FIELD(botData.aiPhysics.velocity.z, "s32");
+	REF_FIELD(botData.botNavFrame, "u32");
 	REF_FIELD_GT(cameraDC[0].cameraPos.x, "s32");
 	REF_FIELD_GT(cameraDC[0].cameraPos.y, "s32");
 	REF_FIELD_GT(cameraDC[0].cameraPos.z, "s32");
@@ -1299,11 +1306,12 @@ void ReferenceDump_Tick(const struct GameTracker *gGT)
 	{
 		unsigned int rngU = (unsigned int)rng;
 		unsigned char mask = 0;
-		int n = (int)gGT->numPlyrCurrGame;
+
 		if (n > 8)
 		{
 			n = 8;
 		}
+		int n = 8;
 		for (i = 0; i < n; i++)
 		{
 			if (gGT->drivers[i] != NULL)
